@@ -164,6 +164,12 @@ class Db0001 extends Migration
                 'null' => true,
                 'default' => null,
             ],
+            'alat_transportasi_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ]
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('alamat_tinggal', true);
@@ -397,6 +403,122 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('alamat_guru_pegawai', true);
+
+        // tabel referensi alat transportasi
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'alat_transportasi_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('alat_transportasi', true);
+
+        // tabel pekerjaan
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'pekerjaan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('pekerjaan', true);
+
+        // tabel pendidikan
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'pendidikan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('pendidikan', true);
+
+        // tabel penghasilan
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'penghasilan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('penghasilan', true);
     }
 
     public function down()
@@ -408,5 +530,9 @@ class Db0001 extends Migration
         $this->forge->dropTable('alamat_peserta_didik', true);
         $this->forge->dropTable('alamat_guru_pegawai', true);
         $this->forge->dropTable('alamat_orangtua', true);
+        $this->forge->dropTable('alat_transportasi', true);
+        $this->forge->dropTable('pekerjaan', true);
+        $this->forge->dropTable('pendidikan', true);
+        $this->forge->dropTable('penghasilan', true);
     }
 }
