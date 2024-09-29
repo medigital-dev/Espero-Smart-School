@@ -65,22 +65,6 @@ class Db0001 extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 64,
             ],
-            'ayah_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-                'null' => true,
-                'default' => null,
-            ],
-            'ibu_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128
-            ],
-            'wali_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-                'null' => true,
-                'default' => null,
-            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('peserta_didik', true);
@@ -234,6 +218,43 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('orangtua_wali', true);
+
+        // table orangtua_wali_pd
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'ortupd_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'orangtua_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'hubungan_keluarga' => [
+                'type' => 'ENUM',
+                'constraint' => ['kandung', 'angkat', 'wali']
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('orangtua_wali_pd');
 
         // tabel alamat peserta didik
         $this->forge->addField([
@@ -526,6 +547,7 @@ class Db0001 extends Migration
         $this->forge->dropTable('peserta_didik', true);
         $this->forge->dropTable('guru_pegawai', true);
         $this->forge->dropTable('orangtua_wali', true);
+        $this->forge->dropTable('orangtua_wali_pd', true);
         $this->forge->dropTable('alamat_tinggal', true);
         $this->forge->dropTable('alamat_peserta_didik', true);
         $this->forge->dropTable('alamat_guru_pegawai', true);
