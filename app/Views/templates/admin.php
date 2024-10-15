@@ -6,22 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SISPADU - Sistem Informasi Satuan Pendidikan Terpadu</title>
 
-    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-    <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed">
-    <!-- Site wrapper -->
     <div class="wrapper">
-        <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Right navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
             <ul class="navbar-nav ml-auto">
-                <!-- Navbar Search -->
                 <li class="nav-item">
                     <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                         <i class="fas fa-search"></i>
@@ -43,7 +41,6 @@
                     </div>
                 </li>
 
-                <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-comments"></i>
@@ -51,7 +48,6 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
                             <div class="media">
                                 <img src="/assets/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
@@ -63,11 +59,9 @@
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
                             </div>
-                            <!-- Message End -->
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
                             <div class="media">
                                 <img src="/assets/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
@@ -79,11 +73,9 @@
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
                             </div>
-                            <!-- Message End -->
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
                             <div class="media">
                                 <img src="/assets/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
@@ -95,13 +87,11 @@
                                     <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
                                 </div>
                             </div>
-                            <!-- Message End -->
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
                     </div>
                 </li>
-                <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
@@ -135,12 +125,9 @@
                 </li>
             </ul>
         </nav>
-        <!-- /.navbar -->
 
-        <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="/index3.html" class="brand-link elevation-4">
+            <a href="<?= base_url(); ?>" class="brand-link elevation-4 text-center">
                 <i class="fab fa-centos mr-1 fa-fw"></i>
                 <span class="brand-text font-weight-light">SISPADU</span>
             </a>
@@ -176,16 +163,22 @@
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="#" class="nav-link active">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <i class="nav-icon fas fa-user-graduate"></i>
                                 <p>
-                                    Peserta Didik
+                                    Data
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/index.html" class="nav-link active">
-                                        <i class="fas fa-user-graduate nav-icon"></i>
+                                    <a href="<?= base_url('data/peserta-didik'); ?>" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Peserta Didik</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('data/buku-induk'); ?>" class="nav-link active">
+                                        <i class="far fa-circle nav-icon"></i>
                                         <p>Buku Induk</p>
                                     </a>
                                 </li>
@@ -207,9 +200,7 @@
             <!-- /.sidebar -->
         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -218,72 +209,69 @@
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><?= ahref(base_url(), 'Dashboard'); ?></li>
-                                <li class="breadcrumb-item active">Peserta Didik</li>
+                                <li class="breadcrumb-item"><a href="<?= base_url(); ?>">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="<?= base_url('peserta-didik'); ?>">Peserta Didik</a></li>
                                 <li class="breadcrumb-item active">Buku Induk</li>
                             </ol>
                         </div>
                     </div>
-                </div><!-- /.container-fluid -->
+                </div>
             </section>
 
-            <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
-                            <!-- Default box -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Title</h3>
-
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
+                                    <h3 class="card-title">Daftar Peserta Didik</h3>
                                 </div>
                                 <div class="card-body">
-                                    Start creating your amazing application!
+                                    <div class="btn-toolbar mb-2">
+                                        <div class="btn-group btn-group-sm my-1 mr-2" role="group" aria-label="First group">
+                                            <button type="button" class="btn btn-secondary">1</button>
+                                            <button type="button" class="btn btn-secondary">2</button>
+                                            <button type="button" class="btn btn-secondary">3</button>
+                                            <button type="button" class="btn btn-secondary">4</button>
+                                        </div>
+                                        <div class="btn-group btn-group-sm my-1 mr-2" role="group" aria-label="First group">
+                                            <button type="button" class="btn btn-secondary">1</button>
+                                            <button type="button" class="btn btn-secondary">2</button>
+                                            <button type="button" class="btn btn-secondary">3</button>
+                                            <button type="button" class="btn btn-secondary">4</button>
+                                        </div>
+                                    </div>
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-primary align-middle text-center">Nama</th>
+                                                <th class="table-primary align-middle text-center">NIS</th>
+                                                <th class="table-primary align-middle text-center">NISN</th>
+                                                <th class="table-primary align-middle text-center">Tempat Lahir</th>
+                                                <th class="table-primary align-middle text-center">Tanggal Lahir</th>
+                                                <th class="table-primary align-middle text-center">Tahun Masuk</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    Footer
-                                </div>
-                                <!-- /.card-footer-->
                             </div>
-                            <!-- /.card -->
                         </div>
                     </div>
                 </div>
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
 
         <footer class="main-footer">
             <div class="float-right d-none d-sm-block">
-                <b>Version</b> 3.2.0
+                <a href="https://adminlte.io">AdminLTE.io</a>
             </div>
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2024 | meDigital-dev
         </footer>
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
+        <aside class="control-sidebar control-sidebar-dark"> </aside>
     </div>
-    <!-- ./wrapper -->
-
-    <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
     <script src="/assets/js/adminlte.min.js"></script>
 </body>
 
