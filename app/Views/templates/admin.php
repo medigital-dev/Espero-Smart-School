@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SISPADU - Sistem Informasi Satuan Pendidikan Terpadu</title>
+    <title><?= $title; ?></title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
@@ -161,8 +161,8 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                        <li class="nav-item <?= $sidebar == 'buku-induk' || $sidebar == 'peserta-didik' ? 'menu-open' : ''; ?>">
+                            <a href="#" class="nav-link <?= $sidebar == 'buku-induk' || $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
                                 <i class="nav-icon fas fa-user-graduate"></i>
                                 <p>
                                     Data
@@ -171,13 +171,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= base_url('data/peserta-didik'); ?>" class="nav-link">
+                                    <a href="<?= base_url('data/peserta-didik'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Peserta Didik</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?= base_url('data/buku-induk'); ?>" class="nav-link active">
+                                    <a href="<?= base_url('data/buku-induk'); ?>" class="nav-link <?= $sidebar == 'buku-induk' ? 'active' : ''; ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Buku Induk</p>
                                     </a>
@@ -193,6 +193,23 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>
+                                    Pengaturan
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="<?= base_url('pengaturan/dapodik'); ?>" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Koneksi Dapodik</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -205,7 +222,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Buku Induk Peserta Didik</h1>
+                            <h1><?= $name; ?></h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -220,43 +237,7 @@
 
             <section class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Daftar Peserta Didik</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="btn-toolbar mb-2">
-                                        <div class="btn-group btn-group-sm my-1 mr-2" role="group" aria-label="First group">
-                                            <button type="button" class="btn btn-secondary">1</button>
-                                            <button type="button" class="btn btn-secondary">2</button>
-                                            <button type="button" class="btn btn-secondary">3</button>
-                                            <button type="button" class="btn btn-secondary">4</button>
-                                        </div>
-                                        <div class="btn-group btn-group-sm my-1 mr-2" role="group" aria-label="First group">
-                                            <button type="button" class="btn btn-secondary">1</button>
-                                            <button type="button" class="btn btn-secondary">2</button>
-                                            <button type="button" class="btn btn-secondary">3</button>
-                                            <button type="button" class="btn btn-secondary">4</button>
-                                        </div>
-                                    </div>
-                                    <table class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="table-primary align-middle text-center">Nama</th>
-                                                <th class="table-primary align-middle text-center">NIS</th>
-                                                <th class="table-primary align-middle text-center">NISN</th>
-                                                <th class="table-primary align-middle text-center">Tempat Lahir</th>
-                                                <th class="table-primary align-middle text-center">Tanggal Lahir</th>
-                                                <th class="table-primary align-middle text-center">Tahun Masuk</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?= $this->renderSection('content'); ?>
                 </div>
             </section>
         </div>
@@ -268,11 +249,28 @@
             <strong>Copyright &copy; 2024 | meDigital-dev
         </footer>
 
-        <aside class="control-sidebar control-sidebar-dark"> </aside>
+        <aside class="control-sidebar control-sidebar-dark"></aside>
     </div>
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.table').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 </body>
 
 </html>

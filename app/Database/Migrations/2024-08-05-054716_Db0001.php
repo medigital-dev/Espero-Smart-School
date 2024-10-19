@@ -540,6 +540,169 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('penghasilan', true);
+
+        // Tabel: sidebar_menu
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'menu_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'parent_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'url' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'default' => '#',
+            ],
+            'icon' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+            ],
+            'status' => [
+                'type' => 'BOOLEAN',
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('sidebar_menu', true);
+
+        // Tabel: dapodik_sync
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'dapodik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'url' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'port' => [
+                'type' => 'INT'
+            ],
+            'npsn' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+            ],
+            'token' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'status' => [
+                'type' => 'BOOLEAN',
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('dapodik_sync', true);
+
+        // Tabel: satuan_pendidikan
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'sekolah_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'nss' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'npsn' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'bentuk_pendidikan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+            ],
+            'status_sekolah' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+            ],
+            'alamat_jalan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'rt' => ['type' => 'INT'],
+            'rw' => ['type' => 'INT'],
+            'dusun' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'desa_kelurahan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'kecamatan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'kabupaten_kota' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'provinsi' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'lintang' => [
+                'type' => 'double',
+            ],
+            'bujur' => [
+                'type' => 'double',
+            ],
+            'kode_pos' => [
+                'type' => 'VARCHAR',
+                'constraint' => 8,
+            ],
+            'nomor_telepon' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'null' => true,
+            ],
+            'nomor_fax' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'null' => true,
+            ],
+            'email' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'website' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('satuan_pendidikan', true);
     }
 
     public function down()
@@ -556,5 +719,7 @@ class Db0001 extends Migration
         $this->forge->dropTable('pekerjaan', true);
         $this->forge->dropTable('pendidikan', true);
         $this->forge->dropTable('penghasilan', true);
+        $this->forge->dropTable('sidebar_menu', true);
+        $this->forge->dropTable('dapodik_sync', true);
     }
 }
