@@ -8,6 +8,10 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
+    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
 </head>
 
@@ -253,21 +257,344 @@
     </div>
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables//datatables.min.js"></script>
+    <script src="/plugins/toastr/toastr.min.js"></script>
+    <script src="/plugins/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
+    <!-- functions -->
+    <script>
+        function toast(message, type = 'info', delay = 5000) {
+            let closeButton = false;
+            if (delay == 0) closeButton = true;
+            toastr.options = {
+                timeOut: delay,
+                closeButton: closeButton,
+                progressBar: true,
+            };
+
+            switch (type) {
+                case 'info':
+                    toastr.info(message);
+                    break;
+
+                case 'success':
+                    toastr.success(message);
+                    break;
+
+                case 'warning':
+                    toastr.warning(message);
+                    break;
+
+                case 'error':
+                    toastr.error(message);
+                    break;
+
+                default:
+                    toastr.info(message);
+                    break;
+            }
+        }
+
+        function errorHandle(err) {
+            if (err.responseJSON && err.responseJSON.message) {
+                toast(err.responseJSON.message, "error", 0);
+            } else if (err.code === 400) {
+                toast(err.messages, "error", 0);
+            } else if (err.code === 500 || err.status === 400) {
+                toast(
+                    err.responseJSON ? err.responseJSON.messages.error : "Error server",
+                    "error", 0
+                );
+            } else {
+                toast("An error occurred", "error", 0);
+            }
+        }
+
+        function validationElm(elm = [], invalidIf = [], errorMessage = null) {
+            let check = [];
+            if (errorMessage == null) errorMessage = 'Invalid Field.';
+            elm.forEach(function(item) {
+                if (invalidIf.includes($(item).val())) {
+                    check.push($(item).val());
+                    $(item).addClass('is-invalid');
+                } else $(item).removeClass('is-invalid');
+            })
+            if (check.length !== 0) {
+                toast(errorMessage, 'error');
+                return false;
+            }
+            $('.is-invalid').removeClass('is-invalid');
+            return true;
+        }
+    </script>
+    <!-- end functions -->
+    <!-- toastr config -->
+    <script>
+    </script>
+    <!-- end toastr config -->
+    <!-- Global Script -->
     <script>
         $(document).ready(function() {
-            $('.table').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
+            $('#btnReloadTable').on('click', function() {
+                $(this).children('i').addClass('fa-spin');
+                $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).children('i').removeClass('fa-spin'));
+            });
+            $('#checkAllRow').on('click', function() {
+                const isChecked = $(this).is(':checked');
+                $('.dtCheckbox').prop('checked', isChecked);
+            });
+        })
+    </script>
+    <!-- End Global Script -->
+    <script>
+        $(document).ready(function() {
+            const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
+                dom: 't',
+                processing: true,
+                pagingType: "simple",
+                responsive: true,
+                fixedHeader: true,
+                ordering: false,
+                ajax: {
+                    method: "POST",
+                    url: "/api/v0/dapodik/getTable",
+                    dataSrc: "",
+                },
+                language: {
+                    url: "/plugins/datatables/id.json",
+                },
+                columns: [{
+                        data: "checkbox",
+                        className: "text-center",
+                    },
+                    {
+                        data: "nama",
+                    },
+                    {
+                        data: "url",
+                    },
+                    {
+                        data: "npsn",
+                        className: "text-center",
+                    },
+                    {
+                        data: "token",
+                        className: 'text-end'
+                    },
+                    {
+                        data: "status",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "koneksi",
+                        className: 'text-center'
+                    },
+                ],
+            });
+
+            tabelKoneksiDapodik.on('draw', function() {
+                $('.dtCheckbox').change(function() {
+                    const countCheckbox = $(".dtCheckbox").length;
+                    const countCheckboxChecked = $(".dtCheckbox:checked").length;
+                    if (countCheckbox == countCheckboxChecked)
+                        $("#checkAllRow").prop("checked", true).prop("indeterminate", false);
+                    else if (countCheckboxChecked == 0)
+                        $("#checkAllRow").prop("checked", false).prop("indeterminate", false);
+                    else $("#checkAllRow").prop("indeterminate", true);
+                });
+
+                $('.btnRiwayatTestKoneksiDapodik').on('click', function() {
+                    const id = $(this).data('id');
+                    const modal = $('#modalRiwayatTestKoneksiDapodik');
+                    modal.modal('show');
+                    $.post('/api/v0/dapodik/riwayat-test/get', {
+                        id: id
+                    }, r => {
+                        modal.find('.modal-body').html(r);
+                        $('#tabelRiwayatTestKoneksiDapodik').DataTable({
+                            lengthMenu: [
+                                [5, 10, 25, 50, -1],
+                                [5, 10, 25, 50, 'Semua']
+                            ],
+                            ordering: false,
+                            pagingType: "simple",
+                            language: {
+                                url: "/plugins/datatables/id.json",
+                            },
+                        });
+                    }).fail(err => errorHandle(err));
+                });
+            }).on('xhr', function() {
+                $('#checkAllRow').prop('checked', false).prop('indeterminate', false);
+            });
+
+            $('#btnSimpanFormKoneksiDapodik').on('click', function() {
+                const btn = $(this);
+                const form = $('#formKoneksiDapodik');
+                const id = $('#idKoneksi');
+                const nama = $('#namaProfil');
+                const url = $('#urlProfil');
+                const port = $('#portUrl');
+                const npsn = $('#npsnProfil')
+                const token = $('#tokenProfil')
+                const check = validationElm([nama, url, port, npsn, token], ['', '0']);
+
+                if (!check) return;
+                btn.html('<i class="fas fa-spin fa-spinner"></i>').prop('disabled', true);
+
+                $.post('/api/v0/dapodik/set', {
+                    id: id.val(),
+                    set: {
+                        nama: nama.val(),
+                        url: url.val(),
+                        port: port.val(),
+                        npsn: npsn.val(),
+                        token: token.val(),
+                    }
+                }, r => {
+                    toast(r.message, 'success');
+                    tabelKoneksiDapodik.ajax.reload(null, false);
+                    btn.text('Simpan').prop('disabled', false);
+                    form.trigger('reset');
+                    $('#modalFormKoneksiDapodik').modal('hide');
+                    $('.modal-backdrop').remove();
+                }).fail(err => {
+                    errorHandle(err);
+                    btn.text('Simpan').prop('disabled', false)
+                });
+            });
+
+            $('#btnEditKoneksiDapodik').click(function() {
+                const btn = $(this);
+                const checked = $('.dtCheckbox:checked');
+                if (checked.length !== 1) {
+                    toast('Pilih satu baris data yang akan dilakukan perubahan.');
+                    return;
+                }
+                $.post('/api/v0/dapodik/get', {
+                    id: checked.val()
+                }, r => {
+                    $('#idKoneksi').val(r.id);
+                    $('#namaProfil').val(r.nama);
+                    $('#urlProfil').val(r.url);
+                    $('#portUrl').val(r.port);
+                    $('#npsnProfil').val(r.npsn);
+                    $('#tokenProfil').val(r.token);
+                    $('#modalFormKoneksiDapodik').modal('show');
+                }).fail(err => errorHandle(err));
+            });
+
+            $('#modalFormKoneksiDapodik').on('hide.bs.modal', () => $('#formKoneksiDapodik').trigger('reset'));
+            $('#modalRiwayatTestKoneksiDapodik').on('hide.bs.modal', function() {
+                $(this).find('.modal-body').html('<div class="d-flex justify-content-center">' +
+                    '<div class="spinner-border" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                    '</div></div>');
+            });
+
+            $('#btnHapusKoneksiDapodik').on('click', function() {
+                const checked = $('.dtCheckbox:checked');
+                let dataId = [];
+                if (checked.length == 0) {
+                    toast('Pilih satu atau beberapa baris data yang akan dihapus.');
+                    return;
+                }
+                checked.each(function() {
+                    dataId.push($(this).val());
+                })
+                Swal.fire({
+                    icon: "warning",
+                    title: "Hapus?",
+                    text: "Data koneksi dapodik akan dihapus permanen.",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-danger",
+                    },
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return $.post(
+                            "/api/v0/dapodik/delete", {
+                                ids: dataId,
+                            },
+                            (r) => {
+                                return r;
+                            }
+                        ).fail((err) => errorHandle(err));
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        toast(result.value.message);
+                        tabelKoneksiDapodik.ajax.reload(null, false);
+                    }
+                });
+            });
+
+            $('#btnAktifkanKoneksiDapodik').on('click', function() {
+                const checked = $('.dtCheckbox:checked');
+                if (checked.length != 1) {
+                    toast('Pilih satu baris data yang akan diaktifkan.');
+                    return;
+                }
+                const id = checked.val();
+                Swal.fire({
+                    icon: "warning",
+                    title: "Aktifkan?",
+                    text: "Data koneksi dapodik akan diaktifkan.",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Aktifkan",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-success",
+                    },
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return $.post(
+                            "/api/v0/dapodik/setAktif", {
+                                id: id,
+                            },
+                            (r) => {
+                                return r;
+                            }
+                        ).fail((err) => errorHandle(err));
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        toast(result.value.message);
+                        tabelKoneksiDapodik.ajax.reload(null, false);
+                    }
+                });
+            });
+
+            $('#cariTabelKoneksiDapodik').on('input', function() {
+                const key = $(this).val();
+                tabelKoneksiDapodik.search(key).draw(false);
+            })
+
+            $('#btnTestKoneksiDapodik').on('click', function() {
+                const btn = $(this);
+                const checked = $('.dtCheckbox:checked');
+                if (checked.length != 1) {
+                    toast('Pilih satu baris data yang akan diaktifkan.');
+                    return;
+                }
+                btn.html('<i class="fas fa-spinner fa-spin fa-fw"></i>').prop('disabled', true);
+                $('#btnAktifkanKoneksiDapodik').prop('disabled', true);
+
+                $.post('/api/v0/dapodik/test', {
+                    id: checked.first().val()
+                }, r => {
+                    Swal.fire('Koneksi Berhasil', 'Koneksi ke Aplikasi Dapodik berhasil. <br><strong>(' + r.npsn + ') ' + r.nama + '</strong>', 'success');
+                }).fail(err => {
+                    errorHandle(err);
+                }).always(() => {
+                    tabelKoneksiDapodik.ajax.reload(null, false);
+                    btn.html('<i class="fas fa-exchange-alt fa-fw"></i>').prop('disabled', false);
+                    $('#btnAktifkanKoneksiDapodik').prop('disabled', false);
+                });
             });
         });
     </script>

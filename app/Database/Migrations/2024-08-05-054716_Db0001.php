@@ -614,6 +614,34 @@ class Db0001 extends Migration
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('dapodik_sync', true);
 
+        // Tabel: riwayat_test_koneksi
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'riwayat_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'dapodik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tanggal_waktu' => [
+                'type' => 'DATETIME',
+            ],
+            'status' => [
+                'type' => 'BOOLEAN'
+            ],
+            'pesan' => [
+                'type' => 'TEXT',
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('riwayat_test_koneksi', true);
+
         // Tabel: satuan_pendidikan
         $this->forge->addField([
             'created_at' => ['type' => 'DATETIME',],
@@ -721,5 +749,6 @@ class Db0001 extends Migration
         $this->forge->dropTable('penghasilan', true);
         $this->forge->dropTable('sidebar_menu', true);
         $this->forge->dropTable('dapodik_sync', true);
+        $this->forge->dropTable('riwayat_test_koneksi', true);
     }
 }
