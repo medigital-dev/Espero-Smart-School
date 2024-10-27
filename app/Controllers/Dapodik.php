@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\DapodikSyncModel;
+use App\Models\PesertaDidikModel;
+use App\Models\RegistrasiPesertaDidikModel;
 use App\Models\RiwayatTestKoneksiModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -17,35 +19,11 @@ class Dapodik extends BaseController
 
     public function index(): string
     {
-        $mDapodik = new DapodikSyncModel();
-        $sendDapodik = [];
-        $dataDapodik = $mDapodik
-            ->select(['dapodik_id as id', 'nama', 'url', 'port', 'npsn', 'token', 'status'])
-            ->orderBy('status', 'DESC')
-            ->findAll();
-        foreach ($dataDapodik as $dapodik) {
-            $status = $dapodik['status'] ? '<span class="text-success"><i class="fas fa-check-circle fa-fw"></i></span>' : '<span class="text-secondary"><i class="fas fa-minus-circle fa-fw"></i></span>';
-            $temp = [
-                'checkbox' => '
-                    <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input dtCheckbox" type="checkbox" id="check_' . $dapodik['id'] . '" value="' . $dapodik['id'] . '">
-                        <label for="check_' . $dapodik['id'] . '" class="custom-control-label"></label>
-                    </div>',
-                'nama' => $dapodik['nama'],
-                'url' => '<a href="http://' . $dapodik['url'] . ':' . $dapodik['port'] . '" target="_blank">http://' . $dapodik['url'] . ':' . $dapodik['port'] . '</a>',
-                'npsn' => $dapodik['npsn'],
-                'token' => $dapodik['token'],
-                'status' => $status
-            ];
-            array_push($sendDapodik, $temp);
-        }
         $page = [
             'title' => 'SISPADU - Pengaturan Dapodik',
             'sidebar' => 'dapodik',
             'name' => 'Koneksi Aplikasi Dapodik',
-            'data' => [
-                'dapodik' => $sendDapodik
-            ],
+            'data' => [],
         ];
         return view('dapodik/index', $page);
     }
@@ -81,7 +59,7 @@ class Dapodik extends BaseController
                         <label for="check_' . $dapodik['id'] . '" class="custom-control-label"></label>
                     </div>',
                 'nama' => $dapodik['nama'],
-                'url' => '<a href="' . $dapodik['url'] . ':' . $dapodik['port'] . '" target="_blank">' . $dapodik['url'] . ':' . $dapodik['port'] . '</a>',
+                'url' => '<a href="//' . $dapodik['url'] . ':' . $dapodik['port'] . '" target="_blank">' . $dapodik['url'] . ':' . $dapodik['port'] . '</a>',
                 'npsn' => $dapodik['npsn'],
                 'token' => $dapodik['token'],
                 'status' => $status,
@@ -169,7 +147,7 @@ class Dapodik extends BaseController
         $config = $mDapodik->where('status', true)->first();
         if ($config) {
             return [
-                'alamat' => $config['url'],
+                'url' => $config['url'],
                 'port' => $config['port'],
                 'npsn' => $config['npsn'],
                 'token' => $config['token'],
@@ -177,15 +155,26 @@ class Dapodik extends BaseController
         }
         return [];
     }
-
-    private function makeRequest($url, $token)
+    /**
+     * @param string $type Enum ['getPesertaDidik','getSekolah','getRombonganBelajar','get]
+     * @return array Response
+     */
+    private function makeRequest($type, $config = [])
     {
         $client = \Config\Services::curlrequest();
+        if (empty($config)) {
+            $config = $this->getConfig();
+            if (empty($config)) return ['message' => 'Error: Konfigurasi koneksi dapodik belum diset.', 'success' => false];
+        }
+        $url = 'http://' . $config['url'] . ':' . $config['port'] . '/WebService/' . $type . '?npsn=' . $config['npsn'];
+        $token = 'Authorization: Bearer ' . $config['token'];
+
         $options = [
             'headers' => ['Authorization' => $token],
             'http_errors' => false,
             'debug' => true,
         ];
+
         try {
             $response = $client->get($url, $options);
             $statusCode = $response->getStatusCode();
@@ -235,29 +224,24 @@ class Dapodik extends BaseController
         if (empty($config))
             return $this->fail('Error: Konfigurasi dapodik belum diset aktif.');
 
-        $url = 'http://' . $config['url'] . ':' . $config['port'] . '/WebService/getSekolah?npsn=' . $config['npsn'];
-        $token = 'Authorization: Bearer ' . $config['token'];
+        $result = $this->makeRequest('getSekolah', $config);
 
-        $result = $this->makeRequest($url, $token);
-        if (!$result['success']) {
-            $temp = [
-                'riwayat_id' => unik($mRiwayatTest, 'riwayat_id'),
-                'dapodik_id' => $id,
-                'tanggal_waktu' => date('Y-m-d H:i:s'),
-                'status' => false,
-                'pesan' => $result['message']
-            ];
-            if (!$mRiwayatTest->save($temp)) return $this->fail('Error: Riwayat testing koneksi dapodik gagal disimpan.');
-            return $this->fail($result['message']);
-        }
         $temp = [
             'riwayat_id' => unik($mRiwayatTest, 'riwayat_id'),
             'dapodik_id' => $id,
             'tanggal_waktu' => date('Y-m-d H:i:s'),
-            'status' => true,
             'pesan' => $result['message']
         ];
+
+        if (!$result['success']) {
+            $temp['status'] =  false;
+            if (!$mRiwayatTest->save($temp)) return $this->fail('Error: Riwayat testing koneksi dapodik gagal disimpan.');
+            return $this->fail($result['message']);
+        }
+
+        $temp['status'] = true;
         if (!$mRiwayatTest->save($temp)) return $this->fail('Error: Riwayat testing koneksi dapodik gagal disimpan.');
+
         $response = [
             'nama' => $result['data']['nama'],
             'npsn' => $result['data']['npsn'],
@@ -276,5 +260,45 @@ class Dapodik extends BaseController
             ->findAll();
         $data['riwayat'] = $riwayat;
         return view('dapodik/riwayat-test', $data);
+    }
+
+    public function getNewPdDapodik()
+    {
+        $mPesertaDidik = new PesertaDidikModel();
+        $mRegistrasi = new RegistrasiPesertaDidikModel();
+
+        $request = $this->makeRequest('getPesertaDidik');
+        if (!$request['success']) return $this->fail($request['message']);
+
+        foreach ($request['data'] as $row) {
+            $temp = [
+                'peserta_didik_id' => $row['peserta_didik_id'],
+                'nama' => $row['nama'],
+                'jenis_kelamin' => $row['jenis_kelamin'],
+                'tempat_lahir' => $row['tempat_lahir'],
+                'tanggal_lahir' => $row['tanggal_lahir'],
+                'nisn' => $row['nisn'],
+                'nik' => $row['nik'],
+                'agama' => $row['agama_id_str'],
+                'registrasi_id' => $row['registrasi_id'],
+                'jenis_registrasi' => $row['jenis_pendaftaran_id_str'],
+                'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
+                'nipd' => $row['nipd'],
+                'asal_sekolah' => $row['sekolah_asal'],
+            ];
+            $cPd = $mPesertaDidik->where('peserta_didik_id', $row['peserta_didik_id'])->first();
+            if ($cPd) $temp['id'] = $cPd['id'];
+            if (!$mPesertaDidik->save($temp)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
+
+            unset($temp['id']);
+            $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $row['peserta_didik_id'])->first();
+            if ($cRegistrasi) $temp['id'] = $cRegistrasi['id'];
+            if (!$mRegistrasi->save($temp)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
+        }
+
+        $response = [
+            'message' => count($request['data']) . ' Data peserta didik berhasil disinkronkan.',
+        ];
+        return $this->respond($response);
     }
 }

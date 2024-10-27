@@ -56,15 +56,6 @@ class Db0001 extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 64
             ],
-            'golongan_darah' => [
-                'type' => 'ENUM',
-                'constraint' => ['A', 'B', 'AB', 'O', '-'],
-                'default' => '-',
-            ],
-            'kewarganegaraan' => [
-                'type' => 'VARCHAR',
-                'constraint' => 64,
-            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('peserta_didik', true);
@@ -564,11 +555,20 @@ class Db0001 extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'default' => '#',
+                'unique' => true,
+            ],
+            'slug' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
             ],
             'icon' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'null' => true,
+            ],
+            'urutan' => [
+                'type' => 'INT',
             ],
             'status' => [
                 'type' => 'BOOLEAN',
@@ -731,6 +731,106 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('satuan_pendidikan', true);
+
+        // Tabel: registrasi_peserta_didik
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'registrasi_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'jenis_registrasi' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tanggal_registrasi' => [
+                'type' => 'DATE'
+            ],
+            'nipd' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'unique' => true,
+            ],
+            'asal_sekolah' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+            ],
+            'sekolah_jenjang_sebelumnya' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('registrasi_peserta_didik', true);
+
+        // Tabel: rombongan_belajar
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'rombel_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tingkat_pendidikan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 24,
+            ],
+            'semester_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'ptk_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('rombongan_belajar', true);
+
+        // Tabel: anggota_rombongan_belajar
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'anggota_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'rombel_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'jenis_registrasi_rombel' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('anggota_rombongan_belajar', true);
     }
 
     public function down()
@@ -750,5 +850,7 @@ class Db0001 extends Migration
         $this->forge->dropTable('sidebar_menu', true);
         $this->forge->dropTable('dapodik_sync', true);
         $this->forge->dropTable('riwayat_test_koneksi', true);
+        $this->forge->dropTable('rombongan_belajar', true);
+        $this->forge->dropTable('anggota_rombongan_belajar', true);
     }
 }

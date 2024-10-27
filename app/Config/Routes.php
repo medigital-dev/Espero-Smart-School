@@ -8,7 +8,8 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 $routes->get('/data/buku-induk', 'BukuInduk::index');
-$routes->get('/data/peserta-didik', 'PesertaDidik::index');
+$routes->get('/data/peserta-didik/aktif', 'PesertaDidik::aktif');
+$routes->get('/data/peserta-didik/baru', 'PesertaDidik::baru');
 $routes->get('/pengaturan/dapodik', 'Dapodik::index');
 
 // API
@@ -20,3 +21,8 @@ $routes->post('/api/v0/dapodik/delete', 'Dapodik::delete');
 $routes->post('/api/v0/dapodik/setAktif', 'Dapodik::setAktif');
 $routes->post('/api/v0/dapodik/test', 'Dapodik::testKoneksi');
 $routes->post('/api/v0/dapodik/riwayat-test/get', 'Dapodik::getRiwayatTest');
+
+$routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
+$routes->post('/api/v0/peserta-didik/baru/get', 'Dapodik::getNewPdDapodik');
+
+$routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');

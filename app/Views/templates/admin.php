@@ -8,7 +8,8 @@
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
@@ -175,9 +176,15 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= base_url('data/peserta-didik'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
+                                    <a href="<?= base_url('data/peserta-didik/baru'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Peserta Didik</p>
+                                        <p>Peserta Didik Baru</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('data/peserta-didik/aktif'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Peserta Didik Aktif</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -250,16 +257,19 @@
             <div class="float-right d-none d-sm-block">
                 <a href="https://adminlte.io">AdminLTE.io</a>
             </div>
-            <strong>Copyright &copy; 2024 | meDigital-dev
+            <strong>&copy; 2024 | <a href="//muhsaidlg.my.id" class="text-decoration-none text-muted" target="_blank"> meDigital-dev</a>
         </footer>
 
         <aside class="control-sidebar control-sidebar-dark"></aside>
     </div>
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/plugins/datatables//datatables.min.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="/plugins/toastr/toastr.min.js"></script>
-    <script src="/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="/plugins/sweetalert2/sweetalert2.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- functions -->
     <script>
@@ -348,6 +358,61 @@
     <!-- End Global Script -->
     <script>
         $(document).ready(function() {
+            const tableBukuIndukPesertaDidik = $('#tableBukuIndukPesertaDidik').DataTable({
+                dom: 't',
+                processing: true,
+                pagingType: "simple",
+                responsive: true,
+                fixedHeader: true,
+                ordering: false,
+                ajax: {
+                    method: "POST",
+                    url: "/api/v0/buku-induk/getTable",
+                    dataSrc: "",
+                },
+                language: {
+                    url: "/plugins/datatables/id.json",
+                },
+                columns: [{
+                        data: "checkbox",
+                        className: "text-center",
+                    },
+                    {
+                        data: "nama",
+                    },
+                    {
+                        data: "nis",
+                        className: "text-center",
+                    },
+                    {
+                        data: "nisn",
+                        className: "text-center",
+                    },
+                    {
+                        data: "jk",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "tempatLahir",
+                    },
+                    {
+                        data: "tanggalLahir",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "tanggalRegistrasi",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "jenisRegistrasi",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "status",
+                        className: 'text-center'
+                    },
+                ],
+            });
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',
                 processing: true,
@@ -379,7 +444,7 @@
                     },
                     {
                         data: "token",
-                        className: 'text-end'
+                        className: 'text-center'
                     },
                     {
                         data: "status",
@@ -595,6 +660,63 @@
                     btn.html('<i class="fas fa-exchange-alt fa-fw"></i>').prop('disabled', false);
                     $('#btnAktifkanKoneksiDapodik').prop('disabled', false);
                 });
+            });
+
+            const tabelPesertaDidikBaru = $('#tabelPesertaDidikBaru').DataTable({
+                dom: 't',
+                processing: true,
+                pagingType: "simple",
+                responsive: true,
+                fixedHeader: true,
+                ordering: false,
+                ajax: {
+                    method: "POST",
+                    url: "/api/v0/peserta-didik/baru/getTable",
+                    dataSrc: "",
+                },
+                language: {
+                    url: "/plugins/datatables/id.json",
+                },
+                columns: [{
+                        data: 'checkbox',
+                        className: 'text-center',
+                    }, {
+                        data: "nama",
+                    },
+                    {
+                        data: "nisn",
+                        className: 'text-center',
+                    },
+                    {
+                        data: "jk",
+                        className: "text-center",
+                    },
+                    {
+                        data: "tempatLahir",
+                    },
+                    {
+                        data: "tanggalLahir",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "nik",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "agama",
+                    },
+                ],
+            });
+
+            $('#btnSinkronPdDapodik').on('click', function() {
+                const btn = $(this);
+                btn.prop('disabled', true).children('i').addClass('fa-spin');
+                $.post('/api/v0/peserta-didik/baru/get', r => {
+                        toast(r.message);
+                        tabelPesertaDidikBaru.ajax.reload(null, false);
+                    })
+                    .fail(err => errorHandle(err))
+                    .always(() => btn.prop('disabled', false).children('i').removeClass('fa-spin'));
             });
         });
     </script>

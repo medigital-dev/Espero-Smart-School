@@ -6,10 +6,10 @@
             <div class="card-body">
                 <div class="btn-toolbar mb-2">
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" title="Reload Tabel"><i class="fas fa-sync fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTable"><i class="fas fa-redo-alt fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" title="Sinkron dengan Dapodik"><i class="fas fa-exchange-alt fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" title="Sinkron dengan Dapodik" id="btnSinkronPdDapodik"><i class="fas fa-sync-alt fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary disabled" title="Registrasi">
@@ -34,9 +34,15 @@
                         <button type="button" class="btn btn-primary" title="Pengaturan" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-cog fa-fw"></i></button>
                     </div>
                 </div>
-                <table class="table table-bordered table-hover w-100">
+                <table class="table table-bordered table-hover w-100" id="tableBukuIndukPesertaDidik">
                     <thead>
                         <tr>
+                            <th class="table-primary align-middle text-center" style="width: 10px;">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="checkAllRow">
+                                    <label for="checkAllRow" class="custom-control-label"></label>
+                                </div>
+                            </th>
                             <th class="table-primary align-middle text-center">Nama</th>
                             <th class="table-primary align-middle text-center">NIS</th>
                             <th class="table-primary align-middle text-center">NISN</th>
