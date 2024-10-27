@@ -166,60 +166,23 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item <?= $sidebar == 'buku-induk' || $sidebar == 'peserta-didik' ? 'menu-open' : ''; ?>">
-                            <a href="#" class="nav-link <?= $sidebar == 'buku-induk' || $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
-                                <i class="nav-icon fas fa-user-graduate"></i>
-                                <p>
-                                    Data
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="<?= base_url('data/peserta-didik/baru'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Peserta Didik Baru</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?= base_url('data/peserta-didik/aktif'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Peserta Didik Aktif</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?= base_url('data/buku-induk'); ?>" class="nav-link <?= $sidebar == 'buku-induk' ? 'active' : ''; ?>">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Buku Induk</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                         <li class="nav-item">
-                            <a href="../widgets.html" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Widgets
-                                    <span class="right badge badge-danger">New</span>
-                                </p>
+                            <a href="<?= base_url('data/peserta-didik'); ?>" class="nav-link <?= $sidebar == 'peserta-didik' ? 'active' : ''; ?>">
+                                <i class="fas fa-user-graduate nav-icon"></i>
+                                <p>Peserta Didik</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-cogs"></i>
-                                <p>
-                                    Pengaturan
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
+                            <a href="<?= base_url('data/buku-induk'); ?>" class="nav-link <?= $sidebar == 'buku-induk' ? 'active' : ''; ?>">
+                                <i class="fas fa-book-open nav-icon"></i>
+                                <p>Buku Induk</p>
                             </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="<?= base_url('pengaturan/dapodik'); ?>" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Koneksi Dapodik</p>
-                                    </a>
-                                </li>
-                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('pengaturan/dapodik'); ?>" class="nav-link <?= $sidebar == 'dapodik' ? 'active' : ''; ?>">
+                                <i class="fas fa-sync-alt nav-icon"></i>
+                                <p>Koneksi Dapodik</p>
+                            </a>
                         </li>
                     </ul>
                 </nav>

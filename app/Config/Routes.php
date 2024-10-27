@@ -8,8 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 $routes->get('/data/buku-induk', 'BukuInduk::index');
-$routes->get('/data/peserta-didik/aktif', 'PesertaDidik::aktif');
-$routes->get('/data/peserta-didik/baru', 'PesertaDidik::baru');
+$routes->get('/data/peserta-didik', 'PesertaDidik::aktif');
 $routes->get('/pengaturan/dapodik', 'Dapodik::index');
 
 // API

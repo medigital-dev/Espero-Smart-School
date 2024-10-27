@@ -11,20 +11,6 @@ class BukuInduk extends BaseController
 
     public function index(): string
     {
-        // $token = 'tgRkvD7cZaYPRL3';
-        // $t = 'Authorization: Bearer ' . $token;
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, 'http://10.2.0.2:5774/WebService/getGtk?npsn=20402028');
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, [$t]);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        // $hasil = curl_exec($ch);
-        // $awal = strpos($hasil, '{');
-        // $result = json_decode(substr($hasil, $awal), true);
-        // echo "<pre>";
-        // var_dump($result);
-        // echo "</pre>";
-        // die;
         $page = [
             'title' => 'SISPADU - Buku Induk',
             'sidebar' => 'buku-induk',
@@ -37,12 +23,40 @@ class BukuInduk extends BaseController
     public function getTable()
     {
         $mRegistrasi = new RegistrasiPesertaDidikModel();
+        $response = [];
         $dataRegistrasi = $mRegistrasi
-            ->select(['registrasi_id as id', 'nama', 'nipd as nis', 'nisn', 'jenis_kelamin as jk', 'tempat_lahir as tempatLahir', 'tanggal_lahir as tanggalLahir', 'tanggal_registrasi as tanggalRegistrasi', 'jenis_registrasi as jenisRegistrasi'])
+            ->select([
+                'registrasi_id as id',
+                'nama',
+                'nipd as nis',
+                'nisn',
+                'jenis_kelamin as jk',
+                'tempat_lahir as tempatLahir',
+                'tanggal_lahir as tanggalLahir',
+                'tanggal_registrasi as tanggalRegistrasi',
+                'jenis_registrasi as jenisRegistrasi'
+            ])
             ->join('peserta_didik', 'peserta_didik.peserta_didik_id = registrasi_peserta_didik.peserta_didik_id', 'LEFT')
             ->orderBy('nis', 'desc')
             ->findAll();
-
-        return $this->respond($dataRegistrasi);
+        foreach ($dataRegistrasi as $registrasi) {
+            $temp = [
+                'checkbox' => '
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input dtCheckbox" type="checkbox" id="check_' . $registrasi['id'] . '" value="' . $registrasi['id'] . '">
+                        <label for="check_' . $registrasi['id'] . '" class="custom-control-label"></label>
+                    </div>',
+                'nama' => $registrasi['nama'],
+                'nis' => $registrasi['nis'],
+                'nisn' => $registrasi['nisn'],
+                'jk' => $registrasi['jk'],
+                'tempatLahir' => $registrasi['tempatLahir'],
+                'tanggalLahir' => tanggal($registrasi['tanggalLahir']),
+                'jenisRegistrasi' => tanggal($registrasi['jenisRegistrasi']),
+                'status' => ''
+            ];
+            array_push($response, $temp);
+        }
+        return $this->respond($response);
     }
 }
