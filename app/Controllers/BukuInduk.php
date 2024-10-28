@@ -9,6 +9,11 @@ class BukuInduk extends BaseController
 {
     use ResponseTrait;
 
+    public function __construct()
+    {
+        helper(['indonesia']);
+    }
+
     public function index(): string
     {
         $page = [
@@ -46,13 +51,14 @@ class BukuInduk extends BaseController
                         <input class="custom-control-input dtCheckbox" type="checkbox" id="check_' . $registrasi['id'] . '" value="' . $registrasi['id'] . '">
                         <label for="check_' . $registrasi['id'] . '" class="custom-control-label"></label>
                     </div>',
-                'nama' => $registrasi['nama'],
+                'nama' => strtoupper($registrasi['nama']),
                 'nis' => $registrasi['nis'],
                 'nisn' => $registrasi['nisn'],
                 'jk' => $registrasi['jk'],
                 'tempatLahir' => $registrasi['tempatLahir'],
                 'tanggalLahir' => tanggal($registrasi['tanggalLahir']),
-                'jenisRegistrasi' => tanggal($registrasi['jenisRegistrasi']),
+                'jenisRegistrasi' => $registrasi['jenisRegistrasi'],
+                'tanggalRegistrasi' => tanggal($registrasi['tanggalRegistrasi']),
                 'status' => ''
             ];
             array_push($response, $temp);

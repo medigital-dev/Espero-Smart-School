@@ -756,8 +756,7 @@ class Db0001 extends Migration
                 'type' => 'DATE'
             ],
             'nipd' => [
-                'type' => 'VARCHAR',
-                'constraint' => 16,
+                'type' => 'INT',
                 'unique' => true,
             ],
             'asal_sekolah' => [
@@ -831,6 +830,95 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('anggota_rombongan_belajar', true);
+
+        // Tabel: mutasi_pd
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'mutasi_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'jenis' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tanggal' => [
+                'type' => 'DATE'
+            ],
+            'alasan' => [
+                'type' => 'TEXT'
+            ],
+            'sekolah_tujuan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+            ],
+            'nomor_ijazah_lulus' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('mutasi_pd', true);
+
+        // Tabel: data_semester
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'semester_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'kode' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'status' => [
+                'type' => 'BOOLEAN'
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('semester', true);
+
+        // Tabel: riwayat_aplikasi
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'riwayat_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'tipe' => [
+                'type' => 'ENUM',
+                'constraint' => ['info', 'error', 'success', 'warning'],
+                'default' => 'info'
+            ],
+            'pesan' => [
+                'type' => 'TEXT'
+            ],
+            'created_by' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('riwayat_aplikasi', true);
     }
 
     public function down()
@@ -852,5 +940,10 @@ class Db0001 extends Migration
         $this->forge->dropTable('riwayat_test_koneksi', true);
         $this->forge->dropTable('rombongan_belajar', true);
         $this->forge->dropTable('anggota_rombongan_belajar', true);
+        $this->forge->dropTable('registrasi_peserta_didik', true);
+        $this->forge->dropTable('satuan_pendidikan', true);
+        $this->forge->dropTable('mutasi_pd', true);
+        $this->forge->dropTable('semester', true);
+        $this->forge->dropTable('riwayat_aplikasi', true);
     }
 }

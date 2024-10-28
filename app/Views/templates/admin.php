@@ -179,6 +179,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="<?= base_url('data/rombel'); ?>" class="nav-link <?= $sidebar == 'rombel' ? 'active' : ''; ?>">
+                                <i class="fas fa-users nav-icon"></i>
+                                <p>Rombongan Belajar</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="<?= base_url('pengaturan/dapodik'); ?>" class="nav-link <?= $sidebar == 'dapodik' ? 'active' : ''; ?>">
                                 <i class="fas fa-sync-alt nav-icon"></i>
                                 <p>Koneksi Dapodik</p>
@@ -322,7 +328,7 @@
     <script>
         $(document).ready(function() {
             const tableBukuIndukPesertaDidik = $('#tableBukuIndukPesertaDidik').DataTable({
-                dom: 't',
+                dom: '<t><"d-flex justify-content-between"ip>',
                 processing: true,
                 pagingType: "simple",
                 responsive: true,
