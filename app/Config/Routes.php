@@ -20,8 +20,8 @@ $routes->post('/api/v0/dapodik/delete', 'Dapodik::delete');
 $routes->post('/api/v0/dapodik/setAktif', 'Dapodik::setAktif');
 $routes->post('/api/v0/dapodik/test', 'Dapodik::testKoneksi');
 $routes->post('/api/v0/dapodik/riwayat-test/get', 'Dapodik::getRiwayatTest');
+$routes->post('/api/v0/dapodik/sync/pd', 'Dapodik::syncPd');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
-$routes->post('/api/v0/peserta-didik/baru/get', 'Dapodik::getNewPdDapodik');
 
 $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');

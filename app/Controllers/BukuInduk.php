@@ -28,41 +28,49 @@ class BukuInduk extends BaseController
     public function getTable()
     {
         $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $response = [];
-        $dataRegistrasi = $mRegistrasi
-            ->select([
-                'registrasi_id as id',
-                'nama',
-                'nipd as nis',
-                'nisn',
-                'jenis_kelamin as jk',
-                'tempat_lahir as tempatLahir',
-                'tanggal_lahir as tanggalLahir',
-                'tanggal_registrasi as tanggalRegistrasi',
-                'jenis_registrasi as jenisRegistrasi'
-            ])
+        $draw = $this->request->getPost('draw');
+        $start = $this->request->getPost('start');
+        $length = $this->request->getPost('length');
+        $searchValue = $this->request->getPost('search')['value'];
+        $filter = [];
+
+        $totalRecord = $mRegistrasi->countAllResults();
+
+        $query = $mRegistrasi
             ->join('peserta_didik', 'peserta_didik.peserta_didik_id = registrasi_peserta_didik.peserta_didik_id', 'LEFT')
-            ->orderBy('nis', 'desc')
-            ->findAll();
-        foreach ($dataRegistrasi as $registrasi) {
-            $temp = [
+            ->like('nama', $searchValue)
+            ->orLike('nipd', $searchValue)
+            ->orLike('nisn', $searchValue);
+
+        $totalFilteredData = $query->countAllResults(false);
+        $filteredData = $query->orderBy('nama', 'asc')->findAll($length, $start);
+
+        $data = array_map(function ($row) {
+            return [
                 'checkbox' => '
-                    <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input dtCheckbox" type="checkbox" id="check_' . $registrasi['id'] . '" value="' . $registrasi['id'] . '">
-                        <label for="check_' . $registrasi['id'] . '" class="custom-control-label"></label>
-                    </div>',
-                'nama' => strtoupper($registrasi['nama']),
-                'nis' => $registrasi['nis'],
-                'nisn' => $registrasi['nisn'],
-                'jk' => $registrasi['jk'],
-                'tempatLahir' => $registrasi['tempatLahir'],
-                'tanggalLahir' => tanggal($registrasi['tanggalLahir']),
-                'jenisRegistrasi' => $registrasi['jenisRegistrasi'],
-                'tanggalRegistrasi' => tanggal($registrasi['tanggalRegistrasi']),
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input dtCheckbox" type="checkbox" id="check_' . $row['peserta_didik_id'] . '" value="' . $row['peserta_didik_id'] . '">
+                    <label for="check_' . $row['peserta_didik_id'] . '" class="custom-control-label"></label>
+                </div>',
+                'nama' => '<a type="button" href="#">' . strtoupper($row['nama']) . '</a>',
+                'nis' => $row['nipd'],
+                'nisn' => $row['nisn'],
+                'jk' => $row['jenis_kelamin'],
+                'tempatLahir' => $row['tempat_lahir'],
+                'tanggalLahir' => tanggal($row['tanggal_lahir']),
+                'jenisRegistrasi' => $row['jenis_registrasi'],
+                'tanggalRegistrasi' => tanggal($row['tanggal_registrasi']),
                 'status' => ''
             ];
-            array_push($response, $temp);
-        }
+        }, $filteredData);
+
+        $response = [
+            'draw' => intval($draw),
+            'recordsTotal' => $totalRecord,
+            'recordsFiltered' => $totalFilteredData,
+            'data' => $data,
+        ];
+
         return $this->respond($response);
     }
 }

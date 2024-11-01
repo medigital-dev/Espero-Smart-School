@@ -262,7 +262,7 @@ class Dapodik extends BaseController
         return view('dapodik/riwayat-test', $data);
     }
 
-    public function getNewPdDapodik()
+    public function syncPd()
     {
         $mPesertaDidik = new PesertaDidikModel();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
@@ -271,7 +271,16 @@ class Dapodik extends BaseController
         if (!$request['success']) return $this->fail($request['message']);
 
         foreach ($request['data'] as $row) {
-            $temp = [
+            $setRegistrasi = [
+                'registrasi_id' => $row['registrasi_id'],
+                'peserta_didik_id' => $row['peserta_didik_id'],
+                'jenis_registrasi' => $row['jenis_pendaftaran_id_str'],
+                'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
+                'nipd' => $row['nipd'],
+                'asal_sekolah' => $row['sekolah_asal'],
+            ];
+
+            $setPd = [
                 'peserta_didik_id' => $row['peserta_didik_id'],
                 'nama' => $row['nama'],
                 'jenis_kelamin' => $row['jenis_kelamin'],
@@ -279,13 +288,55 @@ class Dapodik extends BaseController
                 'tanggal_lahir' => $row['tanggal_lahir'],
                 'nisn' => $row['nisn'],
                 'nik' => $row['nik'],
-                'agama' => $row['agama_id_str'],
-                'registrasi_id' => $row['registrasi_id'],
-                'jenis_registrasi' => $row['jenis_pendaftaran_id_str'],
-                'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
-                'nipd' => $row['nipd'],
-                'asal_sekolah' => $row['sekolah_asal'],
+                'agama' => $row['agama_id'],
             ];
+
+            $setAgama = [
+                'agama_id' => $row['agama_id'],
+                'nama' => $row['agama_id_str'],
+            ];
+
+            $setKontakPd = [
+                'peserta_didik_id' => $row['peserta_didik_id'],
+                'telepon' => $row['nomor_telepon_rumah'],
+                'hp' => $row['nomor_telepon_seluler'],
+                'email' => $row['email'],
+            ];
+
+            $setOrtuAyah = [
+                'nama' => $row['nama_ayah'],
+                'pekerjaan_id' => $row['pekerjaan_ayah_id'],
+            ];
+
+            $setPekerjaanAyah = [
+                'pekerjaan_id' => $row['pekerjaan_ayah_id'],
+                'nama' => $row['pekerjaan_ayah_id_str'],
+            ];
+
+            $setOrtuIbu = [
+                'nama' => $row['nama_ibu'],
+                'pekerjaan_id' => $row['pekerjaan_ibu_id'],
+            ];
+
+            $setPekerjaanIbu = [
+                'pekerjaan_id' => $row['pekerjaan_ibu_id'],
+                'nama' => $row['pekerjaan_ibu_id_str'],
+            ];
+
+            $setOrtuWali = [
+                'nama' => $row['nama_wali'],
+                'pekerjaan_id' => $row['pekerjaan_wali_id'],
+            ];
+
+            $setPekerjaanWali = [
+                'pekerjaan_id' => $row['pekerjaan_wali_id'],
+                'nama' => $row['pekerjaan_wali_id_str'],
+            ];
+
+
+
+
+
             $cPd = $mPesertaDidik->where('peserta_didik_id', $row['peserta_didik_id'])->first();
             if ($cPd) $temp['id'] = $cPd['id'];
             if (!$mPesertaDidik->save($temp)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');

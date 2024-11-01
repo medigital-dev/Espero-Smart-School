@@ -1,7 +1,7 @@
 <?= $this->extend('templates/admin'); ?>
 <?= $this->section('content'); ?>
 <div class="row">
-    <div class="col-12">
+    <div class="col-12" id="tabelColumn">
         <div class="card">
             <div class="card-body">
                 <div class="btn-toolbar mb-2">
@@ -25,13 +25,20 @@
                         <button type="button" class="btn btn-primary" title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
                     </div>
                     <div class="my-1 mr-1 ml-auto">
-                        <input class="form-control form-control-sm" type="text" id="cariKategoriTransaksi" placeholder="Cari..." aria-label="Search">
+                        <input class="form-control form-control-sm" type="text" id="cariPd" placeholder="Cari..." aria-label="Search">
+                    </div>
+                    <div class="input-group input-group-sm my-1 mr-1">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Status</span>
+                        </div>
+                        <select id="selectFilter" class="custom-select" id="selectStatusPd">
+                            <option value="aktif">Aktif</option>
+                            <option value="mutasi">Mutasi</option>
+                            <option value="all">Semua</option>
+                        </select>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-1" role="group">
-                        <button type="button" class="btn btn-primary" title="Filter" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-filter fa-fw"></i></button>
-                    </div>
-                    <div class="btn-group btn-group-sm my-1 mr-1" role="group">
-                        <button type="button" class="btn btn-primary" title="Pengaturan" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-cog fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" title="Filter" id="filterData"><i class="fas fa-filter fa-fw"></i></button>
                     </div>
                 </div>
                 <table class="table table-bordered table-hover w-100" id="tableBukuIndukPesertaDidik">
@@ -57,6 +64,11 @@
                     <tbody></tbody>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="col-4 d-none" id="filterColumn">
+        <div class="card card-body">
+            <h5>filter data</h5>
         </div>
     </div>
 </div>

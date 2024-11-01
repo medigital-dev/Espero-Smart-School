@@ -330,6 +330,7 @@
             const tableBukuIndukPesertaDidik = $('#tableBukuIndukPesertaDidik').DataTable({
                 dom: '<t><"d-flex justify-content-between"ip>',
                 processing: true,
+                serverSide: true,
                 pagingType: "simple",
                 responsive: true,
                 fixedHeader: true,
@@ -337,7 +338,6 @@
                 ajax: {
                     method: "POST",
                     url: "/api/v0/buku-induk/getTable",
-                    dataSrc: "",
                 },
                 language: {
                     url: "/plugins/datatables/id.json",
@@ -680,12 +680,23 @@
             $('#btnSinkronPdDapodik').on('click', function() {
                 const btn = $(this);
                 btn.prop('disabled', true).children('i').addClass('fa-spin');
-                $.post('/api/v0/peserta-didik/baru/get', r => {
+                $.post('/api/v0/dapodik/sync/pd', r => {
                         toast(r.message);
-                        tabelPesertaDidikBaru.ajax.reload(null, false);
+                        tableBukuIndukPesertaDidik.ajax.reload(null, false);
                     })
                     .fail(err => errorHandle(err))
                     .always(() => btn.prop('disabled', false).children('i').removeClass('fa-spin'));
+            });
+
+            $('#cariPd').on('input', function() {
+                const val = $(this).val();
+                tableBukuIndukPesertaDidik.search(val).draw(false);
+            });
+
+            $('#filterData').click(function() {
+                $('#filterColumn').toggleClass('d-none');
+                $('#tabelColumn').toggleClass('col-8 col-12');
+                tableBukuIndukPesertaDidik.columns.adjust().draw();
             });
         });
     </script>

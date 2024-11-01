@@ -52,7 +52,7 @@ class Db0001 extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 16,
             ],
-            'agama' => [
+            'agama_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 64
             ],
@@ -919,6 +919,64 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('riwayat_aplikasi', true);
+
+        // Tabel: kontak
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'kontak_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'telepon' => [
+                'type' => 'VARCHAR',
+                'constraint' => 24,
+                'null' => true,
+            ],
+            'hp' => [
+                'type' => 'VARCHAR',
+                'constraint' => 24,
+                'null' => true,
+            ],
+            'email' => [
+                'type' => 'VARCHAR',
+                'constraint' => 24,
+                'null' => true,
+            ],
+            'website' => [
+                'type' => 'VARCHAR',
+                'constraint' => 24,
+                'null' => true,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('kontak', true);
+
+        // Tabel: kontak_pd
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'kontak_pd_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'kontak_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('kontak_pd', true);
     }
 
     public function down()
@@ -945,5 +1003,6 @@ class Db0001 extends Migration
         $this->forge->dropTable('mutasi_pd', true);
         $this->forge->dropTable('semester', true);
         $this->forge->dropTable('riwayat_aplikasi', true);
+        $this->forge->dropTable('kontak', true);
     }
 }
