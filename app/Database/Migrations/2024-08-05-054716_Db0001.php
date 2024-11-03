@@ -81,6 +81,10 @@ class Db0001 extends Migration
                 'constraint' => 128,
                 'unique' => true,
             ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128
+            ],
             'alamat_jalan' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
@@ -144,7 +148,7 @@ class Db0001 extends Migration
                 'constraint' => 128,
                 'null' => true,
                 'default' => null,
-            ]
+            ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('alamat_tinggal', true);
@@ -173,6 +177,10 @@ class Db0001 extends Migration
             'nama' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
+            ],
+            'jenis_kelamin' => [
+                'type' => 'VARCHAR',
+                'constraint' => 8,
             ],
             'tempat_lahir' => [
                 'type' => 'VARCHAR',
@@ -241,83 +249,11 @@ class Db0001 extends Migration
             ],
             'hubungan_keluarga' => [
                 'type' => 'ENUM',
-                'constraint' => ['kandung', 'angkat', 'wali']
+                'constraint' => ['kandung', 'angkat', 'wali'],
             ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('orangtua_wali_pd');
-
-        // tabel alamat peserta didik
-        $this->forge->addField([
-            'created_at' => [
-                'type' => 'DATETIME',
-            ],
-            'updated_at' => [
-                'type' => 'DATETIME',
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
-            'id' => [
-                'type' => 'INT',
-                'auto_increment' => true,
-            ],
-            'alamat_pd_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-                'unique' => true,
-            ],
-            'peserta_didik_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-            ],
-            'alamat_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-            ],
-            'status' => [
-                'type' => 'BOOLEAN'
-            ],
-        ]);
-        $this->forge->addKey('id', true);
-        $this->forge->createTable('alamat_peserta_didik', true);
-
-        // tabel alamat orangtua
-        $this->forge->addField([
-            'created_at' => [
-                'type' => 'DATETIME',
-            ],
-            'updated_at' => [
-                'type' => 'DATETIME',
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
-            'id' => [
-                'type' => 'INT',
-                'auto_increment' => true,
-            ],
-            'alamat_orangtua_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-                'unique' => true,
-            ],
-            'orangtua_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-            ],
-            'alamat_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-            ],
-            'status' => [
-                'type' => 'BOOLEAN'
-            ],
-        ]);
-        $this->forge->addKey('id', true);
-        $this->forge->createTable('alamat_orangtua', true);
 
         // tabel guru_pegawai
         $this->forge->addField([
@@ -379,42 +315,6 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('guru_pegawai', true);
-
-        // tabel alamat guru_pegawai
-        $this->forge->addField([
-            'created_at' => [
-                'type' => 'DATETIME',
-            ],
-            'updated_at' => [
-                'type' => 'DATETIME',
-            ],
-            'deleted_at' => [
-                'type' => 'DATETIME',
-                'null' => true,
-            ],
-            'id' => [
-                'type' => 'INT',
-                'auto_increment' => true,
-            ],
-            'alamat_guru_pegawai_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-                'unique' => true,
-            ],
-            'guru_pegawai_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-            ],
-            'alamat_id' => [
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-            ],
-            'status' => [
-                'type' => 'BOOLEAN'
-            ],
-        ]);
-        $this->forge->addKey('id', true);
-        $this->forge->createTable('alamat_guru_pegawai', true);
 
         // tabel referensi alat transportasi
         $this->forge->addField([
@@ -870,7 +770,7 @@ class Db0001 extends Migration
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('mutasi_pd', true);
 
-        // Tabel: data_semester
+        // Tabel: semester
         $this->forge->addField([
             'created_at' => ['type' => 'DATETIME',],
             'updated_at' => ['type' => 'DATETIME',],
@@ -931,6 +831,11 @@ class Db0001 extends Migration
                 'constraint' => 128,
                 'unique' => true,
             ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
             'telepon' => [
                 'type' => 'VARCHAR',
                 'constraint' => 24,
@@ -955,28 +860,310 @@ class Db0001 extends Migration
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('kontak', true);
 
-        // Tabel: kontak_pd
         $this->forge->addField([
-            'created_at' => ['type' => 'DATETIME',],
-            'updated_at' => ['type' => 'DATETIME',],
-            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
-            'id' => ['type' => 'INT', 'auto_increment' => true,],
-            'kontak_pd_id' => [
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'kesejahteraan_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'unique' => true,
             ],
-            'peserta_didik_id' => [
+            'nik' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
             ],
-            'kontak_id' => [
+            'jenis_id' => [
+                'type' => 'INT'
+            ],
+            'nomor_kartu' => [
+                'type' => 'VARCHAR',
+                'constraint' => 8,
+            ],
+            'nama_kartu' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
-            ]
+            ],
         ]);
-        $this->forge->addKey('id', 'true');
-        $this->forge->createTable('kontak_pd', true);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('kesejahteraan', true);
+
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'kode' => [
+                'type' => 'VARCHAR',
+                'constraint' => '16',
+                'unique' => true,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('ref_jenis_kesejahteraan', true);
+        $data = [
+            ['kode' => 'PIP', 'nama' => 'Program Indonesia Pintar',],
+            ['kode' => 'PKH', 'nama' => 'Program Keluarga Harapan',],
+            ['kode' => 'KPS', 'nama' => 'Kartu Perlindungan Sosial',],
+            ['kode' => 'KKS', 'nama' => 'Kartu Keluarga Sejahtera',],
+            ['kode' => 'KIS', 'nama' => 'Kartu Indonesia Sehat',],
+        ];
+        $m = $this->db->table('ref_jenis_kesejahteraan');
+        $m->insertBatch($data);
+
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'catatan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'isi_catatan' => [
+                'type' => 'LONGTEXT'
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('catatan', true);
+
+        // tabel prestasi PD
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'prestasi_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'tahun' => [
+                'type' => 'VARCHAR',
+                'constraint' => 8,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'nama_kegiatan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tingkat_prestasi' => [
+                'type' => 'ENUM',
+                'constraint' => ['Kabupaten', 'Provinsi', 'Nasional', 'Internasional'],
+            ],
+            'penyelenggara' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'hasil_dicapai' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('prestasi', true);
+
+        // Beasiswa
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'beasiswa_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tahun' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 512,
+            ],
+            'nominal' => [
+                'type' => 'INT',
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('beasiswa', true);
+
+        // Data Periodik PD
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'periodik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tanggal' => [
+                'type' => 'DATE',
+            ],
+            'tinggi_badan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+            ],
+            'berat_badan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+            ],
+            'lingkar_kepala' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('periodik', true);
+
+        // Riwayat Medis
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'riwayat_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tahun_riwayat' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+            ],
+            'nama_penyakit' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('penyakit', true);
+
+        $this->forge->addField([
+            'created_at' => [
+                'type' => 'DATETIME',
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+            ],
+            'deleted_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'id' => [
+                'type' => 'INT',
+                'auto_increment' => true,
+            ],
+            'nama_jenis_mutasi' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'kode_warna' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+            ],
+        ]);
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('ref_jenis_mutasi', true);
     }
 
     public function down()
@@ -1004,5 +1191,13 @@ class Db0001 extends Migration
         $this->forge->dropTable('semester', true);
         $this->forge->dropTable('riwayat_aplikasi', true);
         $this->forge->dropTable('kontak', true);
+        $this->forge->dropTable('kesejahteraan', true);
+        $this->forge->dropTable('ref_jenis_kesejahteraan', true);
+        $this->forge->dropTable('catatan', true);
+        $this->forge->dropTable('prestasi', true);
+        $this->forge->dropTable('beasiswa', true);
+        $this->forge->dropTable('periodik', true);
+        $this->forge->dropTable('penyakit', true);
+        $this->forge->dropTable('ref_jenis_mutasi_pd', true);
     }
 }
