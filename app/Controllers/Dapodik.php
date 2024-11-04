@@ -333,6 +333,11 @@ class Dapodik extends BaseController
                 'nama' => $row['pekerjaan_wali_id_str'],
             ];
 
+            $setPeriodik = [
+                'tinggi_badan' => $row['tinggi_badan'],
+                'berat_badan' => $row['berat_badan'],
+            ];
+
 
 
 

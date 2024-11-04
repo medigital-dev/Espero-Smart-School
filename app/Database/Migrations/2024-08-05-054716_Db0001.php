@@ -8,6 +8,8 @@ class Db0001 extends Migration
 {
     public function up()
     {
+        helper('text');
+
         // tabel peserta didik
         $this->forge->addField([
             'created_at' => [
@@ -198,7 +200,7 @@ class Db0001 extends Migration
                 'constraint' => 128,
                 'default' => 'Indonesia',
             ],
-            'agama' => [
+            'agama_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
             ],
@@ -253,7 +255,7 @@ class Db0001 extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('orangtua_wali_pd');
+        $this->forge->createTable('orangtua_wali_pd', true);
 
         // tabel guru_pegawai
         $this->forge->addField([
@@ -295,7 +297,7 @@ class Db0001 extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 16,
             ],
-            'agama' => [
+            'agama_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 64
             ],
@@ -332,7 +334,7 @@ class Db0001 extends Migration
                 'type' => 'INT',
                 'auto_increment' => true,
             ],
-            'alat_transportasi_id' => [
+            'ref_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'unique' => true,
@@ -343,7 +345,22 @@ class Db0001 extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('alat_transportasi', true);
+        $this->forge->createTable('ref_alat_transportasi', true);
+        $set = [
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Jalan Kaki', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Angkutan Umum/Bus/Pete-pete', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Mobil/Bus antar jemput', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Kereta Api', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Ojek', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Andong/bendi/sado/dokar/delman/becak', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Perahu penyeberangan/rakit/getek', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Kuda', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Sepeda', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Sepeda Motor', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Mobil Pribadi', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Lainnya', 'created_at' => date('Y-m-d H:i:s'), 'deleted_at' => date('Y-m-d H:i:s')],
+        ];
+        $this->db->table('ref_alat_transportasi')->insertBatch($set);
 
         // tabel pekerjaan
         $this->forge->addField([
@@ -361,7 +378,7 @@ class Db0001 extends Migration
                 'type' => 'INT',
                 'auto_increment' => true,
             ],
-            'pekerjaan_id' => [
+            'ref_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'unique' => true,
@@ -372,7 +389,27 @@ class Db0001 extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('pekerjaan', true);
+        $this->forge->createTable('ref_pekerjaan', true);
+        $set = [
+            ['nama' => 'Tidak bekerja', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Nelayan', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Petani', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Peternak', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'PNS/TNI/Polri', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Karyawan Swasta', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Pedagang kecil', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Wiraswasta', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Wirausaha', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Buruh', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Pensiunan', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Tenaga Kerja Indonesia', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Karyawan BUMN', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Tidak dapat diterapkan', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Sudah Meninggal', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Lainnya', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Tidak bekerja', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+        ];
+        $this->db->table('ref_pekerjaan')->insertBatch($set);
 
         // tabel pendidikan
         $this->forge->addField([
@@ -390,7 +427,7 @@ class Db0001 extends Migration
                 'type' => 'INT',
                 'auto_increment' => true,
             ],
-            'pendidikan_id' => [
+            'ref_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'unique' => true,
@@ -401,7 +438,35 @@ class Db0001 extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('pendidikan', true);
+        $this->forge->createTable('ref_pendidikan', true);
+        $set = [
+            ['nama' => 'D1', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'D2', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'D3', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'D4', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Informal', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Lainnya', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Non Formal', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Paket A', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Paket B', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Paket C', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'PAUD', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Profesi', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Putus SD', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'S1', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'S2', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'S2 Terapan', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'S3', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'S3 Terapan', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'TK / Sederajat', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'SD / Sederajat', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'SMP / Sederajat', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'SMA / Sederajat', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Sp-1', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Sp-2', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Tidak Sekolah', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+        ];
+        $this->db->table('ref_pendidikan')->insertBatch($set);
 
         // tabel penghasilan
         $this->forge->addField([
@@ -419,7 +484,7 @@ class Db0001 extends Migration
                 'type' => 'INT',
                 'auto_increment' => true,
             ],
-            'penghasilan_id' => [
+            'ref_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'unique' => true,
@@ -430,7 +495,17 @@ class Db0001 extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('penghasilan', true);
+        $this->forge->createTable('ref_penghasilan', true);
+        $set = [
+            ['nama' => 'Kurang dari Rp. 500.000', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Rp. 500.000 - Rp. 999.999', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Rp. 1.00.000 - Rp. 1.999.999', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Rp. 2.000.000 - Rp. 4.999.999', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Rp. 5.000.000 - Rp. 20.000.000', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Lebih dari Rp. 20.000.000', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama' => 'Tidak berpenghasilan', 'ref_id' => random_string('crypto', 16), 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+        ];
+        $this->db->table('ref_penghasilan')->insertBatch($set);
 
         // Tabel: sidebar_menu
         $this->forge->addField([
@@ -672,6 +747,49 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('registrasi_peserta_didik', true);
+
+        // Tabel: ref_jenis_registrasi
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'warna' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('ref_jenis_registrasi', true);
+        $set = [
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Baru',
+                'warna' => 'primary',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Pindahan',
+                'warna' => 'warning',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Kembali Sekolah',
+                'warna' => 'success',
+            ],
+        ];
+        $this->db->table('ref_jenis_registrasi')->insertBatch($set);
 
         // Tabel: rombongan_belajar
         $this->forge->addField([
@@ -926,15 +1044,14 @@ class Db0001 extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('ref_jenis_kesejahteraan', true);
-        $data = [
-            ['kode' => 'PIP', 'nama' => 'Program Indonesia Pintar',],
-            ['kode' => 'PKH', 'nama' => 'Program Keluarga Harapan',],
-            ['kode' => 'KPS', 'nama' => 'Kartu Perlindungan Sosial',],
-            ['kode' => 'KKS', 'nama' => 'Kartu Keluarga Sejahtera',],
-            ['kode' => 'KIS', 'nama' => 'Kartu Indonesia Sehat',],
+        $set = [
+            ['kode' => 'PIP', 'nama' => 'Program Indonesia Pintar', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),],
+            ['kode' => 'PKH', 'nama' => 'Program Keluarga Harapan', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),],
+            ['kode' => 'KPS', 'nama' => 'Kartu Perlindungan Sosial', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),],
+            ['kode' => 'KKS', 'nama' => 'Kartu Keluarga Sejahtera', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),],
+            ['kode' => 'KIS', 'nama' => 'Kartu Indonesia Sehat', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),],
         ];
-        $m = $this->db->table('ref_jenis_kesejahteraan');
-        $m->insertBatch($data);
+        $this->db->table('ref_jenis_kesejahteraan')->insertBatch($set);
 
         $this->forge->addField([
             'created_at' => [
@@ -1085,16 +1202,13 @@ class Db0001 extends Migration
                 'type' => 'DATE',
             ],
             'tinggi_badan' => [
-                'type' => 'VARCHAR',
-                'constraint' => 16,
+                'type' => 'INT',
             ],
             'berat_badan' => [
-                'type' => 'VARCHAR',
-                'constraint' => 16,
+                'type' => 'INT',
             ],
             'lingkar_kepala' => [
-                'type' => 'VARCHAR',
-                'constraint' => 16,
+                'type' => 'INT',
             ],
         ]);
         $this->forge->addKey('id', true);
@@ -1152,18 +1266,159 @@ class Db0001 extends Migration
                 'type' => 'INT',
                 'auto_increment' => true,
             ],
-            'nama_jenis_mutasi' => [
+            'ref_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'unique' => true,
             ],
-            'kode_warna' => [
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'warna' => [
                 'type' => 'VARCHAR',
                 'constraint' => 64,
             ],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('ref_jenis_mutasi', true);
+        $set = [
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Mutasi',
+                'warna' => 'danger',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Dikeluarkan',
+                'warna' => 'warning',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Menundurkan Diri',
+                'warna' => 'info',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Putus Sekolah',
+                'warna' => 'warning',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Wafat',
+                'warna' => 'secondary',
+            ],
+            [
+                'ref_id' => random_string('crypto', 16),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'nama' => 'Hilang',
+                'warna' => 'secondary',
+            ],
+        ];
+        $this->db->table('ref_jenis_mutasi')->insertBatch($set);
+
+        // Tabel: kebutuhan_khusus
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'kebutuhan_khusus_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'unique' => true,
+            ],
+            'ref_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'tanggal_mulai' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
+            'tanggal_akhir' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('kebutuhan_khusus', true);
+
+        // Tabel: ref_kebutuhan_khusus
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('ref_kebutuhan_khusus', true);
+        $set = [
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Netra', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Rungu', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Grahita Ringan', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Grahita Sedang', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Daksa Ringan', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Daksa Sedang', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Laras', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Wicara', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Hyperaktif', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Cerdas Istimewa', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Bakat Istimewa', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Kesulitan Belajar', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Narkoba', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Indigo', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Down Syndrome', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Autis', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+        ];
+        $this->db->table('ref_kebutuhan_khusus')->insertBatch($set);
+
+        // Tabel: ref_agama
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('ref_agama', true);
+        $set = [
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Islam', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Katolik', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Kristen', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Hindu', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Budha', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Konghucu', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['ref_id' => random_string('crypto', 16), 'nama' => 'Kepercayaan', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+        ];
+        $this->db->table('ref_agama')->insertBatch($set);
     }
 
     public function down()
@@ -1177,9 +1432,6 @@ class Db0001 extends Migration
         $this->forge->dropTable('alamat_guru_pegawai', true);
         $this->forge->dropTable('alamat_orangtua', true);
         $this->forge->dropTable('alat_transportasi', true);
-        $this->forge->dropTable('pekerjaan', true);
-        $this->forge->dropTable('pendidikan', true);
-        $this->forge->dropTable('penghasilan', true);
         $this->forge->dropTable('sidebar_menu', true);
         $this->forge->dropTable('dapodik_sync', true);
         $this->forge->dropTable('riwayat_test_koneksi', true);
@@ -1192,12 +1444,19 @@ class Db0001 extends Migration
         $this->forge->dropTable('riwayat_aplikasi', true);
         $this->forge->dropTable('kontak', true);
         $this->forge->dropTable('kesejahteraan', true);
-        $this->forge->dropTable('ref_jenis_kesejahteraan', true);
         $this->forge->dropTable('catatan', true);
         $this->forge->dropTable('prestasi', true);
         $this->forge->dropTable('beasiswa', true);
         $this->forge->dropTable('periodik', true);
         $this->forge->dropTable('penyakit', true);
-        $this->forge->dropTable('ref_jenis_mutasi_pd', true);
+        $this->forge->dropTable('kebutuhan_khusus', true);
+        $this->forge->dropTable('ref_jenis_kesejahteraan', true);
+        $this->forge->dropTable('ref_pekerjaan', true);
+        $this->forge->dropTable('ref_pendidikan', true);
+        $this->forge->dropTable('ref_penghasilan', true);
+        $this->forge->dropTable('ref_jenis_mutasi', true);
+        $this->forge->dropTable('ref_kebutuhan_khusus', true);
+        $this->forge->dropTable('ref_agama', true);
+        $this->forge->dropTable('ref_alat_transportasi', true);
     }
 }
