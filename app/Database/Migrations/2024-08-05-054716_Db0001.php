@@ -252,6 +252,8 @@ class Db0001 extends Migration
             'hubungan_keluarga' => [
                 'type' => 'ENUM',
                 'constraint' => ['kandung', 'angkat', 'wali'],
+                'null' => true,
+                'default' => null,
             ],
         ]);
         $this->forge->addKey('id', true);
