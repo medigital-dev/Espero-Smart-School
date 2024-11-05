@@ -271,6 +271,8 @@ class Dapodik extends BaseController
         if (!$request['success']) return $this->fail($request['message']);
 
         foreach ($request['data'] as $row) {
+            $idPd = $row['peserta_didik_id'];
+
             $setRegistrasi = [
                 'registrasi_id' => $row['registrasi_id'],
                 'peserta_didik_id' => $row['peserta_didik_id'],
@@ -279,6 +281,9 @@ class Dapodik extends BaseController
                 'nipd' => $row['nipd'],
                 'asal_sekolah' => $row['sekolah_asal'],
             ];
+            $cReg = $mRegistrasi->where('peserta_didik_id', $idPd)->first();
+            if ($cReg) $setRegistrasi['id'] = $cReg['id'];
+            if (!$mPesertaDidik->save($setRegistrasi)) return $this->fail('Error: Registrasi Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
 
             $setPd = [
                 'peserta_didik_id' => $row['peserta_didik_id'],
@@ -290,6 +295,9 @@ class Dapodik extends BaseController
                 'nik' => $row['nik'],
                 'agama' => $row['agama_id'],
             ];
+            $cPd = $mPesertaDidik->where('peserta_didik_id', $idPd)->first();
+            if ($cPd) $setPd['id'] = $cPd['id'];
+            if (!$mPesertaDidik->save($setPd)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
 
             $setAgama = [
                 'agama_id' => $row['agama_id'],
@@ -336,15 +344,31 @@ class Dapodik extends BaseController
             $setPeriodik = [
                 'tinggi_badan' => $row['tinggi_badan'],
                 'berat_badan' => $row['berat_badan'],
+                'anak_ke' => $row['anak_keberapa'],
+            ];
+
+            $setSemester = [
+                'kode' => $row['semester_id'],
+                'status' => true,
+            ];
+
+            $setRombel = [
+                'rombel_id' => $row['rombongan_belajar_id'],
+                'tingkat_pendidikan' => $row['tingkat_pendidikan_id'],
+                'nama' => $row['nama_rombel'],
+            ];
+
+            $setAnggotaRombel = [
+                'angota_id' => $row['anggota_rombel_id'],
+                'rombel_id' => $row['rombongan_belajar_id'],
+                'jenis_registrasi_rombel' => $row['jenis_pendaftaran_id_str'],
             ];
 
 
 
 
 
-            $cPd = $mPesertaDidik->where('peserta_didik_id', $row['peserta_didik_id'])->first();
-            if ($cPd) $temp['id'] = $cPd['id'];
-            if (!$mPesertaDidik->save($temp)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
+
 
             unset($temp['id']);
             $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $row['peserta_didik_id'])->first();

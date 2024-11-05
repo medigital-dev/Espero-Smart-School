@@ -1210,6 +1210,9 @@ class Db0001 extends Migration
             'lingkar_kepala' => [
                 'type' => 'INT',
             ],
+            'anak_ke' => [
+                'type' => 'INT',
+            ]
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('periodik', true);
