@@ -1202,18 +1202,23 @@ class Db0001 extends Migration
             ],
             'tanggal' => [
                 'type' => 'DATE',
+                'null' => true,
             ],
             'tinggi_badan' => [
                 'type' => 'INT',
+                'null' => true,
             ],
             'berat_badan' => [
                 'type' => 'INT',
+                'null' => true,
             ],
             'lingkar_kepala' => [
                 'type' => 'INT',
+                'null' => true,
             ],
             'anak_ke' => [
                 'type' => 'INT',
+                'null' => true,
             ]
         ]);
         $this->forge->addKey('id', true);

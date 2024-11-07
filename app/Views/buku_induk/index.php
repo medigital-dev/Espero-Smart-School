@@ -10,13 +10,8 @@
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" title="Sinkron dengan Dapodik" id="btnSinkronPdDapodik"><i class="fas fa-sync-alt fa-fw"></i></button>
-                    </div>
-                    <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary disabled" title="Registrasi">
-                            <i class="fas fa-user-check fa-fw mr-1"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary" title="Perbaharui Registrasi"><i class="fas fa-user-edit fa-fw"></i></button>
-                        <button type="button" class="btn btn-danger" title="Batalkan Registrasi"><i class="fas fa-user-slash fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
+
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" title="Mutasi"><i class="fas fa-people-arrows fa-fw"></i></button>

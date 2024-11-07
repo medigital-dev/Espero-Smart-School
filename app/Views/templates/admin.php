@@ -382,6 +382,7 @@
                     },
                 ],
             });
+
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',
                 processing: true,
@@ -680,13 +681,40 @@
             $('#btnSinkronPdDapodik').on('click', function() {
                 const btn = $(this);
                 btn.prop('disabled', true).children('i').addClass('fa-spin');
-                $.post('/api/v0/dapodik/sync/pd', r => {
-                        toast(r.message);
+
+                Swal.fire({
+                    icon: "warning",
+                    title: "Sinkron Dapodik?",
+                    text: "Data peserta didik akan disinkronkan dengan data di aplikasi Dapodik.",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Sinkron",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-success",
+                    },
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return $.post('/api/v0/dapodik/sync/pd')
+                            .then(response => response)
+                            .fail(err => {
+                                return Promise.reject(err.responseJSON ? err.responseJSON.message : "Terjadi kesalahan pada sinkronisasi");
+                            })
+                            .always(() => btn.prop('disabled', false).children('i').removeClass('fa-spin'));
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed && result.value) {
+                        toast(result.value.message);
                         tableBukuIndukPesertaDidik.ajax.reload(null, false);
-                    })
-                    .fail(err => errorHandle(err))
-                    .always(() => btn.prop('disabled', false).children('i').removeClass('fa-spin'));
+                    }
+                }).catch((errorMessage) => {
+                    errorHandle(errorMessage);
+                    Swal.close();
+                }).finally(() => {
+                    btn.prop('disabled', false).children('i').removeClass('fa-spin');
+                });
             });
+
 
             $('#cariPd').on('input', function() {
                 const val = $(this).val();

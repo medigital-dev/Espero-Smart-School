@@ -2,15 +2,18 @@
 
 namespace App\Controllers;
 
+use App\Models\AnggotaRombelModel;
 use App\Models\DapodikSyncModel;
 use App\Models\KontakModel;
 use App\Models\OrangtuaWaliModel;
+use App\Models\OrtuWaliPdModel;
 use App\Models\PeriodikModel;
 use App\Models\PesertaDidikModel;
 use App\Models\RefAgamaModel;
 use App\Models\RefPekerjaanModel;
 use App\Models\RegistrasiPesertaDidikModel;
 use App\Models\RiwayatTestKoneksiModel;
+use App\Models\RombelModel;
 use App\Models\SemesterModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -273,6 +276,9 @@ class Dapodik extends BaseController
         $mPesertaDidik = new PesertaDidikModel();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
         $mOrtuWali = new OrangtuaWaliModel();
+        $mOrtuWaliPd = new OrtuWaliPdModel();
+        $mRombel = new RombelModel();
+        $mAnggotaRombel = new AnggotaRombelModel();
         $mSemester = new SemesterModel();
         $mKontak = new KontakModel();
         $mPeriodik = new PeriodikModel();
@@ -296,17 +302,17 @@ class Dapodik extends BaseController
             ];
             $cReg = $mRegistrasi->where('peserta_didik_id', $idPd)->first();
             if ($cReg) $setRegistrasi['id'] = $cReg['id'];
-            if (!$mPesertaDidik->save($setRegistrasi)) return $this->fail('Error: Registrasi Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
+            if (!$mRegistrasi->save($setRegistrasi)) return $this->fail('Error: Registrasi Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
 
             $setAgama = [
                 'nama' => $row['agama_id_str'],
             ];
             $cRefAgama = $mRefAgama->where('nama', $setAgama['nama'])->first();
             if (!$cRefAgama) {
-                $setAgama['ref_id'] = unik($cRefAgama, 'ref_id');
+                $setAgama['ref_id'] = unik($mRefAgama, 'ref_id');
                 if (!$mRefAgama->save($setAgama)) return $this->fail('Error: Referensi Agama gagal disimpan.');
-            }
-            $setAgama['ref_id'] = $cRefAgama['ref_id'];
+            } else
+                $setAgama['ref_id'] = $cRefAgama['ref_id'];
 
             $setPd = [
                 'peserta_didik_id' => $row['peserta_didik_id'],
@@ -316,20 +322,21 @@ class Dapodik extends BaseController
                 'tanggal_lahir' => $row['tanggal_lahir'],
                 'nisn' => $row['nisn'],
                 'nik' => $row['nik'],
-                'agama' => $setAgama['ref_id'],
+                'agama_id' => $setAgama['ref_id'],
             ];
             $cPd = $mPesertaDidik->where('peserta_didik_id', $idPd)->first();
             if ($cPd) $setPd['id'] = $cPd['id'];
             if (!$mPesertaDidik->save($setPd)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
 
             $setKontakPd = [
+                'nik' => $nik,
                 'telepon' => $row['nomor_telepon_rumah'],
                 'hp' => $row['nomor_telepon_seluler'],
                 'email' => $row['email'],
             ];
             $cKontak = $mKontak->where('nik', $nik)->first();
             if ($cKontak) $setKontakPd['id'] = $cKontak['id'];
-            else $cKontak['kontak_id'] = unik($mKontak, 'kontak_id');
+            else $setKontakPd['kontak_id'] = unik($mKontak, 'kontak_id');
             if (!$mKontak->save($setKontakPd)) return $this->fail('Error: Kontak peserta didik gagal disimpan.');
 
             // Mulai Ortu: Ayah
@@ -351,8 +358,16 @@ class Dapodik extends BaseController
                 if (!$cOrtuWali) {
                     $setOrtuAyah['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
                     if (!$mOrtuWali->save($setOrtuAyah)) return $this->fail('Error: Orangtua/Wali an ' . $setOrtuAyah['nama'] . ' gagal disimpan.');
-                } else $setOrtuAyah['ref_id'] = $cOrtuWali['ref_id'];
-                $idAyah = $setOrtuAyah['ref_id'];
+                } else $setOrtuAyah['orangtua_id'] = $cOrtuWali['orangtua_id'];
+                $idAyah = $setOrtuAyah['orangtua_id'];
+                if (!$mOrtuWaliPd->where('peserta_didik_id', $idPd)->where('orangtua_id', $idAyah)->first()) {
+                    $setOrtuPd = [
+                        'ortupd_id' => unik($mOrtuWaliPd, 'ortupd_id'),
+                        'peserta_didik_id' => $idPd,
+                        'orangtua_id' => $idAyah,
+                    ];
+                    if (!$mOrtuWaliPd->save($setOrtuPd)) return $this->fail('Error: Data orangtua/wali peserta didik gagal disimpan.');
+                }
             }
             // Akhir Ortu: Ayah
 
@@ -375,8 +390,16 @@ class Dapodik extends BaseController
                 if (!$cOrtuWali) {
                     $setOrtuIbu['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
                     if (!$mOrtuWali->save($setOrtuIbu)) return $this->fail('Error: Orangtua/Wali an ' . $setOrtuIbu['nama'] . ' gagal disimpan.');
-                } else $setOrtuIbu['ref_id'] = $cOrtuWali['ref_id'];
-                $idIbu = $setOrtuIbu['ref_id'];
+                } else $setOrtuIbu['orangtua_id'] = $cOrtuWali['orangtua_id'];
+                $idIbu = $setOrtuIbu['orangtua_id'];
+                if (!$mOrtuWaliPd->where('peserta_didik_id', $idPd)->where('orangtua_id', $idIbu)->first()) {
+                    $setOrtuPd = [
+                        'ortupd_id' => unik($mOrtuWaliPd, 'ortupd_id'),
+                        'peserta_didik_id' => $idPd,
+                        'orangtua_id' => $idIbu,
+                    ];
+                    if (!$mOrtuWaliPd->save($setOrtuPd)) return $this->fail('Error: Data orangtua/wali peserta didik gagal disimpan.');
+                }
             }
             // Akhir Ortu: Ibu
 
@@ -399,8 +422,16 @@ class Dapodik extends BaseController
                 if (!$cOrtuWali) {
                     $setOrtuWali['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
                     if (!$mOrtuWali->save($setOrtuWali)) return $this->fail('Error: Orangtua/Wali an ' . $setOrtuWali['nama'] . ' gagal disimpan.');
-                } else $setOrtuWali['ref_id'] = $cOrtuWali['ref_id'];
-                $idWali = $setOrtuWali['ref_id'];
+                } else $setOrtuWali['orangtua_id'] = $cOrtuWali['orangtua_id'];
+                $idWali = $setOrtuWali['orangtua_id'];
+                if (!$mOrtuWaliPd->where('peserta_didik_id', $idPd)->where('orangtua_id', $idWali)->first()) {
+                    $setOrtuPd = [
+                        'ortupd_id' => unik($mOrtuWaliPd, 'ortupd_id'),
+                        'peserta_didik_id' => $idPd,
+                        'orangtua_id' => $idWali,
+                    ];
+                    if (!$mOrtuWaliPd->save($setOrtuPd)) return $this->fail('Error: Data orangtua/wali peserta didik gagal disimpan.');
+                }
             }
             // Akhir Ortu: Wali
 
@@ -408,7 +439,7 @@ class Dapodik extends BaseController
                 ->where('nik', $nik)
                 ->where('tinggi_badan', $row['tinggi_badan'])
                 ->where('berat_badan', $row['berat_badan'])
-                ->where('anak_ke', $row['anak_ke'])
+                ->where('anak_ke', $row['anak_keberapa'])
                 ->first();
             $setPeriodik = [
                 'tinggi_badan' => $row['tinggi_badan'],
@@ -431,31 +462,35 @@ class Dapodik extends BaseController
                 ->first();
             if (!$cSemester)
                 $setSemester['semester_id'] = unik($mSemester, 'semester_id');
-            else $setSemester['id'] = $cSemester['id'];
+            else {
+                $setSemester['id'] = $cSemester['id'];
+                $setSemester['semester_id'] = $cSemester['semester_id'];
+            };
             if (!$mSemester->save($setSemester)) return $this->fail('Error: Data semester gagal disimpan.');
 
             $setRombel = [
                 'rombel_id' => $row['rombongan_belajar_id'],
                 'tingkat_pendidikan' => $row['tingkat_pendidikan_id'],
                 'nama' => $row['nama_rombel'],
+                'semester_id' => $setSemester['semester_id']
             ];
+            $cRombel = $mRombel->where('rombel_id', $setRombel['rombel_id'])->first();
+            if ($cRombel)
+                $setRombel['id'] = $cRombel['id'];
+            if (!$mRombel->save($setRombel)) return $this->fail('Error: Data rombongan belajar gagal disimpan.');
 
-            $setAnggotaRombel = [
-                'angota_id' => $row['anggota_rombel_id'],
-                'rombel_id' => $row['rombongan_belajar_id'],
-                'jenis_registrasi_rombel' => $row['jenis_pendaftaran_id_str'],
-            ];
-
-
-
-
-
-
-
-            unset($temp['id']);
-            $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $row['peserta_didik_id'])->first();
-            if ($cRegistrasi) $temp['id'] = $cRegistrasi['id'];
-            if (!$mRegistrasi->save($temp)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
+            $cAnggotaRombel = $mAnggotaRombel->where('rombel_id', $row['rombongan_belajar_id'])
+                ->where('peserta_didik_id', $idPd)
+                ->first();
+            if (!$cAnggotaRombel) {
+                $setAnggotaRombel = [
+                    'anggota_id' => $row['anggota_rombel_id'],
+                    'rombel_id' => $row['rombongan_belajar_id'],
+                    'jenis_registrasi_rombel' => $row['jenis_pendaftaran_id_str'],
+                    'peserta_didik_id' => $idPd,
+                ];
+                if (!$mAnggotaRombel->save($setAnggotaRombel)) return $this->fail('Error: Data anggota rombel gagal disimpan.');
+            }
         }
 
         $response = [

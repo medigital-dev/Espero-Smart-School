@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class PeriodikModel extends Model
 {
-    protected $table      = 'kontak';
+    protected $table      = 'periodik';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class OrtuWaliPdModel extends Model
+class RombelModel extends Model
 {
-    protected $table      = 'orangtua_wali_pd';
+    protected $table      = 'rombongan_belajar';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
@@ -14,9 +14,10 @@ class OrtuWaliPdModel extends Model
 
     protected $allowedFields = [
         'deleted_at',
-        'ortupd_id',
-        'peserta_didik_id',
-        'orangtua_id',
-        'hubungan_keluarga',
+        'rombel_id',
+        'nama',
+        'tingkat_pendidikan',
+        'semester_id',
+        'ptk_id',
     ];
 }

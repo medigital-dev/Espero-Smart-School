@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\AnggotaRombelModel;
+use App\Models\MutasiPdModel;
 use App\Models\RegistrasiPesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -28,6 +30,9 @@ class BukuInduk extends BaseController
     public function getTable()
     {
         $mRegistrasi = new RegistrasiPesertaDidikModel();
+        $mMutasi = new MutasiPdModel();
+        $mAnggotaRombel = new AnggotaRombelModel();
+
         $draw = $this->request->getPost('draw');
         $start = $this->request->getPost('start');
         $length = $this->request->getPost('length');
@@ -45,8 +50,24 @@ class BukuInduk extends BaseController
         $totalFilteredData = $query->countAllResults(false);
         $filteredData = $query->orderBy('nama', 'asc')->findAll($length, $start);
 
-        $data = array_map(function ($row) {
-            return [
+        $data = [];
+        foreach ($filteredData as $row) {
+            $status = '<i class="fas fa-minus-circle text-secondary"></i>';
+            $cMutasi = $mMutasi
+                ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'LEFT')
+                ->where('peserta_didik_id', $row['peserta_didik_id'])
+                ->first();
+            if ($cMutasi) $status = '<span class="badge bg-' . $cMutasi['warna'] . '">' . $cMutasi['nama'] . '</span>';
+
+            $cAnggota = $mAnggotaRombel
+                ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'LEFT')
+                ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'LEFT')
+                ->where('semester.status', true)
+                ->where('peserta_didik_id', $row['peserta_didik_id'])
+                ->orderBy('semester.kode', 'DESC')
+                ->first();
+            if ($cAnggota) $status = '<span class="badge bg-success p-1 m-0">Kelas ' . $cAnggota['nama'] . '</span>';
+            $temp = [
                 'checkbox' => '
                 <div class="custom-control custom-checkbox">
                     <input class="custom-control-input dtCheckbox" type="checkbox" id="check_' . $row['peserta_didik_id'] . '" value="' . $row['peserta_didik_id'] . '">
@@ -60,9 +81,10 @@ class BukuInduk extends BaseController
                 'tanggalLahir' => tanggal($row['tanggal_lahir']),
                 'jenisRegistrasi' => $row['jenis_registrasi'],
                 'tanggalRegistrasi' => tanggal($row['tanggal_registrasi']),
-                'status' => ''
+                'status' => $status,
             ];
-        }, $filteredData);
+            $data[] = $temp;
+        }
 
         $response = [
             'draw' => intval($draw),
