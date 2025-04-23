@@ -7,8 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 $routes->get('/', 'Home::index');
-$routes->get('/data/buku-induk', 'BukuInduk::index');
-$routes->get('/data/peserta-didik', 'PesertaDidik::aktif');
+$routes->get('/buku-induk/pd', 'BukuInduk::pesertaDidik');
+$routes->get('/peserta-didik', 'PesertaDidik::aktif');
 $routes->get('/pengaturan/dapodik', 'Dapodik::index');
 
 // API
@@ -25,3 +25,7 @@ $routes->post('/api/v0/dapodik/sync/pd', 'Dapodik::syncPd');
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
 $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');
+
+$routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
+});
