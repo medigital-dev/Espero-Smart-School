@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet" href="/plugins/select2/css/select2.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
+    <style>
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-navbar-fixed layout-fixed">
@@ -133,8 +137,10 @@
 
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="<?= base_url(); ?>" class="brand-link elevation-4 text-center">
-                <i class="fab fa-centos mr-1 fa-fw"></i>
-                <span class="brand-text font-weight-light">SISPADU</span>
+                <img src="<?= base_url('/assets/img/brands/logo2.png'); ?>" alt="ESS Logo" class="brand-image">
+                <span class="brand-text font-weight-light">
+                    EsperoSmartSchool
+                </span>
             </a>
 
             <!-- Sidebar -->
@@ -142,10 +148,10 @@
                 <!-- Sidebar user (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="/assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="/assets/img/brands/meDigital-dev.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block">Muhammad Said LG</a>
                     </div>
                 </div>
 
@@ -172,11 +178,34 @@
                                 <p>Peserta Didik</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('data/buku-induk'); ?>" class="nav-link <?= $sidebar == 'buku-induk' ? 'active' : ''; ?>">
-                                <i class="fas fa-book-open nav-icon"></i>
-                                <p>Buku Induk</p>
+                        <li class="nav-item <?= $sidebar == 'buku-induk-pd' ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $sidebar == 'buku-induk-pd' ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Buku Induk
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="<?= base_url('buku-induk/pd'); ?>" class="nav-link <?= $sidebar == 'buku-induk-pd' ? 'active' : '' ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Peserta Didik</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('buku-induk/guru'); ?>" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Guru</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('buku-induk/staff'); ?>" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Staff</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="<?= base_url('data/rombel'); ?>" class="nav-link <?= $sidebar == 'rombel' ? 'active' : ''; ?>">
@@ -202,13 +231,14 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1><?= $name; ?></h1>
+                            <h1><?= $page; ?></h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="<?= base_url(); ?>">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="<?= base_url('peserta-didik'); ?>">Peserta Didik</a></li>
-                                <li class="breadcrumb-item active">Buku Induk</li>
+                                <?php foreach ($breadcrumb as $uri): ?>
+                                    <li class="breadcrumb-item"><?= $uri; ?></li>
+                                <?php endforeach; ?>
                             </ol>
                         </div>
                     </div>
@@ -239,6 +269,7 @@
     <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="/plugins/toastr/toastr.min.js"></script>
     <script src="/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="/plugins/select2/js/select2.full.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- functions -->
     <script>
@@ -322,63 +353,86 @@
                 const isChecked = $(this).is(':checked');
                 $('.dtCheckbox').prop('checked', isChecked);
             });
+            $('.select2').select2({
+                placeholder: "Pilih...",
+                theme: "bootstrap4",
+            });
         })
     </script>
     <!-- End Global Script -->
     <script>
         $(document).ready(function() {
             const tableBukuIndukPesertaDidik = $('#tableBukuIndukPesertaDidik').DataTable({
-                dom: '<t><"d-flex justify-content-between"ip>',
+                dom: 't',
+                pageLength: 5,
                 processing: true,
                 serverSide: true,
-                pagingType: "simple",
                 responsive: true,
-                fixedHeader: true,
-                ordering: false,
+                order: [],
                 ajax: {
                     method: "POST",
-                    url: "/api/v0/buku-induk/getTable",
+                    url: "/api/v0/datatables/bukuInduk/pd",
                 },
                 language: {
                     url: "/plugins/datatables/id.json",
                 },
                 columns: [{
-                        data: "checkbox",
+                        data: "id",
                         className: "text-center",
+                        orderable: false,
+                        render: (data) => {
+                            return `<div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input dtCheckbox" type="checkbox" id="check_${data}" value="${data}">
+                                        <label for="check_${data}" class="custom-control-label"></label>
+                                    </div>`;
+                        }
                     },
                     {
                         data: "nama",
+                        render: (data) => {
+                            return `<a type="button" href="#">${data}</a>`;
+                        }
                     },
                     {
-                        data: "nis",
+                        data: "nipd",
                         className: "text-center",
                     },
                     {
                         data: "nisn",
+                        orderable: false,
                         className: "text-center",
                     },
                     {
                         data: "jk",
+                        orderable: false,
                         className: 'text-center'
                     },
                     {
+                        orderable: false,
                         data: "tempatLahir",
                     },
                     {
                         data: "tanggalLahir",
+                        orderable: false,
                         className: 'text-center'
                     },
                     {
                         data: "tanggalRegistrasi",
+                        orderable: false,
                         className: 'text-center'
                     },
                     {
                         data: "jenisRegistrasi",
+                        orderable: false,
                         className: 'text-center'
                     },
                     {
                         data: "status",
-                        className: 'text-center'
+                        className: 'text-center',
+                        orderable: false,
+                        render: (data) => {
+                            return `<span class="badge bg-${data.warna}">${data.nama}</span>`;
+                        }
                     },
                 ],
             });
@@ -427,6 +481,43 @@
                 ],
             });
 
+            tableBukuIndukPesertaDidik.on('draw', function() {
+                const pageInfo = tableBukuIndukPesertaDidik.page.info();
+                const pageInfoElm = $('#dtPageInfo-bukuInduk');
+                const selectPageElm = $('#selectPage-bukuInduk');
+                const btnPrevious = $('#btnPreviousDt-bukuInduk');
+                const btnNext = $('#btnNextDt-bukuInduk');
+
+                const total = parseInt(pageInfo.recordsTotal);
+                const filter = parseInt(pageInfo.recordsDisplay);
+                const totalPage = parseInt(pageInfo.pages);
+                const currentPage = parseInt(pageInfo.page) + 1;
+                const startPage = filter == 0 ? 0 : parseInt(pageInfo.start) + 1;
+                const endPage = parseInt(pageInfo.end);
+
+                let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
+                if (total !== filter) {
+                    text += ' (disaring dari ' + total + ' entri keseluruhan';
+                }
+                pageInfoElm.text(text);
+
+                if (currentPage == 1) btnPrevious.prop('disabled', true);
+                else btnPrevious.prop('disabled', false);
+
+                if (currentPage == totalPage || totalPage == 0) btnNext.prop('disabled', true);
+                else btnNext.prop('disabled', false);
+
+                selectPageElm.html('');
+                for (let index = 0; index < totalPage; index++) {
+                    const selected = index + 1 == currentPage ? 'selected' : '';
+                    selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
+                }
+            });
+
+            $('#selectPage-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page(parseInt(e.target.value)).draw('page'));
+            $('#btnPreviousDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('previous').draw('page'));
+            $('#btnNextDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('next').draw('page'));
+
             tabelKoneksiDapodik.on('draw', function() {
                 $('.dtCheckbox').change(function() {
                     const countCheckbox = $(".dtCheckbox").length;
@@ -461,6 +552,10 @@
                 });
             }).on('xhr', function() {
                 $('#checkAllRow').prop('checked', false).prop('indeterminate', false);
+            });
+
+            $('#pageLenghtDt-bukuInduk').on('change', function() {
+                tableBukuIndukPesertaDidik.page.len($(this).val()).draw();
             });
 
             $('#btnSimpanFormKoneksiDapodik').on('click', function() {
@@ -694,6 +789,7 @@
                         confirmButton: "bg-success",
                     },
                     showLoaderOnConfirm: true,
+                    allowOutsideClick: () => !Swal.isLoading(),
                     preConfirm: () => {
                         return $.post('/api/v0/dapodik/sync/pd')
                             .then(response => response)
