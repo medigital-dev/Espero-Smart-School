@@ -29,4 +29,13 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    public static function dapodik($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('dapodik');
+
+            return new \App\Libraries\Dapodik();
+        }
+    }
 }
