@@ -19,24 +19,26 @@
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
                     </div>
-                    <div class="my-1 mr-1 ml-auto">
-                        <input class="form-control form-control-sm" type="text" id="cariPd" placeholder="Cari..." aria-label="Search">
+                    <div class="my-1 mr-1 ml-lg-auto">
+                        <input class="form-control form-control-sm" type="text" id="cariPd" placeholder="Cari Nama/NIS/NISN..." aria-label="Search">
                     </div>
                     <div class="input-group input-group-sm my-1 mr-1">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Status</span>
+                            <span for="pageLenghtDt-bukuInduk" class="input-group-text">Page</span>
                         </div>
-                        <select id="selectFilter" class="custom-select" id="selectStatusPd">
-                            <option value="aktif">Aktif</option>
-                            <option value="mutasi">Mutasi</option>
-                            <option value="all">Semua</option>
+                        <select id="pageLenghtDt-bukuInduk" class="custom-select">
+                            <option value="5">5</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                         </select>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-1" role="group">
                         <button type="button" class="btn btn-primary" title="Filter" id="filterData"><i class="fas fa-filter fa-fw"></i></button>
                     </div>
                 </div>
-                <table class="table table-bordered table-hover w-100" id="tableBukuIndukPesertaDidik">
+                <table class="table table-bordered table-hover w-100 mb-2" id="tableBukuIndukPesertaDidik">
                     <thead>
                         <tr>
                             <th class="table-primary align-middle text-center" style="width: 10px;">
@@ -58,6 +60,25 @@
                     </thead>
                     <tbody></tbody>
                 </table>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <p class="text-center text-sm-left m-0" id="dtPageInfo-bukuInduk"></p>
+                    </div>
+                    <div class="col-sm-auto ml-auto">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" id="btnPreviousDt-bukuInduk"><i class="fas fa-chevron-left"></i></button>
+                            </div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Halaman:</span>
+                            </div>
+                            <select class="custom-select" id="selectPage-bukuInduk"></select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="btnNextDt-bukuInduk"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
