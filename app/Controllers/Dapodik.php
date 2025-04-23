@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\Dapodik as LibrariesDapodik;
 use App\Models\AnggotaRombelModel;
 use App\Models\DapodikSyncModel;
 use App\Models\KontakModel;
@@ -150,90 +151,18 @@ class Dapodik extends BaseController
         return $this->respond($response);
     }
 
-    private function getConfig()
-    {
-        $mDapodik = new DapodikSyncModel();
-        $config = $mDapodik->where('status', true)->first();
-        if ($config) {
-            return [
-                'url' => $config['url'],
-                'port' => $config['port'],
-                'npsn' => $config['npsn'],
-                'token' => $config['token'],
-            ];
-        }
-        return [];
-    }
-    /**
-     * @param string $type Enum ['getPesertaDidik','getSekolah','getRombonganBelajar','get]
-     * @return array Response
-     */
-    private function makeRequest($type, $config = [])
-    {
-        $client = \Config\Services::curlrequest();
-        if (empty($config)) {
-            $config = $this->getConfig();
-            if (empty($config)) return ['message' => 'Error: Konfigurasi koneksi dapodik belum diset.', 'success' => false];
-        }
-        $url = 'http://' . $config['url'] . ':' . $config['port'] . '/WebService/' . $type . '?npsn=' . $config['npsn'];
-        $token = 'Authorization: Bearer ' . $config['token'];
-
-        $options = [
-            'headers' => ['Authorization' => $token],
-            'http_errors' => false,
-            'debug' => true,
-        ];
-
-        try {
-            $response = $client->get($url, $options);
-            $statusCode = $response->getStatusCode();
-            if ($statusCode !== 200) {
-                return  [
-                    'success' => false,
-                    'http_code' => $statusCode,
-                    'status_code' => 'error',
-                    'message' => $response->getReason(),
-                    'data' => [],
-                ];
-            }
-            $hasil = $response->getBody();
-            $awal = strpos($hasil, '{');
-            $result = json_decode(substr($hasil, $awal), true);
-            if (isset($result['results'])) {
-                $response = [
-                    'success' => true,
-                    'http_code' => 200,
-                    'status_code' => 'success',
-                    'message' => 'Koneksi ke aplikasi Dapodik berhasil.',
-                    'data' => $result['rows'],
-                ];
-            } else {
-                $response = $result;
-                $response['data'] = [];
-            }
-
-            return $response;
-        } catch (\Exception $e) {
-            return  [
-                'success' => false,
-                'http_code' => 400,
-                'status_code' => 'error',
-                'message' => $e->getMessage(),
-                'data' => [],
-            ];
-        }
-    }
-
     public function testKoneksi()
     {
-        $mDapodik = new DapodikSyncModel();
         $mRiwayatTest = new RiwayatTestKoneksiModel();
+        $req = new LibrariesDapodik();
         $id = $this->request->getVar('id');
-        $config = $mDapodik->where('dapodik_id', $id)->first();
+
+        $config = $req->config();
+
         if (empty($config))
             return $this->fail('Error: Konfigurasi dapodik belum diset aktif.');
 
-        $result = $this->makeRequest('getSekolah', $config);
+        $result = $req->sync('getSekolah');
 
         $temp = [
             'riwayat_id' => unik($mRiwayatTest, 'riwayat_id'),
@@ -285,7 +214,9 @@ class Dapodik extends BaseController
         $mRefAgama = new RefAgamaModel();
         $mRefPekerjaan = new RefPekerjaanModel();
 
-        $request = $this->makeRequest('getPesertaDidik');
+        $dapodik = new LibrariesDapodik();
+        $request = $dapodik->sync('getPesertaDidik');
+
         if (!$request['success']) return $this->fail($request['message']);
 
         foreach ($request['data'] as $row) {
@@ -441,6 +372,7 @@ class Dapodik extends BaseController
                 ->where('berat_badan', $row['berat_badan'])
                 ->where('anak_ke', $row['anak_keberapa'])
                 ->first();
+
             $setPeriodik = [
                 'tinggi_badan' => $row['tinggi_badan'],
                 'berat_badan' => $row['berat_badan'],
