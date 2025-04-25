@@ -270,6 +270,8 @@
     <script src="/plugins/toastr/toastr.min.js"></script>
     <script src="/plugins/sweetalert2/sweetalert2.js"></script>
     <script src="/plugins/select2/js/select2.full.js"></script>
+    <script src="/plugins/bs-custom-file-input/bs-custom-file-input.js"></script>
+    <script src="/plugins/fetchData/fetchData.js_"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- functions -->
     <script>
@@ -336,6 +338,82 @@
             $('.is-invalid').removeClass('is-invalid');
             return true;
         }
+
+        /**
+         * Mengambil data dari server dengan AJAX.
+         * Bisa menerima parameter sebagai objek konfigurasi atau individual parameter.
+         *
+         * @param {string|Object} urlOrConfig - URL request atau objek konfigurasi.
+         * @param {Object} [data={}] - Data yang dikirim (opsional, abaikan jika pakai objek konfigurasi).
+         * @param {string} [dataType="json"] - Tipe data yang dikembalikan (opsional, abaikan jika pakai objek konfigurasi).
+         * @param {string} [method="GET"] - Metode request (opsional, abaikan jika pakai objek konfigurasi).
+         * @returns {Promise<any>} - Promise yang mengembalikan hasil response AJAX.
+         * @throws {Error} - Jika terjadi error selama request.
+         */
+        async function fetchData(urlOrConfig, ...restParams) {
+            let config;
+            if (typeof urlOrConfig === "object") {
+                if (restParams.length > 0) {
+                    throw new Error(
+                        "fetchData() tidak boleh memiliki parameter tambahan jika menggunakan objek konfigurasi."
+                    );
+                }
+
+                config = {
+                    url: urlOrConfig.url,
+                    data: urlOrConfig.data || {},
+                    dataType: urlOrConfig.dataType || "json",
+                    method: urlOrConfig.method || "GET",
+                    button: urlOrConfig.button || null,
+                };
+            } else {
+                config = {
+                    url: urlOrConfig,
+                    data: restParams[0] || {},
+                    method: restParams[1] || "GET",
+                    dataType: restParams[2] || "json",
+                };
+            }
+
+            let btnText = '';
+            if (config.button) {
+                btnText = config.button.text();
+                config.button.html('<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>').prop('disabled', true);
+            }
+
+            try {
+                let isFormData = config.data instanceof FormData;
+
+                let options = {
+                    url: config.url,
+                    method: config.method,
+                    dataType: config.dataType,
+                    cache: false,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                };
+
+                if (isFormData) {
+                    options.processData = false;
+                    options.contentType = false;
+                    options.enctype = "multipart/form-data";
+                    options.data = config.data;
+                } else {
+                    options.contentType = "application/x-www-form-urlencoded";
+                    options.data = $.param(config.data);
+                }
+                return await $.ajax(options);
+            } catch (error) {
+                console.log(error);
+                toast(error.responseJSON.messages.error, "error", 0);
+                return false;
+            } finally {
+                if (config.button) {
+                    config.button.text(btnText).prop('disabled', false);
+                }
+            }
+        }
     </script>
     <!-- end functions -->
     <!-- toastr config -->
@@ -345,6 +423,8 @@
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
+            bsCustomFileInput.init();
+
             $('#btnReloadTable').on('click', function() {
                 $(this).children('i').addClass('fa-spin');
                 $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).children('i').removeClass('fa-spin'));
@@ -517,6 +597,22 @@
             $('#selectPage-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page(parseInt(e.target.value)).draw('page'));
             $('#btnPreviousDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('previous').draw('page'));
             $('#btnNextDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('next').draw('page'));
+
+            $('#btnRun-ImportDapodik').on('click', async function() {
+                const inputElm = $('#inputFile');
+                const file = inputElm.prop('files')[0];
+                const btn = $(this);
+
+                let data = new FormData();
+                data.append('fileUpload', file);
+                const result = await fetchData({
+                    url: '/api/v0/dapodik/import/pd',
+                    data: data,
+                    method: 'POST',
+                    button: btn,
+                });
+                console.log(result);
+            });
 
             tabelKoneksiDapodik.on('draw', function() {
                 $('.dtCheckbox').change(function() {

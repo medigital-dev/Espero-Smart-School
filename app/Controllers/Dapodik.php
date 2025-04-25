@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Libraries\Dapodik as LibrariesDapodik;
+use App\Libraries\Files;
+use App\Libraries\Import;
+use App\Models\AlamatModel;
 use App\Models\AnggotaRombelModel;
 use App\Models\DapodikSyncModel;
 use App\Models\KontakModel;
@@ -11,6 +14,7 @@ use App\Models\OrtuWaliPdModel;
 use App\Models\PeriodikModel;
 use App\Models\PesertaDidikModel;
 use App\Models\RefAgamaModel;
+use App\Models\RefTransportasiModel;
 use App\Models\RefPekerjaanModel;
 use App\Models\RegistrasiPesertaDidikModel;
 use App\Models\RiwayatTestKoneksiModel;
@@ -231,7 +235,12 @@ class Dapodik extends BaseController
                 'nipd' => $row['nipd'],
                 'asal_sekolah' => $row['sekolah_asal'],
             ];
-            $cReg = $mRegistrasi->where('peserta_didik_id', $idPd)->first();
+            $cReg = $mRegistrasi
+                ->groupStart()
+                ->where('peserta_didik_id', $idPd)
+                ->orWhere('nipd', $row['nipd'])
+                ->groupEnd()
+                ->first();
             if ($cReg) $setRegistrasi['id'] = $cReg['id'];
             if (!$mRegistrasi->save($setRegistrasi)) return $this->fail('Error: Registrasi Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
 
@@ -255,7 +264,14 @@ class Dapodik extends BaseController
                 'nik' => $row['nik'],
                 'agama_id' => $setAgama['ref_id'],
             ];
-            $cPd = $mPesertaDidik->where('peserta_didik_id', $idPd)->first();
+            $cPd = $mPesertaDidik
+                ->groupStart()
+                ->where('peserta_didik_id', $idPd)
+                ->orWhere('nisn', $row['nisn'])
+                ->orWhere('nik', $row['nik'])
+                ->orWhere('nama', $row['nama'])
+                ->groupEnd()
+                ->first();
             if ($cPd) $setPd['id'] = $cPd['id'];
             if (!$mPesertaDidik->save($setPd)) return $this->fail('Error: Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
 
@@ -429,5 +445,135 @@ class Dapodik extends BaseController
             'message' => count($request['data']) . ' Data peserta didik berhasil disinkronkan.',
         ];
         return $this->respond($response);
+    }
+
+    public function importPd()
+    {
+        $mPd = new PesertaDidikModel();
+        $mRegistrasi = new RegistrasiPesertaDidikModel();
+        $mRefAgama = new RefAgamaModel();
+        $mAlamat = new AlamatModel();
+        $mRefTransportasi = new RefTransportasiModel();
+
+        $file = $this->request->getFile('fileUpload');
+        $filesLib = new Files();
+        $fileExcel = $filesLib->upload($file);
+        if (!$fileExcel['status']) return $this->fail($fileExcel);
+        $import = new Import();
+        $result = $import->excel($fileExcel['data']['path']);
+        if (!$result['status']) return $this->fail($result);
+        $rows = $result['data'];
+        if ($rows[0][0] !== 'Daftar Peserta Didik' || $rows[4][0] !== 'No' || $rows[4][1] !== 'Nama' || $rows[4][2] !== 'NIPD' || $rows[4][3] !== 'JK' || $rows[4][4] !== 'NISN' || $rows[4][5] !== 'Tempat Lahir' || $rows[4][6] !== 'Tanggal Lahir' || $rows[4][7] !== 'NIK' || $rows[4][8] !== 'Agama')
+            return $this->fail('File yang diupload bukan hasil unduh daftar Peserta Didik di aplikasi dapodik atau file telah mengalami perubahan.');
+
+        $countSuccess = $countError = 0;
+        foreach ($rows as $row) {
+            if ((int)$row[0] > 0) {
+                $nisn = $row[4];
+
+                // Start Agama
+                $cAgama = $mRefAgama->where('nama', $row[8])->first();
+                if ($cAgama) $idAgama = $cAgama['ref_id'];
+                else {
+                    $setAgama['ref_id'] = unik($mRefAgama, 'ref_id');
+                    $setAgama['nama'] = $row[8];
+                    if (!$mRefAgama->save($setAgama)) return $this->fail('Error: Referensi Agama gagal disimpan.');
+                    $idAgama = $setAgama['ref_id'];
+                }
+                // End Agama
+
+                // Start Peserta Didik
+                $idPd = unik($mPd, 'peserta_didik_id');
+                $setPd = [
+                    'nama' => $row[1],
+                    'jenis_kelamin' => $row[3],
+                    'tempat_lahir' => $row[5],
+                    'tanggal_lahir' => $row[6],
+                    'nik' => $row[7],
+                    'agama_id' => $idAgama,
+                    'nisn' => $nisn,
+                ];
+
+                $cPd = $mPd
+                    ->groupStart()
+                    ->where('nisn', $nisn)
+                    ->orWhere('nik', $row[7])
+                    ->orWhere('nama', $row[1])
+                    ->groupEnd()
+                    ->first();
+                if ($cPd) {
+                    $setPd['id'] = $cPd['id'];
+                    $setPd['peserta_didik_id'] = $cPd['peserta_didik_id'];
+                } else $setPd['peserta_didik_id'] = $idPd;
+
+                $mPd->save($setPd);
+                // End Peserta Didik
+
+                // Start Registrasi
+                $cRegistrasi = $mRegistrasi
+                    ->groupStart()
+                    ->where('nipd', $row[2])
+                    ->orWhere('peserta_didik_id', $idPd)
+                    ->groupEnd()
+                    ->first();
+                if (!$cRegistrasi) {
+                    $setRegistrasi = [
+                        'registrasi_id' => unik($mRegistrasi, 'registrasi_id'),
+                        'nipd' => $row[2],
+                        'peserta_didik_id' => $setPd['peserta_didik_id'],
+                        'asal_sekolah' => $row[56],
+                    ];
+                    $mRegistrasi->save($setRegistrasi);
+                }
+                // End Registrasi
+
+                // Start Alat Transportasi
+                $setTranspot = ['nama' => $row[17]];
+                $cTranspot = $mRefTransportasi
+                    ->where('nama', $row[17])
+                    ->first();
+                if (!$cTranspot) {
+                    $setTranspot['ref_id'] = unik($mRefTransportasi, 'ref_id');
+                    if (!$mRefTransportasi->save($setTranspot)) return $this->fail('Error: Referensi transportasi gagal disimpan.');
+                } else {
+                    $setTranspot['id'] = $cTranspot['id'];
+                    $setTranspot['ref_id'] = $cTranspot['ref_id'];
+                }
+                // End Alat Transportasi
+
+                // Start Alamat
+                $setAlamat = [
+                    'nik' => $row[7],
+                    'alamat_jalan' => $row[9],
+                    'rt' => $row[10],
+                    'rw' => $row[11],
+                    'dusun' => $row[12],
+                    'desa' => str_replace('Desa/Kel. ', '', $row[13]),
+                    'kecamatan' => str_replace('Kec. ', '', $row[14]),
+                    'kode_pos' => $row[15],
+                    'lintang' => $row[58],
+                    'bujur' => $row[59],
+                    'jarak_rumah' => $row[65],
+                    'alat_transportasi_id' => $setTranspot['ref_id'],
+                ];
+                $cAlamat = $mAlamat
+                    ->groupStart()
+                    ->where('nik', $row[7])
+                    ->where('lintang', $row[58])
+                    ->where('bujur', $row[59])
+                    ->groupEnd()
+                    ->orderBy('updated_at', 'DESC')
+                    ->first();
+                if (!$cAlamat) $setAlamat['alamat_id'] = unik($mAlamat, 'alamat_id');
+                else {
+                    $setAlamat['id'] = $cAlamat['id'];
+                    $setAlamat['alamat_id'] = $cAlamat['alamat_id'];
+                }
+                if (!$mAlamat->save($setAlamat)) return $this->fail('Error: Alamat tempat tinggal gagal disimpan.');
+                // End Alamat
+            }
+        }
+        unlink($fileExcel['data']['path']);
+        return $this->respond(['success' => $countSuccess, 'error' => $countError]);
     }
 }

@@ -1,9 +1,8 @@
 {
-  "name": "codeigniter4/framework",
-  "description": "The CodeIgniter framework v4",
-  "license": "MIT",
+  "name": "medigitaldev/espero-smart-school",
+  "description": "Sistem Informasi Manajemen Sekolah",
   "type": "project",
-  "homepage": "https://codeigniter.com",
+  "homepage": "https://muhsaidlg.my.id",
   "support": {
     "forum": "https://forum.codeigniter.com/",
     "source": "https://github.com/codeigniter4/CodeIgniter4",
@@ -14,6 +13,7 @@
     "ext-intl": "*",
     "ext-mbstring": "*",
     "laminas/laminas-escaper": "^2.13",
+    "phpoffice/phpspreadsheet": "^4.2",
     "psr/log": "^3.0"
   },
   "require-dev": {
