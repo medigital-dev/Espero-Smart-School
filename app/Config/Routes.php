@@ -21,6 +21,7 @@ $routes->post('/api/v0/dapodik/setAktif', 'Dapodik::setAktif');
 $routes->post('/api/v0/dapodik/test', 'Dapodik::testKoneksi');
 $routes->post('/api/v0/dapodik/riwayat-test/get', 'Dapodik::getRiwayatTest');
 $routes->post('/api/v0/dapodik/sync/pd', 'Dapodik::syncPd');
+$routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
