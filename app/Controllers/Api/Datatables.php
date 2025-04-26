@@ -12,42 +12,57 @@ class Datatables extends BaseController
 {
     use ResponseTrait;
 
+    protected $mPesertaDidik;
+    protected $draw;
+    protected $start;
+    protected $length;
+    protected $searchValue;
+    protected $columns;
+    protected $orders;
+    protected $filter = [];
+    protected $totalRecord;
+
     public function __construct()
     {
         helper(['indonesia']);
+
+        $this->mPesertaDidik = new PesertaDidikModel();
+    }
+
+    protected function initDt()
+    {
+        $this->draw = $this->request->getPost('draw');
+        $this->start = (int)$this->request->getPost('start');
+        $this->length = (int)$this->request->getPost('length');
+        $this->searchValue = $this->request->getPost('search')['value'];
+        $this->columns = $this->request->getPost('columns');
+        $this->orders = $this->request->getPost('order');
+        $this->filter = [];
     }
 
     public function bukuIndukPd()
     {
-        $mPesertaDidik = new PesertaDidikModel();
+        $this->initDt();
         $mMutasi = new MutasiPdModel();
         $mAnggotaRombel = new AnggotaRombelModel();
 
-        $draw = $this->request->getPost('draw');
-        $start = $this->request->getPost('start');
-        $length = (int)$this->request->getPost('length');
-        $searchValue = $this->request->getPost('search')['value'];
-        $columns = $this->request->getPost('columns');
-        $orders = $this->request->getPost('order');
-        $filter = [];
-        $totalRecord = $mPesertaDidik->countAllResults();
-
-        $query = $mPesertaDidik
+        $this->totalRecord = $this->mPesertaDidik->countAllResults();
+        $query = $this->mPesertaDidik
             ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'LEFT')
             ->groupStart()
-            ->like('nama', $searchValue)
-            ->orLike('nipd', $searchValue)
-            ->orLike('nisn', $searchValue)
+            ->like('nama', $this->searchValue)
+            ->orLike('nipd', $this->searchValue)
+            ->orLike('nisn', $this->searchValue)
             ->groupEnd();
         $totalFilteredData = $query->countAllResults(false);
-        if (empty($orders)) {
+        if (empty($this->orders)) {
             $query->orderBy('nama', 'asc');
         } else {
-            foreach ($orders as $order) {
-                $query->orderBy($columns[$order['column']]['data'], $order['dir']);
+            foreach ($this->orders as $order) {
+                $query->orderBy($this->columns[$order['column']]['data'], $order['dir']);
             }
         }
-        $filteredData = $query->findAll($length, $start);
+        $filteredData = $query->findAll($this->length, $this->start);
 
         $data = [];
         foreach ($filteredData as $row) {
@@ -85,8 +100,50 @@ class Datatables extends BaseController
         }
 
         $response = [
-            'draw' => intval($draw),
-            'recordsTotal' => $totalRecord,
+            'draw' => intval($this->draw),
+            'recordsTotal' => $this->totalRecord,
+            'recordsFiltered' => $totalFilteredData,
+            'data' => $data,
+        ];
+
+        return $this->respond($response);
+    }
+
+    public function publicPd()
+    {
+        // return $this->respond($this->request->getPost());
+        $this->initDt();
+        $this->mPesertaDidik
+            ->select(['peserta_didik.peserta_didik_id as id', 'peserta_didik.nama', 'jenis_kelamin as jk', 'nipd as nis', 'nisn', 'tanggal_lahir', 'tempat_lahir', 'rombongan_belajar.nama as kelas', 'desa', 'dusun', 'kecamatan'])
+            ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
+            ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
+            ->where('status', true);
+        $this->totalRecord = $this->mPesertaDidik->countAllResults(false);
+        $rows = $this->mPesertaDidik
+            ->groupStart()
+            ->like('peserta_didik.nama', $this->searchValue)
+            ->orLike('nipd', $this->searchValue)
+            ->orLike('nisn', $this->searchValue)
+            ->groupEnd();
+        $totalFilteredData = $rows->countAllResults(false);
+        if (empty($this->orders)) {
+            $rows->orderBy('peserta_didik.nama', 'asc');
+        } else {
+            foreach ($this->orders as $order) {
+                $rows->orderBy($this->columns[$order['column']]['data'], $order['dir']);
+            }
+        }
+        $rows = $rows->findAll($this->length, $this->start);
+        $data = array_map(function ($value) {
+            $value['tanggal_lahir'] = tanggal($value['tanggal_lahir'], 'j F Y');
+            return $value;
+        }, $rows);
+        $response = [
+            'draw' => intval($this->draw),
+            'recordsTotal' => $this->totalRecord,
             'recordsFiltered' => $totalFilteredData,
             'data' => $data,
         ];

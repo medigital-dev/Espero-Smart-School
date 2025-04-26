@@ -19,7 +19,7 @@
                         <button type="button" class="btn btn-primary" title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
                     </div>
                     <div class="my-1 mr-1 ml-lg-auto">
-                        <input class="form-control form-control-sm" type="text" id="cariPd" placeholder="Cari Nama/NIS/NISN..." aria-label="Search">
+                        <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" placeholder="Cari Nama/NIS/NISN..." aria-label="Search">
                     </div>
                     <div class="input-group input-group-sm my-1 mr-1">
                         <div class="input-group-prepend">

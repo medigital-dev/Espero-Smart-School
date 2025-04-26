@@ -8,8 +8,12 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 $routes->get('/buku-induk/pd', 'BukuInduk::pesertaDidik');
-$routes->get('/peserta-didik', 'PesertaDidik::aktif');
+// $routes->get('/peserta-didik', 'PesertaDidik::aktif');
 $routes->get('/pengaturan/dapodik', 'Dapodik::index');
+
+$routes->group('', ['namespace' => 'App\Controllers\Public'], function ($routes) {
+    $routes->get('peserta-didik', 'Homepage::pesertaDidik');
+});
 
 // API
 // Private
@@ -27,6 +31,13 @@ $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBa
 
 $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');
 
+
 $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    $routes->get('rombel/get', 'Rombel::get');
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
+});
+
+// public
+$routes->group('/api', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    $routes->post('getPd', 'Datatables::publicPd');
 });

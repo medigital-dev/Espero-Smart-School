@@ -597,6 +597,8 @@
             $('#selectPage-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page(parseInt(e.target.value)).draw('page'));
             $('#btnPreviousDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('previous').draw('page'));
             $('#btnNextDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('next').draw('page'));
+            $('#pageLenghtDt-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page.len(e.target.value).draw('page'));
+            $('#searchDt-bukuInduk').on('input', e => tableBukuIndukPesertaDidik.search(e.target.value).draw('page'));
 
             $('#btnRun-ImportDapodik').on('click', async function() {
                 const inputElm = $('#inputFile');
@@ -648,10 +650,6 @@
                 });
             }).on('xhr', function() {
                 $('#checkAllRow').prop('checked', false).prop('indeterminate', false);
-            });
-
-            $('#pageLenghtDt-bukuInduk').on('change', function() {
-                tableBukuIndukPesertaDidik.page.len($(this).val()).draw();
             });
 
             $('#btnSimpanFormKoneksiDapodik').on('click', function() {
@@ -905,12 +903,6 @@
                 }).finally(() => {
                     btn.prop('disabled', false).children('i').removeClass('fa-spin');
                 });
-            });
-
-
-            $('#cariPd').on('input', function() {
-                const val = $(this).val();
-                tableBukuIndukPesertaDidik.search(val).draw(false);
             });
 
             $('#filterData').click(function() {
