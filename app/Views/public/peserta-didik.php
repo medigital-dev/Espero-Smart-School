@@ -72,32 +72,81 @@
     </div>
     <div class="offcanvas-body">
         <div class="form-group row mb-2">
-            <label for="selectDt-publicPesertaDidik" class="col-sm-3 col-form-label">Kelas</label>
+            <label for="namaPd" class="col-sm-3 col-form-label">Nama</label>
             <div class="col-sm-9">
-                <select class="custom-select select2-rombelPd" id="selectDt-publicPesertaDidik" multiple></select>
+                <input type="text" class="form-control" id="namaPd" placeholder="Nama peserta didik">
+            </div>
+        </div>
+        <div class="form-group row mb-2">
+            <label for="nis" class="col-sm-3 col-form-label">NIS</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="nis" placeholder="Nomor Induk Siswa">
+            </div>
+        </div>
+        <div class="form-group row mb-2">
+            <label for="nisn" class="col-sm-3 col-form-label">NISN</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="nisn" placeholder="NISN">
             </div>
         </div>
         <div class="form-group row mb-2">
             <label for="inputEmail3" class="col-sm-3 col-form-label">JK</label>
             <div class="col-sm-9">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-sm btn-block btn-outline-primary">
-                                <input type="checkbox"> L
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-sm btn-block btn-outline-primary">
-                                <input type="checkbox"> P
-                            </label>
-                        </div>
-                    </div>
+                <div class="icheck-primary">
+                    <input class="form-check-input" type="checkbox" id="selectDt-filterJkL" checked>
+                    <label class="form-check-label" for="selectDt-filterJkL">
+                        Laki-laki
+                    </label>
+                </div>
+                <div class="icheck-primary">
+                    <input class="form-check-input" type="checkbox" id="selectDt-filterJkP" checked>
+                    <label class="form-check-label" for="selectDt-filterJkP">
+                        Perempuan
+                    </label>
                 </div>
             </div>
         </div>
+        <div class="form-group row mb-2">
+            <label for="select" class="col-sm-3 col-form-label">Tm Lhr</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="tempatLahir" placeholder="Tempat lahir">
+            </div>
+        </div>
+        <div class="form-group row mb-2">
+            <label for="select" class="col-sm-3 col-form-label">Tgl Lhr</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="tanggalLahir" placeholder="Tanggal lahir">
+            </div>
+        </div>
+        <div class="form-group row mb-2">
+            <label for="select" class="col-sm-3 col-form-label">Usia</label>
+            <div class="col-sm-9">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="tanggalLahir" placeholder="Tahun">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon1">s/d</span>
+                    </div>
+                    <!-- <div class="input-group-append"> -->
+                    <input type="text" class="form-control" id="tanggalLahir" placeholder="Tahun">
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="form-group mb-0 row">
+                <label for="select" class="col-sm-3 col-form-label">Alamat</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control mb-2" id="dusun" placeholder="Nama dusun">
+                    <input type="text" class="form-control mb-2" id="desa" placeholder="Nama desa">
+                    <input type="text" class="form-control mb-2" id="kecamatan" placeholder="Nama kecamatan">
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="selectDt-publicPesertaDidik" class="col-sm-3 col-form-label">Kelas</label>
+                <div class="col-sm-9">
+                    <select class="custom-select select2-rombelPd" id="selectDt-publicPesertaDidik"></select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Tutup</button>
+            <button type="button" class="btn btn-sm btn-danger">Reset</button>
+        </div>
     </div>
-</div>
-<?= $this->endSection(); ?>
+    <?= $this->endSection(); ?>

@@ -16,6 +16,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/plugins/select2/css/select2.css">
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <!-- MyCss -->
@@ -335,7 +336,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="/plugins/select2/js/select2.full.js"></script>
-    <script src="/plugins/select2-inputPlaceholder/select2-searchInputPlaceholder.js"></script>
+    <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- Global Script -->
     <script>
@@ -353,7 +354,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         $('.select2-rombelPd').select2({
             placeholder: 'Pilih rombel...',
-            searchInputPlaceholder: 'Cari Nama/NIK/NIS/NISN/Rombel',
+            searchInputPlaceholder: 'Cari Rombel..',
             theme: 'bootstrap4',
             ajax: {
                 url: '/api/v0/rombel/get',
@@ -367,8 +368,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 processResults: function(data) {
                     return {
                         results: $.map(data, function(item) {
-                            console.log(item);
-
                             return {
                                 id: item.id,
                                 text: item.nama,
@@ -390,7 +389,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 if (!option.id) {
                     return option.text;
                 }
-                console.log(option);
 
                 var $option = $(
                     "<div>" +
@@ -405,7 +403,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     return option.text;
                 }
 
-                var $selection = $("<div>" + option.text + "</div>");
+                var $selection = $('<span>' + option.text + "</span>");
                 return $selection;
             },
         });
@@ -423,6 +421,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             ajax: {
                 method: "POST",
                 url: "/api/getPd",
+                data: d => {
+                    d.kelas = $('#selectDt-publicPesertaDidik').val();
+                    d.jk = $('[name="radioDt-publicPesertaDidik"]').val()
+                }
             },
             language: {
                 url: "/plugins/datatables/id.json",
@@ -527,6 +529,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
 
         $('#btnFilterDt-publicPesertaDidik').click('click', () => $('.offcanvas').toggleClass('show'));
+        $('#selectDt-publicPesertaDidik').on('select2:select', function() {
+            console.log($(this).val());
+            dtPublicPd.column(7).search($(this).val()).draw('page');
+        })
     </script>
     <!-- End Main Script -->
 </body>
