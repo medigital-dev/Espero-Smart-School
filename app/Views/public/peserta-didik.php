@@ -71,86 +71,99 @@
         <button class="close" data-toggle="offcanvas" data-target=".offcanvas">&times;</button>
     </div>
     <div class="offcanvas-body">
-        <div class="form-group row mb-2">
-            <label for="inputDt-namaPd" class="col-sm-3 col-form-label">Nama</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="inputDt-namaPd" placeholder="Nama peserta didik">
-            </div>
-        </div>
-        <div class="form-group row mb-2">
-            <label for="inputDt-nisPd" class="col-sm-3 col-form-label">NIS</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="inputDt-nisPd" placeholder="Nomor Induk Siswa">
-            </div>
-        </div>
-        <div class="form-group row mb-2">
-            <label for="inputDt-nisnPd" class="col-sm-3 col-form-label">NISN</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="inputDt-nisnPd" placeholder="NISN">
-            </div>
-        </div>
-        <div class="form-group row mb-2">
-            <label for="inputEmail3" class="col-sm-3 col-form-label">JK</label>
-            <div class="col-sm-9">
-                <div class="icheck-primary">
-                    <input class="form-check-input" type="checkbox" id="checkboxDt-jkPdL" name="checkboxDt-jkPd" value="L" checked>
-                    <label class="form-check-label" for="checkboxDt-jkPdL">
-                        Laki-laki
-                    </label>
-                </div>
-                <div class="icheck-primary">
-                    <input class="form-check-input" type="checkbox" id="chckboxDt-jkPdP" name="checkboxDt-jkPd" value="P" checked>
-                    <label class="form-check-label" for="chckboxDt-jkPdP">
-                        Perempuan
-                    </label>
+        <form id="formDt-filterPd">
+            <div class="form-group row mb-2">
+                <label for="selectDt-rombelPd" class="col-sm-3 col-form-label">Kelas</label>
+                <div class="col-sm-9">
+                    <select class="custom-select select2-rombelPd" id="selectDt-rombelPd"></select>
                 </div>
             </div>
-        </div>
-        <div class="form-group row mb-2">
-            <label for="inputDt-tempatlahirPd" class="col-sm-3 col-form-label">Tm Lhr</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="inputDt-tempatLahirPd" placeholder="Tempat lahir">
+            <div class="form-group row mb-2">
+                <label for="inputDt-namaPd" class="col-sm-3 col-form-label">Nama</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputDt-namaPd" placeholder="Nama peserta didik">
+                </div>
             </div>
-        </div>
-        <div class="form-group row mb-0">
-            <label for="inputDt-tanggalLahirPd" class="col-sm-3 col-form-label">Tgl Lhr</label>
-            <div class="col-sm-9">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="inputDt-tanggalLahirPd" placeholder="Tanggal lahir">
-                    <div class="input-group-append" data-target="#inputDt-tanggalLahirPd" data-toggle="datetimepicker">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+            <div class="form-group row mb-2">
+                <label for="inputDt-nisPd" class="col-sm-3 col-form-label">NIS</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputDt-nisPd" placeholder="Nomor Induk Siswa">
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="inputDt-nisnPd" class="col-sm-3 col-form-label">NISN</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputDt-nisnPd" placeholder="NISN">
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="inputEmail3" class="col-sm-3 col-form-label">JK</label>
+                <div class="col-sm-9">
+                    <div class="icheck-primary">
+                        <input class="form-check-input" type="radio" id="radioDt-jkPdL" name="radioDt-jkPd" value="L">
+                        <label class="form-check-label" for="radioDt-jkPdL">
+                            Laki-laki
+                        </label>
+                    </div>
+                    <div class="icheck-primary">
+                        <input class="form-check-input" type="radio" id="chckboxDt-jkPdP" name="radioDt-jkPd" value="P">
+                        <label class="form-check-label" for="chckboxDt-jkPdP">
+                            Perempuan
+                        </label>
+                    </div>
+                    <div class="icheck-primary">
+                        <input class="form-check-input" type="radio" id="chckboxDt-jkPdAll" name="radioDt-jkPd" value="all" checked>
+                        <label class="form-check-label" for="chckboxDt-jkPdAll">
+                            Semua
+                        </label>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group row mb-0">
-            <label for="inputDt-usiaPdAwal" class="col-sm-3 col-form-label">Usia</label>
-            <div class="col-sm-9">
-                <div class="input-group mb-2">
-                    <input type="number" class="form-control" id="inputDt-usiaPdAwal" placeholder="Usia Awal">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon1">s/d</span>
+            <div class="form-group row mb-2">
+                <label for="inputDt-tempatlahirPd" class="col-sm-3 col-form-label">Tm Lhr</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="inputDt-tempatLahirPd" placeholder="Tempat lahir">
+                </div>
+            </div>
+            <div class="form-group row mb-0">
+                <label for="inputDt-tanggalLahirPd" class="col-sm-3 col-form-label">Tgl Lhr</label>
+                <div class="col-sm-9">
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="inputDt-tanggalLahirPd" data-inputmask-alias="datetime" placeholder="Tanggal lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        <div class="input-group-append" data-target="#inputDt-tanggalLahirPd" data-toggle="datetimepicker">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        </div>
                     </div>
                 </div>
-                <input type="number" class="form-control mb-2" id="inputDt-usiaPdAkhir" placeholder="Usia Akhir">
             </div>
-        </div>
-        <div class="form-group mb-0 row">
-            <label for="inputDt-dusunPd" class="col-sm-3 col-form-label">Alamat</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control mb-2" id="inputDt-dusunPd" placeholder="Nama dusun">
-                <input type="text" class="form-control mb-2" id="inputDt-desaPd" placeholder="Nama desa">
-                <input type="text" class="form-control mb-2" id="inputDt-kecamatanPd" placeholder="Nama kecamatan">
+            <div class="form-group row mb-0">
+                <label for="inputDt-usiaPdAwal" class="col-sm-3 col-form-label">Usia</label>
+                <div class="col-sm-9">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Min</span>
+                        </div>
+                        <input type="number" class="form-control" id="inputDt-usiaPdAwal" placeholder="Usia Awal">
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Max</span>
+                        </div>
+                        <input type="number" class="form-control" id="inputDt-usiaPdAkhir" placeholder="Usia Akhir">
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="form-group row mb-2">
-            <label for="selectDt-rombelPd" class="col-sm-3 col-form-label">Kelas</label>
-            <div class="col-sm-9">
-                <select class="custom-select select2-rombelPd" id="selectDt-rombelPd"></select>
+            <div class="form-group mb-0 row">
+                <label for="inputDt-dusunPd" class="col-sm-3 col-form-label">Alamat</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control mb-2" id="inputDt-dusunPd" placeholder="Nama dusun">
+                    <input type="text" class="form-control mb-2" id="inputDt-desaPd" placeholder="Nama desa">
+                    <input type="text" class="form-control mb-2" id="inputDt-kecamatanPd" placeholder="Nama kecamatan">
+                </div>
             </div>
-        </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary">Tutup</button>
-        <button type="button" class="btn btn-sm btn-danger">Reset</button>
+        </form>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="offcanvas" data-target=".offcanvas">Tutup</button>
+        <button type="button" class="btn btn-sm btn-danger" id="btnReset-filterPd">Reset</button>
     </div>
 </div>
 <?= $this->endSection(); ?>

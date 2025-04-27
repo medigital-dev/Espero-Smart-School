@@ -111,8 +111,19 @@ class Datatables extends BaseController
 
     public function publicPd()
     {
-        // return $this->respond($this->request->getPost());
         $this->initDt();
+        $kelas = $this->request->getPost('kelas');
+        $nama = $this->request->getPost('nama');
+        $nipd = $this->request->getPost('nipd');
+        $nisn = $this->request->getPost('nisn');
+        $jk = $this->request->getPost('jk');
+        $tempat_lahir = $this->request->getPost('tempat_lahir');
+        $tanggal_lahir = $this->request->getPost('tanggal_lahir');
+        $usia_awal = $this->request->getPost('usia_awal');
+        $usia_akhir = $this->request->getPost('usia_akhir');
+        $dusun = $this->request->getPost('dusun');
+        $desa = $this->request->getPost('desa');
+        $kecamatan = $this->request->getPost('kecamatan');
         $this->mPesertaDidik
             ->select(['peserta_didik.peserta_didik_id as id', 'peserta_didik.nama', 'jenis_kelamin as jk', 'nipd as nis', 'nisn', 'tanggal_lahir', 'tempat_lahir', 'rombongan_belajar.nama as kelas', 'desa', 'dusun', 'kecamatan'])
             ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
@@ -122,6 +133,36 @@ class Datatables extends BaseController
             ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
             ->where('status', true);
         $this->totalRecord = $this->mPesertaDidik->countAllResults(false);
+        if ($kelas) $this->mPesertaDidik->where('rombongan_belajar.rombel_id', $kelas);
+        if ($nama) $this->mPesertaDidik->like('peserta_didik.nama', $nama);
+        if ($nipd) $this->mPesertaDidik->like('nipd', $nipd);
+        if ($nisn) $this->mPesertaDidik->like('nisn', $nisn);
+        if ($jk !== 'all') $this->mPesertaDidik->where('jenis_kelamin', $jk);
+        if ($tempat_lahir) $this->mPesertaDidik->like('tempat_lahir', $tempat_lahir);
+        if ($tanggal_lahir) {
+            $setTagl = date_create_from_format('d/m/Y', $tanggal_lahir);
+            $this->mPesertaDidik->where('tanggal_lahir', date_format($setTagl, 'Y-m-d'));
+        }
+        if ($usia_awal && $usia_akhir) {
+            if ($usia_awal == $usia_akhir) {
+                $dateAwal = date('Y-m-d', strtotime('-' . ($usia_awal + 1) . ' years'));
+                $dateAkhir = date('Y-m-d', strtotime('-' . $usia_awal . ' years'));
+            } else {
+                $dateAwal = date('Y-m-d', strtotime('-' . $usia_awal . ' years'));
+                $dateAkhir = date('Y-m-d', strtotime('-' . $usia_akhir . ' years'));
+            }
+
+            if ($dateAwal < $dateAkhir) {
+                [$dateAwal, $dateAkhir] = [$dateAkhir, $dateAwal];
+            }
+
+            $this->mPesertaDidik->where('tanggal_lahir BETWEEN "' . $dateAkhir . '" AND "' . $dateAwal . '"');
+        }
+
+        if ($dusun) $this->mPesertaDidik->like('dusun', $dusun);
+        if ($desa) $this->mPesertaDidik->like('desa', $desa);
+        if ($kecamatan) $this->mPesertaDidik->like('kecamatan', $kecamatan);
+
         $rows = $this->mPesertaDidik
             ->groupStart()
             ->like('peserta_didik.nama', $this->searchValue)

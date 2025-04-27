@@ -332,7 +332,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/plugins/moment/moment.min.js"></script>
+    <script src="/plugins/moment/moment-with-locales.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -340,8 +340,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="/plugins/select2/js/select2.full.js"></script>
     <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
-    <script src="/public/plugins/inputmask/jquery.inputmask.js"></script>
+    <script src="/plugins/inputmask/jquery.inputmask.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
+    <!-- function script -->
+    <script>
+        function convertToISO(dateString) {
+            const [day, month, year] = dateString.split('/');
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+    </script>
+    <!-- end function script -->
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
@@ -355,11 +363,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             placeholder: "Pilih...",
             theme: "bootstrap4",
         });
+        $('[data-mask]').inputmask();
 
         $('.select2-rombelPd').select2({
             placeholder: 'Pilih rombel...',
             searchInputPlaceholder: 'Cari Rombel..',
             theme: 'bootstrap4',
+            allowClear: true,
             ajax: {
                 url: '/api/v0/rombel/get',
                 method: 'GET',
@@ -426,12 +436,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 method: "POST",
                 url: "/api/getPd",
                 data: d => {
+                    d.kelas = $('#selectDt-rombelPd').val();
                     d.nama = $('#inputDt-namaPd').val();
                     d.nipd = $('#inputDt-nisPd').val();
                     d.nisn = $('#inputDt-nisnPd').val();
-                    // d.jk = $('[name="checkboxDt-jkPd"]').val();
-                    // d.tempat_lahir = $('#inputDt-tempatLahirPd');
-                    // d.kelas = $('#selectDt-publicPesertaDidik').val();
+                    d.jk = $('[name="radioDt-jkPd"]:checked').val();
+                    d.tempat_lahir = $('#inputDt-tempatLahirPd').val();
+                    d.tanggal_lahir = $('#inputDt-tanggalLahirPd').val();
+                    d.usia_awal = $('#inputDt-usiaPdAwal').val();
+                    d.usia_akhir = $('#inputDt-usiaPdAkhir').val();
+                    d.dusun = $('#inputDt-dusunPd').val();
+                    d.desa = $('#inputDt-desaPd').val();
+                    d.kecamatan = $('#inputDt-kecamatanPd').val();
                 }
             },
             language: {
@@ -543,10 +559,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
 
         // filter DT Peserta Didik
-        // $('#inputDt-tanggalLahirPd').datetimepicker({
-        //     format: 'L',
-        //     locale: 'id'
-        // })
+        $('#inputDt-tanggalLahirPd').datetimepicker({
+            format: 'L',
+            locale: 'id'
+        });
+        let debounceTimer;
+        $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                dtPublicPd.ajax.reload('page');
+            }, 300);
+        });
+        $('#btnReset-filterPd').on('click', () => {
+            $('#formDt-filterPd').trigger('reset');
+            dtPublicPd.ajax.reload('page')
+        });
     </script>
     <!-- End Main Script -->
 </body>
