@@ -22,10 +22,12 @@ class Rombel extends BaseController
         $id = $this->request->getVar('id');
         $key = $this->request->getVar('key');
 
-        $this->model->select(['rombel_id as id', 'nama', 'tingkat_pendidikan as tingkat', 'semester_id', 'ptk_id']);
+        $this->model->select(['rombel_id as id', 'nama', 'tingkat_pendidikan as tingkat', 'semester_id', 'ptk_id'])
+            ->orderBy('tingkat', 'ASC')
+            ->orderBy('nama', 'ASC');
         if ($key) $this->model->like('nama');
 
-        if (!$id) {
+        if ($id) {
             $this->model->where('rombel_id', $id);
             $result = $this->model->first();
             if (!$result) return $this->failNotFound('Not Found', 404, 'Data rombel tidak ditemukan.');
