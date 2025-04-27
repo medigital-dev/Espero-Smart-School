@@ -17,6 +17,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/select2/css/select2.css">
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
+    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <!-- MyCss -->
@@ -331,12 +332,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/plugins/moment/moment.min.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="/plugins/select2/js/select2.full.js"></script>
     <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
+    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
+    <script src="/public/plugins/inputmask/jquery.inputmask.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- Global Script -->
     <script>
@@ -422,8 +426,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 method: "POST",
                 url: "/api/getPd",
                 data: d => {
-                    d.kelas = $('#selectDt-publicPesertaDidik').val();
-                    d.jk = $('[name="radioDt-publicPesertaDidik"]').val()
+                    d.nama = $('#inputDt-namaPd').val();
+                    d.nipd = $('#inputDt-nisPd').val();
+                    d.nisn = $('#inputDt-nisnPd').val();
+                    // d.jk = $('[name="checkboxDt-jkPd"]').val();
+                    // d.tempat_lahir = $('#inputDt-tempatLahirPd');
+                    // d.kelas = $('#selectDt-publicPesertaDidik').val();
                 }
             },
             language: {
@@ -532,7 +540,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $('#selectDt-publicPesertaDidik').on('select2:select', function() {
             console.log($(this).val());
             dtPublicPd.column(7).search($(this).val()).draw('page');
-        })
+        });
+
+        // filter DT Peserta Didik
+        // $('#inputDt-tanggalLahirPd').datetimepicker({
+        //     format: 'L',
+        //     locale: 'id'
+        // })
     </script>
     <!-- End Main Script -->
 </body>
