@@ -18,90 +18,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
+    <link rel="stylesheet" href="/plugins/bootstrap4-offcanvas/offcanvas-bs4.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <!-- MyCss -->
     <style>
-        .offcanvas {
-            position: fixed;
-            background-color: #fff;
-            transition: transform 0.3s ease-in-out;
-            z-index: 1050;
-            overflow-y: auto;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .15);
-        }
-
-        .offcanvas-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .offcanvas-header h5 {
-            margin: 0;
-        }
-
-        .offcanvas-body {
-            padding: 1rem;
-        }
-
-        /* Default sizes (mobile-first) */
-        .offcanvas-start,
-        .offcanvas-end {
-            top: 0;
-            height: 100%;
-            width: 70vw;
-        }
-
-        .offcanvas-top,
-        .offcanvas-bottom {
-            width: 100%;
-            height: 40vh;
-        }
-
-        .offcanvas-start {
-            left: 0;
-            transform: translateX(-100%);
-        }
-
-        .offcanvas-end {
-            right: 0;
-            transform: translateX(100%);
-        }
-
-        .offcanvas-top {
-            top: 0;
-            transform: translateY(-100%);
-        }
-
-        .offcanvas-bottom {
-            bottom: 0;
-            transform: translateY(100%);
-        }
-
-        .offcanvas .close {
-            background: none;
-            border: none;
-        }
-
-        .offcanvas.show {
-            transform: translate(0, 0);
-        }
-
-        /* Responsive breakpoints */
-        @media (min-width: 576px) {
-
-            .offcanvas-start,
-            .offcanvas-end {
-                width: 300px;
-            }
-
-            .offcanvas-top,
-            .offcanvas-bottom {
-                height: 250px;
-            }
+        .select2-dropdown {
+            z-index: 1100;
         }
     </style>
 </head>
@@ -125,152 +48,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a href="index3.html" class="nav-link">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Contact</a>
+                            <a href="<?= base_url(); ?>" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Dropdown</a>
+                            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Public Data</a>
                             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                                <li><a href="#" class="dropdown-item">Some action </a></li>
-                                <li><a href="#" class="dropdown-item">Some other action</a></li>
-
-                                <li class="dropdown-divider"></li>
-
-                                <!-- Level two dropdown-->
-                                <li class="dropdown-submenu dropdown-hover">
-                                    <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Hover for action</a>
-                                    <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
-                                        <li>
-                                            <a tabindex="-1" href="#" class="dropdown-item">level 2</a>
-                                        </li>
-
-                                        <!-- Level three dropdown-->
-                                        <li class="dropdown-submenu">
-                                            <a id="dropdownSubMenu3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">level 2</a>
-                                            <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow">
-                                                <li><a href="#" class="dropdown-item">3rd level</a></li>
-                                                <li><a href="#" class="dropdown-item">3rd level</a></li>
-                                            </ul>
-                                        </li>
-                                        <!-- End Level three -->
-
-                                        <li><a href="#" class="dropdown-item">level 2</a></li>
-                                        <li><a href="#" class="dropdown-item">level 2</a></li>
-                                    </ul>
-                                </li>
-                                <!-- End Level two -->
+                                <li><a href="<?= base_url('peserta-didik'); ?>" class="dropdown-item">Peserta Didik </a></li>
+                                <li><a href="<?= base_url('guru'); ?>" class="dropdown-item">Guru</a></li>
+                                <li><a href="<?= base_url('pegawai'); ?>" class="dropdown-item">Pegawai</a></li>
                             </ul>
                         </li>
                     </ul>
-
-                    <!-- SEARCH FORM -->
-                    <form class="form-inline ml-0 ml-md-3">
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                            <div class="input-group-append">
-                                <button class="btn btn-navbar" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
-
-                <!-- Right navbar links -->
-                <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-                    <!-- Messages Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="fas fa-comments"></i>
-                            <span class="badge badge-danger navbar-badge">3</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <a href="#" class="dropdown-item">
-                                <!-- Message Start -->
-                                <div class="media">
-                                    <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                                    <div class="media-body">
-                                        <h3 class="dropdown-item-title">
-                                            Brad Diesel
-                                            <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                        </h3>
-                                        <p class="text-sm">Call me whenever you can...</p>
-                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                    </div>
-                                </div>
-                                <!-- Message End -->
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <!-- Message Start -->
-                                <div class="media">
-                                    <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                    <div class="media-body">
-                                        <h3 class="dropdown-item-title">
-                                            John Pierce
-                                            <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                        </h3>
-                                        <p class="text-sm">I got your message bro</p>
-                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                    </div>
-                                </div>
-                                <!-- Message End -->
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <!-- Message Start -->
-                                <div class="media">
-                                    <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                    <div class="media-body">
-                                        <h3 class="dropdown-item-title">
-                                            Nora Silvester
-                                            <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                                        </h3>
-                                        <p class="text-sm">The subject goes here</p>
-                                        <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                    </div>
-                                </div>
-                                <!-- Message End -->
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                        </div>
-                    </li>
-                    <!-- Notifications Dropdown Menu -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="far fa-bell"></i>
-                            <span class="badge badge-warning navbar-badge">15</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <span class="dropdown-header">15 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-envelope mr-2"></i> 4 new messages
-                                <span class="float-right text-muted text-sm">3 mins</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-users mr-2"></i> 8 friend requests
-                                <span class="float-right text-muted text-sm">12 hours</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="fas fa-file mr-2"></i> 3 new reports
-                                <span class="float-right text-muted text-sm">2 days</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                            <i class="fas fa-th-large"></i>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </nav>
         <!-- /.navbar -->
@@ -332,6 +121,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/plugins/bootstrap4-offcanvas/offcanvas-bs4.js"></script>
     <script src="/plugins/moment/moment-with-locales.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -344,9 +134,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- function script -->
     <script>
-        function convertToISO(dateString) {
-            const [day, month, year] = dateString.split('/');
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        function resetInput(elmInput, elmDatatables) {
+            $(elmInput).val('').trigger('change');
+            $(elmDatatables).DataTable().ajax.reload();
         }
     </script>
     <!-- end function script -->
@@ -354,72 +144,69 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
-            $('[data-toggle="offcanvas"]').on('click', function() {
-                const target = $(this).data('target');
-                $(target).toggleClass('show');
+
+            $('.select2').select2({
+                placeholder: "Pilih...",
+                theme: "bootstrap4",
             });
-        });
-        $('.select2').select2({
-            placeholder: "Pilih...",
-            theme: "bootstrap4",
-        });
-        $('[data-mask]').inputmask();
+            $('[data-mask]').inputmask();
 
-        $('.select2-rombelPd').select2({
-            placeholder: 'Pilih rombel...',
-            searchInputPlaceholder: 'Cari Rombel..',
-            theme: 'bootstrap4',
-            allowClear: true,
-            ajax: {
-                url: '/api/v0/rombel/get',
-                method: 'GET',
-                dataType: 'json',
-                data: function(params) {
-                    return {
-                        key: params.term,
-                    };
+            $('.select2-rombelPd').select2({
+                placeholder: 'Pilih rombel...',
+                searchInputPlaceholder: 'Cari Rombel..',
+                theme: 'bootstrap4',
+                allowClear: true,
+                ajax: {
+                    url: '/api/v0/rombel/get',
+                    method: 'GET',
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            key: params.term,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nama,
+                                    tingkat: item.tingkat,
+                                    // wali: item.wali,
+                                    // semester: item.semester,=
+                                };
+                            }),
+                        };
+                    },
+                    cache: true,
+                    error: function(jqXHR, status, error) {
+                        return {
+                            results: []
+                        };
+                    }
                 },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama,
-                                tingkat: item.tingkat,
-                                // wali: item.wali,
-                                // semester: item.semester,=
-                            };
-                        }),
-                    };
+                templateResult: (option) => {
+                    if (!option.id) {
+                        return option.text;
+                    }
+
+                    var $option = $(
+                        "<div>" +
+                        "<h6 class='m-0'>" + option.text + "</h6>" +
+                        "<p class='small m-0'>Tingkat: " + option.tingkat + "</p>" +
+                        "</div>"
+                    );
+                    return $option;
                 },
-                cache: true,
-                error: function(jqXHR, status, error) {
-                    return {
-                        results: []
-                    };
-                }
-            },
-            templateResult: (option) => {
-                if (!option.id) {
-                    return option.text;
-                }
+                templateSelection: (option) => {
+                    if (!option.id) {
+                        return option.text;
+                    }
 
-                var $option = $(
-                    "<div>" +
-                    "<h6 class='m-0'>" + option.text + "</h6>" +
-                    "<p class='small m-0'>Tingkat: " + option.tingkat + "</p>" +
-                    "</div>"
-                );
-                return $option;
-            },
-            templateSelection: (option) => {
-                if (!option.id) {
-                    return option.text;
-                }
-
-                var $selection = $('<span>' + option.text + "</span>");
-                return $selection;
-            },
+                    var $selection = $('<span>' + option.text + "</span>");
+                    return $selection;
+                },
+            });
         });
     </script>
     <!-- End Global Script -->
@@ -438,11 +225,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 data: d => {
                     d.kelas = $('#selectDt-rombelPd').val();
                     d.nama = $('#inputDt-namaPd').val();
+                    d.ibu_kandung = $('#inputDt-namaIbuPd').val();
                     d.nipd = $('#inputDt-nisPd').val();
                     d.nisn = $('#inputDt-nisnPd').val();
                     d.jk = $('[name="radioDt-jkPd"]:checked').val();
                     d.tempat_lahir = $('#inputDt-tempatLahirPd').val();
+                    d.tanggal_lahir_lengkap = $('#inputDt-tanggalLahirLengkapPd').val();
                     d.tanggal_lahir = $('#inputDt-tanggalLahirPd').val();
+                    d.bulan_lahir = $('#inputDt-bulanLahirPd').val();
+                    d.tahun_lahir = $('#inputDt-tahunLahirPd').val();
                     d.usia_awal = $('#inputDt-usiaPdAwal').val();
                     d.usia_akhir = $('#inputDt-usiaPdAkhir').val();
                     d.dusun = $('#inputDt-dusunPd').val();
@@ -454,24 +245,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 url: "/plugins/datatables/id.json",
             },
             columns: [{
-                    data: "nama",
+                    data: "kelas",
+                    className: 'text-lg-center',
                     render: (data) => {
-                        return `<a type="button" href="#">${data}</a>`;
+                        return `<span class="badge bg-success">${data}</span>`;
                     }
+                }, {
+                    data: "nama",
                 },
                 {
                     data: "nis",
-                    className: "text-center",
+                    className: "text-lg-center",
                 },
                 {
                     data: "nisn",
                     orderable: false,
-                    className: "text-center",
+                    className: "text-lg-center",
                 },
                 {
                     data: "jk",
                     orderable: false,
-                    className: 'text-center'
+                    className: 'text-lg-center'
                 },
                 {
                     orderable: false,
@@ -479,22 +273,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 },
                 {
                     data: "tanggal_lahir",
+                    className: 'text-lg-center'
+                },
+                {
+                    data: "ibu_kandung",
                     orderable: false,
-                    className: 'text-center'
                 },
                 {
                     data: "dusun",
                     orderable: false,
                     render: (data, type, rows, meta) => {
                         return `${data}, ${rows.desa}, ${rows.kecamatan}`
-                    }
-                },
-                {
-                    data: "kelas",
-                    className: 'text-center',
-                    orderable: false,
-                    render: (data) => {
-                        return `<span class="badge bg-success">${data}</span>`;
                     }
                 },
             ],
@@ -550,29 +339,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     .reload(null, false)
                     .on("draw", () => btn.prop('disabled', false).children("i").removeClass("fa-spin"));
             });
-        });
 
-        $('#btnFilterDt-publicPesertaDidik').click('click', () => $('.offcanvas').toggleClass('show'));
-        $('#selectDt-publicPesertaDidik').on('select2:select', function() {
-            console.log($(this).val());
-            dtPublicPd.column(7).search($(this).val()).draw('page');
-        });
+            $('#btnFilterDt-publicPesertaDidik').click('click', () => $('#offcanvas-filterPd').offcanvas('toggle'));
+            $('#selectDt-publicPesertaDidik').on('select2:select', function() {
+                console.log($(this).val());
+                dtPublicPd.column(7).search($(this).val()).draw('page');
+            });
 
-        // filter DT Peserta Didik
-        $('#inputDt-tanggalLahirPd').datetimepicker({
-            format: 'L',
-            locale: 'id'
-        });
-        let debounceTimer;
-        $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                dtPublicPd.ajax.reload('page');
-            }, 300);
-        });
-        $('#btnReset-filterPd').on('click', () => {
-            $('#formDt-filterPd').trigger('reset');
-            dtPublicPd.ajax.reload('page')
+            // filter DT Peserta Didik
+            $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
+                format: 'L',
+                locale: 'id'
+            });
+            let debounceTimer;
+            $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    dtPublicPd.ajax.reload();
+                }, 300);
+            });
+            $('#btnReset-filterPd').on('click', () => {
+                $('#formDt-filterPd').trigger('reset');
+                dtPublicPd.ajax.reload()
+            });
         });
     </script>
     <!-- End Main Script -->
