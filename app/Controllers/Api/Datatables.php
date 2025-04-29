@@ -122,6 +122,7 @@ class Datatables extends BaseController
     {
         $this->initDt();
         $kelas = $this->request->getPost('kelas');
+        $tingkat = $this->request->getPost('tingkat');
         $nama = $this->request->getPost('nama');
         $ibu_kandung = $this->request->getPost('ibu_kandung');
         $nipd = $this->request->getPost('nipd');
@@ -152,6 +153,7 @@ class Datatables extends BaseController
         ;
         $this->totalRecord = $this->mPesertaDidik->countAllResults(false);
         if ($kelas) $this->mPesertaDidik->where('rombongan_belajar.rombel_id', $kelas);
+        if ($tingkat) $this->mPesertaDidik->where('tingkat_pendidikan', $tingkat);
         if ($nama) $this->mPesertaDidik->like('peserta_didik.nama', $nama);
         if ($ibu_kandung) $this->mPesertaDidik->like('orangtua_wali.nama', $ibu_kandung);
         if ($nipd) $this->mPesertaDidik->like('nipd', $nipd);

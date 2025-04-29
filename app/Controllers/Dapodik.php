@@ -36,7 +36,8 @@ class Dapodik extends BaseController
         $page = [
             'title' => 'SISPADU - Pengaturan Dapodik',
             'sidebar' => 'dapodik',
-            'name' => 'Koneksi Aplikasi Dapodik',
+            'breadcrumb' => [],
+            'page' => 'Koneksi Aplikasi Dapodik',
             'data' => [],
         ];
         return view('dapodik/index', $page);

@@ -94,6 +94,22 @@
                 </div>
             </div>
             <div class="form-group row mb-2">
+                <label for="selectDt-tingkatRombel" class="col-sm-3 col-form-label">Tingkat</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <select class="custom-select" id="selectDt-tingkatRombel">
+                            <option>Pilih tingkat</option>
+                            <option value="7">Tingkat 7</option>
+                            <option value="8">Tingkat 8</option>
+                            <option value="9">Tingkat 9</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-tingkatRombel','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-2">
                 <label for="inputDt-namaPd" class="col-sm-3 col-form-label">Nama</label>
                 <div class="col-sm-9">
                     <div class="input-group">

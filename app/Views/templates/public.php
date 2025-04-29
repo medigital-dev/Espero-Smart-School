@@ -356,6 +356,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 url: "/api/getPd",
                 data: d => {
                     d.kelas = $('#selectDt-rombelPd').val();
+                    d.tingkat = $('#selectDt-tingkatRombelPd').val();
                     d.nama = $('#inputDt-namaPd').val();
                     d.ibu_kandung = $('#inputDt-namaIbuPd').val();
                     d.nipd = $('#inputDt-nisPd').val();
@@ -514,6 +515,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     data: {
                         keyword: $('#searchDt-publicPesertaDidik').val(),
                         kelas: $('#selectDt-rombelPd').val(),
+                        tingkat: $('#selectDt-tingkatRombelPd').val(),
                         nama: $('#inputDt-namaPd').val(),
                         ibu_kandung: $('#inputDt-namaIbuPd').val(),
                         nipd: $('#inputDt-nisPd').val(),
