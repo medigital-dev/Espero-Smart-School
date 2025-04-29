@@ -21,7 +21,10 @@
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Muat ulang tabel" id="btnReloadDt-publicPesertaDidik"><i class="fas fa-redo-alt fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Unduh Excel" id="btnUnduhExcel-publicPesertaDidik"><i class="fas fa-download fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduh Tabel berserta Filter" id="btnDropdown-unduhPd"><i class="fas fa-download fa-fw"></i></button>
+                        <div class="dropdown-menu">
+                            <button type="button" class="dropdown-item" id="btnUnduhExcel-publicPesertaDidik"><i class="fas fa-file-excel fa-fw mr-1"></i> Unduh Excel</button>
+                        </div>
                     </div>
                     <div class="my-1 mr-1 ml-lg-auto">
                         <input class="form-control form-control-sm" type="text" id="searchDt-publicPesertaDidik" data-toggle="tooltip" data-title="Pencarian Nama/NIS/NISN/Kelas" placeholder="Cari..." aria-label="Search">
@@ -47,18 +50,21 @@
                     <tbody></tbody>
                 </table>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 mb-2">
                         <p class="text-center text-sm-left m-0" id="dtPageInfo-publicPesertaDidik"></p>
                     </div>
-                    <div class="col-sm-auto ml-auto">
+                    <div class="col-sm-auto ml-auto mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" id="btnPreviousDt-publicPesertaDidik"><i class="fas fa-chevron-left"></i></button>
                             </div>
                             <div class="input-group-prepend">
-                                <span class="input-group-text">Halaman:</span>
+                                <span class="input-group-text">Halaman</span>
                             </div>
                             <select class="custom-select" id="selectPage-publicPesertaDidik"></select>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="dtPageInfo-allHalaman"></span>
+                            </div>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="btnNextDt-publicPesertaDidik"><i class="fas fa-chevron-right"></i></button>
                             </div>
@@ -79,7 +85,12 @@
             <div class="form-group row mb-2">
                 <label for="selectDt-rombelPd" class="col-sm-3 col-form-label">Kelas</label>
                 <div class="col-sm-9">
-                    <select class="custom-select select2-rombelPd" id="selectDt-rombelPd"></select>
+                    <div class="input-group">
+                        <select class="custom-select select2-rombelPd" id="selectDt-rombelPd"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-rombelPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group row mb-2">

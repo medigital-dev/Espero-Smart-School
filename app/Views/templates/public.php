@@ -18,6 +18,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
+    <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="/plugins/bootstrap4-offcanvas/offcanvas-bs4.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
@@ -131,6 +132,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
     <script src="/plugins/inputmask/jquery.inputmask.js"></script>
+    <script src="/plugins/toastr/toastr.min.js"></script>
+    <script src="/plugins/fetchData/fetchData.js"></script>
+    <script src="/assets/js/functions.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <!-- function script -->
     <script>
@@ -143,7 +147,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
 
             $('.select2').select2({
                 placeholder: "Pilih...",
@@ -155,7 +159,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 placeholder: 'Pilih rombel...',
                 searchInputPlaceholder: 'Cari Rombel..',
                 theme: 'bootstrap4',
-                allowClear: true,
                 ajax: {
                     url: '/api/v0/rombel/get',
                     method: 'GET',
@@ -300,6 +303,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 const selectPageElm = $('#selectPage-publicPesertaDidik');
                 const btnPrevious = $('#btnPreviousDt-publicPesertaDidik');
                 const btnNext = $('#btnNextDt-publicPesertaDidik');
+                const allHalamanElm = $('#dtPageInfo-allHalaman');
 
                 const total = parseInt(pageInfo.recordsTotal);
                 const filter = parseInt(pageInfo.recordsDisplay);
@@ -325,6 +329,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     const selected = index + 1 == currentPage ? 'selected' : '';
                     selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
                 }
+                allHalamanElm.text('dari ' + totalPage);
             });
 
             $('#selectPage-publicPesertaDidik').on('change', e => dtPublicPd.page(parseInt(e.target.value)).draw('page'));
@@ -360,7 +365,52 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
             $('#btnReset-filterPd').on('click', () => {
                 $('#formDt-filterPd').trigger('reset');
+                $('#formDt-filterPd select').val('').trigger('change');
                 dtPublicPd.ajax.reload()
+            });
+
+            // Unduh DT Peserta Didik
+            $('#btnUnduhExcel-publicPesertaDidik').on('click', async function() {
+                const btnElm = $(this);
+                const btnDropdownElm = $('#btnDropdown-unduhPd');
+
+                btnDropdownElm.prop('disabled', true)
+                    .children('i')
+                    .removeClass('fa-download')
+                    .addClass('fa-spinner fa-spin mr-1');
+
+                const resp = await fetchData({
+                    url: '/api/v0/peserta-didik/export/public',
+                    method: 'POST',
+                    data: {
+                        keyword: $('#searchDt-publicPesertaDidik').val(),
+                        kelas: $('#selectDt-rombelPd').val(),
+                        nama: $('#inputDt-namaPd').val(),
+                        ibu_kandung: $('#inputDt-namaIbuPd').val(),
+                        nipd: $('#inputDt-nisPd').val(),
+                        nisn: $('#inputDt-nisnPd').val(),
+                        jk: $('[name="radioDt-jkPd"]:checked').val(),
+                        tempat_lahir: $('#inputDt-tempatLahirPd').val(),
+                        tanggal_lahir_lengkap: $('#inputDt-tanggalLahirLengkapPd').val(),
+                        tanggal_lahir: $('#inputDt-tanggalLahirPd').val(),
+                        bulan_lahir: $('#inputDt-bulanLahirPd').val(),
+                        tahun_lahir: $('#inputDt-tahunLahirPd').val(),
+                        usia_awal: $('#inputDt-usiaPdAwal').val(),
+                        usia_akhir: $('#inputDt-usiaPdAkhir').val(),
+                        dusun: $('#inputDt-dusunPd').val(),
+                        desa: $('#inputDt-desaPd').val(),
+                        kecamatan: $('#inputDt-kecamatanPd').val(),
+                    }
+                });
+
+                if (!resp) return;
+
+                btnDropdownElm.prop('disabled', false)
+                    .children('i')
+                    .addClass('fa-download')
+                    .removeClass('fa-spinner fa-spin');
+
+                toast('Silahkan unduh file excel <a href="/' + resp + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
         });
     </script>

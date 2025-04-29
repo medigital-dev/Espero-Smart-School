@@ -35,6 +35,7 @@ $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');
 $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($routes) {
     $routes->get('rombel/get', 'Rombel::get');
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
+    $routes->post('peserta-didik/export/public', 'PesertaDidik::exportExcelPublicTable');
 });
 
 // public
