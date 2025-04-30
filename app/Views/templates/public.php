@@ -163,17 +163,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <a href="<?= base_url(); ?>" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Public Data</a>
-                            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                                <li><a href="<?= base_url('peserta-didik'); ?>" class="dropdown-item">Peserta Didik </a></li>
-                                <li><a href="<?= base_url('guru'); ?>" class="dropdown-item">Guru</a></li>
-                                <li><a href="<?= base_url('pegawai'); ?>" class="dropdown-item">Pegawai</a></li>
+                            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= $sidebar['parent'] == 'database' ? 'active' : ''; ?>">Database</a>
+                            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu shadow">
+                                <li><a href="<?= base_url('peserta-didik'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-pd' ? 'active' : ''; ?>">Peserta Didik </a></li>
+                                <li><a href="<?= base_url('guru'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-guru' ? 'active' : ''; ?>">Guru</a></li>
+                                <li><a href="<?= base_url('pegawai'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-pegawai' ? 'active' : ''; ?>">Pegawai</a></li>
                             </ul>
                         </li>
                     </ul>
                     <div class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown">Login</a>
+                            <a href="#" class="nav-link" data-toggle="dropdown" data-autoclose="false">Login</a>
                             <div class="dropdown-menu" style="min-width: 250px;">
                                 <div class="px-3 py-2">
                                     <div class="form-label-group">
@@ -277,6 +277,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
         $(document).ready(function() {
             $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
+            $('[data-autoclose="false"]').on('click', e => $(e.target).siblings('.dropdown-menu').attr('onclick', 'event.stopPropagation()'));
 
             $('.select2').select2({
                 placeholder: "Pilih...",
