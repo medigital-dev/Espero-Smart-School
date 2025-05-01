@@ -36,6 +36,7 @@
                 <table class="table table-bordered table-hover w-100 mb-2" id="dtPublic-pesertaDidik">
                     <thead>
                         <tr>
+                            <th class="table-primary align-middle text-center">No</th>
                             <th class="table-primary align-middle text-center">Kelas</th>
                             <th class="table-primary align-middle text-center">Nama</th>
                             <th class="table-primary align-middle text-center">NIS</th>

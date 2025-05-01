@@ -8,6 +8,7 @@ use App\Libraries\Import;
 use App\Models\AlamatModel;
 use App\Models\AnggotaRombelModel;
 use App\Models\DapodikSyncModel;
+use App\Models\GuruPegawaiModel;
 use App\Models\KontakModel;
 use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
@@ -600,5 +601,50 @@ class Dapodik extends BaseController
         }
         unlink($fileExcel['data']['path']);
         return $this->respond(['success' => $countSuccess, 'error' => $countError]);
+    }
+
+    public function syncGtk()
+    {
+        $mGtk = new GuruPegawaiModel();
+        $dapodik = new LibrariesDapodik();
+        $mRefAgama = new RefAgamaModel();
+
+        $request = $dapodik->sync('getGtk');
+        if (!$request['success']) return $this->fail($request['message']);
+        $success = 0;
+        foreach ($request['data'] as $row) {
+            $cAgama = $mRefAgama->where('nama', $row['agama_id_str'])->first();
+            if ($cAgama) $idAgama = $cAgama['ref_id'];
+            else {
+                $setAgama = [
+                    'ref_id' => unik($mRefAgama, 'ref_id'),
+                    'nama' => $row['agama_id_str'],
+                ];
+                if (!$mRefAgama->save($setAgama)) return $this->fail('Error: Referensi Agama gagal disimpan.');
+                $idAgama = $setAgama['ref_id'];
+            }
+            $setGtk = [
+                'nama' => $row['nama'],
+                'jenis_kelamin' => $row['jenis_kelamin'],
+                'tempat_lahir' => $row['tempat_lahir'],
+                'tanggal_lahir' => $row['tanggal_lahir'],
+                'nik' => $row['nik'],
+                'agama_id' => $idAgama,
+            ];
+            $cGtk = $mGtk
+                ->groupStart()
+                ->where('nik', $row['nik'])
+                ->orWhere('nama', $row['nama'])
+                ->groupEnd()
+                ->first();
+            if ($cGtk) {
+                $setGtk['id'] = $cGtk['id'];
+            } else {
+                $setGtk['guru_pegawai_id'] = unik($mGtk, 'guru_pegawai_id');
+            }
+            if (!$mGtk->save($setGtk)) return $this->fail('Error: Data GTK gagal disimpan.');
+            $success++;
+        }
+        return $success;
     }
 }

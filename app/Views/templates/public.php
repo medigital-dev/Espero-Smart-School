@@ -379,6 +379,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 url: "/plugins/datatables/id.json",
             },
             columns: [{
+                    data: 'no',
+                    className: 'text-lg-center',
+                }, {
                     data: "kelas",
                     className: 'text-lg-center',
                     render: (data) => {

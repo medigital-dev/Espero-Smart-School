@@ -203,12 +203,15 @@ class Datatables extends BaseController
             }
         }
         $rows = $rows->findAll($this->length, $this->start);
-        $data = array_map(function ($value) {
-            $value['tanggal_lahir'] = tanggal($value['tanggal_lahir'], 'j F Y');
-            $value['nama'] = strtoupper($value['nama']);
-            $value['tempat_lahir'] = ucwords(strtolower($value['tempat_lahir']));
-            return $value;
-        }, $rows);
+        $data = [];
+        $no = 1 + $this->start;
+        foreach ($rows as $row) {
+            $row['no'] = $no++;
+            $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'j F Y');
+            $row['nama'] = strtoupper($row['nama']);
+            $row['tempat_lahir'] = ucwords(strtolower($row['tempat_lahir']));
+            $data[] = $row;
+        }
 
         $response = [
             'draw' => intval($this->draw),

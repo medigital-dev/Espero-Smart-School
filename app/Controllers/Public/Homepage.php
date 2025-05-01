@@ -3,6 +3,7 @@
 namespace App\Controllers\public;
 
 use App\Controllers\BaseController;
+use App\Libraries\BankData;
 
 class Homepage extends BaseController
 {
@@ -20,6 +21,11 @@ class Homepage extends BaseController
 
     public function guru(): string
     {
+        $dataLib = new BankData();
+        echo "<pre>";
+        var_dump($dataLib->getGtk()->get()->toArray());
+        echo "</pre>";
+        die;
         $page = [
             'title' => 'EsperoSmartSchool - Daftar Guru',
             'page' => 'Daftar Guru',
