@@ -5,27 +5,24 @@ namespace App\Libraries;
 use App\Models\GuruPegawaiModel;
 use App\Models\PesertaDidikModel;
 
-class BankData
+class DataPesertaDidik
 {
-    private $model;
-    private $builder;
-    private $get;
+    protected $model;
 
-    public function getPesertaDidik()
+    public function __construct()
     {
         $this->model = new PesertaDidikModel();
-        $this->builder = $this->model->builder();
-        return $this;
     }
 
-    public function getGtk()
+    public function allData()
     {
-        $this->model = new GuruPegawaiModel();
-        $this->builder = $this->model->builder();
+        $this->model = new PesertaDidikModel();
         return $this;
     }
 
-    protected function public()
+
+
+    protected function publicData()
     {
         $this->builder =  $this->builder->select($this->publicFilter($this->model->table));
         return $this;
