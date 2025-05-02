@@ -3,6 +3,7 @@
 namespace App\Controllers\public;
 
 use App\Controllers\BaseController;
+use App\Libraries\DataPesertaDidik;
 
 class Homepage extends BaseController
 {
@@ -20,6 +21,16 @@ class Homepage extends BaseController
 
     public function guru(): string
     {
+        $dataPdLib = new DataPesertaDidik();
+        echo "<pre>";
+        var_dump($dataPdLib
+            ->forPublic()
+            ->forAdmin()
+            // ->withAlamat()
+            // ->withOrtuWali()
+            ->get());
+        echo "</pre>";
+        die;
         $page = [
             'title' => 'EsperoSmartSchool - Daftar Guru',
             'page' => 'Daftar Guru',

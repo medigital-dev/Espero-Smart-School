@@ -413,7 +413,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     className: 'text-lg-center'
                 },
                 {
-                    data: "ibu_kandung",
+                    data: "ibu",
                     orderable: false,
                 },
                 {

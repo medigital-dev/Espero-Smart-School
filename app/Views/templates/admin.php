@@ -381,8 +381,8 @@
                         className: 'text-center'
                     },
                     {
-                        orderable: false,
                         data: "tempatLahir",
+                        orderable: false,
                     },
                     {
                         data: "tanggalLahir",
@@ -390,14 +390,12 @@
                         className: 'text-center'
                     },
                     {
-                        data: "tanggalRegistrasi",
+                        data: "alamat",
                         orderable: false,
-                        className: 'text-center'
                     },
                     {
-                        data: "jenisRegistrasi",
+                        data: "ibu",
                         orderable: false,
-                        className: 'text-center'
                     },
                     {
                         data: "status",
