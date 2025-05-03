@@ -52,6 +52,7 @@
                                     <label for="checkAllRow" class="custom-control-label"></label>
                                 </div>
                             </th>
+                            <th class="table-primary align-middle text-center">Kelas</th>
                             <th class="table-primary align-middle text-center">Nama</th>
                             <th class="table-primary align-middle text-center">NIS</th>
                             <th class="table-primary align-middle text-center">NISN</th>
@@ -60,7 +61,6 @@
                             <th class="table-primary align-middle text-center">Tanggal<br>Lahir</th>
                             <th class="table-primary align-middle text-center">Alamat</th>
                             <th class="table-primary align-middle text-center">Nama<br>Orangtua</th>
-                            <th class="table-primary align-middle text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

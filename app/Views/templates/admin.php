@@ -10,11 +10,15 @@
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="/plugins/select2/css/select2.css">
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
+    <link rel="stylesheet" href="/plugins/bootstrap4-offcanvas/offcanvas-bs4.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
+    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <style>
     </style>
@@ -263,14 +267,20 @@
     </div>
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/plugins/moment/moment-with-locales.js"></script>
+    <script src="/plugins/bootstrap4-offcanvas/offcanvas-bs4.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
+    <script src="/plugins/datatables-fixedcolumns/js/fixedColumns.bootstrap4.min.js"></script>
     <script src="/plugins/toastr/toastr.min.js"></script>
     <script src="/plugins/sweetalert2/sweetalert2.js"></script>
     <script src="/plugins/select2/js/select2.full.js"></script>
     <script src="/plugins/bs-custom-file-input/bs-custom-file-input.js"></script>
+    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
+    <script src="/plugins/inputmask/jquery.inputmask.js"></script>
     <script src="/plugins/fetchData/fetchData.js"></script>
     <script src="/assets/js/functions.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
@@ -340,7 +350,10 @@
                 pageLength: 5,
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                fixedColumns: {
+                    leftColumns: 3
+                },
+                scrollX: true,
                 order: [],
                 ajax: {
                     method: "POST",
@@ -358,6 +371,14 @@
                                         <input class="custom-control-input dtCheckbox" type="checkbox" id="check_${data}" value="${data}">
                                         <label for="check_${data}" class="custom-control-label"></label>
                                     </div>`;
+                        }
+                    },
+                    {
+                        data: "status",
+                        className: 'text-center',
+                        orderable: false,
+                        render: (data) => {
+                            return `<span class="badge bg-${data.warna}">${data.nama}</span>`;
                         }
                     },
                     {
@@ -396,14 +417,6 @@
                     {
                         data: "ibu",
                         orderable: false,
-                    },
-                    {
-                        data: "status",
-                        className: 'text-center',
-                        orderable: false,
-                        render: (data) => {
-                            return `<span class="badge bg-${data.warna}">${data.nama}</span>`;
-                        }
                     },
                 ],
             });
@@ -504,7 +517,9 @@
                     method: 'POST',
                     button: btn,
                 });
-                console.log(result);
+                if (!result) return;
+                toast(result.success + ' berhasil diimport.');
+                tableBukuIndukPesertaDidik.ajax.reload();
             });
 
             tabelKoneksiDapodik.on('draw', function() {

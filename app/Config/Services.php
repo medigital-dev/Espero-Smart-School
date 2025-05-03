@@ -53,4 +53,12 @@ class Services extends BaseService
         }
         return new \App\Libraries\Import();
     }
+
+    public static function referensi($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('referensi');
+        }
+        return new \App\Libraries\Referensi();
+    }
 }

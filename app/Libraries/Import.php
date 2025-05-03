@@ -16,7 +16,7 @@ class Import
             }
 
             $spreadsheet = $reader->load($filePath);
-            $dataExcel = $spreadsheet->getActiveSheet()->toArray();
+            $dataExcel = $spreadsheet->getActiveSheet()->toArray('');
 
             if (file_exists($filePath)) {
                 unlink($filePath);

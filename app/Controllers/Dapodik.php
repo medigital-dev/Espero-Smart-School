@@ -30,7 +30,7 @@ class Dapodik extends BaseController
 
     public function __construct()
     {
-        helper(['string', 'indonesia', 'dapodik', 'files']);
+        helper(['string', 'indonesia', 'dapodik', 'files', 'referensi']);
     }
 
     public function index(): string
@@ -463,12 +463,13 @@ class Dapodik extends BaseController
         $mPd = new PesertaDidikModel();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
         $mRefAgama = new RefAgamaModel();
+        $mOrangtuaWali = new OrangtuaWaliModel();
+        $mOrtuWaliPd = new OrtuWaliPdModel();
         $mAlamat = new AlamatModel();
         $mRefTransportasi = new RefTransportasiModel();
 
         $file = $this->request->getFile('fileUpload');
         $result = importExcel($file);
-        return $this->respond($result);
         if (!$result['status']) return $this->fail($result);
         $rows = $result['data'];
         if ($rows[0][0] !== 'Daftar Peserta Didik' || $rows[4][0] !== 'No' || $rows[4][1] !== 'Nama' || $rows[4][2] !== 'NIPD' || $rows[4][3] !== 'JK' || $rows[4][4] !== 'NISN' || $rows[4][5] !== 'Tempat Lahir' || $rows[4][6] !== 'Tanggal Lahir' || $rows[4][7] !== 'NIK' || $rows[4][8] !== 'Agama')
@@ -479,17 +480,6 @@ class Dapodik extends BaseController
             if ((int)$row[0] > 0) {
                 $nisn = $row[4];
 
-                // Start Agama
-                $cAgama = $mRefAgama->where('nama', $row[8])->first();
-                if ($cAgama) $idAgama = $cAgama['ref_id'];
-                else {
-                    $setAgama['ref_id'] = unik($mRefAgama, 'ref_id');
-                    $setAgama['nama'] = $row[8];
-                    if (!$mRefAgama->save($setAgama)) return $this->fail('Error: Referensi Agama gagal disimpan.');
-                    $idAgama = $setAgama['ref_id'];
-                }
-                // End Agama
-
                 // Start Peserta Didik
                 $idPd = unik($mPd, 'peserta_didik_id');
                 $setPd = [
@@ -498,7 +488,7 @@ class Dapodik extends BaseController
                     'tempat_lahir' => $row[5],
                     'tanggal_lahir' => $row[6],
                     'nik' => $row[7],
-                    'agama_id' => $idAgama,
+                    'agama_id' => saveAgama($row[8]),
                     'nisn' => $nisn,
                 ];
 
@@ -521,7 +511,7 @@ class Dapodik extends BaseController
                 $cRegistrasi = $mRegistrasi
                     ->groupStart()
                     ->where('nipd', $row[2])
-                    ->orWhere('peserta_didik_id', $idPd)
+                    ->orWhere('peserta_didik_id', $setPd['peserta_didik_id'])
                     ->groupEnd()
                     ->first();
                 if (!$cRegistrasi) {
@@ -579,9 +569,88 @@ class Dapodik extends BaseController
                 }
                 if (!$mAlamat->save($setAlamat)) return $this->fail('Error: Alamat tempat tinggal gagal disimpan.');
                 // End Alamat
+
+                $idAyah = $idIbu = $idWali = null;
+                // Start Ayah
+                if ($row[24]) {
+                    $setAyah = [
+                        'nama' => $row[24],
+                        'jenis_kelamin' => 'L',
+                        'pendidikan_id' => savePendidikan($row[26]),
+                        'pekerjaan_id' => savePekerjaan($row[27]),
+                        'penghasilan_id' => savePenghasilan($row[28]),
+                        'nik' => $row[29],
+                    ];
+                    $mOrangtuaWali->where('nama', $row[30]);
+                    if ($row[29] !== null)
+                        $mOrangtuaWali->orWhere('nik', $row[35]);
+                    $cAyah = $mOrangtuaWali->first();
+                    if ($cAyah) {
+                        $setAyah['id'] = $cAyah['id'];
+                        $setAyah['orangtua_id'] = $cAyah['orangtua_id'];
+                    } else $setAyah['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
+                    if (!$mOrangtuaWali->save($setAyah)) return $this->fail('Orangtua/Wali gagal disimpan.');
+                    $idAyah = $setAyah['orangtua_id'];
+                }
+                // End Ayah
+                // Start Ibu
+                if ($row[30]) {
+                    $setIbu = [
+                        'nama' => $row[30],
+                        'jenis_kelamin' => 'P',
+                        'pendidikan_id' => savePendidikan($row[32]),
+                        'pekerjaan_id' => savePekerjaan($row[33]),
+                        'penghasilan_id' => savePenghasilan($row[34]),
+                        'nik' => $row[35],
+                    ];
+                    $mOrangtuaWali->where('nama', $row[30]);
+                    if ($row[35] !== null)
+                        $mOrangtuaWali->orWhere('nik', $row[35]);
+                    $cIbu = $mOrangtuaWali->first();
+                    if ($cIbu) {
+                        $setIbu['id'] = $cIbu['id'];
+                        $setIbu['orangtua_id'] = $cIbu['orangtua_id'];
+                    } else $setIbu['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
+                    if (!$mOrangtuaWali->save($setIbu)) return $this->fail('Orangtua/Wali gagal disimpan.');
+                    $idIbu = $setIbu['orangtua_id'];
+                }
+                // End Ibu
+                // Start Wali
+                if ($row[36]) {
+                    $setWali = [
+                        'nama' => $row[36],
+                        'pendidikan_id' => savePendidikan($row[38]),
+                        'pekerjaan_id' => savePekerjaan($row[39]),
+                        'penghasilan_id' => savePenghasilan($row[40]),
+                        'nik' => $row[41],
+                    ];
+                    $mOrangtuaWali->where('nama', $row[30]);
+                    if ($row[41] !== null)
+                        $mOrangtuaWali->orWhere('nik', $row[35]);
+                    $cWali = $mOrangtuaWali->first();
+                    if ($cWali) {
+                        $setWali['id'] = $cWali['id'];
+                        $setWali['orangtua_id'] = $cWali['orangtua_id'];
+                    } else $setWali['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
+                    if (!$mOrangtuaWali->save($setWali)) return $this->fail('Orangtua/Wali gagal disimpan.');
+                    $idWali = $setWali['orangtua_id'];
+                }
+                // End Wali
+
+                // Start Orangtua Wali Pd
+                $setOrtuWaliPd = [
+                    'ayah_id' => $idAyah,
+                    'ibu_id' => $idIbu,
+                    'wali_id' => $idWali,
+                ];
+                $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setPd['peserta_didik_id'])->first();
+                if ($cOrtuWaliPd) $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
+                else $setOrtuWaliPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
+                if (!$mOrtuWaliPd->save($setOrtuWaliPd)) return $this->fail('Orangtua wali peserta didik gagal disimpan.');
+                // End Orangtua Wali Pd
+                $countSuccess++;
             }
         }
-        unlink($fileExcel['data']['path']);
         return $this->respond(['success' => $countSuccess, 'error' => $countError]);
     }
 

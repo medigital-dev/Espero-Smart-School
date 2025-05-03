@@ -5,9 +5,19 @@ use CodeIgniter\HTTP\Files\UploadedFile;
 if (!function_exists('importExcel')) {
     function importExcel(UploadedFile $file)
     {
-        $files = service('files')->upload($file);
-        if ($files)
-            $result = service('import')->excel($files['data']['path'], ['xlsx']);
-        return $result;
+        $upload = service('files')->upload($file, ['xlsx']);
+
+        if (!$upload['status']) {
+            return [
+                'status' => false,
+                'http_code' => 400,
+                'status_code' => 'upload_error',
+                'message' => $upload['message'],
+                'error' => $upload['error'],
+                'data' => [],
+            ];
+        }
+
+        return service('import')->excel($upload['data']['path']);
     }
 }

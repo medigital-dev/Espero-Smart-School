@@ -63,7 +63,7 @@ class Datatables extends BaseController
                 'nisn' => $row['nisn'],
                 'jk' => $row['jenis_kelamin'],
                 'tempatLahir' => $row['tempat_lahir'],
-                'tanggalLahir' => tanggal($row['tanggal_lahir']),
+                'tanggalLahir' => tanggal($row['tanggal_lahir'], 'd/m/Y'),
                 'jenisRegistrasi' => $row['jenis_registrasi'],
                 'tanggalRegistrasi' => tanggal($row['tanggal_registrasi']),
                 'status' => $status,

@@ -19,7 +19,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
     <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
-    <link rel="stylesheet" href="/plugins/bootstrap4-offcanvas/offcanvas-bs4.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <!-- MyCss -->
@@ -251,7 +250,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/plugins/bootstrap4-offcanvas/offcanvas-bs4.js"></script>
     <script src="/plugins/moment/moment-with-locales.js"></script>
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
