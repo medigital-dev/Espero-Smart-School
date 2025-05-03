@@ -90,12 +90,7 @@ class Datatables extends BaseController
     {
         $pdLib = new DataPesertaDidik();
         $rows = $pdLib
-            ->forPublic()
-            ->aktif()
-            ->withAlamat()
-            ->withOrtuWali()
-            ->withFilter()
-            ->withOrder('peserta_didik.nama', 'ASC')
+            ->active()
             ->toDataTable();
         $data = [];
         $no = 1 + $rows['paging']['start'];

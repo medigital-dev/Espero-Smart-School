@@ -34,8 +34,23 @@ class Services extends BaseService
     {
         if ($getShared) {
             return static::getSharedInstance('dapodik');
-
-            return new \App\Libraries\Dapodik();
         }
+        return new \App\Libraries\Dapodik();
+    }
+
+    public static function files($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('files');
+        }
+        return new \App\Libraries\Files();
+    }
+
+    public static function import($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('import');
+        }
+        return new \App\Libraries\Import();
     }
 }

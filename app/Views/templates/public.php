@@ -355,25 +355,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             ajax: {
                 method: "POST",
                 url: "/api/getPd",
-                data: d => {
-                    d.kelas = $('#selectDt-rombelPd').val();
-                    d.tingkat = $('#selectDt-tingkatRombelPd').val();
-                    d.nama = $('#inputDt-namaPd').val();
-                    d.ibu_kandung = $('#inputDt-namaIbuPd').val();
-                    d.nipd = $('#inputDt-nisPd').val();
-                    d.nisn = $('#inputDt-nisnPd').val();
-                    d.jk = $('[name="radioDt-jkPd"]:checked').val();
-                    d.tempat_lahir = $('#inputDt-tempatLahirPd').val();
-                    d.tanggal_lahir_lengkap = $('#inputDt-tanggalLahirLengkapPd').val();
-                    d.tanggal_lahir = $('#inputDt-tanggalLahirPd').val();
-                    d.bulan_lahir = $('#inputDt-bulanLahirPd').val();
-                    d.tahun_lahir = $('#inputDt-tahunLahirPd').val();
-                    d.usia_awal = $('#inputDt-usiaPdAwal').val();
-                    d.usia_akhir = $('#inputDt-usiaPdAkhir').val();
-                    d.dusun = $('#inputDt-dusunPd').val();
-                    d.desa = $('#inputDt-desaPd').val();
-                    d.kecamatan = $('#inputDt-kecamatanPd').val();
-                }
             },
             language: {
                 url: "/plugins/datatables/id.json",
@@ -391,7 +372,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     data: "nama",
                 },
                 {
-                    data: "nis",
+                    data: "nipd",
                     className: "text-lg-center",
                 },
                 {
@@ -400,7 +381,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     className: "text-lg-center",
                 },
                 {
-                    data: "jk",
+                    data: "jenis_kelamin",
                     orderable: false,
                     className: 'text-lg-center'
                 },
@@ -411,17 +392,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 {
                     data: "tanggal_lahir",
                     className: 'text-lg-center'
-                },
-                {
-                    data: "ibu",
-                    orderable: false,
-                },
-                {
-                    data: "dusun",
-                    orderable: false,
-                    render: (data, type, rows, meta) => {
-                        return `${data}, ${rows.desa}, ${rows.kecamatan}`
-                    }
                 },
             ],
         })
@@ -483,69 +453,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $('#selectDt-publicPesertaDidik').on('select2:select', function() {
                 console.log($(this).val());
                 dtPublicPd.column(7).search($(this).val()).draw('page');
-            });
-
-            // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
-                format: 'L',
-                locale: 'id'
-            });
-            let debounceTimer;
-            $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    dtPublicPd.ajax.reload();
-                }, 300);
-            });
-            $('#btnReset-filterPd').on('click', () => {
-                $('#formDt-filterPd').trigger('reset');
-                $('#formDt-filterPd select').val('').trigger('change');
-                dtPublicPd.ajax.reload()
-            });
-
-            // Unduh DT Peserta Didik
-            $('#btnUnduhExcel-publicPesertaDidik').on('click', async function() {
-                const btnElm = $(this);
-                const btnDropdownElm = $('#btnDropdown-unduhPd');
-
-                btnDropdownElm.prop('disabled', true)
-                    .children('i')
-                    .removeClass('fa-download')
-                    .addClass('fa-spinner fa-spin mr-1');
-
-                const resp = await fetchData({
-                    url: '/api/v0/peserta-didik/export/public',
-                    method: 'POST',
-                    data: {
-                        keyword: $('#searchDt-publicPesertaDidik').val(),
-                        kelas: $('#selectDt-rombelPd').val(),
-                        tingkat: $('#selectDt-tingkatRombelPd').val(),
-                        nama: $('#inputDt-namaPd').val(),
-                        ibu_kandung: $('#inputDt-namaIbuPd').val(),
-                        nipd: $('#inputDt-nisPd').val(),
-                        nisn: $('#inputDt-nisnPd').val(),
-                        jk: $('[name="radioDt-jkPd"]:checked').val(),
-                        tempat_lahir: $('#inputDt-tempatLahirPd').val(),
-                        tanggal_lahir_lengkap: $('#inputDt-tanggalLahirLengkapPd').val(),
-                        tanggal_lahir: $('#inputDt-tanggalLahirPd').val(),
-                        bulan_lahir: $('#inputDt-bulanLahirPd').val(),
-                        tahun_lahir: $('#inputDt-tahunLahirPd').val(),
-                        usia_awal: $('#inputDt-usiaPdAwal').val(),
-                        usia_akhir: $('#inputDt-usiaPdAkhir').val(),
-                        dusun: $('#inputDt-dusunPd').val(),
-                        desa: $('#inputDt-desaPd').val(),
-                        kecamatan: $('#inputDt-kecamatanPd').val(),
-                    }
-                });
-
-                if (!resp) return;
-
-                btnDropdownElm.prop('disabled', false)
-                    .children('i')
-                    .addClass('fa-download')
-                    .removeClass('fa-spinner fa-spin');
-
-                toast('Silahkan unduh file excel <a href="/' + resp + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
         });
     </script>

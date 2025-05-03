@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class OrtuWaliPdModel extends Model
+class RefJenisRegistrasiModel extends Model
 {
-    protected $table      = 'orangtua_wali_pd';
+    protected $table      = 'ref_jenis_registrasi';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
@@ -14,10 +14,8 @@ class OrtuWaliPdModel extends Model
 
     protected $allowedFields = [
         'deleted_at',
-        'ortupd_id',
-        'peserta_didik_id',
-        'ayah_id',
-        'ibu_id',
-        'wali_id',
+        'ref_id',
+        'nama',
+        'warna',
     ];
 }

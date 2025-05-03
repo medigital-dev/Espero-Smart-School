@@ -801,6 +801,70 @@
                 $('#tabelColumn').toggleClass('col-8 col-12');
                 tableBukuIndukPesertaDidik.columns.adjust().draw();
             });
+
+            // Unduh DT Peserta Didik
+            $('#btnUnduhExcel-publicPesertaDidik').on('click', async function() {
+                const btnElm = $(this);
+                const btnDropdownElm = $('#btnDropdown-unduhPd');
+
+                btnDropdownElm.prop('disabled', true)
+                    .children('i')
+                    .removeClass('fa-download')
+                    .addClass('fa-spinner fa-spin mr-1');
+
+                const resp = await fetchData({
+                    url: '/api/v0/peserta-didik/export/public',
+                    method: 'POST',
+                    data: {
+                        keyword: $('#searchDt-publicPesertaDidik').val(),
+                        kelas: $('#selectDt-rombelPd').val(),
+                        tingkat: $('#selectDt-tingkatRombelPd').val(),
+                        nama: $('#inputDt-namaPd').val(),
+                        ibu_kandung: $('#inputDt-namaIbuPd').val(),
+                        nipd: $('#inputDt-nisPd').val(),
+                        nisn: $('#inputDt-nisnPd').val(),
+                        jk: $('[name="radioDt-jkPd"]:checked').val(),
+                        tempat_lahir: $('#inputDt-tempatLahirPd').val(),
+                        tanggal_lahir_lengkap: $('#inputDt-tanggalLahirLengkapPd').val(),
+                        tanggal_lahir: $('#inputDt-tanggalLahirPd').val(),
+                        bulan_lahir: $('#inputDt-bulanLahirPd').val(),
+                        tahun_lahir: $('#inputDt-tahunLahirPd').val(),
+                        usia_awal: $('#inputDt-usiaPdAwal').val(),
+                        usia_akhir: $('#inputDt-usiaPdAkhir').val(),
+                        dusun: $('#inputDt-dusunPd').val(),
+                        desa: $('#inputDt-desaPd').val(),
+                        kecamatan: $('#inputDt-kecamatanPd').val(),
+                    }
+                });
+
+                if (!resp) return;
+
+                btnDropdownElm.prop('disabled', false)
+                    .children('i')
+                    .addClass('fa-download')
+                    .removeClass('fa-spinner fa-spin');
+
+                toast('Silahkan unduh file excel <a href="/' + resp + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
+            });
+
+            // filter DT Peserta Didik
+            $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
+                format: 'L',
+                locale: 'id'
+            });
+            let debounceTimer;
+            $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    dtPublicPd.ajax.reload();
+                }, 300);
+            });
+            $('#btnReset-filterPd').on('click', () => {
+                $('#formDt-filterPd').trigger('reset');
+                $('#formDt-filterPd select').val('').trigger('change');
+                dtPublicPd.ajax.reload()
+            });
+
         });
     </script>
 </body>

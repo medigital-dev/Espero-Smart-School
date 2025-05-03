@@ -6,7 +6,7 @@ use App\Models\DapodikSyncModel;
 
 class Dapodik
 {
-    public function config()
+    public function config(): array|null
     {
         $mDapodik = new DapodikSyncModel();
         $config = $mDapodik->where('status', true)->first();
@@ -18,7 +18,7 @@ class Dapodik
                 'token' => $config['token'],
             ];
         }
-        return [];
+        return null;
     }
 
     /**

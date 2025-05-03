@@ -27,12 +27,12 @@ class DataPesertaDidik
         $this->model = new PesertaDidikModel();
         $this->query = $this->model;
 
-        $this->selectDefault();
+        $this->default();
         $this->mainJoin();
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
     }
 
-    private function selectDefault()
+    private function default()
     {
         $this->query->select('peserta_didik.nama')
             ->select('peserta_didik.jenis_kelamin')
@@ -40,6 +40,7 @@ class DataPesertaDidik
             ->select('peserta_didik.tanggal_lahir')
             ->select('peserta_didik.nisn')
             ->select('registrasi_peserta_didik.nipd')
+            ->orderBy('peserta_didik.nama', 'ASC')
         ;
     }
 
@@ -53,6 +54,12 @@ class DataPesertaDidik
             ->join('kontak', 'kontak.nik = peserta_didik.nik', 'left')
             ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
+            ->join('orangtua_wali_pd', 'orangtua_wali_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('orangtua_wali as ayah', 'ayah.orangtua_id = orangtua_wali_pd.ayah_id', 'left')
+            ->join('orangtua_wali as ibu', 'ibu.orangtua_id = orangtua_wali_pd.ibu_id', 'left')
+            ->join('orangtua_wali as wali', 'wali.orangtua_id = orangtua_wali_pd.wali_id', 'left')
+            ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
+            ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
         ;
     }
 
@@ -70,7 +77,7 @@ class DataPesertaDidik
             ->groupStart()
             ->like('peserta_didik.nama', $this->searchValue)
             ->orLike('nipd', $this->searchValue)
-            ->orLike('peserta_didik.nisn', $this->searchValue)
+            ->orLike('nisn', $this->searchValue)
             ->orLike('rombongan_belajar.nama', $this->searchValue)
             ->groupEnd();
         $this->countFiltered = $this->query->countAllResults(false);
@@ -93,15 +100,6 @@ class DataPesertaDidik
         ];
     }
 
-    public function forPublic()
-    {
-        $this->query
-            ->select('rombongan_belajar.nama as kelas')
-        ;
-
-        return $this;
-    }
-
     public function forAdmin()
     {
         $this->query
@@ -113,50 +111,45 @@ class DataPesertaDidik
         return $this;
     }
 
-    public function withOrtuWali()
+    public function withOrtuWali(array $field = [])
     {
-        $this->query->select('ayah.nama as ayah');
-        $this->query->select('ibu.nama as ibu');
-        $this->query->select('wali.nama as wali');
-        $this->query
-            ->join('orangtua_wali_pd', 'orangtua_wali_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            ->join('orangtua_wali as ayah', 'ayah.orangtua_id = orangtua_wali_pd.ayah_id', 'left')
-            ->join('orangtua_wali as ibu', 'ibu.orangtua_id = orangtua_wali_pd.ibu_id', 'left')
-            ->join('orangtua_wali as wali', 'wali.orangtua_id = orangtua_wali_pd.wali_id', 'left');
-        return $this;
-    }
-
-    public function withAlamat()
-    {
-        $this->query
-            ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
-            ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
+        $this->query->select('ayah.nama as ayah')
+            ->select('ibu.nama as ibu')
+            ->select('wali.nama as wali')
         ;
-        $this->query->select([
-            'alamat_jalan',
-            'rt',
-            'rw',
-            'dusun',
-            'desa',
-            'kecamatan',
-            'kabupaten',
-            'provinsi',
-            'kode_pos',
-            'lintang',
-            'bujur',
-            'jarak_rumah',
-            'waktu_tempuh',
-            'ref_alat_transportasi.nama as transportasi'
-        ]);
         return $this;
     }
 
-    public function aktif()
+    public function withAlamat(array $fields = [])
     {
-        $this->query = $this->query
-            ->where('semester.status', true);
-        $this->countAll =
-            $this->countFiltered = $this->query->countAllResults(false);
+        if (empty($field))
+            $this->query->select([
+                'alamat_jalan',
+                'rt',
+                'rw',
+                'dusun',
+                'desa',
+                'kecamatan',
+                'kabupaten',
+                'provinsi',
+                'kode_pos',
+                'lintang',
+                'bujur',
+                'jarak_rumah',
+                'waktu_tempuh',
+                'ref_alat_transportasi.nama as transportasi'
+            ]);
+        else $this->query->select($fields);
+        return $this;
+    }
+
+    public function active()
+    {
+        $this->query->select([
+            'rombongan_belajar.nama as kelas',
+        ]);
+        $this->query->where('semester.status', true);
+        $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         return $this;
     }
 

@@ -22,11 +22,11 @@ class Db0002 extends Migration
             'wali_id' => [
                 'type' => 'varchar',
                 'constraint' => 128,
-                'null' => false,
+                'null' => true,
             ],
         ]);
 
-        $this->forge->dropColumn('orangtua_wali_pd', ['hubungan_keluarga']);
+        $this->forge->dropColumn('orangtua_wali_pd', ['hubungan_keluarga', 'orangtua_id']);
     }
 
     public function down()
@@ -39,6 +39,11 @@ class Db0002 extends Migration
                 'null' => true,
                 'default' => null,
             ],
+            'orangtua_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ]
         ]);
     }
 }

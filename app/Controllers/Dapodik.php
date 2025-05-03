@@ -15,6 +15,7 @@ use App\Models\OrtuWaliPdModel;
 use App\Models\PeriodikModel;
 use App\Models\PesertaDidikModel;
 use App\Models\RefAgamaModel;
+use App\Models\RefJenisRegistrasiModel;
 use App\Models\RefTransportasiModel;
 use App\Models\RefPekerjaanModel;
 use App\Models\RegistrasiPesertaDidikModel;
@@ -29,7 +30,7 @@ class Dapodik extends BaseController
 
     public function __construct()
     {
-        helper(['string', 'indonesia']);
+        helper(['string', 'indonesia', 'dapodik', 'files']);
     }
 
     public function index(): string
@@ -219,9 +220,9 @@ class Dapodik extends BaseController
         $mPeriodik = new PeriodikModel();
         $mRefAgama = new RefAgamaModel();
         $mRefPekerjaan = new RefPekerjaanModel();
+        $mRefJenisRegistrasi = new RefJenisRegistrasiModel();
 
-        $dapodik = new LibrariesDapodik();
-        $request = $dapodik->sync('getPesertaDidik');
+        $request = syncDapodik('getPesertaDidik');
 
         if (!$request['success']) return $this->fail($request['message']);
 
@@ -232,7 +233,7 @@ class Dapodik extends BaseController
             $setRegistrasi = [
                 'registrasi_id' => $row['registrasi_id'],
                 'peserta_didik_id' => $row['peserta_didik_id'],
-                'jenis_registrasi' => $row['jenis_pendaftaran_id_str'],
+                'jenis_registrasi' => $row['jenis_pendaftaran_id'],
                 'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
                 'nipd' => $row['nipd'],
                 'asal_sekolah' => $row['sekolah_asal'],
@@ -245,6 +246,12 @@ class Dapodik extends BaseController
                 ->first();
             if ($cReg) $setRegistrasi['id'] = $cReg['id'];
             if (!$mRegistrasi->save($setRegistrasi)) return $this->fail('Error: Registrasi Peserta Didik an. ' . $row['nama'] . ' gagal disimpan.');
+
+            $setRefJenisRegistrasi = [
+                'id' => $row['jenis_pendaftaran_id'],
+                'nama' => $row['jenis_pendaftaran_id_str'],
+            ];
+            if (!$mRefJenisRegistrasi->save($setRefJenisRegistrasi)) return $this->fail('Referensi jenis registrasi gagal disimpan.');
 
             $setAgama = [
                 'nama' => $row['agama_id_str'],
@@ -288,6 +295,8 @@ class Dapodik extends BaseController
             else $setKontakPd['kontak_id'] = unik($mKontak, 'kontak_id');
             if (!$mKontak->save($setKontakPd)) return $this->fail('Error: Kontak peserta didik gagal disimpan.');
 
+            // Orangtua
+            $idAyah = $idIbu = $idWali = null;
             // Mulai Ortu: Ayah
             if ($row['nama_ayah']) {
                 $setPekerjaanAyah = [
@@ -314,18 +323,6 @@ class Dapodik extends BaseController
                 if (!$mOrtuWali->save($setOrtuAyah)) return $this->fail('Error: Orangtua/Wali an ' . $setOrtuAyah['nama'] . ' gagal disimpan.');
 
                 $idAyah = $setOrtuAyah['orangtua_id'];
-                $setOrtuPd = [
-                    'peserta_didik_id' => $idPd,
-                    'orangtua_id' => $idAyah,
-                    'hubungan_keluarga' => 'kandung',
-                ];
-                $cOrtuWaliAyah = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->where('orangtua_id', $idAyah)->first();
-                if (!$cOrtuWaliAyah) {
-                    $setOrtuPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
-                } else {
-                    $setOrtuPd['id'] = $cOrtuWaliAyah['id'];
-                }
-                if (!$mOrtuWaliPd->save($setOrtuPd)) return $this->fail('Error: Data orangtua/wali peserta didik gagal disimpan.');
             }
             // Akhir Ortu: Ayah
 
@@ -354,18 +351,6 @@ class Dapodik extends BaseController
                 }
                 if (!$mOrtuWali->save($setOrtuIbu)) return $this->fail('Error: Orangtua/Wali an ' . $setOrtuIbu['nama'] . ' gagal disimpan.');
                 $idIbu = $setOrtuIbu['orangtua_id'];
-                $setOrtuPd = [
-                    'peserta_didik_id' => $idPd,
-                    'orangtua_id' => $idIbu,
-                    'hubungan_keluarga' => 'kandung',
-                ];
-                $cOrtuWaliIbu = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->where('orangtua_id', $idIbu)->first();
-                if (!$cOrtuWaliIbu) {
-                    $setOrtuPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
-                } else {
-                    $setOrtuPd['id'] = $cOrtuWaliIbu['id'];
-                }
-                if (!$mOrtuWaliPd->save($setOrtuPd)) return $this->fail('Error: Data orangtua/wali peserta didik gagal disimpan.');
             }
             // Akhir Ortu: Ibu
 
@@ -393,20 +378,20 @@ class Dapodik extends BaseController
                 }
                 if (!$mOrtuWali->save($setOrtuWali)) return $this->fail('Error: Orangtua/Wali an ' . $setOrtuWali['nama'] . ' gagal disimpan.');
                 $idWali = $setOrtuWali['orangtua_id'];
-                $cOrtuWaliWali = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->where('orangtua_id', $idWali)->first();
-                $setOrtuPd = [
-                    'peserta_didik_id' => $idPd,
-                    'orangtua_id' => $idWali,
-                    'hubungan_keluarga' => 'wali',
-                ];
-                if (!$cOrtuWaliWali) {
-                    $setOrtuPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
-                } else {
-                    $setOrtuPd['id'] = $cOrtuWaliWali['id'];
-                }
-                if (!$mOrtuWaliPd->save($setOrtuPd)) return $this->fail('Error: Data orangtua/wali peserta didik gagal disimpan.');
             }
             // Akhir Ortu: Wali
+
+            // Set Orangtua Wali Pd
+            $setOrtuWaliPd = [
+                'peserta_didik_id' => $idPd,
+                'ayah_id' => $idAyah,
+                'ibu_id' => $idIbu,
+                'wali_id' => $idWali,
+            ];
+            $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->first();
+            if (!$cOrtuWaliPd) $setOrtuWaliPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
+            else $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
+            if (!$mOrtuWaliPd->save($setOrtuWaliPd)) return $this->fail('Orangtua/wali peserta didik gagal ditambahkan.');
 
             $cPeriodik = $mPeriodik
                 ->where('nik', $nik)
@@ -482,11 +467,8 @@ class Dapodik extends BaseController
         $mRefTransportasi = new RefTransportasiModel();
 
         $file = $this->request->getFile('fileUpload');
-        $filesLib = new Files();
-        $fileExcel = $filesLib->upload($file);
-        if (!$fileExcel['status']) return $this->fail($fileExcel);
-        $import = new Import();
-        $result = $import->excel($fileExcel['data']['path']);
+        $result = importExcel($file);
+        return $this->respond($result);
         if (!$result['status']) return $this->fail($result);
         $rows = $result['data'];
         if ($rows[0][0] !== 'Daftar Peserta Didik' || $rows[4][0] !== 'No' || $rows[4][1] !== 'Nama' || $rows[4][2] !== 'NIPD' || $rows[4][3] !== 'JK' || $rows[4][4] !== 'NISN' || $rows[4][5] !== 'Tempat Lahir' || $rows[4][6] !== 'Tanggal Lahir' || $rows[4][7] !== 'NIK' || $rows[4][8] !== 'Agama')
