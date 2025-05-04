@@ -65,11 +65,11 @@
                     </thead>
                     <tbody></tbody>
                 </table>
-                <div class="row">
-                    <div class="col-sm-4">
+                <div class="row mt-2">
+                    <div class="col-sm-4 mb-2">
                         <p class="text-center text-sm-left m-0" id="dtPageInfo-bukuInduk"></p>
                     </div>
-                    <div class="col-sm-auto ml-auto">
+                    <div class="col-sm-auto ml-auto mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <button class="btn btn-outline-secondary" type="button" id="btnPreviousDt-bukuInduk"><i class="fas fa-chevron-left"></i></button>

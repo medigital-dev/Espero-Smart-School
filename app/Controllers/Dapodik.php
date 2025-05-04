@@ -462,7 +462,6 @@ class Dapodik extends BaseController
     {
         $mPd = new PesertaDidikModel();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $mRefAgama = new RefAgamaModel();
         $mOrangtuaWali = new OrangtuaWaliModel();
         $mOrtuWaliPd = new OrtuWaliPdModel();
         $mAlamat = new AlamatModel();
@@ -474,8 +473,10 @@ class Dapodik extends BaseController
         $rows = $result['data'];
         if ($rows[0][0] !== 'Daftar Peserta Didik' || $rows[4][0] !== 'No' || $rows[4][1] !== 'Nama' || $rows[4][2] !== 'NIPD' || $rows[4][3] !== 'JK' || $rows[4][4] !== 'NISN' || $rows[4][5] !== 'Tempat Lahir' || $rows[4][6] !== 'Tanggal Lahir' || $rows[4][7] !== 'NIK' || $rows[4][8] !== 'Agama')
             return $this->fail('File yang diupload bukan hasil unduh daftar Peserta Didik di aplikasi dapodik atau file telah mengalami perubahan.');
-
-        $countSuccess = $countError = 0;
+        $importStatus = [
+            'success' => [],
+            'error' => [],
+        ];
         foreach ($rows as $row) {
             if ((int)$row[0] > 0) {
                 $nisn = $row[4];
@@ -504,7 +505,8 @@ class Dapodik extends BaseController
                     $setPd['peserta_didik_id'] = $cPd['peserta_didik_id'];
                 } else $setPd['peserta_didik_id'] = $idPd;
 
-                $mPd->save($setPd);
+                if (!$mPd->save($setPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'savePd', 'nisn' => $nisn, 'message' => $mPd->errors()];
+                else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'savePd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 // End Peserta Didik
 
                 // Start Registrasi
@@ -521,7 +523,8 @@ class Dapodik extends BaseController
                         'peserta_didik_id' => $setPd['peserta_didik_id'],
                         'asal_sekolah' => $row[56],
                     ];
-                    $mRegistrasi->save($setRegistrasi);
+                    if (!$mRegistrasi->save($setRegistrasi)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveRegistrasi', 'nisn' => $nisn, 'message' => $mRegistrasi->errors()];
+                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveRegistrasi', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 }
                 // End Registrasi
 
@@ -532,7 +535,8 @@ class Dapodik extends BaseController
                     ->first();
                 if (!$cTranspot) {
                     $setTranspot['ref_id'] = unik($mRefTransportasi, 'ref_id');
-                    if (!$mRefTransportasi->save($setTranspot)) return $this->fail('Error: Referensi transportasi gagal disimpan.');
+                    if (!$mRefTransportasi->save($setTranspot)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => $mRefTransportasi->errors()];
+                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 } else {
                     $setTranspot['id'] = $cTranspot['id'];
                     $setTranspot['ref_id'] = $cTranspot['ref_id'];
@@ -555,19 +559,15 @@ class Dapodik extends BaseController
                     'alat_transportasi_id' => $setTranspot['ref_id'],
                 ];
                 $cAlamat = $mAlamat
-                    ->groupStart()
                     ->where('nik', $row[7])
-                    ->where('lintang', $row[58])
-                    ->where('bujur', $row[59])
-                    ->groupEnd()
-                    ->orderBy('updated_at', 'DESC')
                     ->first();
                 if (!$cAlamat) $setAlamat['alamat_id'] = unik($mAlamat, 'alamat_id');
                 else {
                     $setAlamat['id'] = $cAlamat['id'];
                     $setAlamat['alamat_id'] = $cAlamat['alamat_id'];
                 }
-                if (!$mAlamat->save($setAlamat)) return $this->fail('Error: Alamat tempat tinggal gagal disimpan.');
+                if (!$mAlamat->save($setAlamat)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAlamat', 'nisn' => $nisn, 'message' => $mAlamat->errors()];
+                else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAlamat', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 // End Alamat
 
                 $idAyah = $idIbu = $idWali = null;
@@ -589,7 +589,8 @@ class Dapodik extends BaseController
                         $setAyah['id'] = $cAyah['id'];
                         $setAyah['orangtua_id'] = $cAyah['orangtua_id'];
                     } else $setAyah['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
-                    if (!$mOrangtuaWali->save($setAyah)) return $this->fail('Orangtua/Wali gagal disimpan.');
+                    if (!$mOrangtuaWali->save($setAyah)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
+                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                     $idAyah = $setAyah['orangtua_id'];
                 }
                 // End Ayah
@@ -611,7 +612,8 @@ class Dapodik extends BaseController
                         $setIbu['id'] = $cIbu['id'];
                         $setIbu['orangtua_id'] = $cIbu['orangtua_id'];
                     } else $setIbu['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
-                    if (!$mOrangtuaWali->save($setIbu)) return $this->fail('Orangtua/Wali gagal disimpan.');
+                    if (!$mOrangtuaWali->save($setIbu)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
+                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                     $idIbu = $setIbu['orangtua_id'];
                 }
                 // End Ibu
@@ -632,13 +634,15 @@ class Dapodik extends BaseController
                         $setWali['id'] = $cWali['id'];
                         $setWali['orangtua_id'] = $cWali['orangtua_id'];
                     } else $setWali['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
-                    if (!$mOrangtuaWali->save($setWali)) return $this->fail('Orangtua/Wali gagal disimpan.');
+                    if (!$mOrangtuaWali->save($setWali)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
+                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                     $idWali = $setWali['orangtua_id'];
                 }
                 // End Wali
 
                 // Start Orangtua Wali Pd
                 $setOrtuWaliPd = [
+                    'peserta_didik_id' => $setPd['peserta_didik_id'],
                     'ayah_id' => $idAyah,
                     'ibu_id' => $idIbu,
                     'wali_id' => $idWali,
@@ -646,12 +650,12 @@ class Dapodik extends BaseController
                 $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setPd['peserta_didik_id'])->first();
                 if ($cOrtuWaliPd) $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
                 else $setOrtuWaliPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
-                if (!$mOrtuWaliPd->save($setOrtuWaliPd)) return $this->fail('Orangtua wali peserta didik gagal disimpan.');
+                if (!$mOrtuWaliPd->save($setOrtuWaliPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => $mOrtuWaliPd->errors()];
+                else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 // End Orangtua Wali Pd
-                $countSuccess++;
             }
         }
-        return $this->respond(['success' => $countSuccess, 'error' => $countError]);
+        return $this->respond($importStatus);
     }
 
     public function syncGtk()
