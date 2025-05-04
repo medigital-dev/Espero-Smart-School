@@ -14,19 +14,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/select2/css/select2.css">
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
     <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
-    <!-- Theme style -->
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
     <!-- MyCss -->
     <style>
-        .select2-dropdown {
-            z-index: 1100;
-        }
-
         .form-label-group {
             position: relative;
             margin-bottom: 1rem;
@@ -261,84 +259,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="/plugins/inputmask/jquery.inputmask.js"></script>
     <script src="/plugins/toastr/toastr.min.js"></script>
     <script src="/plugins/fetchData/fetchData.js"></script>
-    <script src="/assets/js/functions.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
+    <script src="/assets/js/functions.js"></script>
+    <script src="/assets/js/global.js"></script>
     <!-- function script -->
     <script>
-        function resetInput(elmInput, elmDatatables) {
-            $(elmInput).val('').trigger('change');
-            $(elmDatatables).DataTable().ajax.reload();
-        }
+
     </script>
     <!-- end function script -->
     <!-- Global Script -->
     <script>
-        $(document).ready(function() {
-            $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
-            $('[data-autoclose="false"]').on('click', e => $(e.target).siblings('.dropdown-menu').attr('onclick', 'event.stopPropagation()'));
 
-            $('.select2').select2({
-                placeholder: "Pilih...",
-                theme: "bootstrap4",
-            });
-            $('[data-mask]').inputmask();
-
-            $('.select2-rombelPd').select2({
-                placeholder: 'Pilih rombel...',
-                searchInputPlaceholder: 'Cari Rombel..',
-                theme: 'bootstrap4',
-                ajax: {
-                    url: '/api/v0/rombel/get',
-                    method: 'GET',
-                    dataType: 'json',
-                    data: function(params) {
-                        return {
-                            key: params.term,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.nama,
-                                    tingkat: item.tingkat,
-                                    // wali: item.wali,
-                                    // semester: item.semester,=
-                                };
-                            }),
-                        };
-                    },
-                    cache: true,
-                    error: function(jqXHR, status, error) {
-                        return {
-                            results: []
-                        };
-                    }
-                },
-                templateResult: (option) => {
-                    if (!option.id) {
-                        return option.text;
-                    }
-
-                    var $option = $(
-                        "<div>" +
-                        "<h6 class='m-0'>" + option.text + "</h6>" +
-                        "<p class='small m-0'>Tingkat: " + option.tingkat + "</p>" +
-                        "</div>"
-                    );
-                    return $option;
-                },
-                templateSelection: (option) => {
-                    if (!option.id) {
-                        return option.text;
-                    }
-
-                    var $selection = $('<span>' + option.text + "</span>");
-                    return $selection;
-                },
-            });
-        });
     </script>
     <!-- End Global Script -->
     <!-- Constanta DataTables -->

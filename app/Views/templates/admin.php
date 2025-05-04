@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
     <style>
     </style>
 </head>
@@ -278,49 +279,82 @@
     <script src="/plugins/toastr/toastr.min.js"></script>
     <script src="/plugins/sweetalert2/sweetalert2.js"></script>
     <script src="/plugins/select2/js/select2.full.js"></script>
+    <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
     <script src="/plugins/bs-custom-file-input/bs-custom-file-input.js"></script>
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
     <script src="/plugins/inputmask/jquery.inputmask.js"></script>
     <script src="/plugins/fetchData/fetchData.js"></script>
-    <script src="/assets/js/functions.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
+    <script src="/assets/js/functions.js"></script>
+    <script src="/assets/js/global.js"></script>
     <!-- functions -->
     <script>
-        function errorHandle(err) {
-            if (err.responseJSON && err.responseJSON.message) {
-                toast(err.responseJSON.message, "error", 0);
-            } else if (err.code === 400) {
-                toast(err.messages, "error", 0);
-            } else if (err.code === 500 || err.status === 400) {
-                toast(
-                    err.responseJSON ? err.responseJSON.messages.error : "Error server",
-                    "error", 0
-                );
-            } else {
-                toast("An error occurred", "error", 0);
-            }
-        }
 
-        function validationElm(elm = [], invalidIf = [], errorMessage = null) {
-            let check = [];
-            if (errorMessage == null) errorMessage = 'Invalid Field.';
-            elm.forEach(function(item) {
-                if (invalidIf.includes($(item).val())) {
-                    check.push($(item).val());
-                    $(item).addClass('is-invalid');
-                } else $(item).removeClass('is-invalid');
-            })
-            if (check.length !== 0) {
-                toast(errorMessage, 'error');
-                return false;
-            }
-            $('.is-invalid').removeClass('is-invalid');
-            return true;
-        }
     </script>
     <!-- end functions -->
     <!-- toastr config -->
     <script>
+        $(document).ready(function() {
+            $(".select2-getRombel").select2({
+                placeholder: "Pilih rombel...",
+                searchInputPlaceholder: "Cari Rombel..",
+                theme: "bootstrap4",
+                ajax: {
+                    url: "/api/v0/rombel/get",
+                    method: "GET",
+                    dataType: "json",
+                    data: function(params) {
+                        return {
+                            key: params.term,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nama,
+                                    tingkat: item.tingkat,
+                                    // wali: item.wali,
+                                    // semester: item.semester,=
+                                };
+                            }),
+                        };
+                    },
+                    cache: true,
+                    error: function(jqXHR, status, error) {
+                        return {
+                            results: [],
+                        };
+                    },
+                },
+                templateResult: (option) => {
+                    if (!option.id) {
+                        return option.text;
+                    }
+
+                    var $option = $(
+                        "<div>" +
+                        "<h6 class='m-0'>" +
+                        option.text +
+                        "</h6>" +
+                        "<p class='small m-0'>Tingkat: " +
+                        option.tingkat +
+                        "</p>" +
+                        "</div>"
+                    );
+                    return $option;
+                },
+                templateSelection: (option) => {
+                    if (!option.id) {
+                        return option.text;
+                    }
+
+                    var $selection = $("<span>" + option.text + "</span>");
+                    return $selection;
+                },
+            });
+        });
     </script>
     <!-- end toastr config -->
     <!-- Global Script -->
@@ -469,8 +503,9 @@
                 const pageInfo = tableBukuIndukPesertaDidik.page.info();
                 const pageInfoElm = $('#dtPageInfo-bukuInduk');
                 const selectPageElm = $('#selectPage-bukuInduk');
-                const btnPrevious = $('#btnPreviousDt-bukuInduk');
-                const btnNext = $('#btnNextDt-bukuInduk');
+                const btnPrevious = $('.btnPreviousDt-bukuInduk');
+                const btnNext = $('.btnNextDt-bukuInduk');
+                const currentPageElm = $('.text-currentPage');
 
                 const total = parseInt(pageInfo.recordsTotal);
                 const filter = parseInt(pageInfo.recordsDisplay);
@@ -478,6 +513,8 @@
                 const currentPage = parseInt(pageInfo.page) + 1;
                 const startPage = filter == 0 ? 0 : parseInt(pageInfo.start) + 1;
                 const endPage = parseInt(pageInfo.end);
+
+                currentPageElm.text(currentPage + '/' + totalPage);
 
                 let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
                 if (total !== filter) {
@@ -499,8 +536,8 @@
             });
 
             $('#selectPage-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page(parseInt(e.target.value)).draw('page'));
-            $('#btnPreviousDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('previous').draw('page'));
-            $('#btnNextDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('next').draw('page'));
+            $('.btnPreviousDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('previous').draw('page'));
+            $('.btnNextDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('next').draw('page'));
             $('#pageLenghtDt-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page.len(e.target.value).draw('page'));
             $('#searchDt-bukuInduk').on('input', e => tableBukuIndukPesertaDidik.search(e.target.value).draw('page'));
 

@@ -5,6 +5,18 @@
         <div class="card">
             <div class="card-body">
                 <div class="btn-toolbar mb-2">
+                    <div class="input-group input-group-sm my-1 mr-2">
+                        <select id="pageLenghtDt-bukuInduk" class="custom-select" data-toggle="tooltip" data-title="Jumlah data yang ditampilkan">
+                            <option value="5">5</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <div class="input-group-append">
+                            <span for="pageLenghtDt-bukuInduk" class="input-group-text">entri</span>
+                        </div>
+                    </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTable"><i class="fas fa-redo-alt fa-fw"></i></button>
                     </div>
@@ -27,20 +39,19 @@
                     <div class="my-1 mr-1 ml-lg-auto">
                         <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" placeholder="Cari Nama/NIS/NISN..." aria-label="Search">
                     </div>
-                    <div class="input-group input-group-sm my-1 mr-1">
-                        <div class="input-group-prepend">
-                            <span for="pageLenghtDt-bukuInduk" class="input-group-text">Page</span>
-                        </div>
-                        <select id="pageLenghtDt-bukuInduk" class="custom-select">
-                            <option value="5">5</option>
-                            <option value="15">15</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
                     <div class="btn-group btn-group-sm my-1 mr-1" role="group">
-                        <button type="button" class="btn btn-primary" title="Filter" id="filterData"><i class="fas fa-filter fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary btn-tooltip" data-toggle="offcanvas" data-title="Filter Data" data-target=".offcanvas" id="btnFilter-bukuIndukPd"><i class="fas fa-filter fa-fw"></i></button>
+                    </div>
+                    <div class="input-group input-group-sm my-1" role="group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary btnPreviousDt-bukuInduk" data-toggle="tooltip" data-title="Halaman sebelumnya" type="button"><i class="fas fa-chevron-left"></i></button>
+                        </div>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-currentPage"></span>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btnNextDt-bukuInduk" data-toggle="tooltip" data-title="Halaman selanjutnya" type="button"><i class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
                 </div>
                 <table class="table table-bordered table-hover w-100 mb-2" id="tableBukuIndukPesertaDidik">
@@ -72,14 +83,14 @@
                     <div class="col-sm-auto ml-auto mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" id="btnPreviousDt-bukuInduk"><i class="fas fa-chevron-left"></i></button>
+                                <button class="btn btn-outline-secondary btnPreviousDt-bukuInduk" type="button"><i class="fas fa-chevron-left"></i></button>
                             </div>
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Halaman:</span>
                             </div>
                             <select class="custom-select" id="selectPage-bukuInduk"></select>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" id="btnNextDt-bukuInduk"><i class="fas fa-chevron-right"></i></button>
+                                <button class="btn btn-outline-secondary btnNextDt-bukuInduk" type="button"><i class="fas fa-chevron-right"></i></button>
                             </div>
                         </div>
                     </div>
@@ -130,7 +141,7 @@
                 <label for="selectDt-rombelPd" class="col-sm-3 col-form-label">Kelas</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <select class="custom-select select2-rombelPd" id="selectDt-rombelPd"></select>
+                        <select class="custom-select select2-getRombel" id="selectDt-rombelPd"></select>
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-rombelPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
