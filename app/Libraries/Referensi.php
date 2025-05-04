@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\RefAgamaModel;
+use App\Models\RefJenisRegistrasiModel;
 use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
@@ -15,78 +16,90 @@ class Referensi
         helper('string');
     }
 
-    public function saveAgama(string $nama)
+    public function saveAgama(string $nama, array $set = [])
     {
         $model = new RefAgamaModel();
-        $cAgama = $model->where('nama', $nama)->first();
-        if ($cAgama) $idAgama = $cAgama['ref_id'];
+        $cek = $model->where('nama', $nama)->first();
+        if ($cek) $idAgama = $cek['ref_id'];
         else {
-            $setAgama['ref_id'] = unik($model, 'ref_id');
-            $setAgama['nama'] = $nama;
-            if (!$model->save($setAgama)) return false;
-            $idAgama = $setAgama['ref_id'];
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
+            if (!$model->save($set)) return false;
+            $idAgama = $set['ref_id'];
         }
         return $idAgama;
     }
 
-    public function savePekerjaan(string $nama)
+    public function savePekerjaan(string $nama, array $set = [])
     {
         $model = new RefPekerjaanModel();
         $cek = $model->where('nama', $nama)->first();
         if ($cek) $id = $cek['ref_id'];
         else {
-            $set = [
-                'ref_id' => unik($model, 'ref_id'),
-                'nama' => $nama,
-            ];
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
             if (!$model->save($set)) return false;
             $id = $set['ref_id'];
         }
         return $id;
     }
 
-    public function savePendidikan(string $nama)
+    public function savePendidikan(string $nama, array $set = [])
     {
         $model = new RefPendidikanModel();
         $cek = $model->where('nama', $nama)->first();
         if ($cek) $id = $cek['ref_id'];
         else {
-            $set = [
-                'ref_id' => unik($model, 'ref_id'),
-                'nama' => $nama,
-            ];
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
             if (!$model->save($set)) return false;
             $id = $set['ref_id'];
         }
         return $id;
     }
 
-    public function savePenghasilan(string $nama)
+    public function savePenghasilan(string $nama, array $set = [])
     {
         $model = new RefPenghasilanModel();
         $cek = $model->where('nama', $nama)->first();
         if ($cek) $id = $cek['ref_id'];
         else {
-            $set = [
-                'ref_id' => unik($model, 'ref_id'),
-                'nama' => $nama,
-            ];
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
             if (!$model->save($set)) return false;
             $id = $set['ref_id'];
         }
         return $id;
     }
 
-    public function saveTransportasi(string $nama)
+    public function saveTransportasi(string $nama, array $set = [])
     {
         $model = new RefTransportasiModel();
         $cek = $model->where('nama', $nama)->first();
         if ($cek) $id = $cek['ref_id'];
         else {
-            $set = [
-                'ref_id' => unik($model, 'ref_id'),
-                'nama' => $nama,
-            ];
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
+            if (!$model->save($set)) return false;
+            $id = $set['ref_id'];
+        }
+        return $id;
+    }
+
+    public function saveJenisRegistrasi(string $nama, array $set = [])
+    {
+        $model = new RefJenisRegistrasiModel();
+        $cek = $model->where('nama', $nama)->first();
+        if ($cek) $id = $cek['ref_id'];
+        else {
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
             if (!$model->save($set)) return false;
             $id = $set['ref_id'];
         }

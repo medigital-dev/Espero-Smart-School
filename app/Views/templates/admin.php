@@ -518,7 +518,10 @@
                     button: btn,
                 });
                 if (!result) return;
-                toast(result.success + ' berhasil diimport.');
+                console.log(result.result.error);
+                inputElm.val('').trigger('change');
+                $('#modalImportDapodik').modal('hide');
+                toast(result.message);
                 tableBukuIndukPesertaDidik.ajax.reload();
             });
 
@@ -800,6 +803,7 @@
                     },
                 }).then((result) => {
                     if (result.isConfirmed && result.value) {
+                        console.log(result.value.errors);
                         toast(result.value.message);
                         tableBukuIndukPesertaDidik.ajax.reload(null, false);
                     }
