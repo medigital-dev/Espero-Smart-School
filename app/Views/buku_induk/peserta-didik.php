@@ -46,8 +46,9 @@
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary btnPreviousDt-bukuInduk" data-toggle="tooltip" data-title="Halaman sebelumnya" type="button"><i class="fas fa-chevron-left"></i></button>
                         </div>
-                        <div class="input-group-prepend">
-                            <span class="input-group-text text-currentPage"></span>
+                        <input type="number" class="form-control text-currentPage text-center" min="1" id="inputDtPage-bukuInduk" style="width: 60px;">
+                        <div class="input-group-append">
+                            <span class="input-group-text text-totalPage"></span>
                         </div>
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary btnNextDt-bukuInduk" data-toggle="tooltip" data-title="Halaman selanjutnya" type="button"><i class="fas fa-chevron-right"></i></button>
@@ -98,7 +99,7 @@
                             </div>
                             <select class="custom-select" id="selectPage-bukuInduk"></select>
                             <div class="input-group-append">
-                                <span class="input-group-text" id="dtPageInfo-totalHalaman"></span>
+                                <span class="input-group-text text-totalPage"></span>
                             </div>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary btnNextDt-bukuInduk" type="button"><i class="fas fa-chevron-right"></i></button>

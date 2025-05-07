@@ -566,7 +566,7 @@
                 const btnPrevious = $('.btnPreviousDt-bukuInduk');
                 const btnNext = $('.btnNextDt-bukuInduk');
                 const currentPageElm = $('.text-currentPage');
-                const totalHalaman = $('#dtPageInfo-totalHalaman');
+                const totalHalaman = $('.text-totalPage');
 
                 const total = parseInt(pageInfo.recordsTotal);
                 const filter = parseInt(pageInfo.recordsDisplay);
@@ -575,7 +575,7 @@
                 const startPage = filter == 0 ? 0 : parseInt(pageInfo.start) + 1;
                 const endPage = parseInt(pageInfo.end);
 
-                currentPageElm.text(currentPage + '/' + totalPage);
+                currentPageElm.val(currentPage).prop('max', totalPage);
 
                 let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
                 if (total !== filter) {
@@ -594,7 +594,7 @@
                     const selected = index + 1 == currentPage ? 'selected' : '';
                     selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
                 }
-                totalHalaman.text('dari ' + totalPage);
+                totalHalaman.text('/' + totalPage);
             });
 
             let debounceTimer;
@@ -608,6 +608,7 @@
                     dtAdminBukuIndukPd.search(e.target.value).draw();
                 }, 300);
             });
+            $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
             $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
