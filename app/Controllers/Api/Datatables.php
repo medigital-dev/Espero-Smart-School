@@ -3,6 +3,7 @@
 namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
+use App\Libraries\DataPesertaDidik;
 use CodeIgniter\API\ResponseTrait;
 
 class Datatables extends BaseController
@@ -14,17 +15,18 @@ class Datatables extends BaseController
     public function __construct()
     {
         helper(['indonesia']);
-        $this->getData = service('getPesertaDidik');
+        $this->getData = new DataPesertaDidik;
     }
 
     public function bukuIndukPd()
     {
         $result = $this->getData
-            ->withAlamat()
-            ->withContact()
-            ->withOrtuWali()
-            ->withRegistrasi()
-            ->withMutasi()
+            ->withAlamat(['dusun', 'desa', 'kecamatan', 'rt', 'rw'])
+            ->withContact(['hp'])
+            ->withOrtuWali(['ayah.nama', 'ibu.nama'])
+            ->withRegistrasi(['ref_jenis_registrasi.nama as jenis_registrasi', 'tanggal_registrasi'])
+            ->withRombel(['rombongan_belajar.nama as kelas'])
+            ->withMutasi(['mutasi_pd.tanggal as tanggal_mutasi', 'ref_jenis_mutasi.nama as jenis_mutasi'])
             ->withFilter()
             ->forAdmin()
             ->toDataTable();

@@ -423,9 +423,7 @@
                 pageLength: 5,
                 processing: true,
                 serverSide: true,
-                fixedColumns: {
-                    leftColumns: 3
-                },
+                responsive: true,
                 scrollX: true,
                 order: [],
                 ajax: {
@@ -491,22 +489,22 @@
                     },
                     {
                         data: "nipd",
-                        className: "text-center",
+                        className: "text-lg-center",
                     },
                     {
                         data: "nisn",
                         orderable: false,
-                        className: "text-center",
+                        className: "text-lg-center",
                     },
                     {
                         data: "nik",
                         orderable: false,
-                        className: "text-center",
+                        className: "text-lg-center",
                     },
                     {
                         data: "jenis_kelamin",
                         orderable: false,
-                        className: 'text-center'
+                        className: 'text-lg-center'
                     },
                     {
                         data: "tempat_lahir",
@@ -515,7 +513,7 @@
                     {
                         data: "tanggal_lahir",
                         orderable: false,
-                        className: 'text-center'
+                        className: 'text-lg-center'
                     },
                     {
                         data: "peserta_didik_id",
@@ -545,14 +543,13 @@
                     {
                         data: "tahun_registrasi",
                         orderable: false,
-                        className: 'text-lg-center',
                     },
                     {
-                        data: "mutasi_jenis",
+                        data: "jenis_mutasi",
                         orderable: false,
                     },
                     {
-                        data: "mutasi_tanggal",
+                        data: "tanggal_mutasi",
                         orderable: false,
                     },
                 ],
@@ -563,6 +560,7 @@
                 const btnPrevious = $('.btnPreviousDt-bukuInduk');
                 const btnNext = $('.btnNextDt-bukuInduk');
                 const currentPageElm = $('.text-currentPage');
+                const totalHalaman = $('#dtPageInfo-totalHalaman');
 
                 const total = parseInt(pageInfo.recordsTotal);
                 const filter = parseInt(pageInfo.recordsDisplay);
@@ -590,6 +588,7 @@
                     const selected = index + 1 == currentPage ? 'selected' : '';
                     selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
                 }
+                totalHalaman.text('dari ' + totalPage);
             });
 
             let debounceTimer;

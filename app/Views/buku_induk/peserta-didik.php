@@ -68,17 +68,17 @@
                             <th class="table-primary align-middle text-center">NIS</th>
                             <th class="table-primary align-middle text-center">NISN</th>
                             <th class="table-primary align-middle text-center">NIK</th>
-                            <th class="table-primary align-middle text-center">Jenis<br>Kelamin</th>
-                            <th class="table-primary align-middle text-center">Tempat<br>Lahir</th>
-                            <th class="table-primary align-middle text-center">Tanggal<br>Lahir</th>
+                            <th class="table-primary align-middle text-center">Jenis Kelamin</th>
+                            <th class="table-primary align-middle text-center">Tempat Lahir</th>
+                            <th class="table-primary align-middle text-center">Tanggal Lahir</th>
                             <th class="table-primary align-middle text-center">Alamat</th>
-                            <th class="table-primary align-middle text-center">Nomor<br>HP</th>
-                            <th class="table-primary align-middle text-center">Nama<br>Ayah</th>
-                            <th class="table-primary align-middle text-center">Nama<br>Ibu</th>
-                            <th class="table-primary align-middle text-center">Jenis<br>Registrasi</th>
-                            <th class="table-primary align-middle text-center">Tahun<br>Registrasi</th>
-                            <th class="table-primary align-middle text-center">Jenis<br>Mutasi</th>
-                            <th class="table-primary align-middle text-center">Tanggal<br>Mutasi</th>
+                            <th class="table-primary align-middle text-center">Nomor HP</th>
+                            <th class="table-primary align-middle text-center">Nama Ayah</th>
+                            <th class="table-primary align-middle text-center">Nama Ibu</th>
+                            <th class="table-primary align-middle text-center">Jenis Registrasi</th>
+                            <th class="table-primary align-middle text-center">Tahun Registrasi</th>
+                            <th class="table-primary align-middle text-center">Jenis Mutasi</th>
+                            <th class="table-primary align-middle text-center">Tanggal Mutasi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -96,6 +96,9 @@
                                 <span class="input-group-text">Halaman:</span>
                             </div>
                             <select class="custom-select" id="selectPage-bukuInduk"></select>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="dtPageInfo-totalHalaman"></span>
+                            </div>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary btnNextDt-bukuInduk" type="button"><i class="fas fa-chevron-right"></i></button>
                             </div>

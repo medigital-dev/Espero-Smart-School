@@ -132,7 +132,7 @@ class DataPesertaDidik
      */
     public function withAlamat(array|string $fields = [])
     {
-        if (empty($field))
+        if (empty($fields))
             $this->query->select([
                 'alamat_jalan',
                 'rt',
@@ -207,7 +207,6 @@ class DataPesertaDidik
     {
         if (empty($fields)) {
             $this->query->select([
-                'rombongan_belajar.nama as kelas',
                 'tanggal_registrasi',
                 'nipd',
                 'asal_sekolah',
@@ -216,7 +215,7 @@ class DataPesertaDidik
                 'ref_jenis_registrasi.warna as warna_registrasi',
             ]);
         } else {
-            $this->query->select(trim($fields));
+            $this->query->select($fields);
         }
 
         return $this;
@@ -240,12 +239,12 @@ class DataPesertaDidik
                 'jenis_registrasi_rombel',
                 'tingkat_pendidikan as tingkat',
                 'guru_pegawai.nama as wali_kelas',
-                'kode_semester as semester'
+                'kode_semester as semester',
+                'rombongan_belajar.nama as kelas',
             ]);
         } else {
-            $this->query->select(trim($fields));
+            $this->query->select($fields);
         }
-        $this->query->where('semester.status', true);
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         return $this;
     }
@@ -289,12 +288,12 @@ class DataPesertaDidik
     {
         if (empty($fields)) {
             $this->query->select([
-                'ref_jenis_mutasi.nama as mutasi_jenis',
-                'mutasi_pd.tanggal as mutasi_tanggal',
-                'mutasi_pd.alasan as mutasi_alasan',
+                'ref_jenis_mutasi.nama as jenis_mutasi',
+                'mutasi_pd.tanggal as tanggal_mutasi',
+                'mutasi_pd.alasan as alasan_mutasi',
                 'mutasi_pd.sekolah_tujuan',
                 'mutasi_pd.nomor_ijazah_lulus',
-                'ref_jenis_mutasi.warna as mutasi_warna'
+                'ref_jenis_mutasi.warna as warna_mutasi'
             ]);
         } else $this->query->select($fields);
 
@@ -330,7 +329,7 @@ class DataPesertaDidik
 
         if ($status_pd && $status_pd !== 'all') {
             if ($status_pd == 'aktif') $this->query->where('semester.status', true);
-            else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !==', null);
+            else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=', null);
         }
         if ($nik) $this->query->where('peserta_didik.nik', $nik);
         if ($jenis_mutasi) $this->query->where('mutasi_pd.jenis', $jenis_mutasi);
