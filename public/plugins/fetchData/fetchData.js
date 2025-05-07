@@ -34,14 +34,19 @@ async function fetchData(urlOrConfig, ...restParams) {
     };
   }
 
-  let btnText = "";
+  const btnText = config.button ? config.button.children("span").text() : null;
+  const btnIcon = config.button ? config.button.children("i") : null;
+  const iconClass = btnIcon ? btnIcon.prop("class") : null;
+
   if (config.button) {
-    btnText = config.button.text();
-    config.button
-      .html(
-        '<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>'
-      )
-      .prop("disabled", true);
+    config.button.prop("disabled", true);
+
+    if (btnIcon) {
+      config.button
+        .children("i")
+        .removeClass()
+        .addClass("fa fa-spin fa-spinner fa-fw mr-1");
+    }
   }
 
   try {
@@ -69,11 +74,13 @@ async function fetchData(urlOrConfig, ...restParams) {
     return await $.ajax(options);
   } catch (error) {
     console.log(error);
-    toast(error.responseJSON.messages.error, "error", 0);
+    errorHandle(error);
     return false;
   } finally {
     if (config.button) {
-      config.button.text(btnText).prop("disabled", false);
+      config.button.prop("disabled", false);
+      if (btnIcon)
+        config.button.children("i").removeClass().addClass(iconClass);
     }
   }
 }

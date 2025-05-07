@@ -406,8 +406,8 @@
             bsCustomFileInput.init();
 
             $('#btnReloadTable').on('click', function() {
-                $(this).children('i').addClass('fa-spin');
-                $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).children('i').removeClass('fa-spin'));
+                $(this).prop('disabled', true).children('i').addClass('fa-spin');
+                $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).prop('disabled', false).children('i').removeClass('fa-spin'));
             });
             $('#checkAllRow').on('click', function() {
                 const isChecked = $(this).is(':checked');
@@ -437,6 +437,7 @@
                         d.nipd = $('#inputDt-nisPd').val();
                         d.nisn = $('#inputDt-nisnPd').val();
                         d.nik = $('#inputDt-nikPd').val();
+                        d.agama = $('#selectDt-agamaPd').val();
                         d.ayah = $('#inputDt-namaAyahPd').val();
                         d.ibu_kandung = $('#inputDt-namaIbuPd').val();
                         d.jk = $('[name="radioDt-jkPd"]:checked').val();
@@ -512,6 +513,11 @@
                     },
                     {
                         data: "tanggal_lahir",
+                        orderable: false,
+                        className: 'text-lg-center'
+                    },
+                    {
+                        data: "agama",
                         orderable: false,
                         className: 'text-lg-center'
                     },
@@ -976,26 +982,23 @@
             });
 
             // Unduh DT Peserta Didik
-            $('#btnUnduhExcel-publicPesertaDidik').on('click', async function() {
+            $('#btnUnduhExcel-bukuIndukPd').on('click', async function() {
                 const btnElm = $(this);
-                const btnDropdownElm = $('#btnDropdown-unduhPd');
-
-                btnDropdownElm.prop('disabled', true)
-                    .children('i')
-                    .removeClass('fa-download')
-                    .addClass('fa-spinner fa-spin mr-1');
 
                 const resp = await fetchData({
                     url: '/api/v0/peserta-didik/export/public',
                     method: 'POST',
                     data: {
                         keyword: $('#searchDt-publicPesertaDidik').val(),
+                        status_pd: $('[name="radioDt-statusPd"]:checked').val(),
                         kelas: $('#selectDt-rombelPd').val(),
                         tingkat: $('#selectDt-tingkatRombelPd').val(),
                         nama: $('#inputDt-namaPd').val(),
-                        ibu_kandung: $('#inputDt-namaIbuPd').val(),
                         nipd: $('#inputDt-nisPd').val(),
                         nisn: $('#inputDt-nisnPd').val(),
+                        nik: $('#inputDt-nikPd').val(),
+                        ayah: $('#inputDt-namaAyahPd').val(),
+                        ibu_kandung: $('#inputDt-namaIbuPd').val(),
                         jk: $('[name="radioDt-jkPd"]:checked').val(),
                         tempat_lahir: $('#inputDt-tempatLahirPd').val(),
                         tanggal_lahir_lengkap: $('#inputDt-tanggalLahirLengkapPd').val(),
@@ -1007,16 +1010,14 @@
                         dusun: $('#inputDt-dusunPd').val(),
                         desa: $('#inputDt-desaPd').val(),
                         kecamatan: $('#inputDt-kecamatanPd').val(),
-                    }
+                        jenis_mutasi: $('#selectDt-jenisMutasiPd').val(),
+                        jenis_registrasi: $('#selectDt-jenisRegistrasiPd').val(),
+                        tahun_registrasi: $('#inputDt-tahunRegistrasiPd').val(),
+                    },
+                    button: btnElm
                 });
 
                 if (!resp) return;
-
-                btnDropdownElm.prop('disabled', false)
-                    .children('i')
-                    .addClass('fa-download')
-                    .removeClass('fa-spinner fa-spin');
-
                 toast('Silahkan unduh file excel <a href="/' + resp + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
         });

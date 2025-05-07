@@ -40,6 +40,7 @@ class DataPesertaDidik
             ->select('peserta_didik.tanggal_lahir')
             ->select('peserta_didik.nisn')
             ->select('registrasi_peserta_didik.nipd')
+            ->select('ref_agama.nama as agama')
             ->orderBy('peserta_didik.nama', 'ASC')
         ;
     }
@@ -310,6 +311,7 @@ class DataPesertaDidik
         $nipd = $this->request->getVar('nipd');
         $nisn = $this->request->getVar('nisn');
         $nik = $this->request->getVar('nik');
+        $agama = $this->request->getVar('agama');
         $ayah = $this->request->getVar('ayah');
         $ibu_kandung = $this->request->getVar('ibu_kandung');
         $jk = $this->request->getVar('jk');
@@ -379,6 +381,7 @@ class DataPesertaDidik
                 ->orLike('rombongan_belajar.nama', $keyword)
                 ->groupEnd();
         }
+        if ($agama) $this->query->where('ref_agama.ref_id', $agama);
         $this->countFiltered = $this->query->countAllResults(false);
         return $this;
     }

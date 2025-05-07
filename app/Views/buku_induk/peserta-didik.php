@@ -25,9 +25,9 @@
                         <button type="button" class="btn btn-primary btn-tooltip" data-title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduhan" id="btnDropdown-unduhPd"><i class="fas fa-download fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduhan" id="btnDropdown-unduhPd" data-autoclose="false"><i class="fas fa-download fa-fw"></i></button>
                         <div class="dropdown-menu">
-                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Unduh tabel beserta filter" id="btnUnduhExcel-bukuIndukPd"><i class="fas fa-file-excel fa-fw mr-1"></i> Unduh Excel</button>
+                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Unduh tabel beserta filter" id="btnUnduhExcel-bukuIndukPd"><i class="fas fa-file-excel fa-fw mr-1"></i><span>Unduh Excel</span></button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
@@ -71,6 +71,7 @@
                             <th class="table-primary align-middle text-center">Jenis Kelamin</th>
                             <th class="table-primary align-middle text-center">Tempat Lahir</th>
                             <th class="table-primary align-middle text-center">Tanggal Lahir</th>
+                            <th class="table-primary align-middle text-center">Agama</th>
                             <th class="table-primary align-middle text-center">Alamat</th>
                             <th class="table-primary align-middle text-center">Nomor HP</th>
                             <th class="table-primary align-middle text-center">Nama Ayah</th>
@@ -232,6 +233,17 @@
                         <input type="text" class="form-control" id="inputDt-nikPd" placeholder="NIK">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-nikPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="selectDt-agamaPd" class="col-sm-3 col-form-label">Agama</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <select class="custom-select select2-getReferensi" data-referensi="agama" data-placeholder="Pilih jenis agama..." id="selectDt-agamaPd"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-agamaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>

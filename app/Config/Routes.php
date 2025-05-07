@@ -40,7 +40,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->get('referensi/(:segment)/(:segment)', 'Referensi::get/$1/$2');
 
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
-    $routes->post('peserta-didik/export/public', 'PesertaDidik::exportExcelPublicTable');
+    $routes->post('buku-induk/peserta-didik/public', 'PesertaDidik::exportExcelPublicTable');
 });
 
 // public

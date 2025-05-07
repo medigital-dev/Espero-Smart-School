@@ -3,6 +3,7 @@
 namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
+use App\Models\RefAgamaModel;
 use App\Models\RefJenisMutasiModel;
 use App\Models\RefJenisRegistrasiModel;
 use CodeIgniter\API\ResponseTrait;
@@ -30,6 +31,11 @@ class Referensi extends BaseController
             case 'jenisRegistrasi':
                 $model = new RefJenisRegistrasiModel();
                 $model->select(['ref_id as id', 'nama', 'warna']);
+                break;
+
+            case 'agama':
+                $model = new RefAgamaModel();
+                $model->select(['ref_id as id', 'nama']);
                 break;
 
             default:
