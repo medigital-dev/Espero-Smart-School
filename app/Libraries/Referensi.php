@@ -105,4 +105,17 @@ class Referensi
         }
         return $id;
     }
+
+    public function getAgama(string $id = null)
+    {
+        $model = new RefAgamaModel();
+        $model->select([
+            'ref_id as id',
+            'nama'
+        ]);
+        if ($id)
+            return $model->where('ref_id', $id)->first();
+        else
+            return $model->findAll();
+    }
 }

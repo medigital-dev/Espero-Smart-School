@@ -26,7 +26,7 @@ class PesertaDidik extends BaseController
     {
         $dataPdLib = new DataPesertaDidik;
         $rows = $dataPdLib
-            ->aktif()
+            ->active()
             ->withAlamat()
             ->withOrtuWali()
             ->withFilter()

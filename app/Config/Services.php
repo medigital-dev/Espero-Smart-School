@@ -61,4 +61,12 @@ class Services extends BaseService
         }
         return new \App\Libraries\Referensi();
     }
+
+    public static function getPesertaDidik($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('getPesertaDidik');
+        }
+        return new \App\Libraries\DataPesertaDidik();
+    }
 }

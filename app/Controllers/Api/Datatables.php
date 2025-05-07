@@ -3,77 +3,37 @@
 namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
-use App\Libraries\DataPesertaDidik;
-use App\Models\AnggotaRombelModel;
-use App\Models\MutasiPdModel;
-use App\Models\PesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 
 class Datatables extends BaseController
 {
     use ResponseTrait;
 
-    protected $mPesertaDidik;
+    protected $getData;
 
     public function __construct()
     {
         helper(['indonesia']);
-
-        $this->mPesertaDidik = new PesertaDidikModel();
+        $this->getData = service('getPesertaDidik');
     }
 
     public function bukuIndukPd()
     {
-        $pdLib = new DataPesertaDidik();
-        $mMutasi = new MutasiPdModel();
-        $mAnggotaRombel = new AnggotaRombelModel();
-
-        $result = $pdLib
-            ->forAdmin()
+        $result = $this->getData
             ->withAlamat()
+            ->withContact()
             ->withOrtuWali()
+            ->withRegistrasi()
+            ->withMutasi()
             ->withFilter()
-            ->withOrder('peserta_didik.nama', 'ASC')
+            ->forAdmin()
             ->toDataTable();
 
         $data = [];
         foreach ($result['data'] as $row) {
-            $status = ['nama' => '-', 'warna' => 'secondary'];
-            $cMutasi = $mMutasi
-                ->select(['nama', 'warna'])
-                ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'LEFT')
-                ->where('peserta_didik_id', $row['peserta_didik_id'])
-                ->first();
-            if ($cMutasi) $status = $cMutasi;
-
-            $cAnggota = $mAnggotaRombel
-                ->select('nama')
-                ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'LEFT')
-                ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'LEFT')
-                ->where('semester.status', true)
-                ->where('peserta_didik_id', $row['peserta_didik_id'])
-                ->orderBy('semester.kode', 'DESC')
-                ->first();
-            if ($cAnggota) $status = ['nama' => $cAnggota['nama'], 'warna' => 'success'];
-
-            $temp = [
-                'id' => $row['peserta_didik_id'],
-                'nama' => strtoupper($row['nama']),
-                'nipd' => $row['nipd'],
-                'nisn' => $row['nisn'],
-                'jk' => $row['jenis_kelamin'],
-                'tempatLahir' => $row['tempat_lahir'],
-                'tanggalLahir' => tanggal($row['tanggal_lahir'], 'd/m/Y'),
-                'jenisRegistrasi' => $row['jenis_registrasi'],
-                'tanggalRegistrasi' => tanggal($row['tanggal_registrasi']),
-                'status' => $status,
-                'ayah' => $row['ayah'],
-                'ibu' => $row['ibu'],
-                'wali' => $row['wali'],
-                'alamat' => $row['dusun'] . ' ' . $row['rt'] . '/' . $row['rw'] . ', ' . $row['desa'] .
-                    ', ' . $row['kecamatan']
-            ];
-            $data[] = $temp;
+            $row['tahun_registrasi'] = $row['tanggal_registrasi'] !== '0000-00-00' ? tanggal($row['tanggal_registrasi'], 'Y') : '';
+            $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'd/m/Y');
+            $data[] = $row;
         }
 
         $response = [
@@ -88,8 +48,7 @@ class Datatables extends BaseController
 
     public function publicPd()
     {
-        $pdLib = new DataPesertaDidik();
-        $rows = $pdLib
+        $rows = $this->getData
             ->active()
             ->toDataTable();
         $data = [];

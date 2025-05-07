@@ -292,6 +292,7 @@
 
     </script>
     <!-- end functions -->
+
     <!-- toastr config -->
     <script>
         $(document).ready(function() {
@@ -349,10 +350,52 @@
                     if (!option.id) {
                         return option.text;
                     }
-
                     var $selection = $("<span>" + option.text + "</span>");
                     return $selection;
                 },
+            });
+
+            $('.select2-getReferensi').each(function() {
+                const $select = $(this);
+                $(this).select2({
+                    placeholder: $select.data('placeholder') || "Pilih referensi...",
+                    searchInputPlaceholder: "Cari..",
+                    theme: "bootstrap4",
+                    ajax: {
+                        url: "/api/v0/referensi/" + $select.data('referensi'),
+                        method: "GET",
+                        dataType: "json",
+                        data: function(params) {
+                            return {
+                                key: params.term,
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama,
+                                    };
+                                }),
+                            };
+                        },
+                        cache: true,
+                        error: function(jqXHR, status, error) {
+                            return {
+                                results: [],
+                            };
+                        },
+                    },
+                    templateResult: function(option) {
+                        if (!option.id) return option.text;
+                        return $("<div><h6 class='m-0'>" + option.text + "</h6></div>");
+                    },
+                    templateSelection: function(option) {
+                        if (!option.id) return option.text;
+                        return $("<span>" + option.text + "</span>");
+                    },
+                });
             });
         });
     </script>
@@ -370,16 +413,12 @@
                 const isChecked = $(this).is(':checked');
                 $('.dtCheckbox').prop('checked', isChecked);
             });
-            $('.select2').select2({
-                placeholder: "Pilih...",
-                theme: "bootstrap4",
-            });
         })
     </script>
     <!-- End Global Script -->
     <script>
         $(document).ready(function() {
-            const tableBukuIndukPesertaDidik = $('#tableBukuIndukPesertaDidik').DataTable({
+            const dtAdminBukuIndukPd = $('#dtAdmin-bukuIndukPd').DataTable({
                 dom: 't',
                 pageLength: 5,
                 processing: true,
@@ -392,12 +431,37 @@
                 ajax: {
                     method: "POST",
                     url: "/api/v0/datatables/bukuInduk/pd",
+                    data: (d) => {
+                        d.status_pd = $('[name="radioDt-statusPd"]:checked').val();
+                        d.kelas = $('#selectDt-rombelPd').val();
+                        d.tingkat = $('#selectDt-tingkatRombelPd').val();
+                        d.nama = $('#inputDt-namaPd').val();
+                        d.nipd = $('#inputDt-nisPd').val();
+                        d.nisn = $('#inputDt-nisnPd').val();
+                        d.nik = $('#inputDt-nikPd').val();
+                        d.ayah = $('#inputDt-namaAyahPd').val();
+                        d.ibu_kandung = $('#inputDt-namaIbuPd').val();
+                        d.jk = $('[name="radioDt-jkPd"]:checked').val();
+                        d.tempat_lahir = $('#inputDt-tempatLahirPd').val();
+                        d.tanggal_lahir_lengkap = $('#inputDt-tanggalLahirLengkapPd').val();
+                        d.tanggal_lahir = $('#inputDt-tanggalLahirPd').val();
+                        d.bulan_lahir = $('#inputDt-bulanLahirPd').val();
+                        d.tahun_lahir = $('#inputDt-tahunLahirPd').val();
+                        d.usia_awal = $('#inputDt-usiaPdAwal').val();
+                        d.usia_akhir = $('#inputDt-usiaPdAkhir').val();
+                        d.dusun = $('#inputDt-dusunPd').val();
+                        d.desa = $('#inputDt-desaPd').val();
+                        d.kecamatan = $('#inputDt-kecamatanPd').val();
+                        d.jenis_mutasi = $('#selectDt-jenisMutasiPd').val();
+                        d.jenis_registrasi = $('#selectDt-jenisRegistrasiPd').val();
+                        d.tahun_registrasi = $('#inputDt-tahunRegistrasiPd').val();
+                    }
                 },
                 language: {
                     url: "/plugins/datatables/id.json",
                 },
                 columns: [{
-                        data: "id",
+                        data: "peserta_didik_id",
                         className: "text-center",
                         orderable: false,
                         render: (data) => {
@@ -408,11 +472,15 @@
                         }
                     },
                     {
-                        data: "status",
+                        data: "kelas",
                         className: 'text-center',
                         orderable: false,
-                        render: (data) => {
-                            return `<span class="badge bg-${data.warna}">${data.nama}</span>`;
+                        render: (data, type, rows, meta) => {
+                            if (data !== null)
+                                return `<span class="badge bg-success">${data}</span>`;
+                            else {
+                                return `<span class="badge bg-danger"><i class="fas fa-minus-circle"></i></span>`;
+                            }
                         }
                     },
                     {
@@ -431,28 +499,126 @@
                         className: "text-center",
                     },
                     {
-                        data: "jk",
+                        data: "nik",
+                        orderable: false,
+                        className: "text-center",
+                    },
+                    {
+                        data: "jenis_kelamin",
                         orderable: false,
                         className: 'text-center'
                     },
                     {
-                        data: "tempatLahir",
+                        data: "tempat_lahir",
                         orderable: false,
                     },
                     {
-                        data: "tanggalLahir",
+                        data: "tanggal_lahir",
                         orderable: false,
                         className: 'text-center'
                     },
                     {
-                        data: "alamat",
+                        data: "peserta_didik_id",
+                        orderable: false,
+                        render: (data, type, rows, meta) => {
+                            if (rows.alamat_jalan !== null)
+                                return `${rows.dusun} ${rows.rt}/${rows.rw}, ${rows.desa}, ${rows.kecamatan}`;
+                            else return '';
+                        }
+                    },
+                    {
+                        data: "hp",
+                        orderable: false,
+                    },
+                    {
+                        data: "ayah",
                         orderable: false,
                     },
                     {
                         data: "ibu",
                         orderable: false,
                     },
+                    {
+                        data: "jenis_registrasi",
+                        orderable: false,
+                    },
+                    {
+                        data: "tahun_registrasi",
+                        orderable: false,
+                        className: 'text-lg-center',
+                    },
+                    {
+                        data: "mutasi_jenis",
+                        orderable: false,
+                    },
+                    {
+                        data: "mutasi_tanggal",
+                        orderable: false,
+                    },
                 ],
+            }).on('draw', function() {
+                const pageInfo = dtAdminBukuIndukPd.page.info();
+                const pageInfoElm = $('#dtPageInfo-bukuInduk');
+                const selectPageElm = $('#selectPage-bukuInduk');
+                const btnPrevious = $('.btnPreviousDt-bukuInduk');
+                const btnNext = $('.btnNextDt-bukuInduk');
+                const currentPageElm = $('.text-currentPage');
+
+                const total = parseInt(pageInfo.recordsTotal);
+                const filter = parseInt(pageInfo.recordsDisplay);
+                const totalPage = parseInt(pageInfo.pages);
+                const currentPage = parseInt(pageInfo.page) + 1;
+                const startPage = filter == 0 ? 0 : parseInt(pageInfo.start) + 1;
+                const endPage = parseInt(pageInfo.end);
+
+                currentPageElm.text(currentPage + '/' + totalPage);
+
+                let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
+                if (total !== filter) {
+                    text += ' (disaring dari ' + total + ' entri keseluruhan';
+                }
+                pageInfoElm.text(text);
+
+                if (currentPage == 1) btnPrevious.prop('disabled', true);
+                else btnPrevious.prop('disabled', false);
+
+                if (currentPage == totalPage || totalPage == 0) btnNext.prop('disabled', true);
+                else btnNext.prop('disabled', false);
+
+                selectPageElm.html('');
+                for (let index = 0; index < totalPage; index++) {
+                    const selected = index + 1 == currentPage ? 'selected' : '';
+                    selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
+                }
+            });
+
+            let debounceTimer;
+            $('#selectPage-bukuInduk').on('change', e => dtAdminBukuIndukPd.page(parseInt(e.target.value)).draw('page'));
+            $('.btnPreviousDt-bukuInduk').on('click', () => dtAdminBukuIndukPd.page('previous').draw('page'));
+            $('.btnNextDt-bukuInduk').on('click', () => dtAdminBukuIndukPd.page('next').draw('page'));
+            $('#pageLenghtDt-bukuInduk').on('change', e => dtAdminBukuIndukPd.page.len(e.target.value).draw('page'));
+            $('#searchDt-bukuInduk').on('input', e => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    dtAdminBukuIndukPd.search(e.target.value).draw();
+                }, 300);
+            });
+
+            // filter DT Peserta Didik
+            $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
+                format: 'L',
+                locale: 'id'
+            });
+            $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    dtAdminBukuIndukPd.ajax.reload();
+                }, 300);
+            });
+            $('#btnReset-filterPd').on('click', () => {
+                $('#formDt-filterPd').trigger('reset');
+                $('#formDt-filterPd select').val('').trigger('change');
+                dtAdminBukuIndukPd.ajax.reload()
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
@@ -499,48 +665,6 @@
                 ],
             });
 
-            tableBukuIndukPesertaDidik.on('draw', function() {
-                const pageInfo = tableBukuIndukPesertaDidik.page.info();
-                const pageInfoElm = $('#dtPageInfo-bukuInduk');
-                const selectPageElm = $('#selectPage-bukuInduk');
-                const btnPrevious = $('.btnPreviousDt-bukuInduk');
-                const btnNext = $('.btnNextDt-bukuInduk');
-                const currentPageElm = $('.text-currentPage');
-
-                const total = parseInt(pageInfo.recordsTotal);
-                const filter = parseInt(pageInfo.recordsDisplay);
-                const totalPage = parseInt(pageInfo.pages);
-                const currentPage = parseInt(pageInfo.page) + 1;
-                const startPage = filter == 0 ? 0 : parseInt(pageInfo.start) + 1;
-                const endPage = parseInt(pageInfo.end);
-
-                currentPageElm.text(currentPage + '/' + totalPage);
-
-                let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
-                if (total !== filter) {
-                    text += ' (disaring dari ' + total + ' entri keseluruhan';
-                }
-                pageInfoElm.text(text);
-
-                if (currentPage == 1) btnPrevious.prop('disabled', true);
-                else btnPrevious.prop('disabled', false);
-
-                if (currentPage == totalPage || totalPage == 0) btnNext.prop('disabled', true);
-                else btnNext.prop('disabled', false);
-
-                selectPageElm.html('');
-                for (let index = 0; index < totalPage; index++) {
-                    const selected = index + 1 == currentPage ? 'selected' : '';
-                    selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
-                }
-            });
-
-            $('#selectPage-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page(parseInt(e.target.value)).draw('page'));
-            $('.btnPreviousDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('previous').draw('page'));
-            $('.btnNextDt-bukuInduk').on('click', () => tableBukuIndukPesertaDidik.page('next').draw('page'));
-            $('#pageLenghtDt-bukuInduk').on('change', e => tableBukuIndukPesertaDidik.page.len(e.target.value).draw('page'));
-            $('#searchDt-bukuInduk').on('input', e => tableBukuIndukPesertaDidik.search(e.target.value).draw('page'));
-
             $('#btnRun-ImportDapodik').on('click', async function() {
                 const inputElm = $('#inputFile');
                 const file = inputElm.prop('files')[0];
@@ -559,7 +683,7 @@
                 inputElm.val('').trigger('change');
                 $('#modalImportDapodik').modal('hide');
                 toast(result.message);
-                tableBukuIndukPesertaDidik.ajax.reload();
+                dtAdminBukuIndukPd.ajax.reload();
             });
 
             tabelKoneksiDapodik.on('draw', function() {
@@ -842,7 +966,7 @@
                     if (result.isConfirmed && result.value) {
                         console.log(result.value.errors);
                         toast(result.value.message);
-                        tableBukuIndukPesertaDidik.ajax.reload(null, false);
+                        dtAdminBukuIndukPd.ajax.reload(null, false);
                     }
                 }).catch((errorMessage) => {
                     errorHandle(errorMessage);
@@ -850,12 +974,6 @@
                 }).finally(() => {
                     btn.prop('disabled', false).children('i').removeClass('fa-spin');
                 });
-            });
-
-            $('#filterData').click(function() {
-                $('#filterColumn').toggleClass('d-none');
-                $('#tabelColumn').toggleClass('col-8 col-12');
-                tableBukuIndukPesertaDidik.columns.adjust().draw();
             });
 
             // Unduh DT Peserta Didik
@@ -902,25 +1020,6 @@
 
                 toast('Silahkan unduh file excel <a href="/' + resp + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
-
-            // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
-                format: 'L',
-                locale: 'id'
-            });
-            let debounceTimer;
-            $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    dtPublicPd.ajax.reload();
-                }, 300);
-            });
-            $('#btnReset-filterPd').on('click', () => {
-                $('#formDt-filterPd').trigger('reset');
-                $('#formDt-filterPd select').val('').trigger('change');
-                dtPublicPd.ajax.reload()
-            });
-
         });
     </script>
 </body>

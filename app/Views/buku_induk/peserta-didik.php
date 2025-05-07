@@ -18,26 +18,26 @@
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" title="Reload Tabel" id="btnReloadTable"><i class="fas fa-redo-alt fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Reload Tabel" id="btnReloadTable"><i class="fas fa-redo-alt fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" title="Sinkron dengan Dapodik" id="btnSinkronPdDapodik"><i class="fas fa-sync-alt fa-fw"></i></button>
-                        <button type="button" class="btn btn-primary" title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Sinkron dengan Dapodik" id="btnSinkronPdDapodik"><i class="fas fa-sync-alt fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary btn-tooltip" data-title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduh Tabel berserta Filter" id="btnDropdown-unduhPd"><i class="fas fa-download fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduhan" id="btnDropdown-unduhPd"><i class="fas fa-download fa-fw"></i></button>
                         <div class="dropdown-menu">
-                            <button type="button" class="dropdown-item" id="btnUnduhExcel-publicPesertaDidik"><i class="fas fa-file-excel fa-fw mr-1"></i> Unduh Excel</button>
+                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Unduh tabel beserta filter" id="btnUnduhExcel-bukuIndukPd"><i class="fas fa-file-excel fa-fw mr-1"></i> Unduh Excel</button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" title="Mutasi"><i class="fas fa-people-arrows fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Mutasi"><i class="fas fa-people-arrows fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
                     </div>
-                    <div class="my-1 mr-1 ml-lg-auto">
-                        <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" placeholder="Cari Nama/NIS/NISN..." aria-label="Search">
+                    <div class="my-1 mr-1 ml-sm-auto">
+                        <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" data-toggle="tooltip" data-title="Pencarian Nama/NIS/NISN/Kelas" placeholder="Cari..." aria-label="Search">
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-1" role="group">
                         <button type="button" class="btn btn-primary btn-tooltip" data-toggle="offcanvas" data-title="Filter Data" data-target=".offcanvas" id="btnFilter-bukuIndukPd"><i class="fas fa-filter fa-fw"></i></button>
@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered table-hover w-100 mb-2" id="tableBukuIndukPesertaDidik">
+                <table class="table table-bordered table-hover w-100 mb-2" id="dtAdmin-bukuIndukPd">
                     <thead>
                         <tr>
                             <th class="table-primary align-middle text-center" style="width: 10px;">
@@ -63,15 +63,22 @@
                                     <label for="checkAllRow" class="custom-control-label"></label>
                                 </div>
                             </th>
-                            <th class="table-primary align-middle text-center">Kelas</th>
+                            <th class="table-primary align-middle text-center">Status</th>
                             <th class="table-primary align-middle text-center">Nama</th>
                             <th class="table-primary align-middle text-center">NIS</th>
                             <th class="table-primary align-middle text-center">NISN</th>
+                            <th class="table-primary align-middle text-center">NIK</th>
                             <th class="table-primary align-middle text-center">Jenis<br>Kelamin</th>
                             <th class="table-primary align-middle text-center">Tempat<br>Lahir</th>
                             <th class="table-primary align-middle text-center">Tanggal<br>Lahir</th>
                             <th class="table-primary align-middle text-center">Alamat</th>
-                            <th class="table-primary align-middle text-center">Nama<br>Orangtua</th>
+                            <th class="table-primary align-middle text-center">Nomor<br>HP</th>
+                            <th class="table-primary align-middle text-center">Nama<br>Ayah</th>
+                            <th class="table-primary align-middle text-center">Nama<br>Ibu</th>
+                            <th class="table-primary align-middle text-center">Jenis<br>Registrasi</th>
+                            <th class="table-primary align-middle text-center">Tahun<br>Registrasi</th>
+                            <th class="table-primary align-middle text-center">Jenis<br>Mutasi</th>
+                            <th class="table-primary align-middle text-center">Tanggal<br>Mutasi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -96,11 +103,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-4 d-none" id="filterColumn">
-        <div class="card card-body">
-            <h5>filter data</h5>
         </div>
     </div>
 </div>
@@ -137,6 +139,29 @@
     </div>
     <div class="offcanvas-body">
         <form id="formDt-filterPd">
+            <div class="form-group row mb-2">
+                <label class="col-sm-3 col-form-label">Status</label>
+                <div class="col-sm-9">
+                    <div class="icheck-primary form-check-inline">
+                        <input class="form-check-input" type="radio" id="radioDt-statusPdAll" name="radioDt-statusPd" value="all" checked>
+                        <label class="form-check-label" for="radioDt-statusPdAll">
+                            Semua
+                        </label>
+                    </div>
+                    <div class="icheck-primary form-check-inline">
+                        <input class="form-check-input" type="radio" id="chckboxDt-statusPdAktif" name="radioDt-statusPd" value="aktif">
+                        <label class="form-check-label" for="chckboxDt-statusPdAktif">
+                            Aktif
+                        </label>
+                    </div>
+                    <div class="icheck-primary form-check-inline">
+                        <input class="form-check-input" type="radio" id="chckboxDt-statusPdMutasi" name="radioDt-statusPd" value="mutasi">
+                        <label class="form-check-label" for="chckboxDt-statusPdMutasi">
+                            Mutasi
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="form-group row mb-2">
                 <label for="selectDt-rombelPd" class="col-sm-3 col-form-label">Kelas</label>
                 <div class="col-sm-9">
@@ -176,17 +201,6 @@
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-namaIbuPd" class="col-sm-3 col-form-label">Ibu Kdg</label>
-                <div class="col-sm-9">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-namaIbuPd" placeholder="Nama ibu kandung">
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-namaIbuPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row mb-2">
                 <label for="inputDt-nisPd" class="col-sm-3 col-form-label">NIS</label>
                 <div class="col-sm-9">
                     <div class="input-group">
@@ -209,21 +223,54 @@
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputEmail3" class="col-sm-3 col-form-label">JK</label>
+                <label for="inputDt-nikPd" class="col-sm-3 col-form-label">NIK</label>
                 <div class="col-sm-9">
-                    <div class="icheck-primary">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputDt-nikPd" placeholder="NIK">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-nikPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="inputDt-namaAyahPd" class="col-sm-3 col-form-label">Ayah</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputDt-namaAyahPd" placeholder="Nama ayah">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-namaAyahPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="inputDt-namaIbuPd" class="col-sm-3 col-form-label">Ibu</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputDt-namaIbuPd" placeholder="Nama ibu kandung">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-namaIbuPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label class="col-sm-3 col-form-label">JK</label>
+                <div class="col-sm-9">
+                    <div class="icheck-primary form-check-inline">
                         <input class="form-check-input" type="radio" id="radioDt-jkPdL" name="radioDt-jkPd" value="L">
                         <label class="form-check-label" for="radioDt-jkPdL">
-                            Laki-laki
+                            L
                         </label>
                     </div>
-                    <div class="icheck-primary">
+                    <div class="icheck-primary form-check-inline">
                         <input class="form-check-input" type="radio" id="chckboxDt-jkPdP" name="radioDt-jkPd" value="P">
                         <label class="form-check-label" for="chckboxDt-jkPdP">
-                            Perempuan
+                            P
                         </label>
                     </div>
-                    <div class="icheck-primary">
+                    <div class="icheck-primary form-check-inline">
                         <input class="form-check-input" type="radio" id="chckboxDt-jkPdAll" name="radioDt-jkPd" value="all" checked>
                         <label class="form-check-label" for="chckboxDt-jkPdAll">
                             Semua
@@ -336,6 +383,34 @@
                         <input type="text" class="form-control" id="inputDt-kecamatanPd" placeholder="Nama kecamatan">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-kecamatanPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-2">
+                <label for="selectDt-jenisMutasiPd" class="col-sm-3 col-form-label">Mutasi</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectDt-jenisMutasiPd"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-jenisMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-0">
+                <label for="selectDt-jenisRegistrasiPd" class="col-sm-3 col-form-label">Registrasi</label>
+                <div class="col-sm-9">
+                    <div class="input-group mb-2">
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisRegistrasi" data-placeholder="Pilih jenis registrasi..." id="selectDt-jenisRegistrasiPd"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-jenisRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="number" class="form-control" id="inputDt-tahunRegistrasiPd" placeholder="Tahun registrasi">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tahunRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
