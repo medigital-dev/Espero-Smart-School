@@ -31,7 +31,11 @@
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Mutasi"><i class="fas fa-people-arrows fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Mutasi"><i class="fas fa-people-arrows fa-fw"></i></button>
+                        <div class="dropdown-menu">
+                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalMutasiPd" data-title="Mutasikan peserta didik"><i class="fas fa-sign-out-alt fa-fw mr-1"></i><span>PD Keluar</span></button>
+                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalKelulusanPd" data-title="Kelulusan peserta didik"><i class="fas fa-user-graduate fa-fw mr-1"></i><span>Kelulusan</span></button>
+                        </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
@@ -132,6 +136,87 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="btnRun-ImportDapodik">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalMutasiPd" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalMutasiPdLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMutasiPdLabel">Mutasi Peserta Didik</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row mb-2">
+                    <label for="inputForm-tanggalMutasiPd" class="col-sm-3 col-form-label">Tanggal</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="inputDt-tanggalMutasiPd" data-inputmask-alias="datetime" placeholder="Tanggal mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            <div class="input-group-append" data-target="#inputDt-tanggalMutasiPd" data-toggle="datetimepicker">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tanggalMutasiPd');"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="selectForm-namaMutasiPd" class="col-sm-3 col-form-label">Nama</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <select class="custom-select select2-getPd" id="selectForm-namaMutasiPd"></select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-namaMutasiPd');"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="selectForm-jenisMutasiPd" class="col-sm-3 col-form-label">Mutasi</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectForm-jenisMutasiPd"></select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-jenisMutasiPd');"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="selectForm-alasanMutasiPd" class="col-sm-3 col-form-label">Alasan</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <textarea class="form-control" rows="2" id="selectForm-alasanMutasiPd"></textarea>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-alasanMutasiPd');"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label for="inputForm-sekolahTujuanMutasiPd" class="col-sm-3 col-form-label">Tujuan</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="inputForm-sekolahTujuanMutasiPd">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputForm-sekolahTujuanMutasiPd');"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnRun-ImportDapodik">
+                    <i class="fas fa-save mr-1"></i>
+                    <span>
+                        Simpan
+                    </span>
+                </button>
             </div>
         </div>
     </div>

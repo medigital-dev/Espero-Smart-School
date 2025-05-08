@@ -61,7 +61,7 @@ function validationElm(elm = [], invalidIf = [], errorMessage = null) {
   return true;
 }
 
-function resetInput(elmInput, elmDatatables) {
+function resetInput(elmInput, elmDatatables = false) {
   $(elmInput).val("").trigger("change");
-  $(elmDatatables).DataTable().ajax.reload();
+  if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
 }

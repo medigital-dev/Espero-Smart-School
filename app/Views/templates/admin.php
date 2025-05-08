@@ -320,64 +320,144 @@
     <!-- toastr config -->
     <script>
         $(document).ready(function() {
-            $(".select2-getRombel").select2({
-                placeholder: "Pilih rombel...",
-                searchInputPlaceholder: "Cari Rombel..",
-                theme: "bootstrap4",
-                ajax: {
-                    url: "/api/v0/rombel/get",
-                    method: "GET",
-                    dataType: "json",
-                    data: function(params) {
-                        return {
-                            key: params.term,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.nama,
-                                    tingkat: item.tingkat,
-                                    // wali: item.wali,
-                                    // semester: item.semester,=
-                                };
-                            }),
-                        };
-                    },
-                    cache: true,
-                    error: function(jqXHR, status, error) {
-                        return {
-                            results: [],
-                        };
-                    },
-                },
-                templateResult: (option) => {
-                    if (!option.id) {
-                        return option.text;
-                    }
 
-                    var $option = $(
-                        "<div>" +
-                        "<h6 class='m-0'>" +
-                        option.text +
-                        "</h6>" +
-                        "<p class='small m-0'>Tingkat: " +
-                        option.tingkat +
-                        "</p>" +
-                        "</div>"
-                    );
-                    return $option;
-                },
-                templateSelection: (option) => {
-                    if (!option.id) {
-                        return option.text;
-                    }
-                    var $selection = $("<span>" + option.text + "</span>");
-                    return $selection;
-                },
+            $(".select2-getPd").each(function() {
+                const $select = $(this);
+                $select.select2({
+                    placeholder: "Pilih...",
+                    searchInputPlaceholder: "Cari Nama/NIS/NISN/Kelas...",
+                    theme: "bootstrap4",
+                    dropdownParent: $select.parents(".modal").length ?
+                        $select.parents(".modal").first() : $(document.body),
+                    ajax: {
+                        url: "/api/v0/buku-induk/peserta-didik/get/active",
+                        method: "GET",
+                        dataType: "json",
+                        data: function(params) {
+                            return {
+                                key: params.term,
+                            };
+                        },
+                        processResults: function(data) {
+                            console.log(data);
+
+                            return {
+                                results: $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama,
+                                        kelas: item.kelas,
+                                        nisn: item.nisn,
+                                        nipd: item.nipd
+                                    };
+                                }),
+                            };
+                        },
+                        cache: true,
+                        error: function(jqXHR, status, error) {
+                            return {
+                                results: [],
+                            };
+                        },
+                    },
+                    templateResult: (option) => {
+                        if (!option.id) {
+                            return option.text;
+                        }
+
+                        var $option = $(
+                            "<div>" +
+                            "<h6 class='m-0'>" +
+                            option.text +
+                            "</h6>" +
+                            "<p class='small m-0'>Kelas: " +
+                            option.kelas +
+                            "</p>" +
+                            "<p class='small m-0'>NIS: " +
+                            option.nipd +
+                            "</p>" +
+                            "<p class='small m-0'>NISN: " +
+                            option.nisn +
+                            "</p>" +
+                            "</div>"
+                        );
+                        return $option;
+                    },
+                    templateSelection: (option) => {
+                        if (!option.id) {
+                            return option.text;
+                        }
+                        var $selection = $("<span>" + option.text + "</span>");
+                        return $selection;
+                    },
+                });
             });
+
+
+            $(".select2-getRombel").each(function() {
+                const $select = $(this);
+                $select.select2({
+                    placeholder: "Pilih rombel...",
+                    searchInputPlaceholder: "Cari Rombel..",
+                    theme: "bootstrap4",
+                    dropdownParent: $select.parents(".modal").length ?
+                        $select.parents(".modal").first() : $(document.body),
+                    ajax: {
+                        url: "/api/v0/rombel/get",
+                        method: "GET",
+                        dataType: "json",
+                        data: function(params) {
+                            return {
+                                key: params.term,
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.nama,
+                                        tingkat: item.tingkat,
+                                        // wali: item.wali,
+                                        // semester: item.semester,=
+                                    };
+                                }),
+                            };
+                        },
+                        cache: true,
+                        error: function(jqXHR, status, error) {
+                            return {
+                                results: [],
+                            };
+                        },
+                    },
+                    templateResult: (option) => {
+                        if (!option.id) {
+                            return option.text;
+                        }
+
+                        var $option = $(
+                            "<div>" +
+                            "<h6 class='m-0'>" +
+                            option.text +
+                            "</h6>" +
+                            "<p class='small m-0'>Tingkat: " +
+                            option.tingkat +
+                            "</p>" +
+                            "</div>"
+                        );
+                        return $option;
+                    },
+                    templateSelection: (option) => {
+                        if (!option.id) {
+                            return option.text;
+                        }
+                        var $selection = $("<span>" + option.text + "</span>");
+                        return $selection;
+                    },
+                });
+            });
+
 
             $('.select2-getReferensi').each(function() {
                 const $select = $(this);
@@ -385,6 +465,8 @@
                     placeholder: $select.data('placeholder') || "Pilih referensi...",
                     searchInputPlaceholder: "Cari..",
                     theme: "bootstrap4",
+                    dropdownParent: $select.parents(".modal").length ?
+                        $select.parents(".modal").first() : $(document.body),
                     ajax: {
                         url: "/api/v0/referensi/" + $select.data('referensi'),
                         method: "GET",
