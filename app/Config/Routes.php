@@ -31,6 +31,7 @@ $routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
+$routes->post('/api/v0/buku-induk/export/(:segment)', 'BukuInduk::export/$1');
 $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');
 
 

@@ -289,7 +289,31 @@
     <script src="/assets/js/global.js"></script>
     <!-- functions -->
     <script>
+        let selectedRows = [];
 
+        function checkRowDt() {
+            $(".dtCheckbox").on("change", function() {
+                let id = $(this).prop('id');
+                if ($(this).is(':checked')) {
+                    if (!selectedRows.includes(id)) {
+                        selectedRows.push(id);
+                    }
+                } else {
+                    selectedRows = selectedRows.filter(item => item !== id);
+                }
+                stateBtnCheckAll();
+            });
+        }
+
+        function stateBtnCheckAll() {
+            const countCheckbox = $(".dtCheckbox").length;
+            const countCheckboxChecked = $(".dtCheckbox:checked").length;
+            if (countCheckbox == countCheckboxChecked)
+                $("#checkAllRow").prop("checked", true).prop("indeterminate", false);
+            else if (countCheckboxChecked == 0)
+                $("#checkAllRow").prop("checked", false).prop("indeterminate", false);
+            else $("#checkAllRow").prop("indeterminate", true);
+        }
     </script>
     <!-- end functions -->
 
@@ -409,9 +433,21 @@
                 $(this).prop('disabled', true).children('i').addClass('fa-spin');
                 $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).prop('disabled', false).children('i').removeClass('fa-spin'));
             });
+
             $('#checkAllRow').on('click', function() {
                 const isChecked = $(this).is(':checked');
-                $('.dtCheckbox').prop('checked', isChecked);
+                $('.dtCheckbox').each(function() {
+                    const id = $(this).prop('id');
+                    $(this).prop('checked', isChecked);
+                    if ($(this).is(':checked')) {
+                        if (!selectedRows.includes(id)) {
+                            selectedRows.push(id);
+                        }
+                    } else {
+                        selectedRows = selectedRows.filter(item => item !== id);
+                    }
+                })
+
             });
         })
     </script>
@@ -423,9 +459,19 @@
                 pageLength: 5,
                 processing: true,
                 serverSide: true,
-                responsive: true,
+                fixedColumns: true,
                 scrollX: true,
                 order: [],
+                drawCallback: function() {
+                    $(".dtCheckbox").each(function() {
+                        let id = $(this).prop('id');
+                        if (selectedRows.includes(id)) {
+                            $(this).prop('checked', true);
+                        }
+                    });
+
+                    stateBtnCheckAll();
+                },
                 ajax: {
                     method: "POST",
                     url: "/api/v0/datatables/bukuInduk/pd",
@@ -595,6 +641,9 @@
                     selectPageElm.append(`<option value="${index}" ${selected}>${index+1}</option>`)
                 }
                 totalHalaman.text('/' + totalPage);
+
+                checkRowDt();
+                // restoreCheck();
             });
 
             let debounceTimer;
@@ -987,7 +1036,7 @@
                 const btnElm = $(this);
 
                 const resp = await fetchData({
-                    url: '/api/v0/peserta-didik/export/public',
+                    url: '/api/v0/buku-induk/export/' + 'pesertaDidik',
                     method: 'POST',
                     data: {
                         keyword: $('#searchDt-publicPesertaDidik').val(),
@@ -1018,8 +1067,8 @@
                     button: btnElm
                 });
 
-                if (!resp) return;
-                toast('Silahkan unduh file excel <a href="/' + resp + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
+                if (!resp.status) return;
+                toast('Silahkan unduh file excel <a href="/' + resp.data.path + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
         });
     </script>

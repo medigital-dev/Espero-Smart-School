@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -14,33 +15,42 @@ class Export
     public function excel(array $title, array $header, array $rows)
     {
         try {
-
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
-
-            // Heading (A1 downward)
+            $lastColIndex = count($header);
+            $lastColLetter = Coordinate::stringFromColumnIndex($lastColIndex);
+            $rowPosition = 1;
             $sheet->fromArray($title['heading'], null, 'A1');
+            for ($i = 0; $i < count($title['heading']); $i++) {
+                $position = $i + $rowPosition;
+                $coordinate = 'A' . $position . ':' . $lastColLetter . $position;
+                $sheet->mergeCells($coordinate);
+                $sheet->getStyle($coordinate)
+                    ->getAlignment()->setVertical(Alignment::VERTICAL_CENTER)
+                    ->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            }
             $sheet->getStyle('A1:A' . count($title['heading']))
                 ->getFont()->setBold(true)->setSize(14);
 
-            // Mulai baris setelah heading
-            $rowPosition = count($title['heading']) + 1;
+            $rowPosition += count($title['heading']);
 
-            // Subheading jika ada
             if (!empty($title['subHeading'])) {
                 $sheet->fromArray($title['subHeading'], null, 'A' . $rowPosition);
+                for ($i = 0; $i < count($title['subHeading']); $i++) {
+                    $position = $i + $rowPosition;
+                    $coordinate = 'A' . $position . ':' . $lastColLetter . $position;
+                    $sheet->mergeCells($coordinate);
+                    $sheet->getStyle($coordinate)
+                        ->getAlignment()->setVertical(Alignment::VERTICAL_CENTER)
+                        ->setHorizontal(Alignment::HORIZONTAL_LEFT);
+                }
                 $rowPosition += count($title['subHeading']);
             }
 
-            // Skip 1 baris sebelum header kolom utama
             $rowPosition += 1;
             $headerStartRow = $rowPosition;
 
-            // Tulis header kolom dan merge ke baris berikutnya
             $sheet->fromArray($header, null, 'A' . $headerStartRow);
-
-            $lastColIndex = count($header);
-            $lastColLetter = Coordinate::stringFromColumnIndex($lastColIndex);
 
             for ($i = 1; $i <= $lastColIndex; $i++) {
                 $colLetter = Coordinate::stringFromColumnIndex($i);
@@ -48,7 +58,6 @@ class Export
                 $sheet->getColumnDimension($colLetter)->setAutoSize(true);
             }
 
-            // Styling header
             $theadRange = "A{$headerStartRow}:{$lastColLetter}" . ($headerStartRow + 1);
             $thead = $sheet->getStyle($theadRange);
             $thead->getAlignment()
@@ -60,16 +69,31 @@ class Export
             $thead->getFill()->setFillType(Fill::FILL_SOLID)
                 ->getStartColor()->setRGB('F0F0F0');
 
-            // Freeze pane tepat di bawah header 2 baris
             $freezeRow = $headerStartRow + 2;
             $sheet->freezePane("A{$freezeRow}");
 
-            // AutoFilter di baris paling bawah header (baris kedua dari merge)
             $sheet->setAutoFilter("A" . ($headerStartRow + 1) . ":{$lastColLetter}" . ($headerStartRow + 1));
 
-            // Tulis data baris-barisnya
             $dataStartRow = $headerStartRow + 2;
-            $sheet->fromArray($rows, null, 'A' . $dataStartRow);
+            $dataEndRow = $dataStartRow + count($rows) - 1;
+            $sheet->getStyle("A{$dataStartRow}:{$lastColLetter}{$dataEndRow}")
+                ->getNumberFormat()->setFormatCode('@');
+
+            $rowNum = $dataStartRow;
+            foreach ($rows as $row) {
+                $colNum = 1;
+                foreach ($row as $value) {
+                    $cell = Coordinate::stringFromColumnIndex($colNum) . $rowNum;
+                    if (is_numeric($value) && strlen($value) >= 11) {
+                        $sheet->setCellValueExplicit($cell, $value, DataType::TYPE_STRING);
+                    } else {
+                        $sheet->setCellValue($cell, $value);
+                    }
+                    $colNum++;
+                }
+                $rowNum++;
+            }
+
             $sheet->setSelectedCell('A1');
 
             $writer = new Xlsx($spreadsheet);

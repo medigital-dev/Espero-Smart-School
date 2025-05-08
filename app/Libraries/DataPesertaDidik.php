@@ -240,7 +240,7 @@ class DataPesertaDidik
                 'jenis_registrasi_rombel',
                 'tingkat_pendidikan as tingkat',
                 'guru_pegawai.nama as wali_kelas',
-                'kode_semester as semester',
+                'semester.kode as semester',
                 'rombongan_belajar.nama as kelas',
             ]);
         } else {

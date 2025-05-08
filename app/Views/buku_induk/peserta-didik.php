@@ -136,7 +136,6 @@
         </div>
     </div>
 </div>
-
 <div class="offcanvas offcanvas-end" id="offcanvas-filterPd">
     <div class="offcanvas-header sticky-top bg-light">
         <h5 class="text-bold">Filter Data Peserta Didik</h5>
@@ -439,4 +438,5 @@
         </div>
     </div>
 </div>
+
 <?= $this->endSection(); ?>
