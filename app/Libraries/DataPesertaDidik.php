@@ -104,12 +104,48 @@ class DataPesertaDidik
         ];
     }
 
+    public function toSelect2(): array
+    {
+        $this->length = 10;
+        $this->start = (int) $this->request->getGet('page') ?: 1;
+        $offset = ($this->start - 1) * $this->length;
+
+        $this->query->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'rombongan_belajar.nama as kelas', 'nisn', 'nipd']);
+        $items = $this->query->findAll($this->length + 1, $offset);
+
+        $hasMore = count($items) > $this->length;
+        if ($hasMore) {
+            array_pop($items);
+        }
+
+        $results = array_map(function ($item) {
+            return [
+                'id' => $item['peserta_didik_id'],
+                'text' => $item['nama'],
+                'nipd' => $item['nipd'],
+                'nisn' => $item['nisn'],
+                'kelas' => $item['kelas']
+            ];
+        }, $items);
+
+        return [
+            'items' => $results,
+            'hasMore' => $hasMore,
+        ];
+    }
+
     public function forAdmin()
     {
         $this->query
             ->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nik'])
         ;
 
+        return $this;
+    }
+
+    public function select(array|string $fields = [])
+    {
+        $this->query->select($fields);
         return $this;
     }
 
@@ -187,8 +223,10 @@ class DataPesertaDidik
      */
     public function active()
     {
-        $this->query->select('rombongan_belajar.nama as kelas');
-        $this->query->where('semester.status', true);
+        $this->query
+            ->select('rombongan_belajar.nama as kelas')
+            ->where('semester.status', true)
+            ->where('mutasi_pd.id');
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         return $this;
     }
@@ -330,7 +368,7 @@ class DataPesertaDidik
         $tahun_registrasi = $this->request->getVar('tahun_registrasi');
 
         if ($status_pd && $status_pd !== 'all') {
-            if ($status_pd == 'aktif') $this->query->where('semester.status', true);
+            if ($status_pd == 'aktif') $this->query->where('semester.status', true)->where('mutasi_pd.id');
             else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=', null);
         }
         if ($nik) $this->query->where('peserta_didik.nik', $nik);

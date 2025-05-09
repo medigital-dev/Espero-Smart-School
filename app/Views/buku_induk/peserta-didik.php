@@ -154,12 +154,12 @@
                     <label for="inputForm-tanggalMutasiPd" class="col-sm-3 col-form-label">Tanggal</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="inputDt-tanggalMutasiPd" data-inputmask-alias="datetime" placeholder="Tanggal mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                            <div class="input-group-append" data-target="#inputDt-tanggalMutasiPd" data-toggle="datetimepicker">
+                            <input type="text" class="form-control" id="inputForm-tanggalMutasiPd" data-inputmask-alias="datetime" placeholder="Tanggal mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            <div class="input-group-append" data-target="#inputForm-tanggalMutasiPd" data-toggle="datetimepicker">
                                 <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             </div>
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tanggalMutasiPd');"><i class="fas fa-eraser"></i></button>
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputForm-tanggalMutasiPd');"><i class="fas fa-eraser"></i></button>
                             </div>
                         </div>
                     </div>
@@ -187,18 +187,18 @@
                     </div>
                 </div>
                 <div class="form-group row mb-2">
-                    <label for="selectForm-alasanMutasiPd" class="col-sm-3 col-form-label">Alasan</label>
+                    <label for="textForm-alasanMutasiPd" class="col-sm-3 col-form-label">Alasan</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <textarea class="form-control" rows="2" id="selectForm-alasanMutasiPd"></textarea>
+                            <textarea class="form-control" rows="2" id="textForm-alasanMutasiPd"></textarea>
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-alasanMutasiPd');"><i class="fas fa-eraser"></i></button>
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#textForm-alasanMutasiPd');"><i class="fas fa-eraser"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row mb-2">
-                    <label for="inputForm-sekolahTujuanMutasiPd" class="col-sm-3 col-form-label">Tujuan</label>
+                    <label for="inputForm-sekolahTujuanMutasiPd" class="col-sm-3 col-form-label">Sek. Tujuan</label>
                     <div class="col-sm-9">
                         <div class="input-group">
                             <input type="text" class="form-control" id="inputForm-sekolahTujuanMutasiPd">
@@ -211,7 +211,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnRun-ImportDapodik">
+                <button type="button" class="btn btn-primary" id="btnRun-simpanMutasiPd">
                     <i class="fas fa-save mr-1"></i>
                     <span>
                         Simpan

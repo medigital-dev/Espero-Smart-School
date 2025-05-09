@@ -320,7 +320,6 @@
     <!-- toastr config -->
     <script>
         $(document).ready(function() {
-
             $(".select2-getPd").each(function() {
                 const $select = $(this);
                 $select.select2({
@@ -336,21 +335,24 @@
                         data: function(params) {
                             return {
                                 key: params.term,
+                                page: params.page || 1
                             };
                         },
-                        processResults: function(data) {
-                            console.log(data);
-
+                        processResults: function(data, params) {
+                            params.page = params.page || 1;
                             return {
-                                results: $.map(data, function(item) {
+                                results: $.map(data.items, function(item) {
                                     return {
                                         id: item.id,
-                                        text: item.nama,
+                                        text: item.text,
                                         kelas: item.kelas,
                                         nisn: item.nisn,
                                         nipd: item.nipd
                                     };
                                 }),
+                                pagination: {
+                                    more: data.hasMore // true jika masih ada data berikutnya
+                                }
                             };
                         },
                         cache: true,
@@ -599,15 +601,13 @@
                         }
                     },
                     {
-                        data: "kelas",
+                        data: "status",
                         className: 'text-center',
                         orderable: false,
                         render: (data, type, rows, meta) => {
-                            if (data !== null)
-                                return `<span class="badge bg-success">${data}</span>`;
-                            else {
-                                return `<span class="badge bg-danger"><i class="fas fa-minus-circle"></i></span>`;
-                            }
+                            const warna = data == 'M' ? 'secondary' : (rows.kelas ? 'success' : 'danger');
+                            const text = rows.jenis_mutasi == null && rows.kelas == null ? '<i class="fas fa-minus-circle"></i>' : data;
+                            return `<span class="badge bg-${warna}">${text}</span>`;
                         }
                     },
                     {
@@ -742,7 +742,7 @@
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd').datetimepicker({
+            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd').datetimepicker({
                 format: 'L',
                 locale: 'id'
             });
@@ -1152,6 +1152,36 @@
                 if (!resp.status) return;
                 toast('Silahkan unduh file excel <a href="/' + resp.data.path + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
+
+            $('#btnRun-simpanMutasiPd').on('click', async function() {
+                const tanggalElm = $('#inputForm-tanggalMutasiPd');
+                const pdElm = $('#selectForm-namaMutasiPd');
+                const jenisElm = $('#selectForm-jenisMutasiPd');
+                const alasanElm = $('#textForm-alasanMutasiPd');
+                const sekolahElm = $('#inputForm-sekolahTujuanMutasiPd');
+
+                if (!validationElm([tanggalElm, pdElm, jenisElm, alasanElm], ['', null])) return;
+                const response = await fetchData({
+                    url: '/api/v0/mutasi/peserta-didik/set',
+                    data: {
+                        tanggal: tanggalElm.val(),
+                        peserta_didik_id: pdElm.val(),
+                        jenis: jenisElm.val(),
+                        alasan: alasanElm.val(),
+                        sekolah_tujuan: sekolahElm.val(),
+                    },
+                    method: 'POST',
+                    button: $(this),
+                });
+                if (!response) return;
+                toast(response.message, 'success');
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                pdElm.val('');
+                jenisElm.val('');
+                alasanElm.val('');
+                sekolahElm.val('');
+                $('#modalMutasiPd').modal('hide');
+            })
         });
     </script>
 </body>

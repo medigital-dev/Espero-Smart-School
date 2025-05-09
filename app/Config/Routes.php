@@ -39,6 +39,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->get('rombel/get', 'Rombel::get');
     $routes->get('referensi/(:segment)', 'Referensi::get/$1');
     $routes->get('referensi/(:segment)/(:segment)', 'Referensi::get/$1/$2');
+    $routes->post('mutasi/peserta-didik/set', 'MutasiPd::set');
 
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
     $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');

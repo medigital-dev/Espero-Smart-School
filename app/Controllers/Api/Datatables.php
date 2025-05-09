@@ -33,8 +33,10 @@ class Datatables extends BaseController
 
         $data = [];
         foreach ($result['data'] as $row) {
+            $row['status'] = $row['tanggal_mutasi'] ? 'M' : ($row['kelas'] ?? '');
             $row['tahun_registrasi'] = $row['tanggal_registrasi'] !== '0000-00-00' ? tanggal($row['tanggal_registrasi'], 'Y') : '';
             $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'd/m/Y');
+            $row['tanggal_mutasi'] = $row['tanggal_mutasi'] ? tanggal($row['tanggal_mutasi'], 'd/m/Y') : '';
             $data[] = $row;
         }
 
