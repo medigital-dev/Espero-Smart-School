@@ -154,7 +154,7 @@
                     <label for="inputForm-tanggalMutasiPd" class="col-sm-3 col-form-label">Tanggal</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="inputForm-tanggalMutasiPd" data-inputmask-alias="datetime" placeholder="Tanggal mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            <input type="text" class="form-control" id="inputForm-tanggalMutasiPd" value="<?= date('d/m/Y'); ?>" data-inputmask-alias="datetime" placeholder="Tanggal mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                             <div class="input-group-append" data-target="#inputForm-tanggalMutasiPd" data-toggle="datetimepicker">
                                 <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             </div>
@@ -190,7 +190,7 @@
                     <label for="textForm-alasanMutasiPd" class="col-sm-3 col-form-label">Alasan</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <textarea class="form-control" rows="2" id="textForm-alasanMutasiPd"></textarea>
+                            <textarea class="form-control" rows="2" id="textForm-alasanMutasiPd" placeholder="Alasan mutasi"></textarea>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#textForm-alasanMutasiPd');"><i class="fas fa-eraser"></i></button>
                             </div>
@@ -201,7 +201,7 @@
                     <label for="inputForm-sekolahTujuanMutasiPd" class="col-sm-3 col-form-label">Sek. Tujuan</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="inputForm-sekolahTujuanMutasiPd">
+                            <input type="text" class="form-control" id="inputForm-sekolahTujuanMutasiPd" placeholder="Sekolah tujuan">
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputForm-sekolahTujuanMutasiPd');"><i class="fas fa-eraser"></i></button>
                             </div>

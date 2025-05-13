@@ -323,7 +323,7 @@
             $(".select2-getPd").each(function() {
                 const $select = $(this);
                 $select.select2({
-                    placeholder: "Pilih...",
+                    placeholder: "Pilih peserta didik...",
                     searchInputPlaceholder: "Cari Nama/NIS/NISN/Kelas...",
                     theme: "bootstrap4",
                     dropdownParent: $select.parents(".modal").length ?
@@ -744,7 +744,8 @@
             // filter DT Peserta Didik
             $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd').datetimepicker({
                 format: 'L',
-                locale: 'id'
+                locale: 'id',
+                maxDate: 'now'
             });
             $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
                 clearTimeout(debounceTimer);
@@ -1176,8 +1177,8 @@
                 if (!response) return;
                 toast(response.message, 'success');
                 dtAdminBukuIndukPd.ajax.reload(null, false);
-                pdElm.val('');
-                jenisElm.val('');
+                pdElm.val('').change();
+                jenisElm.val('').change();
                 alasanElm.val('');
                 sekolahElm.val('');
                 $('#modalMutasiPd').modal('hide');
