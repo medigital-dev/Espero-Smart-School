@@ -344,14 +344,14 @@
                                 results: $.map(data.items, function(item) {
                                     return {
                                         id: item.id,
-                                        text: item.text,
+                                        text: item.text.toUpperCase(),
                                         kelas: item.kelas,
                                         nisn: item.nisn,
                                         nipd: item.nipd
                                     };
                                 }),
                                 pagination: {
-                                    more: data.hasMore // true jika masih ada data berikutnya
+                                    more: data.hasMore
                                 }
                             };
                         },
@@ -543,7 +543,9 @@
                 pageLength: 5,
                 processing: true,
                 serverSide: true,
-                fixedColumns: true,
+                fixedColumns: {
+                    leftColumns: 3
+                },
                 scrollX: true,
                 order: [],
                 drawCallback: function() {
@@ -607,7 +609,8 @@
                         render: (data, type, rows, meta) => {
                             const warna = data == 'M' ? 'secondary' : (rows.kelas ? 'success' : 'danger');
                             const text = rows.jenis_mutasi == null && rows.kelas == null ? '<i class="fas fa-minus-circle"></i>' : data;
-                            return `<span class="badge bg-${warna}">${text}</span>`;
+                            const title = data == 'M' ? rows.jenis_mutasi : '';
+                            return `<span class="badge bg-${warna}" data-toggle="tooltip" data-title="${title}">${text}</span>`;
                         }
                     },
                     {
@@ -725,6 +728,7 @@
                 totalHalaman.text('/' + totalPage);
 
                 checkRowDt();
+                $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
                 // restoreCheck();
             });
 
