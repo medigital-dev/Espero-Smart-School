@@ -55,13 +55,14 @@ class DataPesertaDidik
             ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
             ->join('kontak', 'kontak.nik = peserta_didik.nik', 'left')
             ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
-            ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
+            ->join('kelulusan', 'kelulusan.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('orangtua_wali_pd', 'orangtua_wali_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('orangtua_wali as ayah', 'ayah.orangtua_id = orangtua_wali_pd.ayah_id', 'left')
             ->join('orangtua_wali as ibu', 'ibu.orangtua_id = orangtua_wali_pd.ibu_id', 'left')
             ->join('orangtua_wali as wali', 'wali.orangtua_id = orangtua_wali_pd.wali_id', 'left')
             ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
+            ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
+            ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
         ;
@@ -432,6 +433,19 @@ class DataPesertaDidik
     public function withOrder(string $field, string $direction)
     {
         $this->query->orderBy($field, $direction);
+        return $this;
+    }
+
+    public function withKelulusan(array|string $field)
+    {
+        if (empty($field)) {
+            $this->query->select([
+                'kelulusan.kurikulum as kurikulum_lulus',
+                'kelulusan.nomor_ijazah as nomor_ijazah_smp',
+                'kelulusan.penandatangan',
+                'kelulusan.tanggal as tanggal_lulus'
+            ]);
+        } else $this->query->select($field);
         return $this;
     }
 }

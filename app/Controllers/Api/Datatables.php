@@ -27,16 +27,18 @@ class Datatables extends BaseController
             ->withRegistrasi(['ref_jenis_registrasi.nama as jenis_registrasi', 'tanggal_registrasi'])
             ->withRombel(['rombongan_belajar.nama as kelas'])
             ->withMutasi(['mutasi_pd.tanggal as tanggal_mutasi', 'ref_jenis_mutasi.nama as jenis_mutasi'])
+            ->withKelulusan(['kelulusan.tanggal as tanggal_lulus'])
             ->withFilter()
             ->forAdmin()
             ->toDataTable();
 
         $data = [];
         foreach ($result['data'] as $row) {
-            $row['status'] = $row['tanggal_mutasi'] ? 'M' : ($row['kelas'] ?? '');
+            $row['status'] = $row['tanggal_mutasi'] ? 'M' : ($row['tanggal_lulus'] ? 'L' : ($row['kelas'] ?? ''));
             $row['tahun_registrasi'] = $row['tanggal_registrasi'] !== '0000-00-00' ? tanggal($row['tanggal_registrasi'], 'Y') : '';
             $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'd/m/Y');
             $row['tanggal_mutasi'] = $row['tanggal_mutasi'] ? tanggal($row['tanggal_mutasi'], 'd/m/Y') : '';
+            $row['tanggal_lulus'] = $row['tanggal_lulus'] ? tanggal($row['tanggal_lulus'], 'd/m/Y') : null;
             $data[] = $row;
         }
 

@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Libraries\DataPesertaDidik;
 use App\Libraries\Export;
+use App\Models\KelulusanPdModel;
+use App\Models\PesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 
 class BukuInduk extends BaseController
@@ -12,7 +14,7 @@ class BukuInduk extends BaseController
 
     public function __construct()
     {
-        helper(['indonesia']);
+        helper(['indonesia', 'files', 'string']);
     }
 
     public function pesertaDidik(): string
@@ -144,5 +146,44 @@ class BukuInduk extends BaseController
         $result =  $lib->excel($title, $header, $rows);
 
         return $this->respond($result);
+    }
+
+    public function importKelulusanPd()
+    {
+        $mKelulusan = new KelulusanPdModel();
+        $mPd = new PesertaDidikModel();
+
+        $file = $this->request->getFile('file');
+        $result = importExcel($file);
+        if (!$result['status'])
+            return $this->fail($result);
+        for ($i = 1; $i < count($result['data']); $i++) {
+            $row = $result['data'][$i];
+            if ((int)$row[0] > 0) {
+                $nipd = $row[1];
+                $nisn = $row[2];
+                $cPd = $mPd
+                    ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+                    ->where('nisn', $nisn)
+                    ->where('nipd', $nipd)
+                    ->first();
+                if (!$cPd) return $this->fail('Peserta didik dengan NIS: ' . $nipd . ' dan NISN: ' . $nisn . ' tidak ditemukan.');
+                $cKelulusan = $mKelulusan->where('peserta_didik_id', $cPd['peserta_didik_id'])->first();
+                $set = [
+                    'peserta_didik_id' => $cPd['peserta_didik_id'],
+                    'kurikulum' => $row[4],
+                    'nomor_ijazah' => $row[5],
+                    'penandatangan' => $row[6],
+                    'tanggal' => $row[7],
+                ];
+                if ($cKelulusan) $set['id'] = $cKelulusan['id'];
+                else $set['kelulusan_id'] = unik($mKelulusan, 'kelulusan_id');
+                if (!$mKelulusan->save($set)) return $this->fail('Kelulusan gagal disimpan');
+            }
+        }
+        return $this->respond([
+            'message' => count($result['data']) - 1 . ' peserta didik berhasil disimpan.',
+            'data' => $result['data']
+        ]);
     }
 }

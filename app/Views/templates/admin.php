@@ -607,9 +607,9 @@
                         className: 'text-center',
                         orderable: false,
                         render: (data, type, rows, meta) => {
-                            const warna = data == 'M' ? 'secondary' : (rows.kelas ? 'success' : 'danger');
-                            const text = rows.jenis_mutasi == null && rows.kelas == null ? '<i class="fas fa-minus-circle"></i>' : data;
-                            const title = data == 'M' ? rows.jenis_mutasi : '';
+                            const warna = data == 'M' ? 'secondary' : (data == 'L' ? 'primary' : (rows.kelas ? 'success' : 'danger'));
+                            const text = rows.jenis_mutasi == null && rows.kelas == null && rows.tanggal_lulus == null ? '<i class="fas fa-minus-circle"></i>' : data;
+                            const title = data == 'M' ? rows.jenis_mutasi : (data == 'L' ? 'Lulus' : '');
                             return `<span class="badge bg-${warna}" data-toggle="tooltip" data-title="${title}">${text}</span>`;
                         }
                     },
@@ -761,6 +761,35 @@
                 $('#formDt-filterPd').trigger('reset');
                 $('#formDt-filterPd select').val('').trigger('change');
                 dtAdminBukuIndukPd.ajax.reload()
+            });
+
+            $('#btnRun-importKelulusanPd').on('click', async function() {
+                const btn = $(this);
+                const fileElm = $('#inputFile-kelulusanPd');
+                const file = fileElm.prop('files');
+                if (file.length !== 1) {
+                    toast('File import belum dipilih.');
+                    fileElm.addClass('is-invalid');
+                    return;
+                }
+                $('.is-invalid').removeClass('is-invalid');
+
+                let data = new FormData();
+                data.append('file', file[0]);
+
+                const upload = await fetchData({
+                    url: '/api/v0/buku-induk/import/kelulusan-pd',
+                    data: data,
+                    method: 'POST',
+                    button: btn
+                });
+                if (!upload) return;
+                fileElm.val('');
+                bsCustomFileInput.destroy();
+                bsCustomFileInput.init();
+                $('#modalKelulusanPd').modal('hide');
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                toast(upload.message);
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

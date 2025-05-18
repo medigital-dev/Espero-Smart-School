@@ -17,7 +17,7 @@
                         </div>
                     </div>
                 </div>
-                <p>Unduh: <a href="">Format Import Kelulusan.xlsx</a></p>
+                <p>Unduh: <a href="<?= base_url('assets/docs/kelulusan-pd.xlsx'); ?>">Format Import Kelulusan.xlsx</a></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
