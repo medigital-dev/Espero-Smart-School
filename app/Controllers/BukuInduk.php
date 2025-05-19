@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Libraries\DataPesertaDidik;
 use App\Libraries\Export;
 use App\Models\KelulusanPdModel;
+use App\Models\MutasiPdModel;
 use App\Models\PesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -14,7 +15,7 @@ class BukuInduk extends BaseController
 
     public function __construct()
     {
-        helper(['indonesia', 'files', 'string']);
+        helper(['indonesia', 'files', 'string', 'referensi']);
     }
 
     public function pesertaDidik(): string
@@ -152,6 +153,7 @@ class BukuInduk extends BaseController
     {
         $mKelulusan = new KelulusanPdModel();
         $mPd = new PesertaDidikModel();
+        $mMutasi = new MutasiPdModel();
 
         $file = $this->request->getFile('file');
         $result = importExcel($file);
@@ -169,16 +171,27 @@ class BukuInduk extends BaseController
                     ->first();
                 if (!$cPd) return $this->fail('Peserta didik dengan NIS: ' . $nipd . ' dan NISN: ' . $nisn . ' tidak ditemukan.');
                 $cKelulusan = $mKelulusan->where('peserta_didik_id', $cPd['peserta_didik_id'])->first();
-                $set = [
+                $setKelulusan = [
                     'peserta_didik_id' => $cPd['peserta_didik_id'],
                     'kurikulum' => $row[4],
                     'nomor_ijazah' => $row[5],
                     'penandatangan' => $row[6],
                     'tanggal' => $row[7],
                 ];
-                if ($cKelulusan) $set['id'] = $cKelulusan['id'];
-                else $set['kelulusan_id'] = unik($mKelulusan, 'kelulusan_id');
-                if (!$mKelulusan->save($set)) return $this->fail('Kelulusan gagal disimpan');
+                if ($cKelulusan) $setKelulusan['id'] = $cKelulusan['id'];
+                else $setKelulusan['kelulusan_id'] = unik($mKelulusan, 'kelulusan_id');
+                if (!$mKelulusan->save($setKelulusan)) return $this->fail('Kelulusan peserta didik an <strong>' . $cPd['nama'] . '</strong> gagal disimpan');
+
+                $setMutasi = [
+                    'peserta_didik_id' => $cPd['peserta_didik_id'],
+                    'jenis' => saveJenisMutasi('Lulus'),
+                    'tanggal' => $row[7],
+                    'alasan' => 'Lulus dari satuan pendidikan.',
+                ];
+                $cMutasi = $mMutasi->where('peserta_didik_id', $cPd['peserta_didik_id'])->first();
+                if ($cMutasi) return $this->fail('Peserta Didik an <strong>' . $cPd['nama'] . '</strong> sudah pernah dikeluarkan.');
+                $setMutasi['mutasi_id'] = unik($mMutasi, 'mutasi_id');
+                if (!$mMutasi->save($setMutasi)) return $this->fail('Mutasi peserta didik an <strong>' . $cPd['nama'] . '</strong> gagal disimpan.');
             }
         }
         return $this->respond([

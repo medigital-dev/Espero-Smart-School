@@ -72,14 +72,28 @@ if (!function_exists('saveTransportasi')) {
 
 if (!function_exists('saveJenisRegistrasi')) {
     /**
-     * Helper menyimpan referensi Jenis Transportasi Peserta Didik berdasarkan nama Jenis Transportasi Peserta Didik
-     * @param string $nama Nama Jenis Transportasi Peserta Didik
+     * Helper menyimpan referensi Jenis Registrasi Peserta Didik berdasarkan nama Jenis Registrasi Peserta Didik
+     * @param string $nama Nama Jenis Registrasi Peserta Didik
      * @param array $set Variable tambahan dalam array
-     * @return string Mengembalikan id unik Jenis Transportasi Peserta Didik
-     * @return false Jika Jenis Transportasi Peserta Didik gagal disimpan 
+     * @return string Mengembalikan id unik Jenis Registrasi Peserta Didik
+     * @return false Jika Jenis Registrasi Peserta Didik gagal disimpan 
      */
     function saveJenisRegistrasi(string $nama, array $set = [])
     {
         return service('referensi')->saveJenisRegistrasi($nama, $set);
+    }
+}
+
+if (!function_exists('saveJenisMutasi')) {
+    /**
+     * Helper menyimpan referensi Jenis Mutasi Peserta Didik berdasarkan nama Jenis Mutasi Peserta Didik
+     * @param string $nama Nama Jenis Mutasi Peserta Didik
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik Jenis Mutasi Peserta Didik
+     * @return false Jika Jenis Mutasi Peserta Didik gagal disimpan 
+     */
+    function saveJenisMutasi(string $nama, array $set = [])
+    {
+        return service('referensi')->saveJenisMutasi($nama, $set);
     }
 }

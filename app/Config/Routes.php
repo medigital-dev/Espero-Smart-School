@@ -34,6 +34,7 @@ $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBa
 $routes->post('/api/v0/buku-induk/export/(:segment)', 'BukuInduk::export/$1');
 $routes->post('/api/v0/buku-induk/import/kelulusan-pd', 'BukuInduk::importKelulusanPd');
 // $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');
+// $routes->resource();
 
 
 $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($routes) {
@@ -45,6 +46,8 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
     $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');
     $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
+
+    $routes->resource('kelulusan');
 });
 
 // public

@@ -35,10 +35,9 @@
                         <div class="dropdown-menu">
                             <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalMutasiPd" data-title="Keluarkan peserta didik"><i class="fas fa-sign-out-alt fa-fw mr-1"></i><span>PD Keluar</span></button>
                             <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalKelulusanPd" data-title="Kelulusan peserta didik"><i class="fas fa-user-graduate fa-fw mr-1"></i><span>Kelulusan</span></button>
+                            <div class="dropdown-divider"></div>
+                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalBatalKeluarPd" data-title="Batalkan mutasi peserta didik"><i class="fas fa-times-circle fa-fw mr-1"></i><span>Batalkan Mutasi</span></button>
                         </div>
-                    </div>
-                    <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cetak Buku Induk"><i class="fas fa-print fa-fw"></i></button>
                     </div>
                     <div class="my-1 mr-1 ml-sm-auto">
                         <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" data-toggle="tooltip" data-title="Pencarian Nama/NIS/NISN/Kelas" placeholder="Cari..." aria-label="Search">

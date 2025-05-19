@@ -26,7 +26,7 @@
                     <label for="selectForm-namaMutasiPd" class="col-sm-3 col-form-label">Nama</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select select2-getPd" id="selectForm-namaMutasiPd"></select>
+                            <select class="custom-select select2-getPd" data-status="active" id="selectForm-namaMutasiPd"></select>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-namaMutasiPd');"><i class="fas fa-eraser"></i></button>
                             </div>

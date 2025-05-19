@@ -264,13 +264,19 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group row mb-2">
-                <label for="selectDt-jenisMutasiPd" class="col-sm-3 col-form-label">Mutasi</label>
+            <div class="form-group row mb-0">
+                <label for="selectDt-jenisMutasiPd" class="col-sm-3 col-form-label">Keluar</label>
                 <div class="col-sm-9">
-                    <div class="input-group">
+                    <div class="input-group mb-2">
                         <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectDt-jenisMutasiPd"></select>
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-jenisMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="number" class="form-control" id="inputDt-tahunMutasiPd" placeholder="Tahun Mutasi">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tahunMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>

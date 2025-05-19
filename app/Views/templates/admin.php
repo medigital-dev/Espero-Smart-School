@@ -322,6 +322,7 @@
         $(document).ready(function() {
             $(".select2-getPd").each(function() {
                 const $select = $(this);
+                const status = $select.data('status');
                 $select.select2({
                     placeholder: "Pilih peserta didik...",
                     searchInputPlaceholder: "Cari Nama/NIS/NISN/Kelas...",
@@ -329,7 +330,7 @@
                     dropdownParent: $select.parents(".modal").length ?
                         $select.parents(".modal").first() : $(document.body),
                     ajax: {
-                        url: "/api/v0/buku-induk/peserta-didik/get/active",
+                        url: "/api/v0/buku-induk/peserta-didik/get/" + (status !== undefined ? status : ''),
                         method: "GET",
                         dataType: "json",
                         data: function(params) {
@@ -513,6 +514,13 @@
         $(document).ready(function() {
             bsCustomFileInput.init();
 
+            $(".modal").on("hide.bs.modal", (e) => {
+                const elm = $(e.target);
+                elm.find("input").val("").trigger('change');
+                bsCustomFileInput.destroy();
+                bsCustomFileInput.init();
+            });
+
             $('#btnReloadTable').on('click', function() {
                 $(this).prop('disabled', true).children('i').addClass('fa-spin');
                 $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).prop('disabled', false).children('i').removeClass('fa-spin'));
@@ -530,8 +538,7 @@
                     } else {
                         selectedRows = selectedRows.filter(item => item !== id);
                     }
-                })
-
+                });
             });
         })
     </script>
@@ -584,6 +591,7 @@
                         d.desa = $('#inputDt-desaPd').val();
                         d.kecamatan = $('#inputDt-kecamatanPd').val();
                         d.jenis_mutasi = $('#selectDt-jenisMutasiPd').val();
+                        d.tahun_mutasi = $('#inputDt-tahunMutasiPd').val();
                         d.jenis_registrasi = $('#selectDt-jenisRegistrasiPd').val();
                         d.tahun_registrasi = $('#inputDt-tahunRegistrasiPd').val();
                     }
@@ -729,7 +737,6 @@
 
                 checkRowDt();
                 $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
-                // restoreCheck();
             });
 
             let debounceTimer;
@@ -746,7 +753,7 @@
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd').datetimepicker({
+            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd, #inputForm-tanggalLulusPd').datetimepicker({
                 format: 'L',
                 locale: 'id',
                 maxDate: 'now'
@@ -1177,6 +1184,7 @@
                         desa: $('#inputDt-desaPd').val(),
                         kecamatan: $('#inputDt-kecamatanPd').val(),
                         jenis_mutasi: $('#selectDt-jenisMutasiPd').val(),
+                        tahun_mutasi: $('#inputDt-tahunMutasiPd').val(),
                         jenis_registrasi: $('#selectDt-jenisRegistrasiPd').val(),
                         tahun_registrasi: $('#inputDt-tahunRegistrasiPd').val(),
                     },
@@ -1215,7 +1223,52 @@
                 alasanElm.val('');
                 sekolahElm.val('');
                 $('#modalMutasiPd').modal('hide');
-            })
+            });
+
+            $('#selectForm-namaPdLulus').on('change', async function() {
+                const id = $(this).val();
+                const response = await fetchData('/api/v0/kelulusan/' + id);
+                if (response) {
+                    $('#inputForm-kurikulumLulusPd').val(response.kurikulum);
+                    $('#inputForm-tanggalLulusPd').val(response.tanggal);
+                    $('#inputForm-noIjazahLulusPd').val(response.nomor_ijazah);
+                    $('#inputForm-penandatanganLulusPd').val(response.penandatangan);
+                    $('#inputForm-sekolahTujuanLulusPd').val(response.sekolah_tujuan);
+                } else {
+                    $('#inputForm-kurikulumLulusPd').val('');
+                    $('#inputForm-tanggalLulusPd').val('');
+                    $('#inputForm-noIjazahLulusPd').val('');
+                    $('#inputForm-penandatanganLulusPd').val('');
+                    $('#inputForm-sekolahTujuanLulusPd').val('');
+                }
+            });
+
+            $('#btnRun-simpanKelulusanPd').on('click', async function() {
+                const idPdElm = $('#selectForm-namaPdLulus');
+                const kurikulum = $('#inputForm-kurikulumLulusPd');
+                const tanggal = $('#inputForm-tanggalLulusPd');
+                const noIjazah = $('#inputForm-noIjazahLulusPd');
+                const ttd = $('#inputForm-penandatanganLulusPd');
+                const sekolah_tujuan = $('#inputForm-sekolahTujuanLulusPd');
+
+                if (!validationElm([idPdElm, kurikulum, tanggal, noIjazah, ttd], ['', null])) return;
+                const data = {
+                    peserta_didik_id: idPdElm.val(),
+                    kurikulum: kurikulum.val(),
+                    nomor_ijazah: noIjazah.val(),
+                    penandatangan: ttd.val(),
+                    tanggal: tanggal.val(),
+                    alasan: 'Lulus dari satuan pendidikan',
+                    sekolah_tujuan: sekolah_tujuan.val(),
+                }
+                const respSetLulus = await fetchData({
+                    url: '/api/v0/kelulusan',
+                    data: data,
+                    method: 'post'
+                });
+                console.log($('form').serializeArray());
+
+            });
         });
     </script>
 </body>

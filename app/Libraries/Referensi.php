@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\RefAgamaModel;
+use App\Models\RefJenisMutasiModel;
 use App\Models\RefJenisRegistrasiModel;
 use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
@@ -117,5 +118,20 @@ class Referensi
             return $model->where('ref_id', $id)->first();
         else
             return $model->findAll();
+    }
+
+    public function saveJenisMutasi(string $nama, array $set = [])
+    {
+        $model = new RefJenisMutasiModel();
+        $cek = $model->where('nama', $nama)->first();
+        if ($cek) $id = $cek['ref_id'];
+        else {
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = unik($model, 'ref_id');
+            $set['nama'] = $nama;
+            if (!$model->save($set)) return false;
+            $id = $set['ref_id'];
+        }
+        return $id;
     }
 }

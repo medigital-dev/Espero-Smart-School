@@ -365,15 +365,17 @@ class DataPesertaDidik
         $desa = $this->request->getVar('desa');
         $kecamatan = $this->request->getVar('kecamatan');
         $jenis_mutasi = $this->request->getVar('jenis_mutasi');
+        $tahun_mutasi = $this->request->getVar('tahun_mutasi');
         $jenis_registrasi = $this->request->getVar('jenis_registrasi');
         $tahun_registrasi = $this->request->getVar('tahun_registrasi');
 
         if ($status_pd && $status_pd !== 'all') {
             if ($status_pd == 'aktif') $this->query->where('semester.status', true)->where('mutasi_pd.id');
-            else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=', null);
+            else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=');
         }
         if ($nik) $this->query->where('peserta_didik.nik', $nik);
         if ($jenis_mutasi) $this->query->where('mutasi_pd.jenis', $jenis_mutasi);
+        if ($tahun_mutasi) $this->query->where('YEAR(mutasi_pd.tanggal)', $tahun_mutasi);
         if ($jenis_registrasi) $this->query->where('registrasi_peserta_didik.jenis_registrasi', $jenis_registrasi);
         if ($tahun_registrasi) $this->query->where('YEAR(registrasi_peserta_didik.tanggal_registrasi)', $tahun_registrasi);
         if ($kelas) $this->query->where('rombongan_belajar.rombel_id', $kelas);
