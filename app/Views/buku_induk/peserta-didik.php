@@ -119,6 +119,6 @@
     </div>
 </div>
 <?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd']); ?>
-<?= offcanvas('filter-pd'); ?>
+<?= offcanvas(['filter-pd', 'edit-pd']); ?>
 
 <?= $this->endSection(); ?>
