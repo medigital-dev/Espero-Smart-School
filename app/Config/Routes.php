@@ -48,6 +48,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
 
     $routes->resource('kelulusan');
+    $routes->resource('mutasiPd');
 });
 
 // public

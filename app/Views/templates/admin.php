@@ -540,6 +540,33 @@
                     }
                 });
             });
+
+            $('#btnClearSelected').on('click', function() {
+                const checked = $('.dtCheckbox:checked');
+                checked.each(function() {
+                    const id = $(this).val();
+                    selectedRows = selectedRows.filter(item => item !== id);
+                });
+                checked.prop('checked', false);
+                stateBtnCheckAll();
+            });
+
+            $('#btnSelectRow').on('click', function() {
+                const checkbox = $('.dtCheckbox');
+                checkbox.each(function() {
+                    const id = $(this).val();
+                    if ($(this).is(':checked')) {
+                        $(this).prop('checked', false);
+                        selectedRows = selectedRows.filter(item => item !== id);
+                    } else {
+                        $(this).prop('checked', true);
+                        if (!selectedRows.includes(id)) {
+                            selectedRows.push(id);
+                        }
+                    }
+                });
+                stateBtnCheckAll();
+            });
         })
     </script>
     <!-- End Global Script -->
@@ -605,8 +632,8 @@
                         orderable: false,
                         render: (data) => {
                             return `<div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input dtCheckbox" type="checkbox" id="check_${data}" value="${data}">
-                                        <label for="check_${data}" class="custom-control-label"></label>
+                                        <input class="custom-control-input dtCheckbox" type="checkbox" id="${data}" value="${data}">
+                                        <label for="${data}" class="custom-control-label"></label>
                                     </div>`;
                         }
                     },
@@ -624,7 +651,7 @@
                     {
                         data: "nama",
                         render: (data) => {
-                            return `<a type="button" href="#">${data}</a>`;
+                            return `<a type="button" href="#" class="btn-tooltip" data-toggle="offcanvas" data-title="Detail Peserta Didik" data-target="#offcanvasEdit-dataPd">${data}</a>`;
                         }
                     },
                     {
@@ -737,6 +764,7 @@
 
                 checkRowDt();
                 $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
+                $('[data-toggle="offcanvas"').offcanvas();
             });
 
             let debounceTimer;
@@ -748,7 +776,7 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     dtAdminBukuIndukPd.search(e.target.value).draw();
-                }, 300);
+                }, 500);
             });
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
@@ -762,7 +790,7 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     dtAdminBukuIndukPd.ajax.reload();
-                }, 300);
+                }, 500);
             });
             $('#btnReset-filterPd').on('click', () => {
                 $('#formDt-filterPd').trigger('reset');
@@ -1244,6 +1272,7 @@
             });
 
             $('#btnRun-simpanKelulusanPd').on('click', async function() {
+                const btn = $(this);
                 const idPdElm = $('#selectForm-namaPdLulus');
                 const kurikulum = $('#inputForm-kurikulumLulusPd');
                 const tanggal = $('#inputForm-tanggalLulusPd');
@@ -1264,10 +1293,52 @@
                 const respSetLulus = await fetchData({
                     url: '/api/v0/kelulusan',
                     data: data,
-                    method: 'post'
+                    method: 'post',
+                    button: btn
                 });
-                console.log($('form').serializeArray());
 
+                if (!respSetLulus) return;
+                $('#form-kelulusanPd').find('input').val('');
+                $('#form-kelulusanPd').find('select').val('').trigger('change');
+                toast(respSetLulus.message);
+            });
+
+            $('#btnBatal-mutasiPd').on('click', async function() {
+                if (selectedRows.length == 0) {
+                    toast('Pilih peserta didik terlebih dahulu.');
+                    return;
+                }
+                const list = $('#listBatalMutasiPd');
+                list.html('');
+                $('#modalBatalMutasiPd').modal('show');
+                let i = 1;
+                for (const value of selectedRows) {
+                    const resp = await fetchData('/api/v0/mutasiPd/' + value);
+                    if (resp)
+                        list.append(`
+                    <li class="list-group-item" id="list_${value}">${i++}. ${resp.nama} (${resp.jenis_mutasi})</li>
+                    `);
+                }
+                if (i == 1) $('#btnRun-batalMutasiPd').prop('disabled', true);
+            });
+
+            $('#btnRun-batalMutasiPd').on('click', async function() {
+                const btn = $(this);
+                for (const value of selectedRows) {
+                    const resp = await fetchData({
+                        url: '/api/v0/mutasiPd/' + value,
+                        method: 'DELETE',
+                        button: btn,
+                    });
+
+                    if (resp) {
+                        $('#list_' + value).remove();
+                        selectedRows = selectedRows.filter(item => item !== value);
+                        toast(resp.message);
+                    }
+                }
+                if (selectedRows.length == 0) $('#modalBatalMutasiPd').modal('hide');
+                dtAdminBukuIndukPd.ajax.reload(null, false);
             });
         });
     </script>

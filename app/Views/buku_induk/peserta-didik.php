@@ -21,7 +21,11 @@
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Reload Tabel" id="btnReloadTable"><i class="fas fa-redo-alt fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Sinkron dengan Dapodik" id="btnSinkronPdDapodik"><i class="fas fa-sync-alt fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Pilih Semua/Balikkan pilihan" id="btnSelectRow"><i class="fas fa-check-circle fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Bersihkan pilihan" id="btnClearSelected"><i class="fas fa-dot-circle fa-fw"></i></button>
+                    </div>
+                    <div class="btn-group btn-group-sm my-1 mr-2" role="group">
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Tarik Data Peserta Didik Baru" id="btnSinkronPdDapodik"><i class="fas fa-angle-double-down fa-fw"></i></button>
                         <button type="button" class="btn btn-primary btn-tooltip" data-title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
@@ -36,14 +40,14 @@
                             <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalMutasiPd" data-title="Keluarkan peserta didik"><i class="fas fa-sign-out-alt fa-fw mr-1"></i><span>PD Keluar</span></button>
                             <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalKelulusanPd" data-title="Kelulusan peserta didik"><i class="fas fa-user-graduate fa-fw mr-1"></i><span>Kelulusan</span></button>
                             <div class="dropdown-divider"></div>
-                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalBatalKeluarPd" data-title="Batalkan mutasi peserta didik"><i class="fas fa-times-circle fa-fw mr-1"></i><span>Batalkan Mutasi</span></button>
+                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Batalkan mutasi peserta didik" id="btnBatal-mutasiPd"><i class="fas fa-times-circle fa-fw mr-1"></i><span>Batalkan Mutasi</span></button>
                         </div>
                     </div>
                     <div class="my-1 mr-1 ml-sm-auto">
                         <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" data-toggle="tooltip" data-title="Pencarian Nama/NIS/NISN/Kelas" placeholder="Cari..." aria-label="Search">
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-1" role="group">
-                        <button type="button" class="btn btn-primary btn-tooltip" data-toggle="offcanvas" data-title="Filter Data" data-target=".offcanvas" id="btnFilter-bukuIndukPd"><i class="fas fa-filter fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary btn-tooltip" data-toggle="offcanvas" data-title="Filter Data" data-target="#offcanvasFilter-bukuIndukPd" id="btnFilter-bukuIndukPd"><i class="fas fa-filter fa-fw"></i></button>
                     </div>
                     <div class="input-group input-group-sm my-1" role="group">
                         <div class="input-group-prepend">
@@ -114,7 +118,7 @@
         </div>
     </div>
 </div>
-<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd']); ?>
+<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd']); ?>
 <?= offcanvas('filter-pd'); ?>
 
 <?= $this->endSection(); ?>

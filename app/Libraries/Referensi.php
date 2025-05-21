@@ -134,4 +134,41 @@ class Referensi
         }
         return $id;
     }
+
+    public function getJenisMutasi(string $keyword = null, array|string $output = []): array|string|false
+    {
+        $model = new RefJenisMutasiModel();
+        $model->select(['ref_id as id', 'nama', 'warna']);
+        $fields = ['id', 'nama', 'warna'];
+
+        if ($keyword) {
+            $model->where('ref_id', $keyword)->orWhere('nama', $keyword);
+            $result = $model->first();
+            if (!$result) return false;
+            if (is_string($output)) return $result[$output] ?? false;
+            else {
+                $rows = [];
+                foreach ($output as $row) {
+                    if (in_array($row, $fields))
+                        $rows[$row] = $output[$row];
+                }
+                return $rows;
+            }
+        } else {
+            $rows = [];
+            $result = $model->findAll();
+            foreach ($result as $row) {
+                if (is_string($output)) $rows[] = $row[$output] ?? false;
+                else {
+                    $item = [];
+                    foreach ($output as $field) {
+                        if (in_array($field, $fields))
+                            $item[] = $row[$field];
+                    }
+                    $rows[] = $item;
+                }
+            }
+            return $rows;
+        }
+    }
 }

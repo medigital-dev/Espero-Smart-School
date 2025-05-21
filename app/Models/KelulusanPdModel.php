@@ -10,7 +10,7 @@ class KelulusanPdModel extends Model
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
-    protected $useSoftDeletes = true;
+    protected $useSoftDeletes = false;
 
     protected $allowedFields = [
         'deleted_at',

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalImportDapodik" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalImportDapodikLabel" aria-hidden="true">
+<div class="modal fade" id="modalImportDapodik" data-backdrop="static" tabindex="-1" aria-labelledby="modalImportDapodikLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,7 +18,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnRun-ImportDapodik">Import</button>
+                <button type="button" class="btn btn-primary" id="btnRun-ImportDapodik"><i class="fas fa-file-import mr-1"></i><span>Import</span></button>
             </div>
         </div>
     </div>

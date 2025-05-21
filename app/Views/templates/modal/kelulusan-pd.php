@@ -1,4 +1,4 @@
-<div class="modal fade" id="modalKelulusanPd" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalKelulusanPdLabel" aria-hidden="true">
+<div class="modal fade" id="modalKelulusanPd" data-backdrop="static" tabindex="-1" aria-labelledby="modalKelulusanPdLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
