@@ -138,7 +138,7 @@ class DataPesertaDidik
     public function forAdmin()
     {
         $this->query
-            ->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nik'])
+            ->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nik', 'ref_agama.ref_id as agama_id'])
         ;
 
         return $this;
@@ -449,5 +449,10 @@ class DataPesertaDidik
             ]);
         } else $this->query->select($field);
         return $this;
+    }
+
+    public function find($id): array
+    {
+        return $this->query->where('peserta_didik.peserta_didik_id', $id)->first();
     }
 }

@@ -19,118 +19,12 @@
     <link rel="stylesheet" href="/plugins/bootstrap4-offcanvas/offcanvas-bs4.css">
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
     <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
+    <link rel="stylesheet" href="/plugins/fancyapps/fancybox.css">
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
     <link rel="stylesheet" href="/assets/css/global.css">
     <style>
-        .form-label-group {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .form-label-group input,
-        .form-label-group label {
-            height: 3.125rem;
-            padding: .75rem;
-        }
-
-        .form-label-group label {
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: block;
-            width: 100%;
-            margin-bottom: 0;
-            /* Override default `<label>` margin */
-            line-height: 1.5;
-            color: #495057;
-            pointer-events: none;
-            cursor: text;
-            /* Match the input under the label */
-            border: 1px solid transparent;
-            border-radius: .25rem;
-            transition: all .1s ease-in-out;
-        }
-
-        .form-label-group input::-webkit-input-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input::-moz-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input:-ms-input-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input::-ms-input-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input::placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input:not(:-moz-placeholder-shown) {
-            padding-top: 1.25rem;
-            padding-bottom: .25rem;
-        }
-
-        .form-label-group input:not(:-ms-input-placeholder) {
-            padding-top: 1.25rem;
-            padding-bottom: .25rem;
-        }
-
-        .form-label-group input:not(:placeholder-shown) {
-            padding-top: 1.25rem;
-            padding-bottom: .25rem;
-        }
-
-        .form-label-group input:not(:-moz-placeholder-shown)~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .form-label-group input:not(:-ms-input-placeholder)~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .form-label-group input:not(:placeholder-shown)~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .form-label-group input:-webkit-autofill~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        /* Fallback for Edge
--------------------------------------------------- */
-        @supports (-ms-ime-align: auto) {
-            .form-label-group {
-                display: -ms-flexbox;
-                display: flex;
-                -ms-flex-direction: column-reverse;
-                flex-direction: column-reverse;
-            }
-
-            .form-label-group label {
-                position: static;
-            }
-
-            .form-label-group input::-ms-input-placeholder {
-                color: #777;
-            }
+        .fancybox__container {
+            z-index: 1800 !important;
         }
     </style>
 </head>
@@ -394,6 +288,7 @@
     <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
     <script src="/plugins/inputmask/jquery.inputmask.js"></script>
     <script src="/plugins/fetchData/fetchData.js"></script>
+    <script src="/plugins/fancyapps/fancybox.umd.js"></script>
     <script src="/assets/js/adminlte.min.js"></script>
     <script src="/assets/js/functions.js"></script>
     <script src="/assets/js/global.js"></script>
@@ -423,6 +318,19 @@
             else if (countCheckboxChecked == 0)
                 $("#checkAllRow").prop("checked", false).prop("indeterminate", false);
             else $("#checkAllRow").prop("indeterminate", true);
+        }
+
+        function btnEditSaveForm(formElm, buttonElm) {
+            const inputElm = $(formElm).find('input,select,textarea');
+            const state = inputElm.prop('disabled');
+            if (inputElm.prop('disabled')) {
+                buttonElm.attr('data-title', 'Simpan').children('i').removeClass('fa-edit').addClass('fa-save');
+            } else {
+                buttonElm.attr('data-title', 'Ubah').children('i').addClass('fa-edit').removeClass('fa-save');
+            }
+            inputElm.each((i, v) => $(v).prop('disabled', !state));
+            $('[data-toggle="tooltip"]').tooltip('dispose')
+            $('[data-toggle="tooltip"]').tooltip()
         }
     </script>
     <!-- end functions -->
@@ -623,6 +531,7 @@
     <script>
         $(document).ready(function() {
             bsCustomFileInput.init();
+            Fancybox.bind("[data-fancybox]");
 
             $(".modal").on("hide.bs.modal", (e) => {
                 const elm = $(e.target);
@@ -760,8 +669,8 @@
                     },
                     {
                         data: "nama",
-                        render: (data) => {
-                            return `<a type="button" href="#" class="btn-tooltip" data-toggle="offcanvas" data-title="Detail Peserta Didik" data-target="#offcanvasEdit-dataPd">${data}</a>`;
+                        render: (data, type, rows, meta) => {
+                            return `<a type="button" href="#" class="text-decoration-none btnRow-detailPd" data-toggle="tooltip" data-title="Detail Peserta Didik" data-id="${rows.peserta_didik_id}">${data}</a>`;
                         }
                     },
                     {
@@ -873,8 +782,28 @@
                 totalHalaman.text('/' + totalPage);
 
                 checkRowDt();
+
                 $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
-                $('[data-toggle="offcanvas"').offcanvas();
+
+                $('.btnRow-detailPd').on('click', async function() {
+                    const id = $(this).data('id');
+                    const formElm = $('#formData-bukuIndukPd');
+                    const offcanvasElm = $('#offcanvasEdit-dataPd');
+                    offcanvasElm.offcanvas('show');
+                    const respData = await fetchData('/api/v0/pesertaDidik/' + id);
+                    console.log(respData);
+                    if (!respData) return;
+                    $('#updatePd-nama').val(respData.nama);
+                    $('#updatePd-jenisKelamin').val(respData.jenis_kelamin).trigger('change');
+                    $('#updatePd-tempatLahir').val(respData.tempat_lahir);
+                    $('#updatePd-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'd/m/Y'));
+                    $('#updatePd-nisn').val(respData.nisn);
+                    $('#updatePd-nik').val(respData.nik);
+                    $('#updatePd-nomorKk').val(respData.nomor_kk);
+                    $('#updatePd-nomorAkte').val(respData.nomor_akte);
+                    let newOptionAgama = new Option(respData.agama, respData.agama_id, true, true);
+                    $('#updatePd-agama').append(newOptionAgama).trigger('change');
+                });
             });
 
             let debounceTimer;
@@ -891,7 +820,7 @@
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd, #inputForm-tanggalLulusPd').datetimepicker({
+            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd, #inputForm-tanggalLulusPd, #updatePd-tanggalLahir').datetimepicker({
                 format: 'L',
                 locale: 'id',
                 maxDate: 'now'

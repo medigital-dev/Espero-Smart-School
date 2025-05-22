@@ -23,6 +23,8 @@ class PesertaDidikModel extends Model
         'nisn',
         'nik',
         'agama_id',
+        'nomor_kk',
+        'nomor_akte',
     ];
 
     /**

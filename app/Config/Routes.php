@@ -49,6 +49,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
 
     $routes->resource('kelulusan');
     $routes->resource('mutasiPd');
+    $routes->resource('pesertaDidik');
 });
 
 // public

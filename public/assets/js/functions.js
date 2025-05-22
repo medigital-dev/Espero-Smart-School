@@ -65,3 +65,38 @@ function resetInput(elmInput, elmDatatables = false) {
   $(elmInput).val("").trigger("change");
   if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
 }
+
+function tanggal(isoDate, format = "d-m-Y") {
+  if (!isoDate) return "";
+
+  const bulanNama = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  const date = new Date(isoDate);
+  const day = date.getDate(); // 1–31
+  const month = date.getMonth() + 1; // 1–12
+  const year = date.getFullYear(); // 4 digit
+
+  const map = {
+    d: String(day).padStart(2, "0"),
+    j: day,
+    m: String(month).padStart(2, "0"),
+    n: month,
+    Y: year,
+    F: bulanNama[month - 1],
+  };
+
+  return format.replace(/d|j|m|n|Y|F/g, (match) => map[match]);
+}
