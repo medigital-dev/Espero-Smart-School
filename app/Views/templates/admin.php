@@ -320,17 +320,28 @@
             else $("#checkAllRow").prop("indeterminate", true);
         }
 
-        function btnEditSaveForm(formElm, buttonElm) {
+        async function btnEditSaveForm(formElm, buttonElm) {
+            const id = buttonElm.data('id');
+            console.log(id);
+
             const inputElm = $(formElm).find('input,select,textarea');
             const state = inputElm.prop('disabled');
             if (inputElm.prop('disabled')) {
-                buttonElm.attr('data-title', 'Simpan').children('i').removeClass('fa-edit').addClass('fa-save');
+                buttonElm.tooltip('hide');
+                buttonElm.attr('data-original-title', 'Simpan').children('i').removeClass('fa-pen-square').addClass('fa-save');
             } else {
-                buttonElm.attr('data-title', 'Ubah').children('i').addClass('fa-edit').removeClass('fa-save');
+                buttonElm.tooltip('hide');
+                buttonElm.attr('data-original-title', 'Ubah').children('i').addClass('fa-pen-square').removeClass('fa-save');
+                const respData = await fetchData({
+                    url: '/api/v0/pesertaDidik/' + (id ? id : ''),
+                    button: buttonElm,
+                    method: 'POST',
+                    data: $(formElm).serializeArray()
+                });
+                console.log(respData);
+
             }
             inputElm.each((i, v) => $(v).prop('disabled', !state));
-            $('[data-toggle="tooltip"]').tooltip('dispose')
-            $('[data-toggle="tooltip"]').tooltip()
         }
     </script>
     <!-- end functions -->
@@ -793,6 +804,7 @@
                     const respData = await fetchData('/api/v0/pesertaDidik/' + id);
                     console.log(respData);
                     if (!respData) return;
+                    $('.btnEditSave').attr('data-id', id);
                     $('#updatePd-nama').val(respData.nama);
                     $('#updatePd-jenisKelamin').val(respData.jenis_kelamin).trigger('change');
                     $('#updatePd-tempatLahir').val(respData.tempat_lahir);

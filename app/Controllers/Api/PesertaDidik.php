@@ -20,6 +20,14 @@ class PesertaDidik extends BaseController
         $this->model->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'nisn', 'nipd', 'nik', 'nomor_akte', 'nomor_kk', '']);
     }
 
+    public function index($status = null)
+    {
+        $data = new DataPesertaDidik;
+        if ($status == 'active')
+            $data->active();
+        return $this->respond($data->withFilter()->toSelect2());
+    }
+
     public function get($status = null)
     {
         $data = new DataPesertaDidik;

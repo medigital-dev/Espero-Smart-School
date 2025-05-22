@@ -23,9 +23,10 @@
                 <div class="tab-pane fade active show" id="vert-tabs-profil" role="tabpanel" aria-labelledby="vert-tabs-profil-tab">
                     <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                         <h6 class="text-bold m-0">Identitas Peserta Didik</h6>
-                        <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Ubah" onclick="btnEditSaveForm('#formData-bukuIndukPd',$(this))"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-link btnEditSave" data-toggle="tooltip" data-title="Ubah" onclick="btnEditSaveForm('#formData-bukuIndukPd',$(this))"><i class="fas fa-pen-square"></i></button>
                     </div>
                     <form id="formData-bukuIndukPd">
+                        <input type="hidden" name="peserta_didik_id" disabled id="updatePd-id">
                         <div class="form-group mb-2">
                             <label class="small mb-1" for="updatePd-nama">Nama</label>
                             <input type="text" class="form-control" disabled id="updatePd-nama" name="nama">
