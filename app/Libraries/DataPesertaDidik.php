@@ -451,8 +451,9 @@ class DataPesertaDidik
         return $this;
     }
 
-    public function find($id): array
+    public function find($id)
     {
-        return $this->query->where('peserta_didik.peserta_didik_id', $id)->first();
+        $this->query->where('peserta_didik.peserta_didik_id', $id);
+        return $this->query->first();
     }
 }

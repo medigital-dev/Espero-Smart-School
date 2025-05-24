@@ -38,6 +38,26 @@ class PesertaDidik extends BaseController
 
     public function show($id = null)
     {
-        return $this->respond(service('getPesertaDidik')->forAdmin()->find($id));
+        $type = $this->request->getGet('type');
+        $data = new DataPesertaDidik();
+
+        switch ($type) {
+            case 'profil':
+                $fields = [
+                    'peserta_didik.peserta_didik_id',
+                    // 'rombongan_belajar.nama as kelas',
+                    // 'nipd',
+                    // 'nisn',
+                    // 'peserta_didik.tanggal_lahir'
+                ];
+                return $this->respond($data->withRombel()->find($id));
+                break;
+
+            default:
+                # code...
+                break;
+        }
+
+        // return $this->respond($data->find($id));
     }
 }

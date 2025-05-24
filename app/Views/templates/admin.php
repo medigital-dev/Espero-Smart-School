@@ -26,6 +26,20 @@
         .fancybox__container {
             z-index: 1800 !important;
         }
+
+        .tab-pane>.overlay-wrapper>.overlay {
+            margin-top: -1rem;
+            margin-left: -1rem;
+            height: calc(100% + 2 * 1rem);
+            width: calc(100% + 2 * 1rem);
+        }
+
+        .card .overlay,
+        .info-box .overlay,
+        .overlay-wrapper .overlay,
+        .small-box .overlay {
+            z-index: 1035;
+        }
     </style>
 </head>
 
@@ -321,9 +335,7 @@
         }
 
         async function btnEditSaveForm(formElm, buttonElm) {
-            const id = buttonElm.data('id');
-            console.log(id);
-
+            const id = $('#updatePd-id').val();
             const inputElm = $(formElm).find('input,select,textarea');
             const state = inputElm.prop('disabled');
             if (inputElm.prop('disabled')) {
@@ -338,8 +350,7 @@
                     method: 'POST',
                     data: $(formElm).serializeArray()
                 });
-                console.log(respData);
-
+                toast(respData.message);
             }
             inputElm.each((i, v) => $(v).prop('disabled', !state));
         }
@@ -801,10 +812,11 @@
                     const formElm = $('#formData-bukuIndukPd');
                     const offcanvasElm = $('#offcanvasEdit-dataPd');
                     offcanvasElm.offcanvas('show');
-                    const respData = await fetchData('/api/v0/pesertaDidik/' + id);
-                    console.log(respData);
+                    offcanvasElm.find('.overlay').toggleClass('d-none');
+                    const respData = await fetchData('/api/v0/pesertaDidik/' + id + '?type=profil');
                     if (!respData) return;
-                    $('.btnEditSave').attr('data-id', id);
+                    $('.idPd').attr('data-id', id);
+                    $('#updatePd-id').val(id);
                     $('#updatePd-nama').val(respData.nama);
                     $('#updatePd-jenisKelamin').val(respData.jenis_kelamin).trigger('change');
                     $('#updatePd-tempatLahir').val(respData.tempat_lahir);
@@ -815,6 +827,7 @@
                     $('#updatePd-nomorAkte').val(respData.nomor_akte);
                     let newOptionAgama = new Option(respData.agama, respData.agama_id, true, true);
                     $('#updatePd-agama').append(newOptionAgama).trigger('change');
+                    offcanvasElm.find('.overlay').toggleClass('d-none');
                 });
             });
 

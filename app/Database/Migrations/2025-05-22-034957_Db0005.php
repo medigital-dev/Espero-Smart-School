@@ -26,7 +26,34 @@ class Db0005 extends Migration
                 'null' => true,
                 'default' => null,
             ],
+            'foto_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ]
         ]);
+
+        // Tabel: pass_foto
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'foto_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'filename' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+                'null' => false,
+            ],
+            'path' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('pass_foto', true);
 
         // Tabel: ref_jenis_kelamin
         $this->forge->addField([
@@ -60,7 +87,8 @@ class Db0005 extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('peserta_didik', ['nomor_akte', 'nomor_kk']);
+        $this->forge->dropColumn('peserta_didik', ['nomor_akte', 'nomor_kk', 'foto_id']);
         $this->forge->dropTable('ref_jenis_kelamin', true);
+        $this->forge->dropTable('pass_foto', true);
     }
 }
