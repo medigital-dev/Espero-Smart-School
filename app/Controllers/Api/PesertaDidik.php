@@ -17,7 +17,17 @@ class PesertaDidik extends BaseController
     {
         helper(['indonesia', 'text']);
         $this->model = new PesertaDidikModel();
-        $this->model->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'nisn', 'nipd', 'nik', 'nomor_akte', 'nomor_kk', '']);
+        $this->model
+            ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
+            ->join('pass_foto', 'pass_foto.foto_id = peserta_didik.foto_id', 'left')
+            ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
+            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
+            ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
+        ;
     }
 
     public function index($status = null)
@@ -39,18 +49,38 @@ class PesertaDidik extends BaseController
     public function show($id = null)
     {
         $type = $this->request->getGet('type');
-        $data = new DataPesertaDidik();
+        if ($id)
+            $this->model->where('peserta_didik.peserta_didik_id', $id);
 
         switch ($type) {
             case 'profil':
-                $fields = [
-                    'peserta_didik.peserta_didik_id',
-                    // 'rombongan_belajar.nama as kelas',
-                    // 'nipd',
-                    // 'nisn',
-                    // 'peserta_didik.tanggal_lahir'
-                ];
-                return $this->respond($data->withRombel()->find($id));
+                $this->model->select([
+                    'peserta_didik.nama',
+                    'nisn',
+                    'nipd',
+                    'peserta_didik.tanggal_lahir as tanggal_lahir',
+                    'peserta_didik.tempat_lahir as tempat_lahir',
+                    'rombongan_belajar.nama as kelas',
+                    'pass_foto.path as foto_src',
+                    'ref_jenis_mutasi.nama as jenis_mutasi',
+                    'ref_jenis_kelamin.nama as jenis_kelamin',
+                ]);
+                break;
+
+            case 'identitas':
+                $this->model->select([
+                    'peserta_didik.nama',
+                    'peserta_didik.tempat_lahir as tempat_lahir',
+                    'peserta_didik.tanggal_lahir as tanggal_lahir',
+                    'nisn',
+                    'nomor_akte',
+                    'peserta_didik.nik',
+                    'nomor_kk',
+                    'ref_agama.ref_id as agama_id',
+                    'ref_agama.nama as agama_str',
+                    'ref_jenis_kelamin.ref_id as jenis_kelamin_id',
+                    'ref_jenis_kelamin.nama as jenis_kelamin_str',
+                ]);
                 break;
 
             default:
@@ -58,6 +88,6 @@ class PesertaDidik extends BaseController
                 break;
         }
 
-        // return $this->respond($data->find($id));
+        return $this->respond($this->model->first());
     }
 }

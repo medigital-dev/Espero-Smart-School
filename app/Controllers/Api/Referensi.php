@@ -38,6 +38,10 @@ class Referensi extends BaseController
                 $model->select(['ref_id as id', 'nama']);
                 break;
 
+            case 'jenisKelamin':
+                $model = new RefJenisKelaminModel();
+                break;
+
             default:
                 return null;
                 break;

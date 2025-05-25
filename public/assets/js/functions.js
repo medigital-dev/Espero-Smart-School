@@ -84,19 +84,52 @@ function tanggal(isoDate, format = "d-m-Y") {
     "Desember",
   ];
 
+  const hariNama = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+  ];
+
+  const hariSingkat = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
   const date = new Date(isoDate);
-  const day = date.getDate(); // 1–31
-  const month = date.getMonth() + 1; // 1–12
-  const year = date.getFullYear(); // 4 digit
+
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  const dayIndex = date.getDay();
+
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
 
   const map = {
-    d: String(day).padStart(2, "0"),
-    j: day,
-    m: String(month).padStart(2, "0"),
-    n: month,
-    Y: year,
-    F: bulanNama[month - 1],
+    d: String(day).padStart(2, "0"), // 01
+    j: day, // 1
+    mm: String(month).padStart(2, "0"), // 02
+    m: month, // 2
+    mmm: bulanNama[month - 1].slice(0, 3), // Feb
+    mmmm: bulanNama[month - 1], // Februari
+    Y: year, // 2009
+    yyyy: year,
+    yy: String(year).slice(-2), // 09
+    F: bulanNama[month - 1], // Februari
+    dddd: hariNama[dayIndex], // Selasa
+    ddd: hariSingkat[dayIndex], // Sel
+    H: hours,
+    HH: String(hours).padStart(2, "0"),
+    i: minutes,
+    ii: String(minutes).padStart(2, "0"),
+    s: seconds,
+    ss: String(seconds).padStart(2, "0"),
   };
 
-  return format.replace(/d|j|m|n|Y|F/g, (match) => map[match]);
+  return format.replace(
+    /dddd|ddd|mmmm|mmm|mm|m|d|j|yyyy|yy|Y|F|HH?|ii?|ss?|H|i|s/g,
+    (match) => map[match]
+  );
 }
