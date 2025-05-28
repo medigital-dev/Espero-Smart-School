@@ -25,6 +25,7 @@ class PesertaDidikModel extends Model
         'agama_id',
         'nomor_kk',
         'nomor_akte',
+        'foto_id',
     ];
 
     /**

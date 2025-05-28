@@ -39,17 +39,18 @@ $routes->post('/api/v0/buku-induk/import/kelulusan-pd', 'BukuInduk::importKelulu
 
 $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($routes) {
     $routes->get('rombel/get', 'Rombel::get');
-    $routes->get('referensi/(:segment)', 'Referensi::get/$1');
-    $routes->get('referensi/(:segment)/(:segment)', 'Referensi::get/$1/$2');
     $routes->post('mutasi/peserta-didik/set', 'MutasiPd::set');
 
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
     $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');
     $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
+    $routes->get('buku-induk/peserta-didik/show/(:segment)', 'PesertaDidik::show/$1');
+    $routes->post('buku-induk/peserta-didik/save/(:segment)', 'PesertaDidik::save/$1');
 
     $routes->resource('kelulusan');
     $routes->resource('mutasiPd');
-    $routes->resource('pesertaDidik');
+    $routes->resource('referensi');
+    // $routes->presenter('pesertaDidik');
 });
 
 // public

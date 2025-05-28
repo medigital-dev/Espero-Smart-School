@@ -21,3 +21,10 @@ if (!function_exists('importExcel')) {
         return service('import')->excel($upload['data']['path']);
     }
 }
+
+if (!function_exists('uploadFile')) {
+    function uploadFile(UploadedFile $file, array $allowedExtension = [], string $toFolder = '')
+    {
+        return service('files')->upload($file, $allowedExtension, $toFolder);
+    }
+}

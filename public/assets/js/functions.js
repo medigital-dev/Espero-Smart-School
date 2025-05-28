@@ -93,10 +93,17 @@ function tanggal(isoDate, format = "d-m-Y") {
     "Jumat",
     "Sabtu",
   ];
-
   const hariSingkat = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
-  const date = new Date(isoDate);
+  let date = new Date(isoDate);
+  if (isNaN(date)) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+      date = new Date(isoDate + "T00:00:00");
+    } else {
+      date = new Date(isoDate.replace(" ", "T"));
+    }
+  }
+  if (isNaN(date)) return "";
 
   const day = date.getDate();
   const month = date.getMonth() + 1;
@@ -108,18 +115,19 @@ function tanggal(isoDate, format = "d-m-Y") {
   const seconds = date.getSeconds();
 
   const map = {
-    d: String(day).padStart(2, "0"), // 01
-    j: day, // 1
-    mm: String(month).padStart(2, "0"), // 02
-    m: month, // 2
-    mmm: bulanNama[month - 1].slice(0, 3), // Feb
-    mmmm: bulanNama[month - 1], // Februari
-    Y: year, // 2009
+    d: day,
+    dd: String(day).padStart(2, "0"),
+    j: day,
+    mm: String(month).padStart(2, "0"),
+    m: month,
+    mmm: bulanNama[month - 1].slice(0, 3),
+    mmmm: bulanNama[month - 1],
+    Y: year,
     yyyy: year,
-    yy: String(year).slice(-2), // 09
-    F: bulanNama[month - 1], // Februari
-    dddd: hariNama[dayIndex], // Selasa
-    ddd: hariSingkat[dayIndex], // Sel
+    yy: String(year).slice(-2),
+    F: bulanNama[month - 1],
+    dddd: hariNama[dayIndex],
+    ddd: hariSingkat[dayIndex],
     H: hours,
     HH: String(hours).padStart(2, "0"),
     i: minutes,
@@ -129,7 +137,7 @@ function tanggal(isoDate, format = "d-m-Y") {
   };
 
   return format.replace(
-    /dddd|ddd|mmmm|mmm|mm|m|d|j|yyyy|yy|Y|F|HH?|ii?|ss?|H|i|s/g,
+    /dddd|ddd|mmmm|mmm|mm|m|dd|d|j|yyyy|yy|Y|F|HH?|ii?|ss?|H|i|s/g,
     (match) => map[match]
   );
 }

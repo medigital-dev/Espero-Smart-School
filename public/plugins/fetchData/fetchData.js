@@ -24,6 +24,7 @@ async function fetchData(urlOrConfig, ...restParams) {
       dataType: urlOrConfig.dataType || "json",
       method: urlOrConfig.method || "GET",
       button: urlOrConfig.button || null,
+      headers: urlOrConfig.headers || null,
     };
   } else {
     config = {

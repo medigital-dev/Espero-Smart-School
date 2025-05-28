@@ -334,26 +334,28 @@
             else $("#checkAllRow").prop("indeterminate", true);
         }
 
-        async function btnEditSaveForm(formElm, buttonElm) {
-            const id = $('#updatePd-id').val();
-            const inputElm = $(formElm).find('input,select,textarea');
-            const state = inputElm.prop('disabled');
-            if (inputElm.prop('disabled')) {
-                buttonElm.tooltip('hide');
-                buttonElm.attr('data-original-title', 'Simpan').children('i').removeClass('fa-pen-square').addClass('fa-save');
-            } else {
-                buttonElm.tooltip('hide');
-                buttonElm.attr('data-original-title', 'Ubah').children('i').addClass('fa-pen-square').removeClass('fa-save');
-                const respData = await fetchData({
-                    url: '/api/v0/pesertaDidik/' + (id ? id : ''),
-                    button: buttonElm,
-                    method: 'POST',
-                    data: $(formElm).serializeArray()
-                });
-                toast(respData.message);
-            }
-            inputElm.each((i, v) => $(v).prop('disabled', !state));
-        }
+        // async function saveForm(formElm, buttonElm) {
+        //     const id = $('#detailPd-id').val();
+        //     const files = $(formElm).find('input:file');
+
+        //     $('#offcanvasEdit-dataPd .overlay').addClass('d-none');
+        //     let data = [];
+        //     const set = $(formElm).serializeArray();
+        // if (files.length > 0) {
+        //     data = new FormData();
+        //     data.append('set', set);
+        //     data.append('files', files.prop('files'));
+        // } else data = set;
+
+        //     const respData = await fetchData({
+        //         url: `/api/v0/pesertaDidik/${id}/update`,
+        //         method: 'POST',
+        //         data: set,
+        //         button: buttonElm,
+        //     });
+        //     console.log(respData);
+        //     $('#offcanvasEdit-dataPd .overlay').removeClass('d-none');
+        // }
     </script>
     <!-- end functions -->
 
@@ -511,7 +513,7 @@
                     dropdownParent: $select.parents(".modal").length ?
                         $select.parents(".modal").first() : $(document.body),
                     ajax: {
-                        url: "/api/v0/referensi/" + $select.data('referensi'),
+                        url: "/api/v0/referensi/?type=" + $select.data('referensi'),
                         method: "GET",
                         dataType: "json",
                         data: function(params) {
@@ -807,12 +809,12 @@
 
                 $('.btnRow-detailPd').on('click', async function() {
                     const id = $(this).data('id');
-                    const formElm = $('#formData-bukuIndukPd');
+                    const formElm = $('#formData-tabsIdentitas');
                     const offcanvasElm = $('#offcanvasEdit-dataPd');
                     offcanvasElm.offcanvas('show');
-                    offcanvasElm.find('.overlay').toggleClass('d-none');
+                    offcanvasElm.find('.overlay').removeClass('d-none');
                     $('#tabs-profil-tab').tab('show');
-                    const respData = await fetchData('/api/v0/pesertaDidik/' + id + '?type=profil');
+                    const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=profil');
                     if (!respData) return;
                     $('.idPd').attr('data-id', id);
                     $('#detailPd-id').val(id);
@@ -822,19 +824,22 @@
                     $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
                     $('#tabsProfile-nisn').text(respData.nisn);
                     $('#tabsProfile-nipd').text(respData.nipd);
-                    $('#tabsProfile-nip').text(respData.nip);
+                    $('#tabsProfile-nik').text(respData.nik);
+                    $('#tabsProfile-ibu').text(respData.ibu);
+                    $('#tabsProfile-hp').text(respData.hp);
+                    $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
                     if (respData.jenis_mutasi)
                         $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
                     else
                         $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
                     if (respData.foto_src) {
-                        $('#tabsProfile-foto a').attr('href', respData.foto_src);
-                        $('#tabsProfile-foto img').attr('src', respData.foto_src);
+                        $('#tabsProfile-foto a').attr('href', '/' + respData.foto_src);
+                        $('#tabsProfile-foto img').attr('src', '/' + respData.foto_src);
                     } else {
                         $('#tabsProfile-foto a').attr('href', '/assets/img/users/_default.png');
                         $('#tabsProfile-foto img').attr('src', '/assets/img/users/_default.png');
                     }
-                    offcanvasElm.find('.overlay').toggleClass('d-none');
+                    offcanvasElm.find('.overlay').addClass('d-none');
                 });
 
                 $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
@@ -854,11 +859,27 @@
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd, #inputForm-tanggalLulusPd, #updatePd-tanggalLahir').datetimepicker({
+            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd, #inputForm-tanggalLulusPd, #tabsIdentitas-tanggalLahir').datetimepicker({
                 format: 'L',
                 locale: 'id',
                 maxDate: 'now'
             });
+
+            $('#tabsIdentitas-tanggalLahir').on('change.datetimepicker', e => {
+                if (e.date)
+                    $('#tabsIdentitas-tanggalLahirDb').val(e.date.format('YYYY-MM-DD'));
+                else
+                    $('#tabsIdentitas-tanggalLahirDb').val('');
+            });
+
+            $('#tabsIdentitas-photoProfil').on('change', function() {
+                const prevElm = $('#previewPassfoto');
+                if ($(this).val() !== '')
+                    prevElm.removeClass('d-none').children('img').attr('src', URL.createObjectURL($(this).prop('files')[0]));
+                else
+                    prevElm.addClass('d-none').children('img').attr('src', '#');
+            });
+
             $('#formDt-filterPd').on('change input', 'input,select,checkbox,radio', () => {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
@@ -900,6 +921,40 @@
                 toast(upload.message);
             });
 
+            $('#tabs-profil-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=profil');
+                if (!respData) return;
+                $('.idPd').attr('data-id', id);
+                $('#detailPd-id').val(id);
+                $('#tabsProfile-nama').text(respData.nama);
+                $('#tabsProfile-jk').text(respData.jenis_kelamin);
+                $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
+                $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
+                $('#tabsProfile-nisn').text(respData.nisn);
+                $('#tabsProfile-nipd').text(respData.nipd);
+                $('#tabsProfile-nik').text(respData.nik);
+                $('#tabsProfile-ibu').text(respData.ibu);
+                $('#tabsProfile-hp').text(respData.hp);
+                $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
+                if (respData.jenis_mutasi)
+                    $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
+                else
+                    $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
+                if (respData.foto_src) {
+                    $('#tabsProfile-foto a').attr('href', '/' + respData.foto_src);
+                    $('#tabsProfile-foto img').attr('src', '/' + respData.foto_src);
+                } else {
+                    $('#tabsProfile-foto a').attr('href', '/assets/img/users/_default.png');
+                    $('#tabsProfile-foto img').attr('src', '/assets/img/users/_default.png');
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
             $('#tabs-identitas-tab').on('click', async function(e) {
                 e.preventDefault();
                 let opt;
@@ -907,21 +962,57 @@
                 const formElm = $('#formData-tabsIdentitas');
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
-                offcanvasElm.find('.overlay').toggleClass('d-none');
-                const respData = await fetchData('/api/v0/pesertaDidik/' + id + '?type=identitas');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=identitas');
                 if (!respData) return;
                 $('#tabsIdentitas-nama').val(respData.nama);
                 opt = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
                 $('#tabsIdentitas-jenisKelamin').append(opt);
                 $('#tabsIdentitas-tempatLahir').val(respData.tempat_lahir);
-                $('#tabsIdentitas-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/yyyy'));
+                $('#tabsIdentitas-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/Y'));
+                $('#tabsIdentitas-tanggalLahirDb').val(respData.tanggal_lahir);
                 $('#tabsIdentitas-nisn').val(respData.nisn);
                 $('#tabsIdentitas-nomorAkte').val(respData.nomor_akte);
                 $('#tabsIdentitas-nomorKk').val(respData.nomor_kk);
                 $('#tabsIdentitas-nik').val(respData.nik);
                 opt = new Option(respData.agama_str, respData.agama_id, false, true);
                 $('#tabsIdentitas-agama').append(opt);
-                offcanvasElm.find('.overlay').toggleClass('d-none');
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnSave-identitasPd').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsIdentitas');
+                const filesElm = formElm.find('input:file');
+                const files = filesElm.prop('files');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+                let data = new FormData();
+                set.forEach(field => {
+                    data.append(field.name, field.value);
+                });
+                if (files.length > 0)
+                    data.append('file', files[0]);
+
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/save/' + id,
+                    method: 'POST',
+                    data: data,
+                    button: btn,
+                });
+                loading.addClass('d-none');
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    filesElm.val('').trigger('change');
+                    bsCustomFileInput.destroy();
+                    bsCustomFileInput.init();
+                }
+
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

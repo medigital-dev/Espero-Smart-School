@@ -4,6 +4,7 @@ namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
 use App\Models\RefAgamaModel;
+use App\Models\RefJenisKelaminModel;
 use App\Models\RefJenisMutasiModel;
 use App\Models\RefJenisRegistrasiModel;
 use CodeIgniter\API\ResponseTrait;
@@ -19,23 +20,21 @@ class Referensi extends BaseController
         $this->dataAgama = service('referensi');
     }
 
-    public function get(string $type, string $id = null)
+    public function index()
     {
         $key = $this->request->getGet('key');
+        $type = $this->request->getGet('type');
         switch ($type) {
             case 'jenisMutasi':
                 $model = new RefJenisMutasiModel();
-                $model->select(['ref_id as id', 'nama', 'warna']);
                 break;
 
             case 'jenisRegistrasi':
                 $model = new RefJenisRegistrasiModel();
-                $model->select(['ref_id as id', 'nama', 'warna']);
                 break;
 
             case 'agama':
                 $model = new RefAgamaModel();
-                $model->select(['ref_id as id', 'nama']);
                 break;
 
             case 'jenisKelamin':
@@ -43,10 +42,10 @@ class Referensi extends BaseController
                 break;
 
             default:
-                return null;
+                return $this->respond(null);
                 break;
         }
-        if ($id) return $this->respond($model->where('ref_id', $id)->first());
+        $model->select(['ref_id as id', 'nama', 'warna', 'kode']);
         if ($key)
             $model->like('nama', $key);
         return $this->respond($model->findAll());

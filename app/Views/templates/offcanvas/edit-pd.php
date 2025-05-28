@@ -6,7 +6,7 @@
     <div class="offcanvas-body pt-0">
         <div class="overlay-wrapper">
             <div class="overlay d-none"><i class="fas fa-spinner fa-spin"></i></div>
-            <input type="hidden" name="peserta_didik_id" disabled id="detailPd-id">
+            <input type="hidden" name="peserta_didik_id" id="detailPd-id">
             <div class="d-flex align-items-start pt-3">
                 <div class="nav flex-column nav-tabs h-100 mr-3 pt-0 sticky-top" id="tabs-tab" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active btn-tooltip idPd" data-placement="right" title="Profil" id="tabs-profil-tab" data-toggle="tab" href="#tabs-profile" role="tab" aria-controls="tabs-profil" aria-selected="true"><i class="fas fa-id-card-alt fa-fw"></i></a>
@@ -16,67 +16,72 @@
                     <div class="tab-pane fade" id="tabs-identitas" role="tabpanel" aria-labelledby="tabs-identitas-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Identitas Peserta Didik</h6>
-                            <button class="btn btn-sm btn-link btnEditSave" data-toggle="tooltip" data-title="Ubah" onclick="btnEditSaveForm('#formData-tabsIdentitas',$(this))"><i class="fas fa-pen-square"></i></button>
+                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-identitasPd"><i class="fas fa-save"></i></button>
                         </div>
                         <form id="formData-tabsIdentitas">
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nama">Nama</label>
-                                <input type="text" class="form-control" disabled id="tabsIdentitas-nama" name="nama">
+                                <!-- <input type="text" class="form-control" id="tabsIdentitas-nama" name="nama"> -->
+                                <textarea name="nama" id="tabsIdentitas-nama" class="form-control" rows="2"></textarea>
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsIdentitas-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIdentitas-jenisKelamin" name="jenis_kelamin" disabled></select>
+                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIdentitas-jenisKelamin" name="jenis_kelamin"></select>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-tempatLahir">Tempat Lahir</label>
-                                <input type="text" class="form-control" disabled id="tabsIdentitas-tempatLahir" name="tempat_lahir">
+                                <input type="text" class="form-control" id="tabsIdentitas-tempatLahir" name="tempat_lahir">
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-tanggalLahir">Tanggal Lahir</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" disabled id="tabsIdentitas-tanggalLahir" name="tanggal_lahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                    <input type="text" class="form-control" id="tabsIdentitas-tanggalLahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                     <div class="input-group-append" data-target="#tabsIdentitas-tanggalLahir" data-toggle="datetimepicker">
                                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                     </div>
                                 </div>
+                                <input type="hidden" id="tabsIdentitas-tanggalLahirDb" name="tanggal_lahir">
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nisn" aria-describedby="nisnHelp">NISN</label>
-                                <input type="text" class="form-control" disabled id="tabsIdentitas-nisn" name="nisn">
+                                <input type="text" class="form-control" id="tabsIdentitas-nisn" name="nisn">
                                 <small id="nisnHelp" class="form-text text-muted">Nomor Induk Siswa Nasional</small>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nomorAkte">Nomor Akte Kelahiran</label>
-                                <input type="text" class="form-control" disabled id="tabsIdentitas-nomorAkte" name="nomorAkte" aria-describedby="nomorAkteHelp">
+                                <input type="text" class="form-control" id="tabsIdentitas-nomorAkte" name="nomor_akte" aria-describedby="nomorAkteHelp">
                                 <small id="nomorAkteHelp" class="form-text text-muted">Nomor registrasi akte kelahiran</small>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nik">NIK</label>
-                                <input type="text" class="form-control" disabled id="tabsIdentitas-nik" name="nik" aria-describedby="nikHelp">
+                                <input type="text" class="form-control" id="tabsIdentitas-nik" name="nik" aria-describedby="nikHelp">
                                 <small id="nikHelp" class="form-text text-muted">Nomor Induk Kependudukan</small>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nomorKk">Nomor KK</label>
-                                <input type="text" class="form-control" disabled id="tabsIdentitas-nomorKk" name="nik" aria-describedby="noKKHelp">
+                                <input type="text" class="form-control" id="tabsIdentitas-nomorKk" name="nomor_kk" aria-describedby="noKKHelp">
                                 <small id="noKKHelp" class="form-text text-muted">Nomor Kartu Kependudukan</small>
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsIdentitas-agama" class="small mb-1">Agama</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIdentitas-agama" name="agama_id" disabled></select>
+                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIdentitas-agama" name="agama_id"></select>
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsIdentitas-photoProfil" class="small mb-1">Pass Foto</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="tabsIdentitas-photoProfil" name="foto_id" disabled>
+                                    <input type="file" class="custom-file-input" id="tabsIdentitas-photoProfil" name="foto_id" accept="image/jpg, image/jpeg, image/png">
                                     <label class="custom-file-label" for="tabsIdentitas-photoProfil">Pilih berkas</label>
                                 </div>
+                            </div>
+                            <div id="previewPassfoto" class="d-none text-center mb-2">
+                                <img src="#" alt="preview" class="rounded rounded-lg" width="80%">
                             </div>
                         </form>
                     </div>
                     <div class="tab-pane fade active show" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
-                        <div class="text-center" id="tabsProfile-foto">
-                            <a href="<?= base_url('assets/img/users/_default.png'); ?>" class="mb-2" data-fancybox>
-                                <img src="<?= base_url('assets/img/users/_default.png'); ?>" class="img-fluid img-circle" width="125" height="125" alt="Default user photo">
+                        <div class="text-center mb-3" id="tabsProfile-foto">
+                            <a href="<?= base_url('assets/img/users/_default.png'); ?>" data-fancybox>
+                                <img src="<?= base_url('assets/img/users/_default.png'); ?>" class="rounded rounded-lg" height="125" alt="Default user photo">
                             </a>
                         </div>
                         <h3 class="profile-username text-center" id="tabsProfile-nama"></h3>
@@ -94,6 +99,18 @@
                             </li>
                             <li class="list-group-item">
                                 <strong>Tgl Lahir</strong> <a class="float-right" id="tabsProfile-tanggalLahir"></a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>NIK</strong> <a class="float-right" id="tabsProfile-nik"></a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Ibu</strong> <a class="float-right" id="tabsProfile-ibu"></a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>HP</strong> <a class="float-right" id="tabsProfile-hp"></a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Alamat</strong> <a class="float-right" id="tabsProfile-alamat"></a>
                             </li>
                         </ul>
                     </div>
