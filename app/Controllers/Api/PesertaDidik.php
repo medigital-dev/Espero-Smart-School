@@ -33,6 +33,8 @@ class PesertaDidik extends BaseController
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
             ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
+            ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
+            ->join('ref_jenis_tinggal', 'ref_jenis_tinggal.ref_id = alamat_tinggal.jenis_tinggal_id', 'left')
         ;
     }
 
@@ -94,6 +96,28 @@ class PesertaDidik extends BaseController
                     'ref_agama.nama as agama_str',
                     'ref_jenis_kelamin.ref_id as jenis_kelamin_id',
                     'ref_jenis_kelamin.nama as jenis_kelamin_str',
+                ]);
+                break;
+
+            case 'alamat':
+                $this->model->select([
+                    'alamat_jalan',
+                    'rt',
+                    'rw',
+                    'dusun',
+                    'desa',
+                    'kecamatan',
+                    'kabupaten',
+                    'provinsi',
+                    'kode_pos',
+                    'lintang',
+                    'bujur',
+                    'jarak_rumah',
+                    'waktu_tempuh',
+                    'ref_alat_transportasi.ref_id as transportasi_id',
+                    'ref_alat_transportasi.nama as transportasi_str',
+                    'ref_jenis_tinggal.ref_id as tinggal_id',
+                    'ref_jenis_tinggal.nama as tinggal_str',
                 ]);
                 break;
 

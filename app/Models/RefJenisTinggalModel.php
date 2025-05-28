@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RefPenghasilanModel extends Model
+class RefJenisTinggalModel extends Model
 {
-    protected $table      = 'ref_penghasilan';
+    protected $table      = 'ref_jenis_tinggal';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;

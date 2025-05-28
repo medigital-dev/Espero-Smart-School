@@ -16,5 +16,7 @@ class RefPekerjaanModel extends Model
         'deleted_at',
         'ref_id',
         'nama',
+        'kode',
+        'warna',
     ];
 }

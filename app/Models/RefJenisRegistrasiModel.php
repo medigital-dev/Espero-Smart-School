@@ -16,6 +16,7 @@ class RefJenisRegistrasiModel extends Model
         'deleted_at',
         'ref_id',
         'nama',
+        'kode',
         'warna',
     ];
 }

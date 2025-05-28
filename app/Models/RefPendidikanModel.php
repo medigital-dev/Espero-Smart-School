@@ -16,5 +16,7 @@ class RefPendidikanModel extends Model
         'deleted_at',
         'ref_id',
         'nama',
+        'kode',
+        'warna',
     ];
 }

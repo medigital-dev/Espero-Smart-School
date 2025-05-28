@@ -7,6 +7,11 @@ use App\Models\RefAgamaModel;
 use App\Models\RefJenisKelaminModel;
 use App\Models\RefJenisMutasiModel;
 use App\Models\RefJenisRegistrasiModel;
+use App\Models\RefJenisTinggalModel;
+use App\Models\RefPekerjaanModel;
+use App\Models\RefPendidikanModel;
+use App\Models\RefPenghasilanModel;
+use App\Models\RefTransportasiModel;
 use CodeIgniter\API\ResponseTrait;
 
 class Referensi extends BaseController
@@ -39,6 +44,26 @@ class Referensi extends BaseController
 
             case 'jenisKelamin':
                 $model = new RefJenisKelaminModel();
+                break;
+
+            case 'alatTransportasi':
+                $model = new RefTransportasiModel();
+                break;
+
+            case 'pekerjaan':
+                $model = new RefPekerjaanModel();
+                break;
+
+            case 'pendidikan':
+                $model = new RefPendidikanModel();
+                break;
+
+            case 'penghasilan':
+                $model = new RefPenghasilanModel();
+                break;
+
+            case 'jenisTinggal':
+                $model = new RefJenisTinggalModel();
                 break;
 
             default:

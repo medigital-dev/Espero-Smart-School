@@ -7,21 +7,21 @@
     <title><?= $title; ?></title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="/plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.min.css">
-    <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
-    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css">
-    <link rel="stylesheet" href="/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
-    <link rel="stylesheet" href="/plugins/select2/css/select2.css">
-    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
-    <link rel="stylesheet" href="/plugins/bootstrap4-offcanvas/offcanvas-bs4.css">
-    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
-    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
-    <link rel="stylesheet" href="/plugins/fancyapps/fancybox.css">
-    <link rel="stylesheet" href="/assets/css/adminlte.min.css">
-    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="<?= base_url('plugins/fontawesome-free/css/all.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/datatables-responsive/css/responsive.bootstrap4.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/toastr/toastr.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/sweetalert2/sweetalert2.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/select2/css/select2.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/select2-bootstrap4-theme/select2-bootstrap4.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/bootstrap4-offcanvas/offcanvas-bs4.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/icheck-bootstrap/icheck-bootstrap.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/fancyapps/fancybox.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/adminlte.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/global.css'); ?>">
     <style>
         .fancybox__container {
             z-index: 1800 !important;
@@ -81,7 +81,7 @@
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <a href="#" class="dropdown-item">
                             <div class="media">
-                                <img src="/assets/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                                <img src="/assets/img/users/user3.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         Brad Diesel
@@ -95,7 +95,7 @@
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
                             <div class="media">
-                                <img src="/assets/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="/assets/img/users/user3.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         John Pierce
@@ -109,7 +109,7 @@
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
                             <div class="media">
-                                <img src="/assets/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                                <img src="/assets/img/users/user3.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
                                         Nora Silvester
@@ -284,28 +284,28 @@
 
         <aside class="control-sidebar control-sidebar-dark"></aside>
     </div>
-    <script src="/plugins/jquery/jquery.min.js"></script>
-    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/plugins/moment/moment-with-locales.js"></script>
-    <script src="/plugins/bootstrap4-offcanvas/offcanvas-bs4.js"></script>
-    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="/plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
-    <script src="/plugins/datatables-fixedcolumns/js/fixedColumns.bootstrap4.min.js"></script>
-    <script src="/plugins/toastr/toastr.min.js"></script>
-    <script src="/plugins/sweetalert2/sweetalert2.js"></script>
-    <script src="/plugins/select2/js/select2.full.js"></script>
-    <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
-    <script src="/plugins/bs-custom-file-input/bs-custom-file-input.js"></script>
-    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
-    <script src="/plugins/inputmask/jquery.inputmask.js"></script>
-    <script src="/plugins/fetchData/fetchData.js"></script>
-    <script src="/plugins/fancyapps/fancybox.umd.js"></script>
-    <script src="/assets/js/adminlte.min.js"></script>
-    <script src="/assets/js/functions.js"></script>
-    <script src="/assets/js/global.js"></script>
+    <script src="<?= base_url('plugins/jquery/jquery.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/moment/moment-with-locales.js'); ?>"></script>
+    <script src="<?= base_url('plugins/bootstrap4-offcanvas/offcanvas-bs4.js'); ?>"></script>
+    <script src="<?= base_url('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/datatables-responsive/js/dataTables.responsive.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/datatables-responsive/js/responsive.bootstrap4.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/datatables-fixedcolumns/js/fixedColumns.bootstrap4.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/toastr/toastr.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/sweetalert2/sweetalert2.js'); ?>"></script>
+    <script src="<?= base_url('plugins/select2/js/select2.full.js'); ?>"></script>
+    <script src="<?= base_url('plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js'); ?>"></script>
+    <script src="<?= base_url('plugins/bs-custom-file-input/bs-custom-file-input.js'); ?>"></script>
+    <script src="<?= base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js'); ?>"></script>
+    <script src="<?= base_url('plugins/inputmask/jquery.inputmask.js'); ?>"></script>
+    <script src="<?= base_url('plugins/fetchData/fetchData.js'); ?>"></script>
+    <script src="<?= base_url('plugins/fancyapps/fancybox.umd.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/adminlte.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/global.js'); ?>"></script>
     <!-- functions -->
     <script>
         let selectedRows = [];
@@ -977,6 +977,39 @@
                 $('#tabsIdentitas-nik').val(respData.nik);
                 opt = new Option(respData.agama_str, respData.agama_id, false, true);
                 $('#tabsIdentitas-agama').append(opt);
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#tabs-alamat-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsIdentitas');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=alamat');
+                if (!respData) return;
+                $('#tabsAlamat-alamatJalan').val(respData.alamat_jalan);
+                $('#tabsAlamat-rt').val(respData.rt);
+                $('#tabsAlamat-rw').val(respData.rw);
+                $('#tabsAlamat-dusun').val(respData.dusun);
+                $('#tabsAlamat-desa').val(respData.desa);
+                $('#tabsAlamat-kecamatan').val(respData.kecamatan);
+                $('#tabsAlamat-kabupaten').val(respData.kabupaten);
+                $('#tabsAlamat-provinsi').val(respData.provinsi);
+                $('#tabsAlamat-kodePos').val(respData.kode_pos);
+                $('#tabsAlamat-lintang').val(respData.lintang);
+                $('#tabsAlamat-bujur').val(respData.bujur);
+                $('#tabsAlamat-jarakRumah').val(respData.jarak_rumah);
+                $('#tabsAlamat-waktuTempuh').val(respData.waktu_tempuh);
+                if (respData.tinggal_id !== null) {
+                    const optTinggal = new Option(respData.tinggal_str, respData.tinggal_id, false, true);
+                    $('#tabsAlamat-jenisTinggal').append(optTinggal);
+                }
+                if (respData.transportasi_id !== null) {
+                    const optTransportasi = new Option(respData.transportasi_str, respData.transportasi_id, false, true);
+                    $('#tabsAlamat-alatTransportasi').append(optTransportasi);
+                }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
 

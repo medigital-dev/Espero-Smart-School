@@ -30,5 +30,6 @@ class AlamatModel extends Model
         'jarak_rumah',
         'waktu_tempuh',
         'alat_transportasi_id',
+        'jenis_tinggal_id',
     ];
 }
