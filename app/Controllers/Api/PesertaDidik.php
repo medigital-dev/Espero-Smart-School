@@ -129,8 +129,9 @@ class PesertaDidik extends BaseController
         return $this->respond($this->model->first());
     }
 
-    public function save($id = null)
+    public function saveIdentitas($id)
     {
+        if (!$id) return $this->fail('Id peserta didik diperlukan.');
         $set = $this->request->getVar();
         $files = $this->request->getFile('file');
 
@@ -148,14 +149,10 @@ class PesertaDidik extends BaseController
             }
         }
 
-        if ($id) {
-            $this->model->select('peserta_didik.id');
-            $result = $this->model->where('peserta_didik.peserta_didik_id', $id)->first();
-            if ($result)
-                $set['id'] = $result['id'];
-        } else {
-            $set['peserta_didik_id'] = unik($this->model, 'peserta_didik_id');
-        }
+        $this->model->select('peserta_didik.id');
+        $result = $this->model->where('peserta_didik.peserta_didik_id', $id)->first();
+        if ($result)
+            $set['id'] = $result['id'];
 
         if (!$this->model->save($set)) return $this->fail('Data peserta didik gagal disimpan.');
 

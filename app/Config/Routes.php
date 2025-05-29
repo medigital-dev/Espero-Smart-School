@@ -45,7 +45,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');
     $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
     $routes->get('buku-induk/peserta-didik/show/(:segment)', 'PesertaDidik::show/$1');
-    $routes->post('buku-induk/peserta-didik/save/(:segment)', 'PesertaDidik::save/$1');
+    $routes->post('buku-induk/peserta-didik/identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
 
     $routes->resource('kelulusan');
     $routes->resource('mutasiPd');

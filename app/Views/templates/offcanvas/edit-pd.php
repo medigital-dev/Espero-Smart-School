@@ -1,6 +1,11 @@
 <div class="offcanvas offcanvas-end" id="offcanvasEdit-dataPd">
     <div class="offcanvas-header sticky-top bg-light">
-        <h5 class="text-bold">Data Peserta Didik</h5>
+        <div class="d-flex align-items-center">
+            <a href="<?= base_url('assets/img/users/_default.png'); ?>" data-fancybox>
+                <img src="<?= base_url('assets/img/users/_default.png'); ?>" class="rounded rounded-lg" height="50" alt="Default user photo">
+            </a>
+            <h5 class="text-bold">Data Peserta Didik</h5>
+        </div>
         <button class="close" data-toggle="offcanvas" data-target=".offcanvas">&times;</button>
     </div>
     <div class="offcanvas-body pt-0">
