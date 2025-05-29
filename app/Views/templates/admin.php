@@ -40,6 +40,21 @@
         .small-box .overlay {
             z-index: 1035;
         }
+
+        .photo-profile {
+            width: 30px;
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
     </style>
 </head>
 
@@ -333,29 +348,6 @@
                 $("#checkAllRow").prop("checked", false).prop("indeterminate", false);
             else $("#checkAllRow").prop("indeterminate", true);
         }
-
-        // async function saveForm(formElm, buttonElm) {
-        //     const id = $('#detailPd-id').val();
-        //     const files = $(formElm).find('input:file');
-
-        //     $('#offcanvasEdit-dataPd .overlay').addClass('d-none');
-        //     let data = [];
-        //     const set = $(formElm).serializeArray();
-        // if (files.length > 0) {
-        //     data = new FormData();
-        //     data.append('set', set);
-        //     data.append('files', files.prop('files'));
-        // } else data = set;
-
-        //     const respData = await fetchData({
-        //         url: `/api/v0/pesertaDidik/${id}/update`,
-        //         method: 'POST',
-        //         data: set,
-        //         button: buttonElm,
-        //     });
-        //     console.log(respData);
-        //     $('#offcanvasEdit-dataPd .overlay').removeClass('d-none');
-        // }
     </script>
     <!-- end functions -->
 
@@ -814,11 +806,11 @@
                     offcanvasElm.offcanvas('show');
                     offcanvasElm.find('.overlay').removeClass('d-none');
                     $('#tabs-profil-tab').tab('show');
-                    const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=profil');
+                    const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/show/' + id);
                     if (!respData) return;
                     $('.idPd').attr('data-id', id);
                     $('#detailPd-id').val(id);
-                    $('#tabsProfile-nama').text(respData.nama);
+                    $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
                     $('#tabsProfile-jk').text(respData.jenis_kelamin);
                     $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
                     $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
@@ -833,16 +825,18 @@
                     else
                         $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
                     if (respData.foto_src) {
-                        $('#tabsProfile-foto a').attr('href', '/' + respData.foto_src);
-                        $('#tabsProfile-foto img').attr('src', '/' + respData.foto_src);
+                        $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
+                        $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
                     } else {
-                        $('#tabsProfile-foto a').attr('href', '/assets/img/users/_default.png');
-                        $('#tabsProfile-foto img').attr('src', '/assets/img/users/_default.png');
+                        $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
+                        $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
                     }
                     offcanvasElm.find('.overlay').addClass('d-none');
                 });
 
-                $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
+                $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
+                    trigger: 'hover',
+                });
             });
 
             let debounceTimer;
@@ -927,11 +921,11 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=profil');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/show/' + id);
                 if (!respData) return;
                 $('.idPd').attr('data-id', id);
                 $('#detailPd-id').val(id);
-                $('#tabsProfile-nama').text(respData.nama);
+                $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
                 $('#tabsProfile-jk').text(respData.jenis_kelamin);
                 $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
                 $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
@@ -946,11 +940,11 @@
                 else
                     $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
                 if (respData.foto_src) {
-                    $('#tabsProfile-foto a').attr('href', '/' + respData.foto_src);
-                    $('#tabsProfile-foto img').attr('src', '/' + respData.foto_src);
+                    $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
+                    $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
                 } else {
-                    $('#tabsProfile-foto a').attr('href', '/assets/img/users/_default.png');
-                    $('#tabsProfile-foto img').attr('src', '/assets/img/users/_default.png');
+                    $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
+                    $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
@@ -963,7 +957,7 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=identitas');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/identitas/show/' + id);
                 if (!respData) return;
                 $('#tabsIdentitas-nama').val(respData.nama);
                 opt = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
@@ -987,7 +981,7 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/show/' + id + '?type=alamat');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/alamat/show/' + id);
                 if (!respData) return;
                 $('#tabsAlamat-alamatJalan').val(respData.alamat_jalan);
                 $('#tabsAlamat-rt').val(respData.rt);
@@ -1032,7 +1026,7 @@
                     data.append('file', files[0]);
 
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/save/' + id,
+                    url: '/api/v0/buku-induk/peserta-didik/identitas/save/' + id,
                     method: 'POST',
                     data: data,
                     button: btn,
@@ -1045,7 +1039,32 @@
                     bsCustomFileInput.destroy();
                     bsCustomFileInput.init();
                 }
+            });
 
+            $('#btnSave-alamatPd').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsAlamat');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/alamat/save/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn,
+                });
+                loading.addClass('d-none');
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    filesElm.val('').trigger('change');
+                    bsCustomFileInput.destroy();
+                    bsCustomFileInput.init();
+                }
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

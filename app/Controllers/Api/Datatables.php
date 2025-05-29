@@ -21,13 +21,29 @@ class Datatables extends BaseController
     public function bukuIndukPd()
     {
         $result = $this->getData
-            ->withAlamat(['dusun', 'desa', 'kecamatan', 'rt', 'rw'])
-            ->withContact(['hp'])
-            ->withOrtuWali(['ayah.nama', 'ibu.nama'])
-            ->withRegistrasi(['ref_jenis_registrasi.nama as jenis_registrasi', 'tanggal_registrasi'])
-            ->withRombel(['rombongan_belajar.nama as kelas'])
-            ->withMutasi(['mutasi_pd.tanggal as tanggal_mutasi', 'ref_jenis_mutasi.nama as jenis_mutasi'])
-            ->withKelulusan(['kelulusan.tanggal as tanggal_lulus'])
+            ->select([
+                'peserta_didik.nama',
+                'peserta_didik.jenis_kelamin',
+                'peserta_didik.tempat_lahir',
+                'peserta_didik.tanggal_lahir',
+                'mutasi_pd.tanggal as tanggal_mutasi',
+                'ref_jenis_mutasi.nama as jenis_mutasi',
+                'peserta_didik.nisn',
+                'rombongan_belajar.nama as kelas',
+                'registrasi_peserta_didik.nipd',
+                'ref_jenis_registrasi.nama as jenis_registrasi',
+                'tanggal_registrasi',
+                'ref_agama.nama as agama',
+                'dusun',
+                'desa',
+                'kecamatan',
+                'rt',
+                'rw',
+                'hp',
+                'ayah.nama as ayah',
+                'ibu.nama as ibu',
+                'kelulusan.tanggal as tanggal_lulus'
+            ])
             ->withFilter()
             ->forAdmin()
             ->toDataTable();

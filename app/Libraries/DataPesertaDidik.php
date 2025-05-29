@@ -27,9 +27,8 @@ class DataPesertaDidik
         $this->model = new PesertaDidikModel();
         $this->query = $this->model;
 
-        $this->default();
         $this->joinTable();
-        $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
+        // $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
     }
 
     private function default()
@@ -61,10 +60,13 @@ class DataPesertaDidik
             ->join('orangtua_wali as ibu', 'ibu.orangtua_id = orangtua_wali_pd.ibu_id', 'left')
             ->join('orangtua_wali as wali', 'wali.orangtua_id = orangtua_wali_pd.wali_id', 'left')
             ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
+            ->join('pass_foto', 'pass_foto.foto_id = peserta_didik.foto_id', 'left')
             ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
+            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
+            ->join('ref_jenis_tinggal', 'ref_jenis_tinggal.ref_id = alamat_tinggal.jenis_tinggal_id', 'left')
         ;
     }
 
@@ -77,7 +79,7 @@ class DataPesertaDidik
         $this->columns = $this->request->getPost('columns');
         $this->orders = $this->request->getPost('order');
         $this->filter = [];
-
+        $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         $this->query
             ->groupStart()
             ->like('peserta_didik.nama', $this->searchValue)
@@ -144,7 +146,7 @@ class DataPesertaDidik
         return $this;
     }
 
-    public function select(array|string $fields = [])
+    public function select(array|string $fields = '*')
     {
         $this->query->select($fields);
         return $this;
@@ -455,5 +457,11 @@ class DataPesertaDidik
     {
         $this->query->where('peserta_didik.peserta_didik_id', $id);
         return $this->query->first();
+    }
+
+    public function where($field, $value = null)
+    {
+        $this->query->where($field, $value);
+        return $this;
     }
 }

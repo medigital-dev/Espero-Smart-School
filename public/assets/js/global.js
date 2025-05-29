@@ -1,5 +1,7 @@
 $(document).ready(function () {
-  $('[data-toggle="tooltip"], .btn-tooltip').tooltip();
+  $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
+    trigger: "hover",
+  });
   $('[data-autoclose="false"]')
     .siblings(".dropdown-menu")
     .attr("onclick", "event.stopPropagation()");

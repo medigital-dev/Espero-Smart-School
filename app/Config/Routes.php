@@ -31,8 +31,7 @@ $routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
-$routes->post('/api/v0/buku-induk/export/(:segment)', 'BukuInduk::export/$1');
-$routes->post('/api/v0/buku-induk/import/kelulusan-pd', 'BukuInduk::importKelulusanPd');
+
 // $routes->post('/api/v0/buku-induk/getTable', 'BukuInduk::getTable');
 // $routes->resource();
 
@@ -45,12 +44,28 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');
     $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
     $routes->get('buku-induk/peserta-didik/show/(:segment)', 'PesertaDidik::show/$1');
-    $routes->post('buku-induk/peserta-didik/identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
+    // $routes->post('buku-induk/peserta-didik/identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
 
     $routes->resource('kelulusan');
     $routes->resource('mutasiPd');
     $routes->resource('referensi');
     // $routes->presenter('pesertaDidik');
+});
+
+// Buku induk
+$routes->group('/api/v0/buku-induk', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post('export/(:segment)', 'BukuInduk::export/$1');
+    $routes->post('import/kelulusan-pd', 'BukuInduk::importKelulusanPd');
+});
+
+// API Buku Induk Peserta Didik
+$routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controllers\Api\BukuInduk'], function ($routes) {
+    $routes->get('profil/show/(:segment)', 'PesertaDidik::showProfil/$1');
+    $routes->get('identitas/show/(:segment)', 'PesertaDidik::showIdentitas/$1');
+    $routes->get('alamat/show/(:segment)', 'PesertaDidik::showAlamat/$1');
+
+    $routes->post('identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
+    $routes->post('alamat/save/(:segment)', 'PesertaDidik::saveAlamat/$1');
 });
 
 // public
