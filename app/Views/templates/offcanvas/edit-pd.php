@@ -11,14 +11,15 @@
         <button class="close" data-toggle="offcanvas" data-target=".offcanvas">&times;</button>
     </div>
     <div class="offcanvas-body pt-0">
-        <div class="overlay-wrapper">
+        <div class="overlay-wrapper vh-100">
             <div class="overlay d-none"><i class="fas fa-spinner fa-spin"></i></div>
             <input type="hidden" name="peserta_didik_id" id="detailPd-id">
-            <div class="d-flex align-items-start pt-3">
-                <div class="nav flex-column nav-tabs h-100 mr-3 pt-0 sticky-top" id="tabs-tab" role="tablist" aria-orientation="vertical">
+            <div class="d-flex align-items-start">
+                <div class="nav flex-column nav-tabs sticky-top mr-3" id="tabs-tab" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active btn-tooltip idPd" data-placement="right" title="Profil" id="tabs-profil-tab" data-toggle="tab" href="#tabs-profile" role="tab" aria-controls="tabs-profil" aria-selected="true"><i class="fas fa-id-card-alt fa-fw"></i></a>
-                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Identitas" id="tabs-identitas-tab" data-toggle="tab" href="#tabs-identitas" role="tab" aria-controls="tabs-identitas" aria-selected="true"><i class="fas fa-user-alt fa-fw"></i></a>
-                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Alamat" id="tabs-alamat-tab" data-toggle="tab" href="#tabs-alamat" role="tab" aria-controls="tabs-alamat" aria-selected="true"><i class="fas fa-map-marked-alt fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Identitas" id="tabs-identitas-tab" data-toggle="tab" href="#tabs-identitas" role="tab" aria-controls="tabs-identitas" aria-selected="false"><i class="fas fa-user-alt fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Alamat" id="tabs-alamat-tab" data-toggle="tab" href="#tabs-alamat" role="tab" aria-controls="tabs-alamat" aria-selected="false"><i class="fas fa-map-marked-alt fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Orangtua/Wali" id="tabs-ortuwali-tab" data-toggle="tab" href="#tabs-ortuwali" role="tab" aria-controls="tabs-ortuwali" aria-selected="false"><i class="fas fa-restroom fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
                     <div class="tab-pane fade" id="tabs-identitas" role="tabpanel" aria-labelledby="tabs-identitas-tab">
@@ -42,12 +43,12 @@
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-tanggalLahir">Tanggal Lahir</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="tabsIdentitas-tanggalLahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                    <input type="text" class="form-control tanggal" id="tabsIdentitas-tanggalLahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                     <div class="input-group-append" data-target="#tabsIdentitas-tanggalLahir" data-toggle="datetimepicker">
                                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                     </div>
+                                    <input type="hidden" id="tabsIdentitas-tanggalLahirDb" name="tanggal_lahir">
                                 </div>
-                                <input type="hidden" id="tabsIdentitas-tanggalLahirDb" name="tanggal_lahir">
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nisn" aria-describedby="nisnHelp">NISN</label>
@@ -86,7 +87,7 @@
                         </form>
                     </div>
                     <div class="tab-pane fade active show" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
-                        <div class="text-center mb-3" id="tabsProfile-foto">
+                        <div class="text-center pt-3 mb-3" id="tabsProfile-foto">
                             <a href="<?= base_url('assets/img/users/_default.png'); ?>" data-fancybox>
                                 <img src="<?= base_url('assets/img/users/_default.png'); ?>" class="rounded rounded-lg" height="125" alt="Default user photo">
                             </a>
@@ -207,8 +208,173 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane fade" id="tabs-settings" role="tabpanel" aria-labelledby="tabs-settings-tab">
-                        Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
+                    <div class="tab-pane fade" id="tabs-ortuwali" role="tabpanel" aria-labelledby="tabs-ortuwali-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Orang Tua/Wali</h6>
+                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-ortuwali"><i class="fas fa-save"></i></button>
+                            </div>
+                            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-ayah-tab" data-toggle="pill" href="#tabs-ayah" role="tab" aria-controls="tabs-ayah" aria-selected="true">Ayah</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-ibu-tab" data-toggle="pill" href="#tabs-ibu" role="tab" aria-controls="tabs-ibu" aria-selected="false">Ibu</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-wali-tab" data-toggle="pill" href="#tabs-wali" role="tab" aria-controls="tabs-wali" aria-selected="false">Wali</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabOrtuwali">
+                            <div class="tab-pane fade active show" id="tabs-ayah" role="tabpanel" aria-labelledby="tabs-ayah-tab">
+                                <input type="hidden" id="idAyah">
+                                <form id="formData-tabsAyah">
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsAyah-nama">Nama</label>
+                                        <textarea name="nama" id="tabsAyah-nama" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsAyah-jenisKelamin" name="jenis_kelamin"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-tempatLahir" class="small mb-1">Tempat Lahir</label>
+                                        <input type="text" name="tempat_lahir" id="tabsAyah-tempatLahir" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsAyah-tanggalLahir">Tanggal Lahir</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control tanggal" id="tabsAyah-tanggalLahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                            <div class="input-group-append" data-target="#tabsAyah-tanggalLahir" data-toggle="datetimepicker">
+                                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                            </div>
+                                            <input type="hidden" id="tabsAyah-tanggalLahirDb" name="tanggal_lahir">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-nik" class="small mb-1">NIK</label>
+                                        <input type="text" name="nik" id="tabsAyah-nik" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-agama" class="small mb-1">Agama</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsAyah-agama" name="agama_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-pendidikan" class="small mb-1">Pendidikan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsAyah-pendidikan" name="pendidikan_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-pekerjaan" class="small mb-1">Pekerjaan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsAyah-pekerjaan" name="pekerjaan_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsAyah-penghasilan" class="small mb-1">Penghasilan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsAyah-penghasilan" name="penghasilan_id"></select>
+                                    </div>
+                                    <hr>
+                                    <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveAyah"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="tabs-ibu" role="tabpanel" aria-labelledby="tabs-ibu-tab">
+                                <input type="hidden" id="idIbu">
+                                <form id="formData-tabsIbu">
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsIbu-nama">Nama</label>
+                                        <textarea name="nama" id="tabsIbu-nama" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIbu-jenisKelamin" name="jenis_kelamin"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-tempatLahir" class="small mb-1">Tempat Lahir</label>
+                                        <input type="text" name="tempat_lahir" id="tabsIbu-tempatLahir" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsIbu-tanggalLahir">Tanggal Lahir</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control tanggal" id="tabsIbu-tanggalLahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                            <div class="input-group-append" data-target="#tabsIbu-tanggalLahir" data-toggle="datetimepicker">
+                                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                            </div>
+                                            <input type="hidden" id="tabsIbu-tanggalLahirDb" name="tanggal_lahir">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-nik" class="small mb-1">NIK</label>
+                                        <input type="text" name="nik" id="tabsIbu-nik" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-agama" class="small mb-1">Agama</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIbu-agama" name="agama_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-pendidikan" class="small mb-1">Pendidikan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsIbu-pendidikan" name="pendidikan_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-pekerjaan" class="small mb-1">Pekerjaan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsIbu-pekerjaan" name="pekerjaan_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsIbu-penghasilan" class="small mb-1">Penghasilan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsIbu-penghasilan" name="penghasilan_id"></select>
+                                    </div>
+                                    <hr>
+                                    <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveIbu"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="tabs-wali" role="tabpanel" aria-labelledby="tabs-wali-tab">
+                                <input type="hidden" id="idWali">
+                                <form id="formData-tabsWali">
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsWali-nama">Nama</label>
+                                        <textarea name="nama" id="tabsWali-nama" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsWali-jenisKelamin" name="jenis_kelamin"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-tempatLahir" class="small mb-1">Tempat Lahir</label>
+                                        <input type="text" name="tempat_lahir" id="tabsWali-tempatLahir" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsWali-tanggalLahir">Tanggal Lahir</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control tanggal" id="tabsWali-tanggalLahir" data-inputmask-alias="datetime" placeholder="Tanggal Lahir" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                            <div class="input-group-append" data-target="#tabsWali-tanggalLahir" data-toggle="datetimepicker">
+                                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                            </div>
+                                            <input type="hidden" id="tabsWali-tanggalLahirDb" name="tanggal_lahir">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-nik" class="small mb-1">NIK</label>
+                                        <input type="text" name="nik" id="tabsWali-nik" class="form-control">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-agama" class="small mb-1">Agama</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsWali-agama" name="agama_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-pendidikan" class="small mb-1">Pendidikan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsWali-pendidikan" name="pendidikan_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-pekerjaan" class="small mb-1">Pekerjaan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsWali-pekerjaan" name="pekerjaan_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsWali-penghasilan" class="small mb-1">Penghasilan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsWali-penghasilan" name="penghasilan_id"></select>
+                                    </div>
+                                    <hr>
+                                    <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveWali"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

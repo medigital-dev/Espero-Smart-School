@@ -853,18 +853,13 @@
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
-            $('#inputDt-tanggalLahirLengkapPd, #inputForm-tanggalMutasiPd, #inputForm-tanggalLulusPd, #tabsIdentitas-tanggalLahir').datetimepicker({
+            $('.tanggal').datetimepicker({
                 format: 'L',
                 locale: 'id',
                 maxDate: 'now'
             });
 
-            $('#tabsIdentitas-tanggalLahir').on('change.datetimepicker', e => {
-                if (e.date)
-                    $('#tabsIdentitas-tanggalLahirDb').val(e.date.format('YYYY-MM-DD'));
-                else
-                    $('#tabsIdentitas-tanggalLahirDb').val('');
-            });
+            $('.tanggal').on('change.datetimepicker', e => $(e.target).siblings('input:hidden').val(e.date ? e.date.format('YYYY-MM-DD') : ''))
 
             $('#tabsIdentitas-photoProfil').on('change', function() {
                 const prevElm = $('#previewPassfoto');
@@ -1005,6 +1000,247 @@
                     $('#tabsAlamat-alatTransportasi').append(optTransportasi);
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#tabs-ortuwali-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwaliPd/show/' + id);
+                if (respData) {
+                    $('#tabs-ayah-tab').attr('data-id', respData.ayah_id).trigger('click');
+                    $('#tabs-ibu-tab').attr('data-id', respData.ibu_id);
+                    $('#tabs-wali-tab').attr('data-id', respData.wali_id);
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#tabs-ayah-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsAyah');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                if (id == undefined) {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
+                }
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/show/' + id);
+                if (!respData) {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
+                }
+                $('#idAyah').val(respData.orangtua_id);
+                $('#tabsAyah-nama').val(respData.nama);
+                if (respData.jenis_kelamin_id) {
+                    const optJk = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
+                    $('#tabsAyah-jenisKelamin').append(optJk);
+                }
+                $('#tabsAyah-tempatLahir').val(respData.tempat_lahir);
+                $('#tabsAyah-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/Y'));
+                $('#tabsAyah-tanggalLahirDb').val(respData.tanggal_lahir);
+                $('#tabsAyah-nik').val(respData.nik);
+                if (respData.agama_id) {
+                    const optAgama = new Option(respData.agama_str, respData.agama_id, false, true);
+                    $('#tabsAyah-agama').append(optAgama);
+                }
+                if (respData.pendidikan_id) {
+                    const optPendidikan = new Option(respData.pendidikan_str, respData.pendidikan_id, false, true);
+                    $('#tabsAyah-pendidikan').append(optPendidikan);
+                }
+                if (respData.pekerjaan_id) {
+                    const optpekerjaan = new Option(respData.pekerjaan_str, respData.pekerjaan_id, false, true);
+                    $('#tabsAyah-pekerjaan').append(optpekerjaan);
+                }
+                if (respData.penghasilan_id) {
+                    const optpenghasilan = new Option(respData.penghasilan_str, respData.penghasilan_id, false, true);
+                    $('#tabsAyah-penghasilan').append(optpenghasilan);
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-saveAyah').on('click', async function() {
+                const btn = $(this);
+                const id = $('#idAyah').val();
+                const formElm = $('#formData-tabsAyah');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
+                    data: {
+                        set: set,
+                        setOrtuwaliPd: {
+                            peserta_didik_id: $('#detailPd-id').val(),
+                            type: 'ayah_id',
+                        }
+                    },
+                    method: 'POST',
+                    button: btn,
+                });
+                loading.addClass('d-none');
+                if (respData) {
+                    toast(respData.message);
+                    $('#idAyah').val(respData.id);
+                    $('#tabs-ayah-tab').attr('data-id', respData.id);
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
+            });
+
+            $('#tabs-ibu-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsIbu');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                if (id == undefined) {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
+                }
+
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/show/' + id);
+                if (!respData) {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
+                }
+                $('#idIbu').val(respData.orangtua_id);
+                $('#tabsIbu-nama').val(respData.nama);
+                if (respData.jenis_kelamin_id) {
+                    const optJk = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
+                    $('#tabsIbu-jenisKelamin').append(optJk);
+                }
+                $('#tabsIbu-tempatLahir').val(respData.tempat_lahir);
+                $('#tabsIbu-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/Y'));
+                $('#tabsIbu-tanggalLahirDb').val(respData.tanggal_lahir);
+                $('#tabsIbu-nik').val(respData.nik);
+                if (respData.agama_id) {
+                    const optAgama = new Option(respData.agama_str, respData.agama_id, false, true);
+                    $('#tabsIbu-agama').append(optAgama);
+                }
+                if (respData.pendidikan_id) {
+                    const optPendidikan = new Option(respData.pendidikan_str, respData.pendidikan_id, false, true);
+                    $('#tabsIbu-pendidikan').append(optPendidikan);
+                }
+                if (respData.pekerjaan_id) {
+                    const optpekerjaan = new Option(respData.pekerjaan_str, respData.pekerjaan_id, false, true);
+                    $('#tabsIbu-pekerjaan').append(optpekerjaan);
+                }
+                if (respData.penghasilan_id) {
+                    const optpenghasilan = new Option(respData.penghasilan_str, respData.penghasilan_id, false, true);
+                    $('#tabsIbu-penghasilan').append(optpenghasilan);
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-saveIbu').on('click', async function() {
+                const btn = $(this);
+                const id = $('#idIbu').val();
+                const formElm = $('#formData-tabsIbu');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
+                    data: {
+                        set: set,
+                        setOrtuwaliPd: {
+                            peserta_didik_id: $('#detailPd-id').val(),
+                            type: 'ibu_id',
+                        }
+                    },
+                    method: 'POST',
+                    button: btn,
+                });
+                loading.addClass('d-none');
+                if (respData) {
+                    toast(respData.message);
+                    $('#idIbu').val(respData.id);
+                    $('#tabs-ibu-tab').attr('data-id', respData.id);
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
+            });
+
+            $('#tabs-wali-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsWali');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                if (id == undefined) {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
+                }
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/show/' + id);
+                if (!respData) {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
+                }
+                $('#idWali').val(respData.orangtua_id);
+                $('#tabsWali-nama').val(respData.nama);
+                if (respData.jenis_kelamin_id) {
+                    const optJk = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
+                    $('#tabsWali-jenisKelamin').append(optJk);
+                }
+                $('#tabsWali-tempatLahir').val(respData.tempat_lahir);
+                $('#tabsWali-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/Y'));
+                $('#tabsWali-tanggalLahirDb').val(respData.tanggal_lahir);
+                $('#tabsWali-nik').val(respData.nik);
+                if (respData.agama_id) {
+                    const optAgama = new Option(respData.agama_str, respData.agama_id, false, true);
+                    $('#tabsWali-agama').append(optAgama);
+                }
+                if (respData.pendidikan_id) {
+                    const optPendidikan = new Option(respData.pendidikan_str, respData.pendidikan_id, false, true);
+                    $('#tabsWali-pendidikan').append(optPendidikan);
+                }
+                if (respData.pekerjaan_id) {
+                    const optpekerjaan = new Option(respData.pekerjaan_str, respData.pekerjaan_id, false, true);
+                    $('#tabsWali-pekerjaan').append(optpekerjaan);
+                }
+                if (respData.penghasilan_id) {
+                    const optpenghasilan = new Option(respData.penghasilan_str, respData.penghasilan_id, false, true);
+                    $('#tabsWali-penghasilan').append(optpenghasilan);
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-saveWali').on('click', async function() {
+                const btn = $(this);
+                const id = $('#idWali').val();
+                const formElm = $('#formData-tabsWali');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
+                    data: {
+                        set: set,
+                        setOrtuwaliPd: {
+                            peserta_didik_id: $('#detailPd-id').val(),
+                            type: 'wali_id',
+                        }
+                    },
+                    method: 'POST',
+                    button: btn,
+                });
+                loading.addClass('d-none');
+                if (respData) {
+                    toast(respData.message);
+                    $('#idWali').val(respData.id);
+                    $('#tabs-wali-tab').attr('data-id', respData.id);
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
             });
 
             $('#btnSave-identitasPd').on('click', async function() {

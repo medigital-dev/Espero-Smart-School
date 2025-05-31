@@ -38,13 +38,14 @@
                                         <label for="inputForm-tanggalLulusPd" class="col-sm-3 col-form-label">Tanggal</label>
                                         <div class="col-sm-9">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="inputForm-tanggalLulusPd" data-inputmask-alias="datetime" placeholder="Tanggal kelulusan" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                                <input type="text" class="form-control tanggal" id="inputForm-tanggalLulusPd" data-inputmask-alias="datetime" placeholder="Tanggal kelulusan" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                                 <div class="input-group-append" data-target="#inputForm-tanggalLulusPd" data-toggle="datetimepicker">
                                                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                                                 </div>
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputForm-tanggalLulusPd');"><i class="fas fa-eraser"></i></button>
                                                 </div>
+                                                <input type="hidden" name="tanggal">
                                             </div>
                                         </div>
                                     </div>

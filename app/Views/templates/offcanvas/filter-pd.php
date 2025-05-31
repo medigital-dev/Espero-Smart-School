@@ -170,13 +170,14 @@
                 <label for="inputDt-tanggalLahirPd" class="col-sm-3 col-form-label">Tgl Lhr</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="inputDt-tanggalLahirLengkapPd" data-inputmask-alias="datetime" placeholder="Tanggal lengkap" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        <input type="text" class="form-control tanggal" id="inputDt-tanggalLahirLengkapPd" data-inputmask-alias="datetime" placeholder="Tanggal lengkap" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                         <div class="input-group-append" data-target="#inputDt-tanggalLahirLengkapPd" data-toggle="datetimepicker">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tanggalLahirLengkapPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
+                        <input type="hidden" name="tanggal">
                     </div>
                     <div class="input-group mb-2">
                         <input type="number" class="form-control" id="inputDt-tanggalLahirPd" placeholder="Tanggal Lahir">

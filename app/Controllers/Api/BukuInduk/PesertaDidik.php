@@ -5,6 +5,8 @@ namespace App\Controllers\Api\BukuInduk;
 use App\Controllers\BaseController;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
+use App\Models\OrangtuaWaliModel;
+use App\Models\OrtuWaliPdModel;
 use App\Models\PassFotoModel;
 use App\Models\PesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
@@ -143,5 +145,69 @@ class PesertaDidik extends BaseController
         if (!$mAlamat->save($set)) return $this->fail('Alamat peserta didik gagal disimpan.');
 
         return $this->respond(['status' => true, 'message' => 'Alamat peserta didik berhasil disimpan.']);
+    }
+
+    public function showOrtuwaliPd($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+
+        $this->baseData->select([
+            'ayah_id',
+            'ibu_id',
+            'wali_id'
+        ]);
+        return $this->respond($this->baseData->find($id));
+    }
+
+    public function showOrtuwali($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Orangtua/Wali diperlukan');
+        $mOrtuWali = new OrangtuaWaliModel();
+        $response = $mOrtuWali
+            ->select([
+                'orangtua_id',
+                'orangtua_wali.nama',
+                'nik',
+                'tempat_lahir',
+                'tanggal_lahir',
+                'jenis_kelamin',
+                'agama_id',
+                'pekerjaan_id',
+                'pendidikan_id',
+                'penghasilan_id',
+                'ref_agama.nama as agama_str',
+                'ref_pekerjaan.nama as pekerjaan_str',
+                'ref_pendidikan.nama as pendidikan_str',
+                'ref_penghasilan.nama as penghasilan_str',
+            ])
+            ->join('ref_agama', 'ref_agama.ref_id = orangtua_wali.agama_id', 'left')
+            ->join('ref_pendidikan', 'ref_pendidikan.ref_id = orangtua_wali.pendidikan_id', 'left')
+            ->join('ref_pekerjaan', 'ref_pekerjaan.ref_id = orangtua_wali.pekerjaan_id', 'left')
+            ->join('ref_penghasilan', 'ref_penghasilan.ref_id = orangtua_wali.penghasilan_id', 'left')
+            ->where('orangtua_id', $id)
+            ->first();
+        return $this->respond($response);
+    }
+
+    public function saveOrtuwali($id = null): ResponseInterface
+    {
+        $mOrtuWali = new OrangtuaWaliModel();
+        $mOrtuWaliPd = new OrtuWaliPdModel();
+
+        $set = $this->request->getPost('set');
+        $setOrtu = $this->request->getPost('setOrtuwaliPd');
+        if ($id) {
+            $cOrtuwali = $mOrtuWali->where('orangtua_id', $id)->first();
+            if ($cOrtuwali) $set['id'] = $cOrtuwali['id'];
+        } else $set['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
+
+        if (!$mOrtuWali->save($set)) return $this->fail('Data orangtua/wali gagal disimpan');
+        $cOrtuwaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setOrtu['peserta_didik_id'])->first();
+        $setOrtu[$setOrtu['type']] = $id ?? $set['orangtua_id'];
+        if ($cOrtuwaliPd) {
+            $setOrtu['id'] = $cOrtuwaliPd['id'];
+        } else $setOrtu['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
+        if (!$mOrtuWaliPd->save($setOrtu)) return $this->fail('Data orangtua/wali peserta didik gagak disimpan.');
+        return $this->respond(['status' => true, 'message' => 'Data peserta didik berhasil disimpan.', 'id' => $id ?? $set['orangtua_id']]);
     }
 }
