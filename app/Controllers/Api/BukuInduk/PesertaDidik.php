@@ -192,22 +192,30 @@ class PesertaDidik extends BaseController
     public function saveOrtuwali($id = null): ResponseInterface
     {
         $mOrtuWali = new OrangtuaWaliModel();
-        $mOrtuWaliPd = new OrtuWaliPdModel();
 
-        $set = $this->request->getPost('set');
-        $setOrtu = $this->request->getPost('setOrtuwaliPd');
+        $set = $this->request->getPost();
+
         if ($id) {
             $cOrtuwali = $mOrtuWali->where('orangtua_id', $id)->first();
             if ($cOrtuwali) $set['id'] = $cOrtuwali['id'];
         } else $set['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
 
         if (!$mOrtuWali->save($set)) return $this->fail('Data orangtua/wali gagal disimpan');
-        $cOrtuwaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setOrtu['peserta_didik_id'])->first();
-        $setOrtu[$setOrtu['type']] = $id ?? $set['orangtua_id'];
-        if ($cOrtuwaliPd) {
-            $setOrtu['id'] = $cOrtuwaliPd['id'];
-        } else $setOrtu['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
-        if (!$mOrtuWaliPd->save($setOrtu)) return $this->fail('Data orangtua/wali peserta didik gagak disimpan.');
+
         return $this->respond(['status' => true, 'message' => 'Data peserta didik berhasil disimpan.', 'id' => $id ?? $set['orangtua_id']]);
+    }
+
+    public function saveOrtuwaliPd($id = null): ResponseInterface
+    {
+        $mOrtuwaliPd = new OrtuWaliPdModel();
+        $set = $this->request->getPost();
+        $cOrtuwaliPd = $mOrtuwaliPd->where('peserta_didik_id', $set['peserta_didik_id'])->first();
+        if (!$cOrtuwaliPd) $set['ortupd_id'] = unik($mOrtuwaliPd, 'ortupd_id');
+        else {
+            $set['id'] = $cOrtuwaliPd['id'];
+            $set['ortupd_id'] = $cOrtuwaliPd['ortupd_id'];
+        }
+        if (!$mOrtuwaliPd->save($set)) return $this->fail('Data orangtua/wali peserta didik gagal disimpan.');
+        return $this->respond(['status' => true, 'message' => 'Data orangtua/wali peserta didik berhasil disimpan.', 'id' => $id ?? $set['ortupd_id']]);
     }
 }

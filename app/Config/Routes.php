@@ -70,6 +70,8 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->post('alamat/save/(:segment)', 'PesertaDidik::saveAlamat/$1');
     $routes->post('ortuwali/save', 'PesertaDidik::saveOrtuwali');
     $routes->post('ortuwali/save/(:segment)', 'PesertaDidik::saveOrtuwali/$1');
+    $routes->post('ortuwalipd/save', 'PesertaDidik::saveOrtuwaliPd');
+    $routes->post('ortuwalipd/save/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
 });
 
 // public

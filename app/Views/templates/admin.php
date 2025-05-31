@@ -1023,7 +1023,7 @@
                 const formElm = $('#formData-tabsAyah');
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
-                if (id == undefined) {
+                if (id == undefined || id == '') {
                     formElm.trigger('reset').find('option').remove();
                     return;
                 }
@@ -1073,23 +1073,32 @@
                 loading.removeClass('d-none');
                 const respData = await fetchData({
                     url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
-                    data: {
-                        set: set,
-                        setOrtuwaliPd: {
-                            peserta_didik_id: $('#detailPd-id').val(),
-                            type: 'ayah_id',
-                        }
-                    },
+                    data: set,
                     method: 'POST',
                     button: btn,
                 });
-                loading.addClass('d-none');
+
                 if (respData) {
                     toast(respData.message);
                     $('#idAyah').val(respData.id);
                     $('#tabs-ayah-tab').attr('data-id', respData.id);
                     dtAdminBukuIndukPd.ajax.reload(null, false);
                 }
+
+                const respData2 = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/save',
+                    data: {
+                        peserta_didik_id: $('#detailPd-id').val(),
+                        ayah_id: respData.id
+                    },
+                    method: 'POST',
+                    button: btn,
+                });
+                if (respData2) {
+                    toast(respData2.message);
+                    $('#tabs-ayah-tab').attr('data-id', respData.id);
+                }
+                loading.addClass('d-none');
             });
 
             $('#tabs-ibu-tab').on('click', async function(e) {
@@ -1098,7 +1107,7 @@
                 const formElm = $('#formData-tabsIbu');
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
-                if (id == undefined) {
+                if (id == undefined || id == '') {
                     formElm.trigger('reset').find('option').remove();
                     return;
                 }
@@ -1149,23 +1158,30 @@
                 loading.removeClass('d-none');
                 const respData = await fetchData({
                     url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
-                    data: {
-                        set: set,
-                        setOrtuwaliPd: {
-                            peserta_didik_id: $('#detailPd-id').val(),
-                            type: 'ibu_id',
-                        }
-                    },
+                    data: set,
                     method: 'POST',
                     button: btn,
                 });
-                loading.addClass('d-none');
                 if (respData) {
                     toast(respData.message);
                     $('#idIbu').val(respData.id);
                     $('#tabs-ibu-tab').attr('data-id', respData.id);
                     dtAdminBukuIndukPd.ajax.reload(null, false);
                 }
+                const respData2 = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/save',
+                    data: {
+                        peserta_didik_id: $('#detailPd-id').val(),
+                        ibu_id: respData.id
+                    },
+                    method: 'POST',
+                    button: btn,
+                });
+                if (respData2) {
+                    toast(respData2.message);
+                    $('#tabs-ibu-tab').attr('data-id', respData.id);
+                }
+                loading.addClass('d-none');
             });
 
             $('#tabs-wali-tab').on('click', async function(e) {
@@ -1174,7 +1190,7 @@
                 const formElm = $('#formData-tabsWali');
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
-                if (id == undefined) {
+                if (id == undefined || id == '') {
                     formElm.trigger('reset').find('option').remove();
                     return;
                 }
@@ -1224,24 +1240,33 @@
                 loading.removeClass('d-none');
                 const respData = await fetchData({
                     url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
-                    data: {
-                        set: set,
-                        setOrtuwaliPd: {
-                            peserta_didik_id: $('#detailPd-id').val(),
-                            type: 'wali_id',
-                        }
-                    },
+                    data: set,
                     method: 'POST',
                     button: btn,
                 });
-                loading.addClass('d-none');
                 if (respData) {
                     toast(respData.message);
                     $('#idWali').val(respData.id);
                     $('#tabs-wali-tab').attr('data-id', respData.id);
                     dtAdminBukuIndukPd.ajax.reload(null, false);
                 }
+                const respData2 = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/save',
+                    data: {
+                        peserta_didik_id: $('#detailPd-id').val(),
+                        wali_id: respData.id
+                    },
+                    method: 'POST',
+                    button: btn,
+                });
+                if (respData2) {
+                    toast(respData2.message);
+                    $('#tabs-wali-tab').attr('data-id', respData.id);
+                }
+                loading.addClass('d-none');
             });
+
+            $('#btnSave-ortuwali').on('click', e => $(e.target).parents('.tab-pane').find('.active.show button').trigger('click'));
 
             $('#btnSave-identitasPd').on('click', async function() {
                 const btn = $(this);
