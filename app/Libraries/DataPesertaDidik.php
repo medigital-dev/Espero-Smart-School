@@ -26,9 +26,8 @@ class DataPesertaDidik
         $this->request = service('request');
         $this->model = new PesertaDidikModel();
         $this->query = $this->model;
-
+        $this->query->orderBy('peserta_didik.nama', 'ASC');
         $this->joinTable();
-        // $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
     }
 
     private function default()

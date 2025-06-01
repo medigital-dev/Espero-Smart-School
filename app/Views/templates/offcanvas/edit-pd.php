@@ -20,8 +20,33 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Identitas" id="tabs-identitas-tab" data-toggle="tab" href="#tabs-identitas" role="tab" aria-controls="tabs-identitas" aria-selected="false"><i class="fas fa-user-alt fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Alamat" id="tabs-alamat-tab" data-toggle="tab" href="#tabs-alamat" role="tab" aria-controls="tabs-alamat" aria-selected="false"><i class="fas fa-map-marked-alt fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Orangtua/Wali" id="tabs-ortuwali-tab" data-toggle="tab" href="#tabs-ortuwali" role="tab" aria-controls="tabs-ortuwali" aria-selected="false"><i class="fas fa-restroom fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kontak" id="tabs-kontak-tab" data-toggle="tab" href="#tabs-kontak" role="tab" aria-controls="tabs-kontak" aria-selected="false"><i class="fas fa-address-book fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-kontak" role="tabpanel" aria-labelledby="tabs-kontak-tab">
+                        <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
+                            <h6 class="text-bold m-0">Kontak</h6>
+                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-kontakPd"><i class="fas fa-save"></i></button>
+                        </div>
+                        <form id="formData-tabsKontak">
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKontak-telepon">Telepon</label>
+                                <input type="text" class="form-control" id="tabsKontak-telepon" name="telepon">
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKontak-hp">HP/Whatsapp</label>
+                                <input type="text" class="form-control" id="tabsKontak-hp" name="hp">
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKontak-email">Email</label>
+                                <textarea name="email" id="tabsKontak-email" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKontak-website">Website</label>
+                                <textarea name="website" id="tabsKontak-website" class="form-control" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
                     <div class="tab-pane fade" id="tabs-identitas" role="tabpanel" aria-labelledby="tabs-identitas-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Identitas</h6>

@@ -5,6 +5,7 @@ namespace App\Controllers\Api\BukuInduk;
 use App\Controllers\BaseController;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
+use App\Models\KontakModel;
 use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
 use App\Models\PassFotoModel;
@@ -217,5 +218,37 @@ class PesertaDidik extends BaseController
         }
         if (!$mOrtuwaliPd->save($set)) return $this->fail('Data orangtua/wali peserta didik gagal disimpan.');
         return $this->respond(['status' => true, 'message' => 'Data orangtua/wali peserta didik berhasil disimpan.', 'id' => $id ?? $set['ortupd_id']]);
+    }
+
+    public function showKontak($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $this->baseData->select([
+            'telepon',
+            'hp',
+            'email',
+            'website'
+        ]);
+        return $this->respond($this->baseData->find($id));
+    }
+
+    public function saveKontak($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $mKontak = new KontakModel();
+        $set = $this->request->getPost();
+
+        $this->mPesertaDidik->select('peserta_didik.nik');
+        $result = $this->mPesertaDidik->where('peserta_didik.peserta_didik_id', $id)->first();
+        if (!$result) return $this->fail('Peserta didik tidak ditemukan.');
+        $cAlamat = $mKontak->where('nik', $result['nik'])->first();
+        if ($cAlamat) $set['id'] = $cAlamat['id'];
+        else {
+            $set['alamat_id'] = unik($mKontak, 'alamat_id');
+            $set['nik'] = $result['nik'];
+        }
+        if (!$mKontak->save($set)) return $this->fail('Alamat peserta didik gagal disimpan.');
+
+        return $this->respond(['status' => true, 'message' => 'Alamat peserta didik berhasil disimpan.']);
     }
 }

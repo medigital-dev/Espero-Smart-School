@@ -1177,10 +1177,8 @@
                     method: 'POST',
                     button: btn,
                 });
-                if (respData2) {
+                if (respData2)
                     toast(respData2.message);
-                    $('#tabs-ibu-tab').attr('data-id', respData.id);
-                }
                 loading.addClass('d-none');
             });
 
@@ -1259,10 +1257,8 @@
                     method: 'POST',
                     button: btn,
                 });
-                if (respData2) {
+                if (respData2)
                     toast(respData2.message);
-                    $('#tabs-wali-tab').attr('data-id', respData.id);
-                }
                 loading.addClass('d-none');
             });
 
@@ -1318,14 +1314,50 @@
                     method: 'POST',
                     button: btn,
                 });
-                loading.addClass('d-none');
                 dtAdminBukuIndukPd.ajax.reload(null, false);
-                if (respData) {
+                if (respData)
                     toast(respData.message);
-                    filesElm.val('').trigger('change');
-                    bsCustomFileInput.destroy();
-                    bsCustomFileInput.init();
+                loading.addClass('d-none');
+            });
+
+            $('#tabs-kontak-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsKontak');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                if (id == undefined || id == '') {
+                    formElm.trigger('reset').find('option').remove();
+                    return;
                 }
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kontak/show/' + id);
+                $('#tabsKontak-telepon').val(respData.telepon);
+                $('#tabsKontak-hp').val(respData.hp);
+                $('#tabsKontak-email').val(respData.email);
+                $('#tabsKontak-website').val(respData.website);
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-saveKontak').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsKontak');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/kontak/save/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData)
+                    toast(respData.message);
+                loading.addClass('d-none');
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

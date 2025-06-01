@@ -65,6 +65,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->get('alamat/show/(:segment)', 'PesertaDidik::showAlamat/$1');
     $routes->get('ortuwaliPd/show/(:segment)', 'PesertaDidik::showOrtuwaliPd/$1');
     $routes->get('ortuwali/show/(:segment)', 'PesertaDidik::showOrtuwali/$1');
+    $routes->get('kontak/show/(:segment)', 'PesertaDidik::showKontak/$1');
 
     $routes->post('identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
     $routes->post('alamat/save/(:segment)', 'PesertaDidik::saveAlamat/$1');
@@ -72,6 +73,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->post('ortuwali/save/(:segment)', 'PesertaDidik::saveOrtuwali/$1');
     $routes->post('ortuwalipd/save', 'PesertaDidik::saveOrtuwaliPd');
     $routes->post('ortuwalipd/save/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
+    $routes->post('kontak/save/(:segment)', 'PesertaDidik::saveKontak/$1');
 });
 
 // public
