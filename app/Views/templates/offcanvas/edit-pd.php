@@ -21,12 +21,93 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Alamat" id="tabs-alamat-tab" data-toggle="tab" href="#tabs-alamat" role="tab" aria-controls="tabs-alamat" aria-selected="false"><i class="fas fa-map-marked-alt fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Orangtua/Wali" id="tabs-ortuwali-tab" data-toggle="tab" href="#tabs-ortuwali" role="tab" aria-controls="tabs-ortuwali" aria-selected="false"><i class="fas fa-restroom fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kontak" id="tabs-kontak-tab" data-toggle="tab" href="#tabs-kontak" role="tab" aria-controls="tabs-kontak" aria-selected="false"><i class="fas fa-address-book fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Beasiswa" id="tabs-beasiswa-tab" data-toggle="tab" href="#tabs-beasiswa" role="tab" aria-controls="tabs-beasiswa" aria-selected="false"><i class="fas fa-credit-card fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-beasiswa" role="tabpanel" aria-labelledby="tabs-beasiswa-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Beasiswa</h6>
+                                <button class="btn btn-sms btn-link btn-tooltip" data-toggle="collapse" data-title="Tambah" id="btnSave-ortuwali"><i class="fas fa-plus-circle"></i></button>
+                            </div>
+                            <ul class="nav nav-tabs" id="ortuwali-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-list-beasiswa-tab" data-toggle="tab" href="#tabs-list-beasiswa" role="tab" aria-controls="tabs-list-beasiswa" aria-selected="true">List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-tambah-beasiswa-tab" data-toggle="tab" href="#tabs-tambah-beasiswa" role="tab" aria-controls="tabs-tambah-beasiswa" aria-selected="false">Tambah</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabBeasiswa">
+                            <div class="tab-pane fade" id="tabs-tambah-beasiswa" role="tabpanel" aria-labelledby="tabs-tambah-beasiswa-tab">
+                                <form id="formData-tabsTambahBeasiswaPd">
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahBeasiswa-jenisBeasiswa" class="small mb-1">Jenis Beasiswa</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisBeasiswa" id="tabsTambahBeasiswa-jenisBeasiswa" name="jenis_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsKontak-uraian">Uraian</label>
+                                        <textarea name="uraian" id="tabsTambahBeasiswa-uraian" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahBeasiswa-tahun" class="small mb-1">Tahun Perolehan</label>
+                                        <div class="input-group">
+                                            <input type="number" name="tahun_awal" id="tabsTambahBeasiswa-tahunAwal" class="form-control" aria-describedby="tahunHelp">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">s.d.</span>
+                                            </div>
+                                            <input type="number" name="tahun_akhir" id="tabsTambahBeasiswa-tahunAkhir" class="form-control" aria-describedby="tahunHelp">
+                                        </div>
+                                        <small id="tahunHelp" class="form-text text-muted">Kosongi tahun akhir jika masih menerima.</small>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahBeasiswa-nominal" class="small mb-1">Nominal</label>
+                                        <div class="input-group">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">Rp.</span>
+                                            </div>
+                                            <input type="number" name="nominal" id="tabsTambahBeasiswa-nominal" class="form-control text-right" aria-describedby="nominalHelp">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahBeasiswa-satuan" class="small mb-1">Satuan</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="satuan" id="tabsTambahBeasiswa-satuan" name="satuan_id"></select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade active show" id="tabs-list-beasiswa" role="tabpanel" aria-labelledby="tabs-list-beasiswa-tab">
+                                <div class="list-group">
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1 text-bold">2024 - 2024</h6>
+                                            <button type="button" data-toggle="tooltip" data-title="Hapus" class="close" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <p class="mb-0">Program Indonesia Pintar.</p>
+                                        <p class="text-muted small mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias neque assumenda quia iusto ipsum, doloremque eligendi. Voluptatem minima fugit harum laudantium, amet veniam, fugiat inventore beatae consequuntur, iste assumenda quasi?</p>
+                                        <small class="text-muted">Rp. 350.000,-/bulan</small>
+                                    </div>
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1 text-bold">2024 - 2024</h6>
+                                            <button type="button" data-toggle="tooltip" data-title="Hapus" class="close" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <p class="mb-0">Program Indonesia Pintar.</p>
+                                        <p class="text-muted small mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias neque assumenda quia iusto ipsum, doloremque eligendi. Voluptatem minima fugit harum laudantium, amet veniam, fugiat inventore beatae consequuntur, iste assumenda quasi?</p>
+                                        <small class="text-muted">Rp. 350.000,-/bulan</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="tabs-kontak" role="tabpanel" aria-labelledby="tabs-kontak-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Kontak</h6>
-                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-kontakPd"><i class="fas fa-save"></i></button>
+                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveKontakPd"><i class="fas fa-save"></i></button>
                         </div>
                         <form id="formData-tabsKontak">
                             <div class="form-group mb-2">
@@ -239,7 +320,7 @@
                                 <h6 class="text-bold">Orang Tua/Wali</h6>
                                 <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-ortuwali"><i class="fas fa-save"></i></button>
                             </div>
-                            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                            <ul class="nav nav-tabs" id="ortuwali-tab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="tabs-ayah-tab" data-toggle="pill" href="#tabs-ayah" role="tab" aria-controls="tabs-ayah" aria-selected="true">Ayah</a>
                                 </li>

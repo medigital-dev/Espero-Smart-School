@@ -77,7 +77,7 @@ class Kelulusan extends BaseController
         $cMutasi = $mMutasi->where('mutasi_pd.peserta_didik_id', $peserta_didik_id)->first();
         if ($cMutasi && $cMutasi['nama'] == 'Lulus') $setMutasi['id'] = $cMutasi['id'];
         else if ($cMutasi && $cMutasi['nama'] !== 'Lulus') return $this->fail('Data kelulusan hanya bisa disimpan jika jenis mutasi <strong>LULUS</strong>. Terdeteksi status mutasi Peserta didik an <strong>' . $cPd['nama'] . '</strong> adalah ' . $cMutasi['nama']);
-        else $setMutasi['mutasi_id'] = unik($mMutasi, 'mutasi_id');
+        else $setMutasi['mutasi_id'] = idUnik($mMutasi, 'mutasi_id');
 
         $cTingkat = $mAnggotaRombel->where('anggota_rombongan_belajar.peserta_didik_id', $peserta_didik_id)->first();
         if ($cTingkat && (int) $cTingkat['tingkat'] !== 9) return $this->fail('Kelulusan hanya bisa dilakukan pada tingkat pendidikan 9. Terdeteksi peserta didik an. <strong>' . $cPd['nama'] . '</strong> masih berada ditingkat ' . $cTingkat['tingkat']);
@@ -95,7 +95,7 @@ class Kelulusan extends BaseController
         ];
         $cKelulusan = $mKelulusan->where('kelulusan.peserta_didik_id', $peserta_didik_id)->first();
         if ($cKelulusan) $setKelulusan['id'] = $cKelulusan['id'];
-        else $setKelulusan['kelulusan_id'] = unik($mKelulusan, 'kelulusan_id');
+        else $setKelulusan['kelulusan_id'] = idUnik($mKelulusan, 'kelulusan_id');
         if (!$mKelulusan->save($setKelulusan)) return $this->fail('Kelulusan peserta didik an <strong>' . $cPd['nama'] . '</strong> gagal disimpan.');
 
         return $this->respond(['status' => true, 'message' => 'Data mutasi peserta didik an <strong>' . $cPd['nama'] . '</strong> berhasil disimpan.']);

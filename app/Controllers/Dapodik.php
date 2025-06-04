@@ -91,7 +91,7 @@ class Dapodik extends BaseController
         $mDapodik = new DapodikSyncModel();
         $data = $mDapodik->where('dapodik_id', $id)->first();
 
-        if (!$data) $set['dapodik_id'] = unik($mDapodik, 'dapodik_id');
+        if (!$data) $set['dapodik_id'] = idUnik($mDapodik, 'dapodik_id');
         else $set['id'] = $data['id'];
 
         if (!$mDapodik->save($set)) return $this->fail('Error: Konfigurasi koneksi dapodik tidak dapat disimpan.');
@@ -169,7 +169,7 @@ class Dapodik extends BaseController
         $result = $req->sync('getSekolah');
 
         $temp = [
-            'riwayat_id' => unik($mRiwayatTest, 'riwayat_id'),
+            'riwayat_id' => idUnik($mRiwayatTest, 'riwayat_id'),
             'dapodik_id' => $id,
             'tanggal_waktu' => date('Y-m-d H:i:s'),
             'pesan' => $result['message']
@@ -286,7 +286,7 @@ class Dapodik extends BaseController
             ];
             $cKontak = $mKontak->where('nik', $nik)->first();
             if ($cKontak) $setKontakPd['id'] = $cKontak['id'];
-            else $setKontakPd['kontak_id'] = unik($mKontak, 'kontak_id');
+            else $setKontakPd['kontak_id'] = idUnik($mKontak, 'kontak_id');
             if (!$mKontak->save($setKontakPd))
                 $error[] = [
                     'created_at' => date('Y-m-d H:i:s'),
@@ -308,7 +308,7 @@ class Dapodik extends BaseController
                 ];
                 $cOrtuWali = $mOrtuWali->where('nama', $setOrtuAyah['nama'])->first();
                 if (!$cOrtuWali) {
-                    $setOrtuAyah['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
+                    $setOrtuAyah['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
                 } else {
                     $setOrtuAyah['id'] = $cOrtuWali['id'];
                     $setOrtuAyah['orangtua_id'] = $cOrtuWali['orangtua_id'];
@@ -335,7 +335,7 @@ class Dapodik extends BaseController
                 ];
                 $cOrtuWali = $mOrtuWali->where('nama', $setOrtuIbu['nama'])->first();
                 if (!$cOrtuWali) {
-                    $setOrtuIbu['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
+                    $setOrtuIbu['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
                 } else {
                     $setOrtuIbu['id'] = $cOrtuWali['id'];
                     $setOrtuIbu['orangtua_id'] = $cOrtuWali['orangtua_id'];
@@ -361,7 +361,7 @@ class Dapodik extends BaseController
                 ];
                 $cOrtuWali = $mOrtuWali->where('nama', $setOrtuWali['nama'])->first();
                 if (!$cOrtuWali) {
-                    $setOrtuWali['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
+                    $setOrtuWali['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
                 } else {
                     $setOrtuWali['id'] = $cOrtuWali['id'];
                     $setOrtuWali['orangtua_id'] = $cOrtuWali['orangtua_id'];
@@ -387,7 +387,7 @@ class Dapodik extends BaseController
                 'wali_id' => $idWali,
             ];
             $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->first();
-            if (!$cOrtuWaliPd) $setOrtuWaliPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
+            if (!$cOrtuWaliPd) $setOrtuWaliPd['ortupd_id'] = idUnik($mOrtuWaliPd, 'ortupd_id');
             else $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
             if (!$mOrtuWaliPd->save($setOrtuWaliPd))
                 $error[] = [
@@ -414,7 +414,7 @@ class Dapodik extends BaseController
                 'tanggal' => date('Y-m-d'),
             ];
             if (!$cPeriodik) {
-                $setPeriodik['periodik_id'] = unik($mPeriodik, 'periodik_id');
+                $setPeriodik['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
                 if (!$mPeriodik->save($setPeriodik))
                     $error[] = [
                         'created_at' => date('Y-m-d H:i:s'),
@@ -434,7 +434,7 @@ class Dapodik extends BaseController
             $cSemester = $mSemester->where('kode', $row['semester_id'])
                 ->first();
             if (!$cSemester)
-                $setSemester['semester_id'] = unik($mSemester, 'semester_id');
+                $setSemester['semester_id'] = idUnik($mSemester, 'semester_id');
             else {
                 $setSemester['id'] = $cSemester['id'];
                 $setSemester['semester_id'] = $cSemester['semester_id'];
@@ -522,7 +522,7 @@ class Dapodik extends BaseController
                 $nisn = $row[4];
 
                 // Start Peserta Didik
-                $idPd = unik($mPd, 'peserta_didik_id');
+                $idPd = idUnik($mPd, 'peserta_didik_id');
                 $setPd = [
                     'nama' => $row[1],
                     'jenis_kelamin' => $row[3],
@@ -558,7 +558,7 @@ class Dapodik extends BaseController
                     ->first();
                 if (!$cRegistrasi) {
                     $setRegistrasi = [
-                        'registrasi_id' => unik($mRegistrasi, 'registrasi_id'),
+                        'registrasi_id' => idUnik($mRegistrasi, 'registrasi_id'),
                         'nipd' => $row[2],
                         'peserta_didik_id' => $setPd['peserta_didik_id'],
                         'asal_sekolah' => $row[56],
@@ -574,7 +574,7 @@ class Dapodik extends BaseController
                     ->where('nama', $row[17])
                     ->first();
                 if (!$cTranspot) {
-                    $setTranspot['ref_id'] = unik($mRefTransportasi, 'ref_id');
+                    $setTranspot['ref_id'] = idUnik($mRefTransportasi, 'ref_id');
                     if (!$mRefTransportasi->save($setTranspot)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => $mRefTransportasi->errors()];
                     else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 } else {
@@ -601,7 +601,7 @@ class Dapodik extends BaseController
                 $cAlamat = $mAlamat
                     ->where('nik', $row[7])
                     ->first();
-                if (!$cAlamat) $setAlamat['alamat_id'] = unik($mAlamat, 'alamat_id');
+                if (!$cAlamat) $setAlamat['alamat_id'] = idUnik($mAlamat, 'alamat_id');
                 else {
                     $setAlamat['id'] = $cAlamat['id'];
                     $setAlamat['alamat_id'] = $cAlamat['alamat_id'];
@@ -628,7 +628,7 @@ class Dapodik extends BaseController
                     if ($cAyah) {
                         $setAyah['id'] = $cAyah['id'];
                         $setAyah['orangtua_id'] = $cAyah['orangtua_id'];
-                    } else $setAyah['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
+                    } else $setAyah['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
                     if (!$mOrangtuaWali->save($setAyah)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
                     else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                     $idAyah = $setAyah['orangtua_id'];
@@ -651,7 +651,7 @@ class Dapodik extends BaseController
                     if ($cIbu) {
                         $setIbu['id'] = $cIbu['id'];
                         $setIbu['orangtua_id'] = $cIbu['orangtua_id'];
-                    } else $setIbu['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
+                    } else $setIbu['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
                     if (!$mOrangtuaWali->save($setIbu)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
                     else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                     $idIbu = $setIbu['orangtua_id'];
@@ -673,7 +673,7 @@ class Dapodik extends BaseController
                     if ($cWali) {
                         $setWali['id'] = $cWali['id'];
                         $setWali['orangtua_id'] = $cWali['orangtua_id'];
-                    } else $setWali['orangtua_id'] = unik($mOrangtuaWali, 'orangtua_id');
+                    } else $setWali['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
                     if (!$mOrangtuaWali->save($setWali)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
                     else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                     $idWali = $setWali['orangtua_id'];
@@ -689,7 +689,7 @@ class Dapodik extends BaseController
                 ];
                 $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setPd['peserta_didik_id'])->first();
                 if ($cOrtuWaliPd) $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
-                else $setOrtuWaliPd['ortupd_id'] = unik($mOrtuWaliPd, 'ortupd_id');
+                else $setOrtuWaliPd['ortupd_id'] = idUnik($mOrtuWaliPd, 'ortupd_id');
                 if (!$mOrtuWaliPd->save($setOrtuWaliPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => $mOrtuWaliPd->errors()];
                 else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
                 // End Orangtua Wali Pd
@@ -717,7 +717,7 @@ class Dapodik extends BaseController
             if ($cAgama) $idAgama = $cAgama['ref_id'];
             else {
                 $setAgama = [
-                    'ref_id' => unik($mRefAgama, 'ref_id'),
+                    'ref_id' => idUnik($mRefAgama, 'ref_id'),
                     'nama' => $row['agama_id_str'],
                 ];
                 if (!$mRefAgama->save($setAgama)) return $this->fail('Error: Referensi Agama gagal disimpan.');
@@ -740,7 +740,7 @@ class Dapodik extends BaseController
             if ($cGtk) {
                 $setGtk['id'] = $cGtk['id'];
             } else {
-                $setGtk['guru_pegawai_id'] = unik($mGtk, 'guru_pegawai_id');
+                $setGtk['guru_pegawai_id'] = idUnik($mGtk, 'guru_pegawai_id');
             }
             if (!$mGtk->save($setGtk)) return $this->fail('Error: Data GTK gagal disimpan.');
             $success++;

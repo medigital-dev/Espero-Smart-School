@@ -28,7 +28,7 @@ class MutasiPd extends BaseController
     public function set()
     {
         $set = [
-            'mutasi_id' => unik($this->model, 'mutasi_id'),
+            'mutasi_id' => idUnik($this->model, 'mutasi_id'),
             'peserta_didik_id' => $this->request->getPost('peserta_didik_id'),
             'jenis' => $this->request->getPost('jenis'),
             'tanggal' => date_format(date_create_from_format('d/m/Y', $this->request->getPost('tanggal')), 'Y-m-d'),

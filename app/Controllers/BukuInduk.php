@@ -179,7 +179,7 @@ class BukuInduk extends BaseController
                     'tanggal' => $row[7],
                 ];
                 if ($cKelulusan) $setKelulusan['id'] = $cKelulusan['id'];
-                else $setKelulusan['kelulusan_id'] = unik($mKelulusan, 'kelulusan_id');
+                else $setKelulusan['kelulusan_id'] = idUnik($mKelulusan, 'kelulusan_id');
                 if (!$mKelulusan->save($setKelulusan)) return $this->fail('Kelulusan peserta didik an <strong>' . $cPd['nama'] . '</strong> gagal disimpan');
 
                 $setMutasi = [
@@ -190,7 +190,7 @@ class BukuInduk extends BaseController
                 ];
                 $cMutasi = $mMutasi->where('peserta_didik_id', $cPd['peserta_didik_id'])->first();
                 if ($cMutasi) return $this->fail('Peserta Didik an <strong>' . $cPd['nama'] . '</strong> sudah pernah dikeluarkan.');
-                $setMutasi['mutasi_id'] = unik($mMutasi, 'mutasi_id');
+                $setMutasi['mutasi_id'] = idUnik($mMutasi, 'mutasi_id');
                 if (!$mMutasi->save($setMutasi)) return $this->fail('Mutasi peserta didik an <strong>' . $cPd['nama'] . '</strong> gagal disimpan.');
             }
         }

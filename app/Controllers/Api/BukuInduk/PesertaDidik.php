@@ -108,7 +108,7 @@ class PesertaDidik extends BaseController
             if ($passfoto) {
                 $mPassfoto = new PassFotoModel();
                 $setFoto = [
-                    'foto_id' => unik($mPassfoto, 'foto_id'),
+                    'foto_id' => idUnik($mPassfoto, 'foto_id'),
                     'filename' => $passfoto['data']['filename'],
                     'path' => $passfoto['data']['path'],
                 ];
@@ -140,7 +140,7 @@ class PesertaDidik extends BaseController
         $cAlamat = $mAlamat->where('nik', $result['nik'])->first();
         if ($cAlamat) $set['id'] = $cAlamat['id'];
         else {
-            $set['alamat_id'] = unik($mAlamat, 'alamat_id');
+            $set['alamat_id'] = idUnik($mAlamat, 'alamat_id');
             $set['nik'] = $result['nik'];
         }
         if (!$mAlamat->save($set)) return $this->fail('Alamat peserta didik gagal disimpan.');
@@ -199,7 +199,7 @@ class PesertaDidik extends BaseController
         if ($id) {
             $cOrtuwali = $mOrtuWali->where('orangtua_id', $id)->first();
             if ($cOrtuwali) $set['id'] = $cOrtuwali['id'];
-        } else $set['orangtua_id'] = unik($mOrtuWali, 'orangtua_id');
+        } else $set['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
 
         if (!$mOrtuWali->save($set)) return $this->fail('Data orangtua/wali gagal disimpan');
 
@@ -211,7 +211,7 @@ class PesertaDidik extends BaseController
         $mOrtuwaliPd = new OrtuWaliPdModel();
         $set = $this->request->getPost();
         $cOrtuwaliPd = $mOrtuwaliPd->where('peserta_didik_id', $set['peserta_didik_id'])->first();
-        if (!$cOrtuwaliPd) $set['ortupd_id'] = unik($mOrtuwaliPd, 'ortupd_id');
+        if (!$cOrtuwaliPd) $set['ortupd_id'] = idUnik($mOrtuwaliPd, 'ortupd_id');
         else {
             $set['id'] = $cOrtuwaliPd['id'];
             $set['ortupd_id'] = $cOrtuwaliPd['ortupd_id'];
@@ -244,11 +244,11 @@ class PesertaDidik extends BaseController
         $cAlamat = $mKontak->where('nik', $result['nik'])->first();
         if ($cAlamat) $set['id'] = $cAlamat['id'];
         else {
-            $set['alamat_id'] = unik($mKontak, 'alamat_id');
+            $set['kontak_id'] = idUnik($mKontak, 'kontak_id');
             $set['nik'] = $result['nik'];
         }
-        if (!$mKontak->save($set)) return $this->fail('Alamat peserta didik gagal disimpan.');
+        if (!$mKontak->save($set)) return $this->fail('Kontak peserta didik gagal disimpan.');
 
-        return $this->respond(['status' => true, 'message' => 'Alamat peserta didik berhasil disimpan.']);
+        return $this->respond(['status' => true, 'message' => 'Kontak peserta didik berhasil disimpan.']);
     }
 }

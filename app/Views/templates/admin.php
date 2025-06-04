@@ -504,6 +504,7 @@
                     theme: "bootstrap4",
                     dropdownParent: $select.parents(".modal").length ?
                         $select.parents(".modal").first() : $(document.body),
+                    tags: true,
                     ajax: {
                         url: "/api/v0/referensi/?type=" + $select.data('referensi'),
                         method: "GET",
@@ -538,6 +539,9 @@
                         if (!option.id) return option.text;
                         return $("<span>" + option.text + "</span>");
                     },
+                    newTags: d => {
+
+                    }
                 });
             });
         });
@@ -1339,7 +1343,7 @@
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
 
-            $('#btnRun-saveKontak').on('click', async function() {
+            $('#btnRun-saveKontakPd').on('click', async function() {
                 const btn = $(this);
                 const id = $('#detailPd-id').val();
                 const formElm = $('#formData-tabsKontak');
