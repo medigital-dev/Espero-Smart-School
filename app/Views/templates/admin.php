@@ -498,13 +498,13 @@
 
             $('.select2-getReferensi').each(function() {
                 const $select = $(this);
-                $(this).select2({
+                const modalDialog = $('#modalReferensi');
+                $select.select2({
                     placeholder: $select.data('placeholder') || "Pilih referensi...",
                     searchInputPlaceholder: "Cari..",
                     theme: "bootstrap4",
                     dropdownParent: $select.parents(".modal").length ?
                         $select.parents(".modal").first() : $(document.body),
-                    tags: true,
                     ajax: {
                         url: "/api/v0/referensi/?type=" + $select.data('referensi'),
                         method: "GET",
@@ -520,6 +520,8 @@
                                     return {
                                         id: item.id,
                                         text: item.nama,
+                                        kode: item.kode,
+                                        warna: item.warna,
                                     };
                                 }),
                             };
@@ -533,17 +535,49 @@
                     },
                     templateResult: function(option) {
                         if (!option.id) return option.text;
-                        return $("<div><h6 class='m-0'>" + option.text + "</h6></div>");
+                        if (option.newTag) return $(`<div class="d-flex justify-content-between align-items-center"><span>${option.text}</span><span class="badge bg-danger" data-toggle="tooltip" title="Tambah Baru"><i class="fas fa-external-link-alt fa-fw"></i>New</span></div>`);
+                        return $(`<div><h6 class='m-0'>${option.text}</h6>
+                        <span class="badge bg-${option.warna||'secondary'}">${option.kode}</span>
+                        </div>`);
+
                     },
                     templateSelection: function(option) {
                         if (!option.id) return option.text;
-                        return $("<span>" + option.text + "</span>");
+                        return $(`<span>${option.text}</span>`);
                     },
-                    newTags: d => {
+                    createTag: function(params) {
+                        var term = $.trim(params.term);
 
+                        if (term === '') {
+                            return null;
+                        }
+
+                        return {
+                            id: term,
+                            text: term,
+                            newTag: true,
+                        }
+                    },
+                }).on('select2:select', function(e) {
+                    let data = e.params.data;
+
+                    if (data.newTag) {
+                        modalDialog.modal('show');
                     }
                 });
             });
+
+            $('#modalReferensi').on('shown.bs.modal', e => $('.modal-backdrop').css('z-index', 1060));
+            $('#formData-tambahReferensi').find('input,select').on('change input', e => {
+                const kode = $('#formReferensi-kode').val();
+                const bg = $('#formReferensi-bgColor').val();
+                const color = $('#formReferensi-textColor').val();
+                const elm = `<span class="badge bg ${bg?'bg-'+bg:''} ${color?'text-'+color:''}">${kode}</span>`;
+                console.log(elm);
+
+                $('#refPreview').html('').append(elm);
+            });
+
         });
     </script>
     <!-- end toastr config -->

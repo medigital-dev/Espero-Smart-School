@@ -27,7 +27,7 @@ class Referensi extends BaseController
 
     public function __construct()
     {
-        helper('referensi');
+        helper('string');
         $this->ref = new LibrariesReferensi();
     }
 
@@ -91,6 +91,7 @@ class Referensi extends BaseController
                 break;
         }
 
+        $model->select(['ref_id as id', 'nama', 'warna', 'kode']);
         return $model;
     }
 
@@ -100,14 +101,28 @@ class Referensi extends BaseController
         $type = $this->request->getGet('type');
         $model = $this->typeReferensi($type);
 
-        $model->select(['ref_id as id', 'nama', 'warna', 'kode']);
         if ($key)
             $model->like('nama', $key);
         return $this->respond($model->findAll());
     }
 
-    public function show($type, $id = null)
+    public function show($id = null)
     {
-        return $this->respond($this->ref->get($type, $id));
+        $type = $this->request->getGet('type');
+        if (!$type) return $this->failServerError('Tipe referensi diperlukan.');
+        $model = $this->typeReferensi($type);
+        return $this->respond($model->where('ref_id', $id)->first());
+    }
+
+    public function create()
+    {
+        $set = $this->request->getPost();
+        $type = $this->request->getGet('type');
+        if (!$type) return $this->failServerError('Tipe referensi diperlukan.');
+        $model = $this->typeReferensi($type);
+        if (!isset($set['ref_id']))
+            $set['ref_id'] = idUnik($model, 'ref_id');
+        if (!$model->save($set)) return $this->failServerError('Referensi gagal disimpan.');
+        return $this->respond($set, 201, 'Referensi berhasil disimpan.');
     }
 }

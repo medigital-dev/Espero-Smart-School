@@ -44,7 +44,7 @@
                                 <form id="formData-tabsTambahBeasiswaPd">
                                     <div class="form-group mb-2">
                                         <label for="tabsTambahBeasiswa-jenisBeasiswa" class="small mb-1">Jenis Beasiswa</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisBeasiswa" id="tabsTambahBeasiswa-jenisBeasiswa" name="jenis_id"></select>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisBeasiswa" data-tags="true" id="tabsTambahBeasiswa-jenisBeasiswa" name="jenis_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label class="small mb-1" for="tabsKontak-uraian">Uraian</label>

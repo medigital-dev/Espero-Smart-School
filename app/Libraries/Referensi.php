@@ -260,14 +260,14 @@ class Referensi
         }
     }
 
-    public function get(string $typeReferensi, string $keyword = null, array|string $output = []): array|string|false
+    public function get(string $typeReferensi, string $idOrNamaOrKode = null, array|string $output = []): array|string|false
     {
         $this->model($typeReferensi);
         $this->model->select(['ref_id as id', 'nama', 'kode', 'warna']);
         $fields = ['id', 'nama', 'kode', 'warna'];
 
-        if ($keyword) {
-            $this->model->where('ref_id', $keyword)->orWhere('nama', $keyword)->orWhere('kode', $keyword);
+        if ($idOrNamaOrKode) {
+            $this->model->where('ref_id', $idOrNamaOrKode)->orWhere('nama', $idOrNamaOrKode)->orWhere('kode', $idOrNamaOrKode);
             $result = $this->model->first();
             if (!$result) return false;
             if (is_string($output)) return $result[$output] ?? false;
@@ -295,5 +295,14 @@ class Referensi
             }
             return $rows;
         }
+    }
+
+    public function withFilter($keyword)
+    {
+        $this->model->groupStart()
+            ->like('nama', $keyword)
+            ->orLike('kode', $keyword)
+            ->groupEnd();
+        return $this;
     }
 }
