@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\RefAgamaModel;
+use App\Models\RefBackgroundColorModel;
 use App\Models\RefJenisBeasiswaModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\RefJenisKelaminModel;
@@ -14,6 +15,7 @@ use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
 use App\Models\RefSatuanModel;
+use App\Models\RefTextColorModel;
 use App\Models\RefTransportasiModel;
 use InvalidArgumentException;
 
@@ -79,6 +81,14 @@ class Referensi
 
             case 'jenisKesejahteraan':
                 $this->model = new RefJenisKesejahteraanModel();
+                break;
+
+            case 'bgColor':
+                $this->model = new RefBackgroundColorModel();
+                break;
+
+            case 'textColor':
+                $this->model = new RefTextColorModel();
                 break;
 
             default:

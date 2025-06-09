@@ -566,18 +566,6 @@
                     }
                 });
             });
-
-            $('#modalReferensi').on('shown.bs.modal', e => $('.modal-backdrop').css('z-index', 1060));
-            $('#formData-tambahReferensi').find('input,select').on('change input', e => {
-                const kode = $('#formReferensi-kode').val();
-                const bg = $('#formReferensi-bgColor').val();
-                const color = $('#formReferensi-textColor').val();
-                const elm = `<span class="badge bg ${bg?'bg-'+bg:''} ${color?'text-'+color:''}">${kode}</span>`;
-                console.log(elm);
-
-                $('#refPreview').html('').append(elm);
-            });
-
         });
     </script>
     <!-- end toastr config -->
@@ -1396,6 +1384,16 @@
                 if (respData)
                     toast(respData.message);
                 loading.addClass('d-none');
+            });
+
+            $('#modalReferensi').on('shown.bs.modal', e => $('.modal-backdrop').css('z-index', 1060));
+
+            $('#formData-tambahReferensi').find('input,select').on('change input', e => {
+                const kode = $('#formReferensi-kode').val();
+                const bg = $('#formReferensi-bgColor').val();
+                const color = $('#formReferensi-textColor').val();
+                const elm = `<span class="badge bg ${bg?'bg-'+bg:''} ${color?'text-'+color:''}">${kode}</span>`;
+                $('#refPreview').html('').append(elm);
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

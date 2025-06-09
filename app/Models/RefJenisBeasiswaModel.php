@@ -17,6 +17,7 @@ class RefJenisBeasiswaModel extends Model
         'ref_id',
         'nama',
         'kode',
-        'warna',
+        'bg_color',
+        'text_color',
     ];
 }

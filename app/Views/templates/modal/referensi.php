@@ -19,11 +19,11 @@
                     </div>
                     <div class="form-group">
                         <label for="formReferensi-bgColor">Warna Latar</label>
-                        <select name="bg_color" id="formReferensi-bgColor" data-referensi="backgroundColor" class="custom-select select2-getReferensi"></select>
+                        <select name="bg_color" id="formReferensi-bgColor" data-referensi="bgColor" class="custom-select select2-getReferensi"></select>
                     </div>
                     <div class="form-group">
                         <label for="formReferensi-textColor">Warna Text</label>
-                        <input type="text" class="form-control" id="formReferensi-textColor" name="text_color">
+                        <select name="text_color" id="formReferensi-textColor" data-referensi="textColor" class="custom-select select2-getReferensi"></select>
                     </div>
                 </form>
                 <div class="mb-2">

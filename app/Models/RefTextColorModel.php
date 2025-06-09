@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RefJenisMutasiModel extends Model
+class RefTextColorModel extends Model
 {
-    protected $table      = 'ref_jenis_mutasi';
+    protected $table      = 'ref_text_color';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
@@ -17,7 +17,5 @@ class RefJenisMutasiModel extends Model
         'ref_id',
         'nama',
         'kode',
-        'bg_color',
-        'text_color',
     ];
 }
