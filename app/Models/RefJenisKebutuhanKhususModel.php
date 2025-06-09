@@ -18,6 +18,5 @@ class RefJenisKebutuhanKhususModel extends Model
         'nama',
         'kode',
         'bg_color',
-        'text_color',
     ];
 }

@@ -251,4 +251,6 @@ class PesertaDidik extends BaseController
 
         return $this->respond(['status' => true, 'message' => 'Kontak peserta didik berhasil disimpan.']);
     }
+
+    public function showBeasiswa($id): ResponseInterface {}
 }

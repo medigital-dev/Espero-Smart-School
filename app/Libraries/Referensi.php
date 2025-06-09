@@ -3,7 +3,6 @@
 namespace App\Libraries;
 
 use App\Models\RefAgamaModel;
-use App\Models\RefBackgroundColorModel;
 use App\Models\RefJenisBeasiswaModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\RefJenisKelaminModel;
@@ -15,7 +14,6 @@ use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
 use App\Models\RefSatuanModel;
-use App\Models\RefTextColorModel;
 use App\Models\RefTransportasiModel;
 use InvalidArgumentException;
 
@@ -81,14 +79,6 @@ class Referensi
 
             case 'jenisKesejahteraan':
                 $this->model = new RefJenisKesejahteraanModel();
-                break;
-
-            case 'bgColor':
-                $this->model = new RefBackgroundColorModel();
-                break;
-
-            case 'textColor':
-                $this->model = new RefTextColorModel();
                 break;
 
             default:
@@ -236,8 +226,8 @@ class Referensi
     public function getJenisMutasi(string $keyword = null, array|string $output = []): array|string|false
     {
         $model = new RefJenisMutasiModel();
-        $model->select(['ref_id as id', 'nama', 'kode', 'warna']);
-        $fields = ['id', 'nama', 'kode', 'warna'];
+        $model->select(['ref_id as id', 'nama', 'kode', 'bg_color']);
+        $fields = ['id', 'nama', 'kode', 'bg_color'];
 
         if ($keyword) {
             $model->where('ref_id', $keyword)->orWhere('nama', $keyword)->orWhere('kode', $keyword);
@@ -273,8 +263,8 @@ class Referensi
     public function get(string $typeReferensi, string $idOrNamaOrKode = null, array|string $output = []): array|string|false
     {
         $this->model($typeReferensi);
-        $this->model->select(['ref_id as id', 'nama', 'kode', 'warna']);
-        $fields = ['id', 'nama', 'kode', 'warna'];
+        $this->model->select(['ref_id as id', 'nama', 'kode', 'bg_color']);
+        $fields = ['id', 'nama', 'kode', 'bg_color'];
 
         if ($idOrNamaOrKode) {
             $this->model->where('ref_id', $idOrNamaOrKode)->orWhere('nama', $idOrNamaOrKode)->orWhere('kode', $idOrNamaOrKode);

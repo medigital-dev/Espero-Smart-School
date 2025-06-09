@@ -5,7 +5,6 @@ namespace App\Controllers\Api;
 use App\Controllers\BaseController;
 use App\Libraries\Referensi as LibrariesReferensi;
 use App\Models\RefAgamaModel;
-use App\Models\RefBackgroundColorModel;
 use App\Models\RefJenisBeasiswaModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\RefJenisKelaminModel;
@@ -17,7 +16,6 @@ use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
 use App\Models\RefSatuanModel;
-use App\Models\RefTextColorModel;
 use App\Models\RefTransportasiModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -88,20 +86,12 @@ class Referensi extends BaseController
                 $model = new RefJenisKesejahteraanModel();
                 break;
 
-            case 'bgColor':
-                $model = new RefBackgroundColorModel();
-                break;
-
-            case 'textColor':
-                $model = new RefTextColorModel();
-                break;
-
             default:
                 return $this->respond(null);
                 break;
         }
 
-        $model->select(['ref_id as id', 'nama', 'bg_color', 'text_color', 'kode']);
+        $model->select(['ref_id as id', 'nama', 'bg_color', 'kode']);
         return $model;
     }
 

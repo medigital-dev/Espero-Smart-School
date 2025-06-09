@@ -11,7 +11,7 @@
         <button class="close" data-toggle="offcanvas" data-target=".offcanvas">&times;</button>
     </div>
     <div class="offcanvas-body pt-0">
-        <div class="overlay-wrapper vh-100">
+        <div class="overlay-wrapper">
             <div class="overlay d-none"><i class="fas fa-spinner fa-spin"></i></div>
             <input type="hidden" name="peserta_didik_id" id="detailPd-id">
             <div class="d-flex align-items-start">
@@ -72,12 +72,14 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsTambahBeasiswa-satuan" class="small mb-1">Satuan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="satuan" id="tabsTambahBeasiswa-satuan" name="satuan_id"></select>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="satuan" data-tags="true" id="tabsTambahBeasiswa-satuan" name="satuan_id"></select>
                                     </div>
                                 </form>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveBeasiswa"><i class="fas fa-save mr-1"></i>Simpan</button>
                             </div>
                             <div class="tab-pane fade active show" id="tabs-list-beasiswa" role="tabpanel" aria-labelledby="tabs-list-beasiswa-tab">
-                                <div class="list-group">
+                                <div class="list-group" id="listBeasiswaPd">
                                     <div class="list-group-item list-group-item-action">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h6 class="mb-1 text-bold">2024 - 2024</h6>

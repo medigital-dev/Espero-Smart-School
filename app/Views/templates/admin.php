@@ -495,6 +495,53 @@
                 });
             });
 
+            $('.select2-getBgColor').each(function() {
+                const $select = $(this);
+                $select.select2({
+                    placeholder: $select.data('placeholder') || "Pilih style...",
+                    searchInputPlaceholder: "Cari..",
+                    theme: "bootstrap4",
+                    dropdownParent: $select.parents(".modal").length ?
+                        $select.parents(".modal").first() : $(document.body),
+                    ajax: {
+                        url: "/api/v0/backgroundColor",
+                        method: "GET",
+                        dataType: "json",
+                        data: function(params) {
+                            return {
+                                key: params.term,
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function(item) {
+                                    return {
+                                        id: item.kode,
+                                        text: item.nama,
+                                        kode: item.kode,
+                                    };
+                                }),
+                            };
+                        },
+                        cache: true,
+                        error: function(jqXHR, status, error) {
+                            return {
+                                results: [],
+                            };
+                        },
+                    },
+                    templateResult: function(option) {
+                        if (!option.id) return option.text;
+                        return $(`<div class="p-2 ${option.kode}">
+                        <h6 class='m-0 text-bold'>${option.text}</h6>
+                        </div>`);
+                    },
+                    templateSelection: function(option) {
+                        if (!option.id) return option.text;
+                        return $(`<span>${option.text}</span>`);
+                    },
+                });
+            });
 
             $('.select2-getReferensi').each(function() {
                 const $select = $(this);
@@ -509,6 +556,7 @@
                         url: "/api/v0/referensi/?type=" + $select.data('referensi'),
                         method: "GET",
                         dataType: "json",
+                        delay: 10,
                         data: function(params) {
                             return {
                                 key: params.term,
@@ -521,7 +569,7 @@
                                         id: item.id,
                                         text: item.nama,
                                         kode: item.kode,
-                                        warna: item.warna,
+                                        bgColor: item.bg_color,
                                     };
                                 }),
                             };
@@ -537,32 +585,32 @@
                         if (!option.id) return option.text;
                         if (option.newTag) return $(`<div class="d-flex justify-content-between align-items-center"><span>${option.text}</span><span class="badge bg-danger" data-toggle="tooltip" title="Tambah Baru"><i class="fas fa-external-link-alt fa-fw"></i>New</span></div>`);
                         return $(`<div><h6 class='m-0'>${option.text}</h6>
-                        <span class="badge bg-${option.warna||'secondary'}">${option.kode}</span>
+                        <span class="badge ${option.bgColor}">${option.kode}</span>
                         </div>`);
-
                     },
                     templateSelection: function(option) {
                         if (!option.id) return option.text;
                         return $(`<span>${option.text}</span>`);
                     },
+                    escapeMarkup: markup => markup,
                     createTag: function(params) {
                         var term = $.trim(params.term);
-
-                        if (term === '') {
-                            return null;
-                        }
-
+                        if (term === '') return null;
                         return {
-                            id: term,
+                            id: '_new-' + term,
                             text: term,
                             newTag: true,
+                            type: $select.data('referensi'),
                         }
                     },
                 }).on('select2:select', function(e) {
                     let data = e.params.data;
-
                     if (data.newTag) {
                         modalDialog.modal('show');
+                        modalDialog.find('textarea[name="nama"],input[name="kode"]').val(data.text).trigger('change');
+                        modalDialog.find('#targetTambahReferensi').val($select.attr('id'));
+                        modalDialog.find('#tempId-selectNewTags').val(data.id);
+                        modalDialog.find('#typeReferensi').val($select.data('referensi'));
                     }
                 });
             });
@@ -1388,12 +1436,77 @@
 
             $('#modalReferensi').on('shown.bs.modal', e => $('.modal-backdrop').css('z-index', 1060));
 
-            $('#formData-tambahReferensi').find('input,select').on('change input', e => {
+            $('#formData-tambahReferensi').find('input,select,textarea').on('change input', e => {
                 const kode = $('#formReferensi-kode').val();
                 const bg = $('#formReferensi-bgColor').val();
-                const color = $('#formReferensi-textColor').val();
-                const elm = `<span class="badge bg ${bg?'bg-'+bg:''} ${color?'text-'+color:''}">${kode}</span>`;
+                const elm = `<span class="badge ${bg}">${kode}</span>`;
                 $('#refPreview').html('').append(elm);
+            });
+
+            $('#btnRun-simpanReferensi').on('click', async function() {
+                const btn = $(this);
+                const formElm = $('#formData-tambahReferensi');
+                const type = $('#typeReferensi');
+                const target = $('#targetTambahReferensi').val();
+                const resp = await fetchData({
+                    url: '/api/v0/referensi?type=' + type.val(),
+                    data: formElm.serializeArray(),
+                    method: 'POST',
+                    button: btn,
+                });
+                if (!resp) return;
+                formElm.trigger('reset').find('select,textarea').val(null).trigger('change');
+                $('#refPreview').html('');
+                $('#modalReferensi').modal('hide');
+                const newOpt = new Option(resp.nama, resp.ref_id, false, true);
+                $('#' + target).append(newOpt);
+            });
+
+            $('#btnCancel-simpanReferensi').on('click', function() {
+                const targetElm = $('#targetTambahReferensi').val();
+                const idOpt = $('#tempId-selectNewTags').val();
+                $('#' + targetElm).find('option[value="' + idOpt + '"]').remove()
+                $('#' + targetElm).val(null).trigger('change');
+                $('#modalReferensi').modal('hide');
+            });
+
+            $('#btnRun-saveBeasiswa').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsTambahBeasiswaPd');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/beasiswa/save/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('select').val(null).trigger('change');
+                    $('#tabs-beasiswa-tab').trigger('click');
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#tabs-beasiswa-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listBeasiswaPd');
+                listElm.html('');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/beasiswa/show/' + id);
+                if (respData) {
+
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

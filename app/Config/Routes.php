@@ -49,7 +49,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->resource('kelulusan');
     $routes->resource('mutasiPd');
     $routes->resource('referensi');
-    // $routes->presenter('pesertaDidik');
+    $routes->presenter('backgroundColor');
 });
 
 // Buku induk
@@ -66,6 +66,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->get('ortuwaliPd/show/(:segment)', 'PesertaDidik::showOrtuwaliPd/$1');
     $routes->get('ortuwali/show/(:segment)', 'PesertaDidik::showOrtuwali/$1');
     $routes->get('kontak/show/(:segment)', 'PesertaDidik::showKontak/$1');
+    $routes->get('beasiswa/show/(:segment)', 'PesertaDidik::showBeasiswa/$1');
 
     $routes->post('identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
     $routes->post('alamat/save/(:segment)', 'PesertaDidik::saveAlamat/$1');
@@ -74,6 +75,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->post('ortuwalipd/save', 'PesertaDidik::saveOrtuwaliPd');
     $routes->post('ortuwalipd/save/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
     $routes->post('kontak/save/(:segment)', 'PesertaDidik::saveKontak/$1');
+    $routes->post('beasiswa/save/(:segment)', 'PesertaDidik::saveBeasiswa/$1');
 });
 
 // public
