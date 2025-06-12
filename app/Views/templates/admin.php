@@ -348,6 +348,23 @@
                 $("#checkAllRow").prop("checked", false).prop("indeterminate", false);
             else $("#checkAllRow").prop("indeterminate", true);
         }
+
+        function validationElm(idElm = [], invalidValue = [], errorMessage = 'Input tidak valid.') {
+            let check = [];
+            idElm.forEach(function(item) {
+                let elm = $('#' + item);
+                if (invalidValue.includes(elm.val())) {
+                    check.push(elm.val());
+                    elm.addClass("is-invalid");
+                } else elm.removeClass("is-invalid");
+            });
+            if (check.length !== 0) {
+                toast(errorMessage, "error");
+                return false;
+            }
+            $(".is-invalid").removeClass("is-invalid");
+            return true;
+        }
     </script>
     <!-- end functions -->
 
@@ -553,10 +570,9 @@
                     dropdownParent: $select.parents(".modal").length ?
                         $select.parents(".modal").first() : $(document.body),
                     ajax: {
-                        url: "/api/v0/referensi/?type=" + $select.data('referensi'),
+                        url: "/api/v0/referensi?type=" + $select.data('referensi'),
                         method: "GET",
                         dataType: "json",
-                        delay: 10,
                         data: function(params) {
                             return {
                                 key: params.term,
@@ -583,10 +599,8 @@
                     },
                     templateResult: function(option) {
                         if (!option.id) return option.text;
-                        if (option.newTag) return $(`<div class="d-flex justify-content-between align-items-center"><span>${option.text}</span><span class="badge bg-danger" data-toggle="tooltip" title="Tambah Baru"><i class="fas fa-external-link-alt fa-fw"></i>New</span></div>`);
-                        return $(`<div><h6 class='m-0'>${option.text}</h6>
-                        <span class="badge ${option.bgColor}">${option.kode}</span>
-                        </div>`);
+                        if (option.newTag) return $(`<div class="d-flex justify-content-between align-items-center"><span>${option.text}</span><span class="badge bg-danger" data-toggle="tooltip" title="Tambah Baru">New</span></div>`);
+                        return $(`<span>${option.text}</span>`);
                     },
                     templateSelection: function(option) {
                         if (!option.id) return option.text;
@@ -597,7 +611,7 @@
                         var term = $.trim(params.term);
                         if (term === '') return null;
                         return {
-                            id: '_new-' + term,
+                            id: new Date().getTime(),
                             text: term,
                             newTag: true,
                             type: $select.data('referensi'),
@@ -1477,7 +1491,10 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 const loading = offcanvasElm.find('.overlay');
                 const set = formElm.serializeArray();
-
+                validationElm(['tabsTambahBeasiswa-jenisBeasiswa', 'tabsTambahBeasiswa-uraian',
+                    'tabsTambahBeasiswa-tahunAwal', 'tabsTambahBeasiswa-nominal', 'tabsTambahBeasiswa-satuan'
+                ], ['', null]);
+                return;
                 loading.removeClass('d-none');
                 const respData = await fetchData({
                     url: '/api/v0/buku-induk/peserta-didik/beasiswa/save/' + id,
@@ -1494,20 +1511,81 @@
                 loading.addClass('d-none');
             });
 
-            $('#tabs-beasiswa-tab').on('click', async function(e) {
+            $('#tabs-beasiswa-tab').on('click', function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const listElm = $('#listBeasiswaPd');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-beasiswa-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-beasiswa-tab').on('click', async function(e) {
                 e.preventDefault();
                 const id = $(this).attr('data-id');
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 const listElm = $('#listBeasiswaPd');
-                listElm.html('');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/beasiswa/show/' + id);
-                if (respData) {
-
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold">${v.tahun_awal} - ${v.tahun_akhir ?? 'sekarang'}</h6>
+                                                <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusBeasiswa" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <p class="mb-0">${v.jenis_beasiswa}</p>
+                                            <p class="text-muted small mb-1">${v.uraian}</p>
+                                            <small class="text-muted">Rp. ${v.nominal},-/${v.satuan}</small>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
+
+                $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
+                    trigger: "hover",
+                });
+
+                $('.btnRow-hapusBeasiswa').on('click', function() {
+                    const btn = $(this);
+                    const id = $(this).data('id');
+
+                    Swal.fire({
+                        icon: "info",
+                        title: "Hapus Data?",
+                        text: "Data beasiswa peserta didik akan dihapus permanen. Apakah anda yakin?",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Hapus",
+                        cancelButtonText: "Batal",
+                        customClass: {
+                            confirmButton: "bg-danger",
+                        },
+                        showLoaderOnConfirm: true,
+                        allowOutsideClick: () => !Swal.isLoading(),
+                        preConfirm: () => {
+                            return fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/beasiswa/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                        },
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            toast(result.value.message);
+                            dtAdminBukuIndukPd.ajax.reload(null, false);
+                            $('#tabs-list-beasiswa-tab').trigger('click');
+                        }
+                    });
+                });
             });
+
+            $('#tabs-tambah-beasiswa-tab').on('click', e => $('#formData-tabsTambahBeasiswaPd').trigger('reset').find('select').val(null).trigger('change'));
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',

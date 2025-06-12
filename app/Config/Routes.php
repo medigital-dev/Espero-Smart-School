@@ -76,6 +76,8 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->post('ortuwalipd/save/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
     $routes->post('kontak/save/(:segment)', 'PesertaDidik::saveKontak/$1');
     $routes->post('beasiswa/save/(:segment)', 'PesertaDidik::saveBeasiswa/$1');
+
+    $routes->delete('beasiswa/(:segment)', 'PesertaDidik::deleteBeasiswa/$1');
 });
 
 // public

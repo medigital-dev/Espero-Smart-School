@@ -28,7 +28,6 @@
                         <div class="pt-1 sticky-top align-items-center bg-white mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
                                 <h6 class="text-bold">Beasiswa</h6>
-                                <button class="btn btn-sms btn-link btn-tooltip" data-toggle="collapse" data-title="Tambah" id="btnSave-ortuwali"><i class="fas fa-plus-circle"></i></button>
                             </div>
                             <ul class="nav nav-tabs" id="ortuwali-tab" role="tablist">
                                 <li class="nav-item">
@@ -50,16 +49,21 @@
                                         <label class="small mb-1" for="tabsKontak-uraian">Uraian</label>
                                         <textarea name="uraian" id="tabsTambahBeasiswa-uraian" class="form-control" rows="2"></textarea>
                                     </div>
-                                    <div class="form-group mb-2">
-                                        <label for="tabsTambahBeasiswa-tahun" class="small mb-1">Tahun Perolehan</label>
-                                        <div class="input-group">
-                                            <input type="number" name="tahun_awal" id="tabsTambahBeasiswa-tahunAwal" class="form-control" aria-describedby="tahunHelp">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">s.d.</span>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group mb-2">
+                                                <label class="small mb-1" for="tabsTambahBeasiswa-tahunAwal">Tahun Awal</label>
+                                                <input type="text" id="tabsTambahBeasiswa-tahunAwal" class="form-control onlyInt" aria-describedby="tahunHelp">
+                                                <input type="hidden" name="tahun_awal">
                                             </div>
-                                            <input type="number" name="tahun_akhir" id="tabsTambahBeasiswa-tahunAkhir" class="form-control" aria-describedby="tahunHelp">
                                         </div>
-                                        <small id="tahunHelp" class="form-text text-muted">Kosongi tahun akhir jika masih menerima.</small>
+                                        <div class="col">
+                                            <div class="form-group mb-2">
+                                                <label class="small mb-1" for="tabsTambahBeasiswa-tahunAkhir">Tahun Akhir</label>
+                                                <input type="text" id="tabsTambahBeasiswa-tahunAkhir" class="form-control onlyInt" aria-describedby="tahunHelp" data-toggle="tooltip" data-title="Kosongi tahun akhir jika masih menerima.">
+                                                <input type="hidden" name="tahun_akhir">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsTambahBeasiswa-nominal" class="small mb-1">Nominal</label>
@@ -67,7 +71,8 @@
                                             <div class="input-group-append">
                                                 <span class="input-group-text">Rp.</span>
                                             </div>
-                                            <input type="number" name="nominal" id="tabsTambahBeasiswa-nominal" class="form-control text-right" aria-describedby="nominalHelp">
+                                            <input type="text" id="tabsTambahBeasiswa-nominal" class="form-control onlyInt" aria-describedby="nominalHelp">
+                                            <input type="hidden" name="nominal">
                                         </div>
                                     </div>
                                     <div class="form-group mb-2">
@@ -79,30 +84,7 @@
                                 <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveBeasiswa"><i class="fas fa-save mr-1"></i>Simpan</button>
                             </div>
                             <div class="tab-pane fade active show" id="tabs-list-beasiswa" role="tabpanel" aria-labelledby="tabs-list-beasiswa-tab">
-                                <div class="list-group" id="listBeasiswaPd">
-                                    <div class="list-group-item list-group-item-action">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1 text-bold">2024 - 2024</h6>
-                                            <button type="button" data-toggle="tooltip" data-title="Hapus" class="close" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <p class="mb-0">Program Indonesia Pintar.</p>
-                                        <p class="text-muted small mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias neque assumenda quia iusto ipsum, doloremque eligendi. Voluptatem minima fugit harum laudantium, amet veniam, fugiat inventore beatae consequuntur, iste assumenda quasi?</p>
-                                        <small class="text-muted">Rp. 350.000,-/bulan</small>
-                                    </div>
-                                    <div class="list-group-item list-group-item-action">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h6 class="mb-1 text-bold">2024 - 2024</h6>
-                                            <button type="button" data-toggle="tooltip" data-title="Hapus" class="close" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <p class="mb-0">Program Indonesia Pintar.</p>
-                                        <p class="text-muted small mb-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias neque assumenda quia iusto ipsum, doloremque eligendi. Voluptatem minima fugit harum laudantium, amet veniam, fugiat inventore beatae consequuntur, iste assumenda quasi?</p>
-                                        <small class="text-muted">Rp. 350.000,-/bulan</small>
-                                    </div>
-                                </div>
+                                <div class="list-group" id="listBeasiswaPd"></div>
                             </div>
                         </div>
                     </div>

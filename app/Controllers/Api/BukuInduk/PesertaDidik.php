@@ -5,6 +5,7 @@ namespace App\Controllers\Api\BukuInduk;
 use App\Controllers\BaseController;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
+use App\Models\BeasiswaModel;
 use App\Models\KontakModel;
 use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
@@ -252,5 +253,55 @@ class PesertaDidik extends BaseController
         return $this->respond(['status' => true, 'message' => 'Kontak peserta didik berhasil disimpan.']);
     }
 
-    public function showBeasiswa($id): ResponseInterface {}
+    public function showBeasiswa($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mBeasiswa = new BeasiswaModel();
+        $dataBeasiswa = $mBeasiswa
+            ->select([
+                'beasiswa_id as id',
+                'nominal',
+                'tahun_awal',
+                'tahun_akhir',
+                'uraian',
+                'ref_jenis_beasiswa.nama as jenis_beasiswa',
+                'ref_jenis_beasiswa.kode as kode_beasiswa',
+                'ref_jenis_beasiswa.bg_color as warna',
+                'ref_satuan.nama as satuan'
+            ])
+            ->join('ref_jenis_beasiswa', 'ref_jenis_beasiswa.ref_id = beasiswa.jenis_id', 'left')
+            ->join('ref_satuan', 'ref_satuan.ref_id = beasiswa.satuan_id', 'left')
+            ->where('nik', $cPd['nik'])
+            ->findAll();
+        return $this->respond($dataBeasiswa);
+    }
+
+    public function saveBeasiswa($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mBeasiswa = new BeasiswaModel();
+        $set = $this->request->getPost();
+        $set['nik'] = $cPd['nik'];
+        $set['beasiswa_id'] = idUnik($mBeasiswa, 'beasiswa_id');
+        if (!$mBeasiswa->save($set)) return $this->fail('Data beasiswa gagal disimpan.');
+        return $this->respond(['message' => 'Data beasiswa berhasil disimpan.', 'id' => $set['beasiswa_id']]);
+    }
+
+    public function deleteBeasiswa($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID beasiswa diperlukan.');
+        $mBeasiswa = new BeasiswaModel();
+        $cBeasiswa = $mBeasiswa->where('beasiswa_id', $id)->first();
+        if (!$cBeasiswa) return $this->fail('Data beasiswa tidak ditemukan.');
+        if (!$mBeasiswa->delete($cBeasiswa['id'], true)) return $this->fail('Data beasiswa gagal dihapus.');
+        return $this->respond(['message' => 'Data beasiswa berhasil dihapus permanen.']);
+    }
 }

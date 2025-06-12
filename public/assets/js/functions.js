@@ -44,23 +44,6 @@ function errorHandle(err) {
   }
 }
 
-function validationElm(elm = [], invalidIf = [], errorMessage = null) {
-  let check = [];
-  if (errorMessage == null) errorMessage = "Invalid Field.";
-  elm.forEach(function (item) {
-    if (invalidIf.includes($(item).val())) {
-      check.push($(item).val());
-      $(item).addClass("is-invalid");
-    } else $(item).removeClass("is-invalid");
-  });
-  if (check.length !== 0) {
-    toast(errorMessage, "error");
-    return false;
-  }
-  $(".is-invalid").removeClass("is-invalid");
-  return true;
-}
-
 function resetInput(elmInput, elmDatatables = false) {
   $(elmInput).val("").trigger("change");
   if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
@@ -140,4 +123,10 @@ function tanggal(isoDate, format = "d-m-Y") {
     /dddd|ddd|mmmm|mmm|mm|m|dd|d|j|yyyy|yy|Y|F|HH?|ii?|ss?|H|i|s/g,
     (match) => map[match]
   );
+}
+
+function formatNumber(number) {
+  var numericValue = number.replace(/\D/g, "");
+  var formattedValue = new Intl.NumberFormat("id-ID").format(numericValue);
+  return formattedValue;
 }

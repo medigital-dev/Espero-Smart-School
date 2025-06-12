@@ -11,4 +11,15 @@ $(document).ready(function () {
     theme: "bootstrap4",
   });
   $("[data-mask]").inputmask();
+  $(".onlyInt")
+    .on("input", function () {
+      $(this).addClass("text-right");
+      var inputValue = $(this).val();
+      $(this).siblings("input:hidden").val(inputValue.replace(/\D/g, ""));
+      var formattedValue = formatNumber(inputValue);
+      $(this).val(formattedValue);
+    })
+    .on("click", function () {
+      $(this).select();
+    });
 });
