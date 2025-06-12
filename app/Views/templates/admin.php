@@ -365,6 +365,138 @@
             $(".is-invalid").removeClass("is-invalid");
             return true;
         }
+
+        function runTooltip() {
+            $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
+                trigger: 'hover',
+            });
+        }
+
+        function runOnlyInt() {
+            $(".onlyInt")
+                .on("input", function() {
+                    $(this).addClass("text-right");
+                    var inputValue = $(this).val();
+                    $(this).siblings("input:hidden").val(inputValue.replace(/\D/g, ""));
+                    var formattedValue = formatNumber(inputValue);
+                    $(this).val(formattedValue);
+                })
+                .on("click", function() {
+                    $(this).select();
+                });
+        }
+
+        function runInputMask() {
+            $("[data-mask]").inputmask();
+        }
+
+        function runSelect2() {
+            $(".select2").select2({
+                placeholder: "Pilih...",
+                theme: "bootstrap4",
+            });
+        }
+
+        function runBsDropdownAutoClose() {
+            $('[data-autoclose="false"]')
+                .siblings(".dropdown-menu")
+                .attr("onclick", "event.stopPropagation()");
+        }
+
+        function initJS() {
+            runInputMask();
+            runOnlyInt();
+            runSelect2();
+            runTooltip();
+            runBsDropdownAutoClose();
+        }
+
+        function resetInput(elmInput, elmDatatables = false) {
+            $(elmInput).val("").trigger("change");
+            if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
+        }
+
+        function tanggal(isoDate, format = "d-m-Y") {
+            if (!isoDate) return "";
+
+            const bulanNama = [
+                "Januari",
+                "Februari",
+                "Maret",
+                "April",
+                "Mei",
+                "Juni",
+                "Juli",
+                "Agustus",
+                "September",
+                "Oktober",
+                "November",
+                "Desember",
+            ];
+
+            const hariNama = [
+                "Minggu",
+                "Senin",
+                "Selasa",
+                "Rabu",
+                "Kamis",
+                "Jumat",
+                "Sabtu",
+            ];
+            const hariSingkat = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+            let date = new Date(isoDate);
+            if (isNaN(date)) {
+                if (/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+                    date = new Date(isoDate + "T00:00:00");
+                } else {
+                    date = new Date(isoDate.replace(" ", "T"));
+                }
+            }
+            if (isNaN(date)) return "";
+
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            const dayIndex = date.getDay();
+
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+
+            const map = {
+                d: day,
+                dd: String(day).padStart(2, "0"),
+                j: day,
+                mm: String(month).padStart(2, "0"),
+                m: month,
+                mmm: bulanNama[month - 1].slice(0, 3),
+                mmmm: bulanNama[month - 1],
+                Y: year,
+                yyyy: year,
+                yy: String(year).slice(-2),
+                F: bulanNama[month - 1],
+                dddd: hariNama[dayIndex],
+                ddd: hariSingkat[dayIndex],
+                H: hours,
+                HH: String(hours).padStart(2, "0"),
+                i: minutes,
+                ii: String(minutes).padStart(2, "0"),
+                s: seconds,
+                ss: String(seconds).padStart(2, "0"),
+            };
+
+            return format.replace(
+                /dddd|ddd|mmmm|mmm|mm|m|dd|d|j|yyyy|yy|Y|F|HH?|ii?|ss?|H|i|s/g,
+                (match) => map[match]
+            );
+        }
+
+        function formatNumber(number) {
+            var numericValue = number.replace(/\D/g, "");
+            var formattedValue = new Intl.NumberFormat("id-ID").format(numericValue);
+            return formattedValue;
+        }
     </script>
     <!-- end functions -->
 
@@ -894,7 +1026,7 @@
                     offcanvasElm.offcanvas('show');
                     offcanvasElm.find('.overlay').removeClass('d-none');
                     $('#tabs-profil-tab').tab('show');
-                    const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/show/' + id);
+                    const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/' + id);
                     if (!respData) return;
                     $('.idPd').attr('data-id', id);
                     $('#detailPd-id').val(id);
@@ -1004,7 +1136,7 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/' + id);
                 if (!respData) return;
                 $('.idPd').attr('data-id', id);
                 $('#detailPd-id').val(id);
@@ -1040,7 +1172,7 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/identitas/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/identitas/' + id);
                 if (!respData) return;
                 $('#tabsIdentitas-nama').val(respData.nama);
                 opt = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
@@ -1064,7 +1196,7 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/alamat/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/alamat/' + id);
                 if (!respData) return;
                 $('#tabsAlamat-alamatJalan').val(respData.alamat_jalan);
                 $('#tabsAlamat-rt').val(respData.rt);
@@ -1096,7 +1228,7 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwaliPd/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwaliPd/' + id);
                 if (respData) {
                     $('#tabs-ayah-tab').attr('data-id', respData.ayah_id).trigger('click');
                     $('#tabs-ibu-tab').attr('data-id', respData.ibu_id);
@@ -1116,7 +1248,7 @@
                     return;
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/' + id);
                 if (!respData) {
                     formElm.trigger('reset').find('option').remove();
                     return;
@@ -1201,7 +1333,7 @@
                 }
 
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/' + id);
                 if (!respData) {
                     formElm.trigger('reset').find('option').remove();
                     return;
@@ -1281,7 +1413,7 @@
                     return;
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/ortuwali/' + id);
                 if (!respData) {
                     formElm.trigger('reset').find('option').remove();
                     return;
@@ -1371,7 +1503,7 @@
                     data.append('file', files[0]);
 
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/identitas/save/' + id,
+                    url: '/api/v0/buku-induk/peserta-didik/identitas/' + id,
                     method: 'POST',
                     data: data,
                     button: btn,
@@ -1397,7 +1529,7 @@
                 loading.removeClass('d-none');
 
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/alamat/save/' + id,
+                    url: '/api/v0/buku-induk/peserta-didik/alamat/' + id,
                     data: set,
                     method: 'POST',
                     button: btn,
@@ -1419,7 +1551,7 @@
                     return;
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kontak/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kontak/' + id);
                 $('#tabsKontak-telepon').val(respData.telepon);
                 $('#tabsKontak-hp').val(respData.hp);
                 $('#tabsKontak-email').val(respData.email);
@@ -1437,7 +1569,7 @@
 
                 loading.removeClass('d-none');
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/kontak/save/' + id,
+                    url: '/api/v0/buku-induk/peserta-didik/kontak/' + id,
                     data: set,
                     method: 'POST',
                     button: btn
@@ -1497,7 +1629,7 @@
                 return;
                 loading.removeClass('d-none');
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/beasiswa/save/' + id,
+                    url: '/api/v0/buku-induk/peserta-didik/beasiswa/' + id,
                     data: set,
                     method: 'POST',
                     button: btn
@@ -1527,7 +1659,7 @@
                 const listElm = $('#listBeasiswaPd');
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
-                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/beasiswa/show/' + id);
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/beasiswa/' + id);
                 if (respData.length > 0) {
                     listElm.html('');
                     respData.forEach(v => {
@@ -1567,6 +1699,7 @@
                             confirmButton: "bg-danger",
                         },
                         showLoaderOnConfirm: true,
+                        backdrop: true,
                         allowOutsideClick: () => !Swal.isLoading(),
                         preConfirm: () => {
                             return fetchData({

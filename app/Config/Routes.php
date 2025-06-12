@@ -60,22 +60,22 @@ $routes->group('/api/v0/buku-induk', ['namespace' => 'App\Controllers'], functio
 
 // API Buku Induk Peserta Didik
 $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controllers\Api\BukuInduk'], function ($routes) {
-    $routes->get('profil/show/(:segment)', 'PesertaDidik::showProfil/$1');
-    $routes->get('identitas/show/(:segment)', 'PesertaDidik::showIdentitas/$1');
-    $routes->get('alamat/show/(:segment)', 'PesertaDidik::showAlamat/$1');
-    $routes->get('ortuwaliPd/show/(:segment)', 'PesertaDidik::showOrtuwaliPd/$1');
-    $routes->get('ortuwali/show/(:segment)', 'PesertaDidik::showOrtuwali/$1');
-    $routes->get('kontak/show/(:segment)', 'PesertaDidik::showKontak/$1');
-    $routes->get('beasiswa/show/(:segment)', 'PesertaDidik::showBeasiswa/$1');
+    $routes->get('profil/(:segment)', 'PesertaDidik::showProfil/$1');
+    $routes->get('identitas/(:segment)', 'PesertaDidik::showIdentitas/$1');
+    $routes->get('alamat/(:segment)', 'PesertaDidik::showAlamat/$1');
+    $routes->get('ortuwaliPd/(:segment)', 'PesertaDidik::showOrtuwaliPd/$1');
+    $routes->get('ortuwali/(:segment)', 'PesertaDidik::showOrtuwali/$1');
+    $routes->get('kontak/(:segment)', 'PesertaDidik::showKontak/$1');
+    $routes->get('beasiswa/(:segment)', 'PesertaDidik::showBeasiswa/$1');
 
-    $routes->post('identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
-    $routes->post('alamat/save/(:segment)', 'PesertaDidik::saveAlamat/$1');
+    $routes->post('identitas/(:segment)', 'PesertaDidik::saveIdentitas/$1');
+    $routes->post('alamat/(:segment)', 'PesertaDidik::saveAlamat/$1');
     $routes->post('ortuwali/save', 'PesertaDidik::saveOrtuwali');
-    $routes->post('ortuwali/save/(:segment)', 'PesertaDidik::saveOrtuwali/$1');
+    $routes->post('ortuwali/(:segment)', 'PesertaDidik::saveOrtuwali/$1');
     $routes->post('ortuwalipd/save', 'PesertaDidik::saveOrtuwaliPd');
-    $routes->post('ortuwalipd/save/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
-    $routes->post('kontak/save/(:segment)', 'PesertaDidik::saveKontak/$1');
-    $routes->post('beasiswa/save/(:segment)', 'PesertaDidik::saveBeasiswa/$1');
+    $routes->post('ortuwalipd/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
+    $routes->post('kontak/(:segment)', 'PesertaDidik::saveKontak/$1');
+    $routes->post('beasiswa/(:segment)', 'PesertaDidik::saveBeasiswa/$1');
 
     $routes->delete('beasiswa/(:segment)', 'PesertaDidik::deleteBeasiswa/$1');
 });
