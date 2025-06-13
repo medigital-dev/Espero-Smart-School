@@ -127,3 +127,32 @@ if (!function_exists('rupiah')) {
         return $prefix . ' ' . number_format($angka, $decimal, ',', '.');
     }
 }
+
+if (!function_exists('eyd')) {
+    /**
+     * Mengubah nama menjadi format sesuai EYD (huruf kapital di awal tiap kata)
+     * Menangani spasi berlebih, tanda hubung, dan apostrof
+     *
+     * @param string $nama Nama yang akan diubah
+     * @return string Nama yang sudah diformat
+     */
+    function eyd(string $nama): string
+    {
+        $nama = preg_replace("/[^a-zA-Z\s'\-]/", '', $nama);
+        $nama = strtolower($nama);
+        $nama = preg_replace('/\s+/', ' ', trim($nama));
+        $kataArray = explode(' ', $nama);
+
+        foreach ($kataArray as &$kata) {
+            $kata = ucfirst($kata);
+            $kata = preg_replace_callback("/(')([a-z])/", function ($m) {
+                return $m[1] . strtolower($m[2]);
+            }, $kata);
+            $kata = preg_replace_callback("/(\-)([a-z])/", function ($m) {
+                return $m[1] . strtoupper($m[2]);
+            }, $kata);
+        }
+
+        return implode(' ', $kataArray);
+    }
+}

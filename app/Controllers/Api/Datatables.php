@@ -50,6 +50,7 @@ class Datatables extends BaseController
 
         $data = [];
         foreach ($result['data'] as $row) {
+            $row['nama'] = eyd($row['nama']);
             $row['status'] = $row['tanggal_mutasi'] ? 'M' : ($row['tanggal_lulus'] ? 'L' : ($row['kelas'] ?? ''));
             $row['tahun_registrasi'] = $row['tanggal_registrasi'] !== '0000-00-00' ? tanggal($row['tanggal_registrasi'], 'Y') : '';
             $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'd/m/Y');
