@@ -4,16 +4,12 @@ if (!function_exists('tanggal')) {
     /**
      * Mengonversi tanggal dan waktu ke format bahasa Indonesia.
      *
-     * @param string|null $tanggalWaktu Input dalam format US (default: null, akan menggunakan waktu saat ini)
+     * @param string|null $tanggalWaktu Input dalam format US (default: 'now', akan menggunakan waktu saat ini)
      * @param string $format Format keluaran (default: 'd-m-Y')
      * @return string Tanggal dan waktu dalam format bahasa Indonesia
      */
-    function tanggal($tanggalWaktu = null, $format = 'd-m-Y')
+    function tanggal($tanggalWaktu = 'now', $format = 'd-m-Y')
     {
-        if ($tanggalWaktu == null) {
-            $tanggalWaktu = 'now';
-        }
-
         $namaHariIndonesia = array(
             'Sunday' => 'Minggu',
             'Monday' => 'Senin',

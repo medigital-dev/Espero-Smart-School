@@ -403,12 +403,23 @@
                 .attr("onclick", "event.stopPropagation()");
         }
 
+        function runFancyBox() {
+            Fancybox.bind("[data-fancybox]");
+        }
+
+        function runBsCustomFileInput() {
+            bsCustomFileInput.destroy();
+            bsCustomFileInput.init();
+        }
+
         function initJS() {
             runInputMask();
             runOnlyInt();
             runSelect2();
             runTooltip();
             runBsDropdownAutoClose();
+            runBsCustomFileInput();
+            runFancyBox();
         }
 
         function resetInput(elmInput, elmDatatables = false) {
@@ -813,9 +824,6 @@
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
-            bsCustomFileInput.init();
-            Fancybox.bind("[data-fancybox]");
-
             $(".modal").on("hide.bs.modal", (e) => {
                 const elm = $(e.target);
                 elm.find("input").val("").trigger('change');
@@ -1100,10 +1108,7 @@
                     }
                     offcanvasElm.find('.overlay').addClass('d-none');
                 });
-
-                $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
-                    trigger: 'hover',
-                });
+                runTooltip();
             });
 
             let debounceTimer;
@@ -1111,12 +1116,7 @@
             $('.btnPreviousDt-bukuInduk').on('click', () => dtAdminBukuIndukPd.page('previous').draw('page'));
             $('.btnNextDt-bukuInduk').on('click', () => dtAdminBukuIndukPd.page('next').draw('page'));
             $('#pageLenghtDt-bukuInduk').on('change', e => dtAdminBukuIndukPd.page.len(e.target.value).draw('page'));
-            $('#searchDt-bukuInduk').on('input', e => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    dtAdminBukuIndukPd.search(e.target.value).draw();
-                }, 500);
-            });
+            $('#searchDt-bukuInduk').on('input', e => dtAdminBukuIndukPd.search(e.target.value).draw());
             $('#inputDtPage-bukuInduk').on('input', e => dtAdminBukuIndukPd.page(((parseInt(e.target.value) - 1))).draw('page'));
 
             // filter DT Peserta Didik
@@ -1725,10 +1725,7 @@
                     });
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
-
-                $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
-                    trigger: "hover",
-                });
+                runTooltip();
 
                 $('.btnRow-hapusBeasiswa').on('click', function() {
                     const btn = $(this);
