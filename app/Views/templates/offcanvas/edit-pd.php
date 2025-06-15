@@ -22,8 +22,48 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Orangtua/Wali" id="tabs-ortuwali-tab" data-toggle="tab" href="#tabs-ortuwali" role="tab" aria-controls="tabs-ortuwali" aria-selected="false"><i class="fas fa-restroom fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kontak" id="tabs-kontak-tab" data-toggle="tab" href="#tabs-kontak" role="tab" aria-controls="tabs-kontak" aria-selected="false"><i class="fas fa-address-book fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Beasiswa" id="tabs-beasiswa-tab" data-toggle="tab" href="#tabs-beasiswa" role="tab" aria-controls="tabs-beasiswa" aria-selected="false"><i class="fas fa-credit-card fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Registrasi" id="tabs-registrasi-tab" data-toggle="tab" href="#tabs-registrasi" role="tab" aria-controls="tabs-registrasi" aria-selected="false"><i class="fas fa-user-plus fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Mutasi" id="tabs-mutasi-tab" data-toggle="tab" href="#tabs-mutasi" role="tab" aria-controls="tabs-mutasi" aria-selected="false"><i class="fas fa-user-minus fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kelulusan" id="tabs-kelulusan-tab" data-toggle="tab" href="#tabs-kelulusan" role="tab" aria-controls="tabs-kelulusan" aria-selected="false"><i class="fas fa-user-graduate fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-registrasi" role="tabpanel" aria-labelledby="tabs-registrasi-tab">
+                        <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
+                            <h6 class="text-bold m-0">Registrasi</h6>
+                            <div>
+                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveRegistrasiPd"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Hapus" id="btnRun-deleteRegistrasiPd"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <form id="formData-tabsRegistrasi">
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsRegistrasi-jenisRegistrasi">Jenis Registrasi</label>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisRegistrasi" data-tags="true" id="tabsRegistrasi-jenisRegistrasi" name="jenis_registrasi"></select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsRegistrasi-tanggalRegistrasi">Tanggal Registrasi</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control tanggal" id="tabsRegistrasi-tanggalRegistrasi" data-inputmask-alias="datetime" placeholder="Tanggal Registrasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                    <div class="input-group-append" data-target="#tabsRegistrasi-tanggalRegistrasi" data-toggle="datetimepicker">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    </div>
+                                    <input type="hidden" id="tabsRegistrasi-tanggalRegistrasiDb" name="tanggal_registrasi">
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsRegistrasi-nipd">Nomor Induk Peserta Didik</label>
+                                <input type="text" class="form-control" id="tabsRegistrasi-nipd" name="nipd">
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsRegistrasi-asalSekolah">Asal Sekolah</label>
+                                <textarea name="asal_sekolah" id="tabsRegistrasi-asalSekolah" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsRegistrasi-sekolahJenjangSebelumnya">Sekolah Jenjang Sebelumnya</label>
+                                <textarea name="sekolah_jenjang_sebelumnya" id="tabsRegistrasi-sekolahJenjangSebelumnya" class="form-control" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
                     <div class="tab-pane fade" id="tabs-beasiswa" role="tabpanel" aria-labelledby="tabs-beasiswa-tab">
                         <div class="pt-1 sticky-top align-items-center bg-white mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
@@ -43,7 +83,7 @@
                                 <form id="formData-tabsTambahBeasiswaPd">
                                     <div class="form-group mb-2">
                                         <label for="tabsTambahBeasiswa-jenisBeasiswa" class="small mb-1">Jenis Beasiswa</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisBeasiswa" data-tags="true" id="tabsTambahBeasiswa-jenisBeasiswa" name="jenis_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisBeasiswa" data-tags="true" id="tabsTambahBeasiswa-jenisBeasiswa" name="jenis_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label class="small mb-1" for="tabsKontak-uraian">Uraian</label>

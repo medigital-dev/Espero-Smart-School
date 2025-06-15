@@ -38,7 +38,6 @@ class Kelulusan extends BaseController
     {
         $data = $this->model->where('peserta_didik_id', $id)->first();
         if (!$data) return $this->respond(false);
-        $data['tanggal'] = tanggal($data['tanggal'], 'd/m/Y');
         return $this->respond($data);
     }
 

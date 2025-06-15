@@ -1126,7 +1126,7 @@
                 maxDate: 'now'
             });
 
-            $('.tanggal').on('change.datetimepicker', e => $(e.target).siblings('input:hidden').val(e.date ? e.date.format('YYYY-MM-DD') : ''))
+            $('.tanggal').on('change.datetimepicker', e => $(e.target).siblings('input:hidden').val(e.date ? e.date.format('YYYY-MM-DD') : ''));
 
             $('#tabsIdentitas-photoProfil').on('change', function() {
                 const prevElm = $('#previewPassfoto');
@@ -1670,10 +1670,9 @@
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
                 const loading = offcanvasElm.find('.overlay');
                 const set = formElm.serializeArray();
-                validationElm(['tabsTambahBeasiswa-jenisBeasiswa', 'tabsTambahBeasiswa-uraian',
-                    'tabsTambahBeasiswa-tahunAwal', 'tabsTambahBeasiswa-nominal', 'tabsTambahBeasiswa-satuan'
-                ], ['', null]);
-                return;
+                if (!validationElm(['tabsTambahBeasiswa-jenisBeasiswa', 'tabsTambahBeasiswa-uraian',
+                        'tabsTambahBeasiswa-tahunAwal', 'tabsTambahBeasiswa-nominal', 'tabsTambahBeasiswa-satuan'
+                    ], ['', null])) return;
                 loading.removeClass('d-none');
                 const respData = await fetchData({
                     url: '/api/v0/buku-induk/peserta-didik/beasiswa/' + id,
@@ -1763,6 +1762,91 @@
             });
 
             $('#tabs-tambah-beasiswa-tab').on('click', e => $('#formData-tabsTambahBeasiswaPd').trigger('reset').find('select').val(null).trigger('change'));
+
+            $('#tabs-registrasi-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsRegistrasi');
+                formElm.trigger('reset').find('option').remove();
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                if (id == undefined || id == '') {
+                    return;
+                }
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/registrasi/' + id);
+                if (respData) {
+                    const opt = new Option(respData.jenis_registrasi_str, respData.jenis_registrasi_id, false, true);
+                    $('#tabsRegistrasi-jenisRegistrasi').append(opt);
+                    $('#tabsRegistrasi-tanggalRegistrasi')
+                        .datetimepicker('date', tanggal(respData.tanggal_registrasi, 'dd/mm/Y'));
+                    $('#tabsRegistrasi-nipd').val(respData.nipd);
+                    $('#tabsRegistrasi-asalSekolah').val(respData.asal_sekolah);
+                    $('#tabsRegistrasi-sekolahJenjangSebelumnya').val(respData.Sekolah_jenjang_sebelumnya);
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-saveRegistrasiPd').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsRegistrasi');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+                if (!validationElm(['tabsRegistrasi-jeniRegistrasi', 'tabsRegistrasi-tanggalRegistrasi',
+                        'tabsRegistrasi-nipd'
+                    ], ['', 'null']))
+                    return;
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/registrasi/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('option').remove();
+                    $('#tabs-registrasi-tab').trigger('click');
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#btnRun-deleteRegistrasiPd').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+
+                Swal.fire({
+                    icon: "info",
+                    title: "Hapus Data?",
+                    text: "Data registrasi peserta didik akan dihapus permanen. Apakah anda yakin?",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-danger",
+                    },
+                    showLoaderOnConfirm: true,
+                    backdrop: true,
+                    allowOutsideClick: () => !Swal.isLoading(),
+                    preConfirm: () => {
+                        return fetchData({
+                            url: '/api/v0/buku-induk/peserta-didik/registrasi/' + id,
+                            method: 'DELETE',
+                            button: btn
+                        });
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed && result.value) {
+                        toast(result.value.message);
+                        dtAdminBukuIndukPd.ajax.reload(null, false);
+                        $('#tabs-registrasi-tab').trigger('click');
+                    }
+                });
+            });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',

@@ -11,6 +11,7 @@ use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
 use App\Models\PassFotoModel;
 use App\Models\PesertaDidikModel;
+use App\Models\RegistrasiPesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -303,5 +304,56 @@ class PesertaDidik extends BaseController
         if (!$cBeasiswa) return $this->fail('Data beasiswa tidak ditemukan.');
         if (!$mBeasiswa->delete($cBeasiswa['id'], true)) return $this->fail('Data beasiswa gagal dihapus.');
         return $this->respond(['message' => 'Data beasiswa berhasil dihapus permanen.']);
+    }
+
+    public function showRegistrasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mRegistrasi = new RegistrasiPesertaDidikModel();
+        $mRegistrasi->select([
+            'ref_jenis_registrasi.ref_id as jenis_registrasi_id',
+            'ref_jenis_registrasi.nama as jenis_registrasi_str',
+            'tanggal_registrasi',
+            'nipd',
+            'asal_sekolah',
+            'sekolah_jenjang_sebelumnya',
+        ])
+            ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
+            ->where('peserta_didik_id', $id);
+        return $this->respond($mRegistrasi->first());
+    }
+
+    public function saveRegistrasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $set = $this->request->getPost();
+        $mRegistrasi = new RegistrasiPesertaDidikModel();
+        $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $id)->first();
+        if (!$cRegistrasi) $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
+        else $set['id'] = $cRegistrasi['id'];
+        if (!$mRegistrasi->save($set)) return $this->fail('Data registrasi peserta didik gagal disimpan.');
+        return $this->respond(['message' => 'Data registrasi peserta didik berhasil disimpan.']);
+    }
+
+    public function deleteRegistrasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id, nama')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mRegistrasi = new RegistrasiPesertaDidikModel();
+        $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $id)->first();
+        if (!$cRegistrasi) return $this->fail('Data registrasi peserta didik tidak ditemukan.');
+        if (!$mRegistrasi->delete($cRegistrasi['id'], true)) return $this->fail('Registrasi peserta didik gagal dihapus.');
+        return $this->respond(['message' => 'Data registrasi an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
     }
 }
