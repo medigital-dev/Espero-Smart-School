@@ -25,7 +25,19 @@
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Bersihkan pilihan" id="btnClearSelected"><i class="fas fa-dot-circle fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Tarik Data Peserta Didik Baru" id="btnSinkronPdDapodik"><i class="fas fa-angle-double-down fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cek Peserta Didik Baru" id="btnSync-checkNewPd">
+                            <i class="fas fa-sync-alt fa-fw"></i>
+                            <span class="badge bg-danger d-none"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon btn-tooltip" data-title="Menu Sinkronisasi" data-autoclose="false" data-toggle="dropdown">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Tarik data hanya Peserta Didik Baru" id="btnRun-SyncNewPd"><i class="fas fa-download fa-fw mr-1"></i><span>Tarik PD Baru</span></button>
+                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Sinkronkan semua Peserta Didik dengan data Dapodik"><i class="fas fa-retweet fa-fw mr-1"></i><span>Sync Semua PD</span></button>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary btn-tooltip" data-title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
@@ -118,7 +130,7 @@
         </div>
     </div>
 </div>
-<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi']); ?>
+<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi', 'syncDapodik']); ?>
 <?= offcanvas(['filter-pd', 'edit-pd']); ?>
 
 <?= $this->endSection(); ?>

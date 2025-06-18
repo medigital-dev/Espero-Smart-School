@@ -46,7 +46,7 @@ async function fetchData(urlOrConfig, ...restParams) {
       config.button
         .children("i")
         .removeClass()
-        .addClass("fas fa-spin fa-spinner");
+        .addClass("fas fa-pulse fa-spinner mr-1");
     }
   }
 

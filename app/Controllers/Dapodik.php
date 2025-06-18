@@ -20,6 +20,7 @@ use App\Models\RiwayatTestKoneksiModel;
 use App\Models\RombelModel;
 use App\Models\SemesterModel;
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Dapodik extends BaseController
 {
@@ -228,7 +229,7 @@ class Dapodik extends BaseController
             $setRegistrasi = [
                 'registrasi_id' => $row['registrasi_id'],
                 'peserta_didik_id' => $row['peserta_didik_id'],
-                'jenis_registrasi' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str'], ['ref_id' => $row['jenis_pendaftaran_id'], 'nama' => 'info']),
+                'jenis_registrasi' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str'], ['ref_id' => $row['jenis_pendaftaran_id']]),
                 'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
                 'nipd' => $row['nipd'],
                 'asal_sekolah' => $row['sekolah_asal'],
@@ -746,5 +747,53 @@ class Dapodik extends BaseController
             $success++;
         }
         return $success;
+    }
+
+    public function checkNewPd(): ResponseInterface
+    {
+        $mPd = new PesertaDidikModel();
+        $req = syncDapodik('getPesertaDidik');
+        if (!$req['success']) return $this->fail($req['message']);
+        $na = [];
+        foreach ($req['data'] as $row) {
+            $cPd = $mPd
+                ->where('peserta_didik_id', $row['peserta_didik_id'])
+                ->orWhere('nama', $row['nama'])
+                ->orWhere('nik', $row['nik'])
+                ->orWhere('nisn', $row['nisn'])
+                ->first();
+            if (!$cPd) {
+                $na[] = $row['peserta_didik_id'];
+            }
+        }
+        return $this->respond($na);
+    }
+
+    public function getNewPd(): ResponseInterface
+    {
+        $mPd = new PesertaDidikModel();
+        $req = syncDapodik('getPesertaDidik');
+        if (!$req['success']) return $this->fail($req['message']);
+        $na = [];
+        foreach ($req['data'] as $row) {
+            $cPd = $mPd
+                ->where('peserta_didik_id', $row['peserta_didik_id'])
+                ->orWhere('nama', $row['nama'])
+                ->orWhere('nik', $row['nik'])
+                ->orWhere('nisn', $row['nisn'])
+                ->first();
+            if (!$cPd) {
+                $set = [
+                    'peserta_didik_id' => $row['peserta_didik_id'],
+                    'nama' => eyd($row['nama']),
+                    'jenis_kelamin' => $row['jenis_kelamin'],
+                    'tempat_lahir' => $row['tempat_lahir'],
+                    'tanggal_lahir' => $row['tanggal_lahir']
+                ];
+                return $this->respond($row);
+                $na[] = $row['peserta_didik_id'];
+            }
+        }
+        return $this->respond($na);
     }
 }

@@ -22,6 +22,9 @@ class Datatables extends BaseController
     {
         $result = $this->getData
             ->select([
+                'peserta_didik.peserta_didik_id',
+                'peserta_didik.nik',
+                'ref_agama.ref_id as agama_id',
                 'peserta_didik.nama',
                 'peserta_didik.jenis_kelamin',
                 'peserta_didik.tempat_lahir',
@@ -45,12 +48,10 @@ class Datatables extends BaseController
                 'kelulusan.tanggal as tanggal_lulus'
             ])
             ->withFilter()
-            ->forAdmin()
             ->toDataTable();
 
         $data = [];
         foreach ($result['data'] as $row) {
-            $row['nama'] = eyd($row['nama']);
             $row['status'] = $row['tanggal_mutasi'] ? 'M' : ($row['tanggal_lulus'] ? 'L' : ($row['kelas'] ?? ''));
             $row['tahun_registrasi'] = $row['tanggal_registrasi'] !== '0000-00-00' ? tanggal($row['tanggal_registrasi'], 'Y') : '';
             $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'd/m/Y');

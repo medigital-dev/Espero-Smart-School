@@ -29,6 +29,10 @@ $routes->post('/api/v0/dapodik/sync/pd', 'Dapodik::syncPd');
 $routes->post('/api/v0/dapodik/sync/gtk', 'Dapodik::syncGtk');
 $routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
+$routes->get('/api/v0/dapodik/sync/peserta-didik/check/new', 'Dapodik::checkNewPd');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/get/new', 'Dapodik::getNewPd');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/get/all', 'Dapodik::getAllPd');
+
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
 

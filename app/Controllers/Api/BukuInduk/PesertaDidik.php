@@ -324,7 +324,7 @@ class PesertaDidik extends BaseController
         ])
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
             ->where('peserta_didik_id', $id);
-        return $this->respond($mRegistrasi->first());
+        return $this->respond($mRegistrasi->first() ?? false);
     }
 
     public function saveRegistrasi($id): ResponseInterface

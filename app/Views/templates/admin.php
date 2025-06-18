@@ -342,10 +342,12 @@
         function stateBtnCheckAll() {
             const countCheckbox = $(".dtCheckbox").length;
             const countCheckboxChecked = $(".dtCheckbox:checked").length;
-            if (countCheckbox == countCheckboxChecked)
-                $("#checkAllRow").prop("checked", true).prop("indeterminate", false);
+            if (countCheckbox == 0)
+                $('#checkAllRow').prop('checked', false).prop('indeterminate', false);
             else if (countCheckboxChecked == 0)
                 $("#checkAllRow").prop("checked", false).prop("indeterminate", false);
+            else if (countCheckbox == countCheckboxChecked)
+                $("#checkAllRow").prop("checked", true).prop("indeterminate", false);
             else $("#checkAllRow").prop("indeterminate", true);
         }
 
@@ -1775,6 +1777,8 @@
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/registrasi/' + id);
+                console.log(respData);
+
                 if (respData) {
                     const opt = new Option(respData.jenis_registrasi_str, respData.jenis_registrasi_id, false, true);
                     $('#tabsRegistrasi-jenisRegistrasi').append(opt);
@@ -2164,43 +2168,29 @@
                 ],
             });
 
-            $('#btnSinkronPdDapodik').on('click', function() {
+            $('#btnSync-checkNewPd').on('click', async function() {
                 const btn = $(this);
-                btn.prop('disabled', true).children('i').addClass('fa-spin');
-
-                Swal.fire({
-                    icon: "warning",
-                    title: "Sinkron Dapodik?",
-                    text: "Data peserta didik akan disinkronkan dengan data di aplikasi Dapodik.",
-                    showCloseButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Sinkron",
-                    cancelButtonText: "Batal",
-                    customClass: {
-                        confirmButton: "bg-success",
-                    },
-                    showLoaderOnConfirm: true,
-                    allowOutsideClick: () => !Swal.isLoading(),
-                    preConfirm: () => {
-                        return $.post('/api/v0/dapodik/sync/pd')
-                            .then(response => response)
-                            .fail(err => {
-                                return Promise.reject(err.responseJSON ? err.responseJSON.message : "Terjadi kesalahan pada sinkronisasi");
-                            })
-                            .always(() => btn.prop('disabled', false).children('i').removeClass('fa-spin'));
-                    },
-                }).then((result) => {
-                    if (result.isConfirmed && result.value) {
-                        console.log(result.value.errors);
-                        toast(result.value.message);
-                        dtAdminBukuIndukPd.ajax.reload(null, false);
-                    }
-                }).catch((errorMessage) => {
-                    errorHandle(errorMessage);
-                    Swal.close();
-                }).finally(() => {
-                    btn.prop('disabled', false).children('i').removeClass('fa-spin');
+                const resp = await fetchData({
+                    url: '/api/v0/dapodik/sync/peserta-didik/check/new',
+                    button: btn
                 });
+                if (!resp) return;
+                if (resp.length > 0) {
+                    btn.children('span').removeClass('d-none').text(resp.length);
+                    toast(resp.length + ' peserta didik baru ditemukan.', 'info', 0);
+                } else
+                    btn.children('span').addClass('d-none').text('');
+            });
+
+            $('#btnRun-SyncNewPd').on('click', async function() {
+                const btn = $(this);
+                const resp = await fetchData({
+                    url: '/api/v0/dapodik/sync/peserta-didik/get/new',
+                    button: btn
+                });
+                if (!resp) return;
+                console.log(resp);
+
             });
 
             // Unduh DT Peserta Didik
