@@ -30,19 +30,6 @@ class DataPesertaDidik
         $this->joinTable();
     }
 
-    private function default()
-    {
-        $this->query->select('peserta_didik.nama')
-            ->select('peserta_didik.jenis_kelamin')
-            ->select('peserta_didik.tempat_lahir')
-            ->select('peserta_didik.tanggal_lahir')
-            ->select('peserta_didik.nisn')
-            ->select('registrasi_peserta_didik.nipd')
-            ->select('ref_agama.nama as agama')
-            ->orderBy('peserta_didik.nama', 'ASC')
-        ;
-    }
-
     private function joinTable()
     {
         $this->query
@@ -64,7 +51,7 @@ class DataPesertaDidik
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
-            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
+            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.kode = peserta_didik.jenis_kelamin', 'left')
             ->join('ref_jenis_tinggal', 'ref_jenis_tinggal.ref_id = alamat_tinggal.jenis_tinggal_id', 'left')
         ;
     }
@@ -136,85 +123,9 @@ class DataPesertaDidik
         ];
     }
 
-    public function forAdmin()
-    {
-        $this->query
-            ->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nik', 'ref_agama.ref_id as agama_id'])
-        ;
-
-        return $this;
-    }
-
     public function select(array|string $fields = '*')
     {
         $this->query->select($fields);
-        return $this;
-    }
-
-    public function withOrtuWali(array $field = [])
-    {
-        $this->query->select('ayah.nama as ayah')
-            ->select('ibu.nama as ibu')
-            ->select('wali.nama as wali')
-        ;
-        return $this;
-    }
-
-    /**
-     * Mengambil data alamat
-     * @param array|string $fields Kolom pada tabel yang akan ditampilkan. Default: array kosong untuk menampilkan semua kolom pada tabel.
-     * 
-     * Array: Contoh ['id','nama', dst].
-     * 
-     * String: Gunakan tanda koma (,) untuk memisahkan. Exp: 'id,nama,dst'.
-     * @return self|object $this
-     */
-    public function withAlamat(array|string $fields = [])
-    {
-        if (empty($fields))
-            $this->query->select([
-                'alamat_jalan',
-                'rt',
-                'rw',
-                'dusun',
-                'desa',
-                'kecamatan',
-                'kabupaten',
-                'provinsi',
-                'kode_pos',
-                'lintang',
-                'bujur',
-                'jarak_rumah',
-                'waktu_tempuh',
-                'ref_alat_transportasi.nama as transportasi'
-            ]);
-        else {
-            $this->query->select($fields);
-        }
-        return $this;
-    }
-
-    /**
-     * Mengambil data kontak peserta didik
-     * @param array|string $fields Kolom pada tabel yang akan ditampilkan. Default: array kosong untuk menampilkan semua kolom pada tabel.
-     * 
-     * Array: Contoh ['id','nama', dst].
-     * 
-     * String: Gunakan tanda koma (,) untuk memisahkan. Exp: 'id,nama,dst'.
-     * @return self|object $this
-     */
-    public function withContact(array|string $fields = [])
-    {
-        if (empty($fields)) {
-            $this->query->select([
-                'telepon',
-                'hp',
-                'email',
-                'website'
-            ]);
-        } else {
-            $this->query->select($fields);
-        }
         return $this;
     }
 
@@ -230,114 +141,6 @@ class DataPesertaDidik
             ->where('semester.status', true)
             ->where('mutasi_pd.id');
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
-        return $this;
-    }
-
-    /**
-     * Mengambil data registrasi peserta didik
-     * @param array|string $fields Kolom pada tabel yang akan ditampilkan. 
-     * 
-     * Default: array kosong untuk menampilkan semua kolom pada tabel.
-     * 
-     * Array: Contoh ['id','nama', dst].
-     * 
-     * String: Gunakan tanda koma (,) untuk memisahkan. Exp: 'id,nama,dst'.
-     * @return self|object $this
-     */
-    public function withRegistrasi(array|string $fields = [])
-    {
-        if (empty($fields)) {
-            $this->query->select([
-                'tanggal_registrasi',
-                'nipd',
-                'asal_sekolah',
-                'sekolah_jenjang_sebelumnya',
-                'ref_jenis_registrasi.nama as jenis_registrasi',
-                'ref_jenis_registrasi.warna as warna_registrasi',
-            ]);
-        } else {
-            $this->query->select($fields);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Mengambil data rombongan belajar peserta didik
-     * @param array|string $fields Kolom pada tabel yang akan ditampilkan. 
-     * 
-     * Default: array kosong untuk menampilkan semua kolom pada tabel.
-     * 
-     * Array: Contoh ['id','nama', dst].
-     * 
-     * String: Gunakan tanda koma (,) untuk memisahkan. Exp: 'id,nama,dst'.
-     * @return self|object $this
-     */
-    public function withRombel(array|string $fields = [])
-    {
-        if (empty($fields)) {
-            $this->query->select([
-                'jenis_registrasi_rombel',
-                'tingkat_pendidikan as tingkat',
-                'guru_pegawai.nama as wali_kelas',
-                'semester.kode as semester',
-                'rombongan_belajar.nama as kelas',
-            ]);
-        } else {
-            $this->query->select($fields);
-        }
-        $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
-        return $this;
-    }
-
-    /**
-     * Mengambil data peserta didik non aktif (lulus/mutasi)
-     * @param array|string $fields Kolom pada tabel yang akan ditampilkan. 
-     * 
-     * Default: array kosong untuk menampilkan semua kolom pada tabel.
-     * 
-     * Array: Contoh ['id','nama', dst].
-     * 
-     * String: Gunakan tanda koma (,) untuk memisahkan. Exp: 'id,nama,dst'.
-     * @return self|object $this
-     */
-    public function nonActive(array|string $fields = [])
-    {
-        if (empty($fields)) {
-            $this->query->select([
-                'ref_jenis_mutasi.nama as mutasi_jenis',
-                'mutasi_pd.tanggal as mutasi_tanggal',
-            ]);
-        } else $this->query->select($fields);
-        $this->query = $this->query->where('mutasi_pd.id !=', null);
-        $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
-        return $this;
-    }
-
-    /**
-     * Mengambil data peserta didik non aktif (lulus/mutasi)
-     * @param array|string $fields Kolom pada tabel yang akan ditampilkan. 
-     * 
-     * Default: array kosong untuk menampilkan semua kolom pada tabel.
-     * 
-     * Array: Contoh ['id','nama', dst].
-     * 
-     * String: Gunakan tanda koma (,) untuk memisahkan. Exp: 'id,nama,dst'.
-     * @return self|object $this
-     */
-    public function withMutasi(array|string $fields = [])
-    {
-        if (empty($fields)) {
-            $this->query->select([
-                'ref_jenis_mutasi.nama as jenis_mutasi',
-                'mutasi_pd.tanggal as tanggal_mutasi',
-                'mutasi_pd.alasan as alasan_mutasi',
-                'mutasi_pd.sekolah_tujuan',
-                'mutasi_pd.nomor_ijazah_lulus',
-                'ref_jenis_mutasi.warna as warna_mutasi'
-            ]);
-        } else $this->query->select($fields);
-
         return $this;
     }
 
@@ -436,19 +239,6 @@ class DataPesertaDidik
     public function withOrder(string $field, string $direction)
     {
         $this->query->orderBy($field, $direction);
-        return $this;
-    }
-
-    public function withKelulusan(array|string $field)
-    {
-        if (empty($field)) {
-            $this->query->select([
-                'kelulusan.kurikulum as kurikulum_lulus',
-                'kelulusan.nomor_ijazah as nomor_ijazah_smp',
-                'kelulusan.penandatangan',
-                'kelulusan.tanggal as tanggal_lulus'
-            ]);
-        } else $this->query->select($field);
         return $this;
     }
 

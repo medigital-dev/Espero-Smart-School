@@ -38,7 +38,7 @@
                     <label for="selectForm-jenisMutasiPd" class="col-sm-3 col-form-label">Mutasi</label>
                     <div class="col-sm-9">
                         <div class="input-group">
-                            <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectForm-jenisMutasiPd"></select>
+                            <select class="custom-select select2-getReferensi" data-tags="true" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectForm-jenisMutasiPd"></select>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-jenisMutasiPd');"><i class="fas fa-eraser"></i></button>
                             </div>

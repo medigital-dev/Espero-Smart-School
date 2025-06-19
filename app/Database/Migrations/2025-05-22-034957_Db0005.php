@@ -8,6 +8,8 @@ class Db0005 extends Migration
 {
     public function up()
     {
+        helper('string');
+
         $this->forge->addColumn('peserta_didik', [
             'nomor_akte' => [
                 'type' => 'VARCHAR',
@@ -78,6 +80,27 @@ class Db0005 extends Migration
         ]);
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('ref_jenis_kelamin', true);
+        $db = $this->db->table('ref_jenis_kelamin');
+        $db->insertBatch([
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'deleted_at' => null,
+                'ref_id' => uuid(),
+                'nama' => 'Laki-laki',
+                'kode' => 'L',
+                'warna' => 'bg-primary',
+            ],
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'deleted_at' => null,
+                'ref_id' => uuid(),
+                'nama' => 'Perempuan',
+                'kode' => 'P',
+                'warna' => 'bg-danger',
+            ],
+        ]);
 
         $this->forge->addColumn('ref_agama', [
             'kode' => [

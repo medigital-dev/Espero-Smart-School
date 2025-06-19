@@ -756,7 +756,7 @@
                 const modalDialog = $('#modalReferensi');
                 $select.select2({
                     placeholder: $select.data('placeholder') || "Pilih referensi...",
-                    searchInputPlaceholder: "Cari..",
+                    searchInputPlaceholder: $select.data('tags') == true ? "Cari/Tambah baru..." : 'Cari...',
                     theme: "bootstrap4",
                     dropdownParent: $select.parents(".modal").length ?
                         $select.parents(".modal").first() : $(document.body),
@@ -1630,6 +1630,7 @@
             });
 
             $('#modalReferensi').on('shown.bs.modal', e => $('.modal-backdrop').css('z-index', 1060));
+            $('#modalReferensi').on('hidden.bs.modal', e => $('.modal-backdrop').css('z-index', 1040));
 
             $('#formData-tambahReferensi').find('input,select,textarea').on('change input', e => {
                 const kode = $('#formReferensi-kode').val();
@@ -1777,7 +1778,6 @@
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/registrasi/' + id);
-                console.log(respData);
 
                 if (respData) {
                     const opt = new Option(respData.jenis_registrasi_str, respData.jenis_registrasi_id, false, true);
@@ -1850,6 +1850,31 @@
                         $('#tabs-registrasi-tab').trigger('click');
                     }
                 });
+            });
+
+            $('#tabs-mutasi-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsMutasi');
+                formElm.trigger('reset').find('option').remove();
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                if (id == undefined || id == '') {
+                    return;
+                }
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/mutasi/' + id);
+                console.log(respData);
+
+                if (respData) {
+                    const opt = new Option(respData.jenis_mutasi_str, respData.jenis_mutasi_id, false, true);
+                    $('#tabsMutasi-jenisMutasi').append(opt);
+                    $('#tabsMutasi-tanggalMutasi')
+                        .datetimepicker('date', tanggal(respData.tanggal, 'dd/mm/Y'));
+                    $('#tabsMutasi-alasanMutasi').val(respData.alasan);
+                    $('#tabsMutasi-sekolahTujuan').val(respData.sekolah_tujuan);
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
@@ -2190,6 +2215,15 @@
                 });
                 if (!resp) return;
                 console.log(resp);
+            });
+
+            $('#btnSync-syncAllPd').on('click', async function() {
+                const btn = $(this);
+                const resp = await fetchData({
+                    url: '/api/v0/dapodik/sync/peserta-didik/get/all',
+                    button: btn
+                });
+                console.log(resp);
 
             });
 
@@ -2234,35 +2268,35 @@
                 toast('Silahkan unduh file excel <a href="/' + resp.data.path + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
 
-            $('#btnRun-simpanMutasiPd').on('click', async function() {
-                const tanggalElm = $('#inputForm-tanggalMutasiPd');
-                const pdElm = $('#selectForm-namaMutasiPd');
-                const jenisElm = $('#selectForm-jenisMutasiPd');
-                const alasanElm = $('#textForm-alasanMutasiPd');
-                const sekolahElm = $('#inputForm-sekolahTujuanMutasiPd');
+            // $('#btnRun-simpanMutasiPd').on('click', async function() {
+            //     const tanggalElm = $('#inputForm-tanggalMutasiPd');
+            //     const pdElm = $('#selectForm-namaMutasiPd');
+            //     const jenisElm = $('#selectForm-jenisMutasiPd');
+            //     const alasanElm = $('#textForm-alasanMutasiPd');
+            //     const sekolahElm = $('#inputForm-sekolahTujuanMutasiPd');
 
-                if (!validationElm([tanggalElm, pdElm, jenisElm, alasanElm], ['', null])) return;
-                const response = await fetchData({
-                    url: '/api/v0/mutasi/peserta-didik/set',
-                    data: {
-                        tanggal: tanggalElm.val(),
-                        peserta_didik_id: pdElm.val(),
-                        jenis: jenisElm.val(),
-                        alasan: alasanElm.val(),
-                        sekolah_tujuan: sekolahElm.val(),
-                    },
-                    method: 'POST',
-                    button: $(this),
-                });
-                if (!response) return;
-                toast(response.message, 'success');
-                dtAdminBukuIndukPd.ajax.reload(null, false);
-                pdElm.val('').change();
-                jenisElm.val('').change();
-                alasanElm.val('');
-                sekolahElm.val('');
-                $('#modalMutasiPd').modal('hide');
-            });
+            //     if (!validationElm([tanggalElm, pdElm, jenisElm, alasanElm], ['', null])) return;
+            //     const response = await fetchData({
+            //         url: '/api/v0/mutasi/peserta-didik/set',
+            //         data: {
+            //             tanggal: tanggalElm.val(),
+            //             peserta_didik_id: pdElm.val(),
+            //             jenis: jenisElm.val(),
+            //             alasan: alasanElm.val(),
+            //             sekolah_tujuan: sekolahElm.val(),
+            //         },
+            //         method: 'POST',
+            //         button: $(this),
+            //     });
+            //     if (!response) return;
+            //     toast(response.message, 'success');
+            //     dtAdminBukuIndukPd.ajax.reload(null, false);
+            //     pdElm.val('').change();
+            //     jenisElm.val('').change();
+            //     alasanElm.val('');
+            //     sekolahElm.val('');
+            //     $('#modalMutasiPd').modal('hide');
+            // });
 
             $('#selectForm-namaPdLulus').on('change', async function() {
                 const id = $(this).val();

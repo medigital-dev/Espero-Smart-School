@@ -7,6 +7,7 @@ use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
 use App\Models\BeasiswaModel;
 use App\Models\KontakModel;
+use App\Models\MutasiPdModel;
 use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
 use App\Models\PassFotoModel;
@@ -199,7 +200,8 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
 
         if ($id) {
-            $cOrtuwali = $mOrtuWali->where('orangtua_id', $id)->first();
+            $cOrtuwali = $mOrtuWali->where('orangtua_id', $id)
+                ->orWhere('nama', $set['nama'])->first();
             if ($cOrtuwali) $set['id'] = $cOrtuwali['id'];
         } else $set['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
 
@@ -355,5 +357,55 @@ class PesertaDidik extends BaseController
         if (!$cRegistrasi) return $this->fail('Data registrasi peserta didik tidak ditemukan.');
         if (!$mRegistrasi->delete($cRegistrasi['id'], true)) return $this->fail('Registrasi peserta didik gagal dihapus.');
         return $this->respond(['message' => 'Data registrasi an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
+    }
+
+    public function showMutasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mMutasi = new MutasiPdModel();
+        $mMutasi->select([
+            'ref_jenis_mutasi.ref_id as jenis_mutasi_id',
+            'ref_jenis_mutasi.nama as jenis_mutasi_str',
+            'tanggal',
+            'alasan',
+            'sekolah_tujuan',
+        ])
+            ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
+            ->where('peserta_didik_id', $id);
+        return $this->respond($mMutasi->first() ?? false);
+    }
+
+    public function saveMutasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $set = $this->request->getPost();
+        $mMutasi = new MutasiPdModel();
+        $cMutasi = $mMutasi->where('peserta_didik_id', $id)->first();
+        if (!$cMutasi) $set['mutasi_id'] = idUnik($mMutasi, 'mutasi_id');
+        else $set['id'] = $cMutasi['id'];
+        if (!$mMutasi->save($set)) return $this->fail('Data mutasi peserta didik gagal disimpan.');
+        return $this->respond(['message' => 'Data mutasi peserta didik berhasil disimpan.']);
+    }
+
+    public function deleteMutasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id, nama')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mMutasi = new MutasiPdModel();
+        $cMutasi = $mMutasi->where('peserta_didik_id', $id)->first();
+        if (!$cMutasi) return $this->fail('Data mutasi peserta didik tidak ditemukan.');
+        if (!$mMutasi->delete($cMutasi['id'], true)) return $this->fail('Mutasi peserta didik gagal dihapus.');
+        return $this->respond(['message' => 'Data mutasi an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
     }
 }

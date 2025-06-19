@@ -34,7 +34,7 @@
                         </button>
                         <div class="dropdown-menu">
                             <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Tarik data hanya Peserta Didik Baru" id="btnRun-SyncNewPd"><i class="fas fa-download fa-fw mr-1"></i><span>Tarik PD Baru</span></button>
-                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Sinkronkan semua Peserta Didik dengan data Dapodik"><i class="fas fa-retweet fa-fw mr-1"></i><span>Sync Semua PD</span></button>
+                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Sinkronkan semua Peserta Didik dengan data Dapodik" id="btnSync-syncAllPd"><i class="fas fa-retweet fa-fw mr-1"></i><span>Sync Semua PD</span></button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">

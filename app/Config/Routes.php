@@ -31,7 +31,7 @@ $routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
 $routes->get('/api/v0/dapodik/sync/peserta-didik/check/new', 'Dapodik::checkNewPd');
 $routes->get('/api/v0/dapodik/sync/peserta-didik/get/new', 'Dapodik::getNewPd');
-$routes->get('/api/v0/dapodik/sync/peserta-didik/get/all', 'Dapodik::getAllPd');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/get/all', 'Dapodik::syncPd');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
@@ -72,6 +72,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->get('kontak/(:segment)', 'PesertaDidik::showKontak/$1');
     $routes->get('beasiswa/(:segment)', 'PesertaDidik::showBeasiswa/$1');
     $routes->get('registrasi/(:segment)', 'PesertaDidik::showRegistrasi/$1');
+    $routes->get('mutasi/(:segment)', 'PesertaDidik::showMutasi/$1');
 
     $routes->post('identitas/(:segment)', 'PesertaDidik::saveIdentitas/$1');
     $routes->post('alamat/(:segment)', 'PesertaDidik::saveAlamat/$1');

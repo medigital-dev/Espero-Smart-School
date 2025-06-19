@@ -23,16 +23,49 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kontak" id="tabs-kontak-tab" data-toggle="tab" href="#tabs-kontak" role="tab" aria-controls="tabs-kontak" aria-selected="false"><i class="fas fa-address-book fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Beasiswa" id="tabs-beasiswa-tab" data-toggle="tab" href="#tabs-beasiswa" role="tab" aria-controls="tabs-beasiswa" aria-selected="false"><i class="fas fa-credit-card fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Registrasi" id="tabs-registrasi-tab" data-toggle="tab" href="#tabs-registrasi" role="tab" aria-controls="tabs-registrasi" aria-selected="false"><i class="fas fa-user-plus fa-fw"></i></a>
-                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Mutasi" id="tabs-mutasi-tab" data-toggle="tab" href="#tabs-mutasi" role="tab" aria-controls="tabs-mutasi" aria-selected="false"><i class="fas fa-user-minus fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Peserta Didik Keluar" id="tabs-mutasi-tab" data-toggle="tab" href="#tabs-mutasi" role="tab" aria-controls="tabs-mutasi" aria-selected="false"><i class="fas fa-user-minus fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kelulusan" id="tabs-kelulusan-tab" data-toggle="tab" href="#tabs-kelulusan" role="tab" aria-controls="tabs-kelulusan" aria-selected="false"><i class="fas fa-user-graduate fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-mutasi" role="tabpanel" aria-labelledby="tabs-mutasi-tab">
+                        <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
+                            <h6 class="text-bold m-0">Peserta Didik Keluar</h6>
+                            <div>
+                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveMutasiPd"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Batalkan" id="btnRun-deleteMutasiPd"><i class="fas fa-ban"></i></button>
+                            </div>
+                        </div>
+                        <form id="formData-tabsMutasi">
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsMutasi-jenisMutasi">Jenis PD Keluar</label>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisMutasi" data-tags="true" id="tabsMutasi-jenisMutasi" name="jenis"></select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsMutasi-tanggalMutasi">Tanggal Mutasi</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control tanggal" id="tabsMutasi-tanggalMutasi" data-inputmask-alias="datetime" placeholder="Tanggal Mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                    <div class="input-group-append" data-target="#tabsMutasi-tanggalMutasi" data-toggle="datetimepicker">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    </div>
+                                    <input type="hidden" id="tabsMutasi-tanggalMutasiDb" name="tanggal">
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsMutasi-alasanMutasi">Alasan</label>
+                                <textarea name="alasan" id="tabsMutasi-alasanMutasi" class="form-control" rows="2"></textarea>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsMutasi-sekolahTujuan">Sekolah Tujuan</label>
+                                <textarea name="sekolah_tujuan" id="tabsMutasi-sekolahTujuan" class="form-control" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
                     <div class="tab-pane fade" id="tabs-registrasi" role="tabpanel" aria-labelledby="tabs-registrasi-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Registrasi</h6>
                             <div>
                                 <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveRegistrasiPd"><i class="fas fa-save"></i></button>
-                                <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Hapus" id="btnRun-deleteRegistrasiPd"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Batalkan" id="btnRun-deleteRegistrasiPd"><i class="fas fa-ban"></i></button>
                             </div>
                         </div>
                         <form id="formData-tabsRegistrasi">

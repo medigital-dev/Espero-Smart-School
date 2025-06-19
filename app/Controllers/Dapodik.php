@@ -307,12 +307,12 @@ class Dapodik extends BaseController
                     'pekerjaan_id' => savePekerjaan($row['pekerjaan_ayah_id_str']),
                     'jenis_kelamin' => 'L',
                 ];
-                $cOrtuWali = $mOrtuWali->where('nama', $setOrtuAyah['nama'])->first();
-                if (!$cOrtuWali) {
+                $cAyah = $mOrtuWali->where('nama', $setOrtuAyah['nama'])->first();
+                if (!$cAyah) {
                     $setOrtuAyah['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
                 } else {
-                    $setOrtuAyah['id'] = $cOrtuWali['id'];
-                    $setOrtuAyah['orangtua_id'] = $cOrtuWali['orangtua_id'];
+                    $setOrtuAyah['id'] = $cAyah['id'];
+                    $setOrtuAyah['orangtua_id'] = $cAyah['orangtua_id'];
                 };
                 if (!$mOrtuWali->save($setOrtuAyah))
                     $error[] = [
@@ -334,12 +334,12 @@ class Dapodik extends BaseController
                     'pekerjaan_id' => savePekerjaan($row['pekerjaan_ibu_id_str']),
                     'jenis_kelamin' => 'P',
                 ];
-                $cOrtuWali = $mOrtuWali->where('nama', $setOrtuIbu['nama'])->first();
-                if (!$cOrtuWali) {
+                $cIbu = $mOrtuWali->where('nama', $setOrtuIbu['nama'])->first();
+                if (!$cIbu) {
                     $setOrtuIbu['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
                 } else {
-                    $setOrtuIbu['id'] = $cOrtuWali['id'];
-                    $setOrtuIbu['orangtua_id'] = $cOrtuWali['orangtua_id'];
+                    $setOrtuIbu['id'] = $cIbu['id'];
+                    $setOrtuIbu['orangtua_id'] = $cIbu['orangtua_id'];
                 }
                 if (!$mOrtuWali->save($setOrtuIbu))
                     $error[] = [
@@ -360,12 +360,12 @@ class Dapodik extends BaseController
                     'nama' => $row['nama_wali'],
                     'pekerjaan_id' => savePekerjaan($row['pekerjaan_wali_id_str']),
                 ];
-                $cOrtuWali = $mOrtuWali->where('nama', $setOrtuWali['nama'])->first();
-                if (!$cOrtuWali) {
+                $cWali = $mOrtuWali->where('nama', $setOrtuWali['nama'])->first();
+                if (!$cWali) {
                     $setOrtuWali['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
                 } else {
-                    $setOrtuWali['id'] = $cOrtuWali['id'];
-                    $setOrtuWali['orangtua_id'] = $cOrtuWali['orangtua_id'];
+                    $setOrtuWali['id'] = $cWali['id'];
+                    $setOrtuWali['orangtua_id'] = $cWali['orangtua_id'];
                 }
                 if (!$mOrtuWali->save($setOrtuWali))
                     $error[] = [
@@ -783,13 +783,17 @@ class Dapodik extends BaseController
                 ->orWhere('nisn', $row['nisn'])
                 ->first();
             if (!$cPd) {
-                $set = [
+                $setIdentitas = [
                     'peserta_didik_id' => $row['peserta_didik_id'],
                     'nama' => eyd($row['nama']),
                     'jenis_kelamin' => $row['jenis_kelamin'],
                     'tempat_lahir' => $row['tempat_lahir'],
-                    'tanggal_lahir' => $row['tanggal_lahir']
+                    'tanggal_lahir' => $row['tanggal_lahir'],
+                    'nisn' => $row['nisn'],
+                    'nik' => $row['nik'],
+                    'agama_id' => saveAgama($row['agama_id_str'], ['kode' => $row['agama_id']]),
                 ];
+                if (!$mPd->save($setIdentitas)) return $this->fail('Data identitas peserta didik gagal disimpan.');
                 return $this->respond($row);
                 $na[] = $row['peserta_didik_id'];
             }
