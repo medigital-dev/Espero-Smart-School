@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
 use App\Models\BeasiswaModel;
+use App\Models\KelulusanPdModel;
 use App\Models\KontakModel;
 use App\Models\MutasiPdModel;
 use App\Models\OrangtuaWaliModel;
@@ -389,8 +390,10 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
         $mMutasi = new MutasiPdModel();
         $cMutasi = $mMutasi->where('peserta_didik_id', $id)->first();
-        if (!$cMutasi) $set['mutasi_id'] = idUnik($mMutasi, 'mutasi_id');
-        else $set['id'] = $cMutasi['id'];
+        if (!$cMutasi) {
+            $set['mutasi_id'] = idUnik($mMutasi, 'mutasi_id');
+            $set['peserta_didik_id'] = $id;
+        } else $set['id'] = $cMutasi['id'];
         if (!$mMutasi->save($set)) return $this->fail('Data mutasi peserta didik gagal disimpan.');
         return $this->respond(['message' => 'Data mutasi peserta didik berhasil disimpan.']);
     }
@@ -407,5 +410,57 @@ class PesertaDidik extends BaseController
         if (!$cMutasi) return $this->fail('Data mutasi peserta didik tidak ditemukan.');
         if (!$mMutasi->delete($cMutasi['id'], true)) return $this->fail('Mutasi peserta didik gagal dihapus.');
         return $this->respond(['message' => 'Data mutasi an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
+    }
+
+    public function showKelulusan($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mKelulusan = new KelulusanPdModel();
+        $mKelulusan->select([
+            'ref_kurikulum.ref_id as kurikulum_id',
+            'ref_kurikulum.nama as kurikulum_str',
+            'tanggal',
+            'nomor_ijazah',
+            'penandatangan',
+        ])
+            ->join('ref_kurikulum', 'ref_kurikulum.ref_id = kelulusan.kurikulum', 'left')
+            ->where('peserta_didik_id', $id);
+        return $this->respond($mKelulusan->first() ?? false);
+    }
+
+    public function saveKelulusan($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $set = $this->request->getPost();
+        $mKelulusan = new KelulusanPdModel();
+        $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->first();
+        if (!$cKelulusan) {
+            $set['kelulusan_id'] = idUnik($mKelulusan, 'kelulusan_id');
+            $set['peserta_didik_id'] = $id;
+        } else $set['id'] = $cKelulusan['id'];
+        if (!$mKelulusan->save($set)) return $this->fail('Data kelulusan peserta didik gagal disimpan.');
+        return $this->respond(['message' => 'Data kelulusan peserta didik berhasil disimpan.']);
+    }
+
+    public function deleteKelulusan($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id, nama')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mKelulusan = new KelulusanPdModel();
+        $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->first();
+        if (!$cKelulusan) return $this->fail('Data kelulusan peserta didik tidak ditemukan.');
+        if (!$mKelulusan->delete($cKelulusan['id'], true)) return $this->fail('Kelulusan peserta didik gagal dihapus.');
+        return $this->respond(['message' => 'Data kelulusan an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
     }
 }

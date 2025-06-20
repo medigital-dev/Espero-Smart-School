@@ -27,6 +27,39 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kelulusan" id="tabs-kelulusan-tab" data-toggle="tab" href="#tabs-kelulusan" role="tab" aria-controls="tabs-kelulusan" aria-selected="false"><i class="fas fa-user-graduate fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-kelulusan" role="tabpanel" aria-labelledby="tabs-kelulusan-tab">
+                        <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
+                            <h6 class="text-bold m-0">Kelulusan</h6>
+                            <div>
+                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveKelulusanPd"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Batalkan" id="btnRun-deleteKelulusanPd"><i class="fas fa-ban"></i></button>
+                            </div>
+                        </div>
+                        <form id="formData-tabsKelulusan">
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKelulusan-tanggalKelulusan">Tanggal Kelulusan</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control tanggal" id="tabsKelulusan-tanggalKelulusan" data-inputmask-alias="datetime" placeholder="Tanggal Kelulusan" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                    <div class="input-group-append" data-target="#tabsKelulusan-tanggalKelulusan" data-toggle="datetimepicker">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                    </div>
+                                    <input type="hidden" id="tabsKelulusan-tanggalKelulusanDb" name="tanggal">
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKelulusan-kurikulumKelulusan">Kurikulum</label>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="kurikulum" data-tags="true" id="tabsKelulusan-kurikulumKelulusan" name="kurikulum"></select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKelulusan-nomorIjazah">Nomor Ijazah</label>
+                                <textarea name="nomor_ijazah" id="tabsKelulusan-nomorIjazah" class="form-control" rows="1"></textarea>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="small mb-1" for="tabsKelulusan-penandatangan">Penandatangan</label>
+                                <textarea name="penandatangan" id="tabsKelulusan-penandatangan" class="form-control" rows="1"></textarea>
+                            </div>
+                        </form>
+                    </div>
                     <div class="tab-pane fade" id="tabs-mutasi" role="tabpanel" aria-labelledby="tabs-mutasi-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Peserta Didik Keluar</h6>

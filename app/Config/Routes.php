@@ -73,6 +73,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->get('beasiswa/(:segment)', 'PesertaDidik::showBeasiswa/$1');
     $routes->get('registrasi/(:segment)', 'PesertaDidik::showRegistrasi/$1');
     $routes->get('mutasi/(:segment)', 'PesertaDidik::showMutasi/$1');
+    $routes->get('kelulusan/(:segment)', 'PesertaDidik::showKelulusan/$1');
 
     $routes->post('identitas/(:segment)', 'PesertaDidik::saveIdentitas/$1');
     $routes->post('alamat/(:segment)', 'PesertaDidik::saveAlamat/$1');
@@ -83,9 +84,12 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->post('kontak/(:segment)', 'PesertaDidik::saveKontak/$1');
     $routes->post('beasiswa/(:segment)', 'PesertaDidik::saveBeasiswa/$1');
     $routes->post('registrasi/(:segment)', 'PesertaDidik::saveRegistrasi/$1');
+    $routes->post('mutasi/(:segment)', 'PesertaDidik::saveMutasi/$1');
+    $routes->post('kelulusan/(:segment)', 'PesertaDidik::saveKelulusan/$1');
 
     $routes->delete('beasiswa/(:segment)', 'PesertaDidik::deleteBeasiswa/$1');
     $routes->delete('registrasi/(:segment)', 'PesertaDidik::deleteRegistrasi/$1');
+    $routes->delete('kelulusan/(:segment)', 'PesertaDidik::deleteKelulusan/$1');
 });
 
 // public

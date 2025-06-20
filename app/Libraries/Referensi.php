@@ -10,6 +10,7 @@ use App\Models\RefJenisKesejahteraanModel;
 use App\Models\RefJenisMutasiModel;
 use App\Models\RefJenisRegistrasiModel;
 use App\Models\RefJenisTinggalModel;
+use App\Models\RefKurikulumModel;
 use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
@@ -79,6 +80,10 @@ class Referensi
 
             case 'jenisKesejahteraan':
                 $this->model = new RefJenisKesejahteraanModel();
+                break;
+
+            case 'kurikulum':
+                $this->model = new RefKurikulumModel();
                 break;
 
             default:
