@@ -25,8 +25,63 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Registrasi" id="tabs-registrasi-tab" data-toggle="tab" href="#tabs-registrasi" role="tab" aria-controls="tabs-registrasi" aria-selected="false"><i class="fas fa-user-plus fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Peserta Didik Keluar" id="tabs-mutasi-tab" data-toggle="tab" href="#tabs-mutasi" role="tab" aria-controls="tabs-mutasi" aria-selected="false"><i class="fas fa-user-minus fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kelulusan" id="tabs-kelulusan-tab" data-toggle="tab" href="#tabs-kelulusan" role="tab" aria-controls="tabs-kelulusan" aria-selected="false"><i class="fas fa-user-graduate fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kesejahteraan" id="tabs-kesejahteraan-tab" data-toggle="tab" href="#tabs-kesejahteraan" role="tab" aria-controls="tabs-kesejahteraan" aria-selected="false"><i class="fas fa-hands-helping fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-kesejahteraan" role="tabpanel" aria-labelledby="tabs-kesejahteraan-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Kesejahteraan</h6>
+                            </div>
+                            <ul class="nav nav-tabs" id="kesejahteraan-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-list-kesejahteraan-tab" data-toggle="tab" href="#tabs-list-kesejahteraan" role="tab" aria-controls="tabs-list-kesejahteraan" aria-selected="true">List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-tambah-kesejahteraan-tab" data-toggle="tab" href="#tabs-tambah-kesejahteraan" role="tab" aria-controls="tabs-tambah-kesejahteraan" aria-selected="false">Tambah</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabKesejahteraan">
+                            <div class="tab-pane fade" id="tabs-tambah-kesejahteraan" role="tabpanel" aria-labelledby="tabs-tambah-kesejahteraan-tab">
+                                <form id="formData-tabsTambahKesejahteraanPd">
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahKesejahteraan-jenisKesejahteraan" class="small mb-1">Jenis Kesejahteraan</label>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisKesejahteraan" data-tags="true" id="tabsTambahKesejahteraan-jenisKesejahteraan" name="jenis_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsKontak-nomorKartu">Nomor Kartu</label>
+                                        <textarea name="nomor_kartu" id="tabsTambahKesejahteraan-nomorKartu" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsKontak-namaKartu">Nama di Kartu</label>
+                                        <textarea name="nama_kartu" id="tabsTambahKesejahteraan-namaKartu" class="form-control" rows="2"></textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group mb-2">
+                                                <label class="small mb-1" for="tabsTambahKesejahteraan-tahunAwal">Tahun Awal</label>
+                                                <input type="text" id="tabsTambahKesejahteraan-tahunAwal" class="form-control onlyInt" aria-describedby="tahunHelp">
+                                                <input type="hidden" name="tahun_awal">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group mb-2">
+                                                <label class="small mb-1" for="tabsTambahKesejahteraan-tahunAkhir">Tahun Akhir</label>
+                                                <input type="text" id="tabsTambahKesejahteraan-tahunAkhir" class="form-control onlyInt" aria-describedby="tahunHelp" data-toggle="tooltip" data-title="Kosongi tahun akhir jika masih menerima.">
+                                                <input type="hidden" name="tahun_akhir">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveKesejahteraan"><i class="fas fa-save mr-1"></i>Simpan</button>
+                            </div>
+                            <div class="tab-pane fade active show" id="tabs-list-kesejahteraan" role="tabpanel" aria-labelledby="tabs-list-kesejahteraan-tab">
+                                <div class="list-group" id="listKesejahteraanPd"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="tabs-kelulusan" role="tabpanel" aria-labelledby="tabs-kelulusan-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Kelulusan</h6>
@@ -135,7 +190,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
                                 <h6 class="text-bold">Beasiswa</h6>
                             </div>
-                            <ul class="nav nav-tabs" id="ortuwali-tab" role="tablist">
+                            <ul class="nav nav-tabs" id="beasiswa-tab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="tabs-list-beasiswa-tab" data-toggle="tab" href="#tabs-list-beasiswa" role="tab" aria-controls="tabs-list-beasiswa" aria-selected="true">List</a>
                                 </li>

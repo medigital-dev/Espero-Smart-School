@@ -1714,7 +1714,7 @@
                     respData.forEach(v => {
                         const itemElm = `<div class="list-group-item list-group-item-action">
                                             <div class="d-flex w-100 justify-content-between">
-                                                <h6 class="mb-1 text-bold">${v.tahun_awal} - ${v.tahun_akhir ?? 'sekarang'}</h6>
+                                                <h6 class="mb-1 text-bold">${v.tahun_awal} - ${parseInt(v.tahun_akhir) || 'sekarang'}</h6>
                                                 <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusBeasiswa" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -1764,7 +1764,7 @@
                 });
             });
 
-            $('#tabs-tambah-beasiswa-tab').on('click', e => $('#formData-tabsTambahBeasiswaPd').trigger('reset').find('select').val(null).trigger('change'));
+            $('#tabs-tambah-beasiswa-tab').on('click', e => $('#formData-tabsTambahBeasiswaPd').trigger('reset').find('option').remove());
 
             $('#tabs-registrasi-tab').on('click', async function(e) {
                 e.preventDefault();
@@ -1985,6 +1985,140 @@
                 }
                 loading.addClass('d-none');
             });
+
+            $('#btnRun-deleteKelulusanPd').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+
+                Swal.fire({
+                    icon: "info",
+                    title: "Hapus Kelulusan?",
+                    text: "Data kelulusan peserta didik akan dihapus permanen. Apakah anda yakin?",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-danger",
+                    },
+                    showLoaderOnConfirm: true,
+                    backdrop: true,
+                    allowOutsideClick: () => !Swal.isLoading(),
+                    preConfirm: () => {
+                        return fetchData({
+                            url: '/api/v0/buku-induk/peserta-didik/kelulusan/' + id,
+                            method: 'DELETE',
+                            button: btn
+                        });
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed && result.value) {
+                        toast(result.value.message);
+                        dtAdminBukuIndukPd.ajax.reload(null, false);
+                        $('#tabs-kelulusan-tab').trigger('click');
+                    }
+                });
+            });
+
+            $('#btnRun-saveKesejahteraan').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsTambahKesejahteraanPd');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+                if (!validationElm(['tabsTambahKesejahteraan-jenisKesejahteraan', 'tabsTambahKesejahteraan-nomorKartu',
+                        'tabsTambahKesejahteraan-tahunAwal', 'tabsTambahKesejahteraan-namaKartu'
+                    ], ['', null])) return;
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/kesejahteraan/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('select').val(null).trigger('change');
+                    $('#tabs-kesejahteraan-tab').trigger('click');
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#tabs-kesejahteraan-tab').on('click', function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const listElm = $('#listKesejahteraanPd');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-kesejahteraan-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-kesejahteraan-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listKesejahteraanPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kesejahteraan/' + id);
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold">${v.tahun_awal} - ${parseInt(v.tahun_akhir) || 'sekarang'}</h6>
+                                                <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusKesejahteraan" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <p class="mb-0 text-black">${v.jenis_kesejahteraan}</p>
+                                            <p class="small mb-0 text-black">${v.nama_kartu}</p>
+                                            <p class="text-muted small mb-0">${v.nomor_kartu}</p>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+                runTooltip();
+
+                $('.btnRow-hapusKesejahteraan').on('click', function() {
+                    const btn = $(this);
+                    const id = $(this).data('id');
+
+                    Swal.fire({
+                        icon: "info",
+                        title: "Hapus Data?",
+                        text: "Data kesejahteraan peserta didik akan dihapus permanen. Apakah anda yakin?",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Hapus",
+                        cancelButtonText: "Batal",
+                        customClass: {
+                            confirmButton: "bg-danger",
+                        },
+                        showLoaderOnConfirm: true,
+                        backdrop: true,
+                        allowOutsideClick: () => !Swal.isLoading(),
+                        preConfirm: async () => {
+                            return await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/kesejahteraan/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                        },
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            toast(result.value.message);
+                            dtAdminBukuIndukPd.ajax.reload(null, false);
+                            $('#tabs-list-kesejahteraan-tab').trigger('click');
+                        }
+                    });
+                });
+            });
+
+            $('#tabs-tambah-kesejahteraan-tab').on('click', e => $('#formData-tabsTambahKesejahteraanPd').trigger('reset').find('option').remove());
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',

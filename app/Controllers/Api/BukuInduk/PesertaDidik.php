@@ -7,6 +7,7 @@ use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
 use App\Models\BeasiswaModel;
 use App\Models\KelulusanPdModel;
+use App\Models\KesejahteraanModel;
 use App\Models\KontakModel;
 use App\Models\MutasiPdModel;
 use App\Models\OrangtuaWaliModel;
@@ -435,10 +436,17 @@ class PesertaDidik extends BaseController
     public function saveKelulusan($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id')
+        $cPd = $this->mPesertaDidik->select(['peserta_didik.peserta_didik_id', 'tingkat_pendidikan as tingkat', 'mutasi_pd.mutasi_id'])
+            ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
+            ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->where('semester.status', true)
             ->where('peserta_didik.peserta_didik_id', $id)
             ->first();
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        if ($cPd['mutasi_id'] !== null) return $this->fail('Peserta didik terdeteksi sebagai peserta didik keluar.');
+        if ((int)$cPd['tingkat'] !== 9) return $this->fail('Kelulusan hanya hanya pada kelas 9.');
         $set = $this->request->getPost();
         $mKelulusan = new KelulusanPdModel();
         $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->first();
@@ -462,5 +470,55 @@ class PesertaDidik extends BaseController
         if (!$cKelulusan) return $this->fail('Data kelulusan peserta didik tidak ditemukan.');
         if (!$mKelulusan->delete($cKelulusan['id'], true)) return $this->fail('Kelulusan peserta didik gagal dihapus.');
         return $this->respond(['message' => 'Data kelulusan an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
+    }
+
+    public function showKesejahteraan($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mKesejahteraan = new KesejahteraanModel();
+        $dataKesejahteraan = $mKesejahteraan
+            ->select([
+                'kesejahteraan_id as id',
+                'tahun_awal',
+                'tahun_akhir',
+                'nomor_kartu',
+                'nama_kartu',
+                'ref_jenis_kesejahteraan.nama as jenis_kesejahteraan',
+                'ref_jenis_kesejahteraan.kode as kode_kesejahteraan',
+                'ref_jenis_kesejahteraan.bg_color as warna',
+            ])
+            ->join('ref_jenis_kesejahteraan', 'ref_jenis_kesejahteraan.ref_id = kesejahteraan.jenis_id', 'left')
+            ->where('nik', $cPd['nik'])
+            ->findAll();
+        return $this->respond($dataKesejahteraan);
+    }
+
+    public function saveKesejahteraan($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mKesejahteraan = new KesejahteraanModel();
+        $set = $this->request->getPost();
+        $set['nik'] = $cPd['nik'];
+        $set['kesejahteraan_id'] = idUnik($mKesejahteraan, 'kesejahteraan_id');
+        if (!$mKesejahteraan->save($set)) return $this->fail('Data kesejahteraan gagal disimpan.');
+        return $this->respond(['message' => 'Data kesejahteraan berhasil disimpan.', 'id' => $set['kesejahteraan_id']]);
+    }
+
+    public function deleteKesejahteraan($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID kesejahteraan diperlukan.');
+        $mKesejahteraan = new KesejahteraanModel();
+        $cKesejahteraan = $mKesejahteraan->where('kesejahteraan_id', $id)->first();
+        if (!$cKesejahteraan) return $this->fail('Data kesejahteraan tidak ditemukan.');
+        if (!$mKesejahteraan->delete($cKesejahteraan['id'], true)) return $this->fail('Data kesejahteraan gagal dihapus.');
+        return $this->respond(['message' => 'Data kesejahteraan berhasil dihapus permanen.']);
     }
 }

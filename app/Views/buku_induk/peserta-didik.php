@@ -130,7 +130,7 @@
         </div>
     </div>
 </div>
-<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi', 'syncDapodik']); ?>
+<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi']); ?>
 <?= offcanvas(['filter-pd', 'edit-pd']); ?>
 
 <?= $this->endSection(); ?>
