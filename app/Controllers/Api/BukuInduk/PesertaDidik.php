@@ -13,6 +13,8 @@ use App\Models\MutasiPdModel;
 use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
 use App\Models\PassFotoModel;
+use App\Models\PenyakitModel;
+use App\Models\PeriodikModel;
 use App\Models\PesertaDidikModel;
 use App\Models\RegistrasiPesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
@@ -520,5 +522,97 @@ class PesertaDidik extends BaseController
         if (!$cKesejahteraan) return $this->fail('Data kesejahteraan tidak ditemukan.');
         if (!$mKesejahteraan->delete($cKesejahteraan['id'], true)) return $this->fail('Data kesejahteraan gagal dihapus.');
         return $this->respond(['message' => 'Data kesejahteraan berhasil dihapus permanen.']);
+    }
+
+    public function showPenyakit($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mPenyakit = new PenyakitModel();
+        $dataPenyakit = $mPenyakit
+            ->select([
+                'riwayat_id as id',
+                'tahun_riwayat as tahun',
+                'nama_penyakit as nama',
+            ])
+            ->where('nik', $cPd['nik'])
+            ->findAll();
+        return $this->respond($dataPenyakit);
+    }
+
+    public function savePenyakit($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mPenyakit = new PenyakitModel();
+        $set = $this->request->getPost();
+        $set['nik'] = $cPd['nik'];
+        $set['riwayat_id'] = idUnik($mPenyakit, 'riwayat_id');
+        if (!$mPenyakit->save($set)) return $this->fail('Data penyakit gagal disimpan.');
+        return $this->respond(['message' => 'Data penyakit berhasil disimpan.', 'id' => $set['riwayat_id']]);
+    }
+
+    public function deletePenyakit($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID penyakit diperlukan.');
+        $mPenyakit = new PenyakitModel();
+        $cPenyakit = $mPenyakit->where('riwayat_id', $id)->first();
+        if (!$cPenyakit) return $this->fail('Riwayat penyakit tidak ditemukan.');
+        if (!$mPenyakit->delete($cPenyakit['id'], true)) return $this->fail('Riwayat penyakit gagal dihapus.');
+        return $this->respond(['message' => 'Riwayat penyakit berhasil dihapus permanen.']);
+    }
+
+    public function showPeriodik($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mPeriodik = new PeriodikModel();
+        $dataPeriodik = $mPeriodik
+            ->select([
+                'periodik_id as id',
+                'tanggal',
+                'nik',
+                'tinggi_badan',
+                'berat_badan',
+                'lingkar_kepala',
+            ])
+            ->where('nik', $cPd['nik'])
+            ->findAll();
+        return $this->respond($dataPeriodik);
+    }
+
+    public function savePeriodik($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mPeriodik = new PeriodikModel();
+        $set = $this->request->getPost();
+        $set['nik'] = $cPd['nik'];
+        $set['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
+        $set['tanggal'] = date('Y-m-d');
+        if (!$mPeriodik->save($set)) return $this->fail('Data periodik gagal disimpan.');
+        return $this->respond(['message' => 'Data periodik berhasil disimpan.', 'id' => $set['periodik_id']]);
+    }
+
+    public function deletePeriodik($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID periodik diperlukan.');
+        $mPeriodik = new PeriodikModel();
+        $cPeriodik = $mPeriodik->where('periodik_id', $id)->first();
+        if (!$cPeriodik) return $this->fail('Riwayat periodik tidak ditemukan.');
+        if (!$mPeriodik->delete($cPeriodik['id'], true)) return $this->fail('Riwayat periodik gagal dihapus.');
+        return $this->respond(['message' => 'Riwayat periodik berhasil dihapus permanen.']);
     }
 }

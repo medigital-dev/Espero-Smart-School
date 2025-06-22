@@ -22,12 +22,106 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Orangtua/Wali" id="tabs-ortuwali-tab" data-toggle="tab" href="#tabs-ortuwali" role="tab" aria-controls="tabs-ortuwali" aria-selected="false"><i class="fas fa-restroom fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kontak" id="tabs-kontak-tab" data-toggle="tab" href="#tabs-kontak" role="tab" aria-controls="tabs-kontak" aria-selected="false"><i class="fas fa-address-book fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Beasiswa" id="tabs-beasiswa-tab" data-toggle="tab" href="#tabs-beasiswa" role="tab" aria-controls="tabs-beasiswa" aria-selected="false"><i class="fas fa-credit-card fa-fw"></i></a>
-                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Registrasi" id="tabs-registrasi-tab" data-toggle="tab" href="#tabs-registrasi" role="tab" aria-controls="tabs-registrasi" aria-selected="false"><i class="fas fa-user-plus fa-fw"></i></a>
-                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Peserta Didik Keluar" id="tabs-mutasi-tab" data-toggle="tab" href="#tabs-mutasi" role="tab" aria-controls="tabs-mutasi" aria-selected="false"><i class="fas fa-user-minus fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Registrasi" id="tabs-registrasi-tab" data-toggle="tab" href="#tabs-registrasi" role="tab" aria-controls="tabs-registrasi" aria-selected="false"><i class="fas fa-user-check fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Peserta Didik Keluar" id="tabs-mutasi-tab" data-toggle="tab" href="#tabs-mutasi" role="tab" aria-controls="tabs-mutasi" aria-selected="false"><i class="fas fa-user-slash fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kelulusan" id="tabs-kelulusan-tab" data-toggle="tab" href="#tabs-kelulusan" role="tab" aria-controls="tabs-kelulusan" aria-selected="false"><i class="fas fa-user-graduate fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kesejahteraan" id="tabs-kesejahteraan-tab" data-toggle="tab" href="#tabs-kesejahteraan" role="tab" aria-controls="tabs-kesejahteraan" aria-selected="false"><i class="fas fa-hands-helping fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Riwayat Penyakit" id="tabs-penyakit-tab" data-toggle="tab" href="#tabs-penyakit" role="tab" aria-controls="tabs-penyakit" aria-selected="false"><i class="fas fa-book-medical fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Data Periodik" id="tabs-periodik-tab" data-toggle="tab" href="#tabs-periodik" role="tab" aria-controls="tabs-periodik" aria-selected="false"><i class="fas fa-chart-line fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-periodik" role="tabpanel" aria-labelledby="tabs-periodik-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Data Periodik</h6>
+                            </div>
+                            <ul class="nav nav-tabs" id="periodik-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-list-periodik-tab" data-toggle="tab" href="#tabs-list-periodik" role="tab" aria-controls="tabs-list-periodik" aria-selected="true">List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-tambah-periodik-tab" data-toggle="tab" href="#tabs-tambah-periodik" role="tab" aria-controls="tabs-tambah-periodik" aria-selected="false">Tambah</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabPeriodik">
+                            <div class="tab-pane fade" id="tabs-tambah-periodik" role="tabpanel" aria-labelledby="tabs-tambah-periodik-tab">
+                                <form id="formData-tabsTambahPeriodikPd">
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPeriodik-tinggiBadan">Tinggi Badan</label>
+                                        <div class="input-group">
+                                            <input type="text" id="tabsTambahPeriodik-tinggiBadan" class="form-control onlyInt" aria-describedby="tinggiBadanHelp">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">cm</span>
+                                            </div>
+                                            <input type="hidden" name="tinggi_badan">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPeriodik-beratBadan">Berat Badan</label>
+                                        <div class="input-group">
+                                            <input type="text" id="tabsTambahPeriodik-beratBadan" class="form-control onlyInt" aria-describedby="beratBadanHelp">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">kg</span>
+                                            </div>
+                                            <input type="hidden" name="berat_badan">
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPeriodik-lingkatKepala">Lingkar Kepala</label>
+                                        <div class="input-group">
+                                            <input type="text" id="tabsTambahPeriodik-lingkatKepala" class="form-control onlyInt" aria-describedby="lingkatKepalaHelp">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">cm</span>
+                                            </div>
+                                            <input type="hidden" name="lingkar_kepala">
+                                        </div>
+                                    </div>
+                                </form>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-savePeriodik"><i class="fas fa-save mr-1"></i>Simpan</button>
+                            </div>
+                            <div class="tab-pane fade active show" id="tabs-list-periodik" role="tabpanel" aria-labelledby="tabs-list-periodik-tab">
+                                <div class="list-group" id="listPeriodikPd"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tabs-penyakit" role="tabpanel" aria-labelledby="tabs-penyakit-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Riwayat Penyakit</h6>
+                            </div>
+                            <ul class="nav nav-tabs" id="penyakit-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-list-penyakit-tab" data-toggle="tab" href="#tabs-list-penyakit" role="tab" aria-controls="tabs-list-penyakit" aria-selected="true">List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-tambah-penyakit-tab" data-toggle="tab" href="#tabs-tambah-penyakit" role="tab" aria-controls="tabs-tambah-penyakit" aria-selected="false">Tambah</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabPenyakit">
+                            <div class="tab-pane fade" id="tabs-tambah-penyakit" role="tabpanel" aria-labelledby="tabs-tambah-penyakit-tab">
+                                <form id="formData-tabsTambahPenyakitPd">
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsKontak-nomorKartu">Nama Penyakit</label>
+                                        <textarea name="nama_penyakit" id="tabsTambahPenyakit-nomorKartu" class="form-control" rows="2" aria-describedby="penyakitHelp"></textarea>
+                                        <small id="penyakitHelp" class="form-text text-muted">Nama penyakit kronis yang pernah diderita.</small>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPenyakit-tahunRiwayat">Tahun Riwayat</label>
+                                        <input type="text" id="tabsTambahPenyakit-tahunRiwayat" class="form-control onlyInt" aria-describedby="tahunRiwayatHelp">
+                                        <input type="hidden" name="tahun_riwayat">
+                                    </div>
+                                </form>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-savePenyakit"><i class="fas fa-save mr-1"></i>Simpan</button>
+                            </div>
+                            <div class="tab-pane fade active show" id="tabs-list-penyakit" role="tabpanel" aria-labelledby="tabs-list-penyakit-tab">
+                                <div class="list-group" id="listPenyakitPd"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="tabs-kesejahteraan" role="tabpanel" aria-labelledby="tabs-kesejahteraan-tab">
                         <div class="pt-1 sticky-top align-items-center bg-white mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
@@ -232,7 +326,7 @@
                                             <div class="input-group-append">
                                                 <span class="input-group-text">Rp.</span>
                                             </div>
-                                            <input type="text" id="tabsTambahBeasiswa-nominal" class="form-control onlyInt" aria-describedby="nominalHelp">
+                                            <input type="text" id="tabsTambahBeasiswa-nominal" class="form-control onlyInt" data-currency="true" aria-describedby="nominalHelp">
                                             <input type="hidden" name="nominal">
                                         </div>
                                     </div>

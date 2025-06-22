@@ -8,6 +8,7 @@ class Db0009 extends Migration
 {
     public function up()
     {
+        helper('string');
         $this->forge->addColumn('kesejahteraan', [
             'tahun_awal' => [
                 'type' => 'INT',
@@ -20,6 +21,9 @@ class Db0009 extends Migration
                 'default' => null,
             ],
         ]);
+        $db = $this->db->table('ref_jenis_kesejahteraan');
+        $data = $db->get()->getResultArray();
+        $db->emptyTable();
         $this->forge->addColumn('ref_jenis_kesejahteraan', [
             'ref_id' => [
                 'type' => 'VARCHAR',
@@ -28,6 +32,11 @@ class Db0009 extends Migration
                 'unique' => true,
             ]
         ]);
+
+        foreach ($data as $row) {
+            $row['ref_id'] = uuid();
+            $db->insert($row);
+        }
     }
 
     public function down()

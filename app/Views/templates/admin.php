@@ -377,11 +377,14 @@
         function runOnlyInt() {
             $(".onlyInt")
                 .on("input", function() {
-                    $(this).addClass("text-right");
-                    var inputValue = $(this).val();
-                    $(this).siblings("input:hidden").val(inputValue.replace(/\D/g, ""));
-                    var formattedValue = formatNumber(inputValue);
-                    $(this).val(formattedValue);
+                    const $input = $(this);
+                    const inputValue = $input.val();
+                    const numericValue = inputValue.replace(/\D/g, "");
+                    const useCurrencyFormat = $input.data("currency") === true || $input.data("currency") === "true";
+                    $input.siblings("input:hidden").val(numericValue);
+                    $input.toggleClass("text-right", useCurrencyFormat);
+                    const formattedValue = useCurrencyFormat ? formatNumber(numericValue) : numericValue;
+                    $input.val(formattedValue);
                 })
                 .on("click", function() {
                     $(this).select();
@@ -506,9 +509,10 @@
         }
 
         function formatNumber(number) {
-            var numericValue = number.replace(/\D/g, "");
-            var formattedValue = new Intl.NumberFormat("id-ID").format(numericValue);
-            return formattedValue;
+            return new Intl.NumberFormat("id-ID", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(number);
         }
 
         function toast(message, type = "info", delay = 5000) {
@@ -1686,7 +1690,7 @@
                 dtAdminBukuIndukPd.ajax.reload(null, false);
                 if (respData) {
                     toast(respData.message);
-                    formElm.trigger('reset').find('select').val(null).trigger('change');
+                    formElm.trigger('reset').find('select').remove();
                     $('#tabs-beasiswa-tab').trigger('click');
                 }
                 loading.addClass('d-none');
@@ -1758,7 +1762,7 @@
                         if (result.isConfirmed && result.value) {
                             toast(result.value.message);
                             dtAdminBukuIndukPd.ajax.reload(null, false);
-                            $('#tabs-list-beasiswa-tab').trigger('click');
+                            $('#tabs-beasiswa-tab').trigger('click');
                         }
                     });
                 });
@@ -2040,7 +2044,7 @@
                 dtAdminBukuIndukPd.ajax.reload(null, false);
                 if (respData) {
                     toast(respData.message);
-                    formElm.trigger('reset').find('select').val(null).trigger('change');
+                    formElm.trigger('reset').find('select').remove();
                     $('#tabs-kesejahteraan-tab').trigger('click');
                 }
                 loading.addClass('d-none');
@@ -2112,13 +2116,207 @@
                         if (result.isConfirmed && result.value) {
                             toast(result.value.message);
                             dtAdminBukuIndukPd.ajax.reload(null, false);
-                            $('#tabs-list-kesejahteraan-tab').trigger('click');
+                            $('#tabs-kesejahteraan-tab').trigger('click');
                         }
                     });
                 });
             });
 
             $('#tabs-tambah-kesejahteraan-tab').on('click', e => $('#formData-tabsTambahKesejahteraanPd').trigger('reset').find('option').remove());
+
+            $('#btnRun-savePenyakit').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsTambahPenyakitPd');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+                if (!validationElm(['tabsTambahPenyakit-namaPenyakit', 'tabsTambahPenyakit-tahunRiwayat'], ['', null])) return;
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/penyakit/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('select').remove();
+                    $('#tabs-penyakit-tab').trigger('click');
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#tabs-penyakit-tab').on('click', function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const listElm = $('#listPenyakitPd');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-penyakit-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-penyakit-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listPenyakitPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/penyakit/' + id);
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold">${v.tahun}</h6>
+                                                <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusPenyakit" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <p class="mb-0 text-black">${v.nama}</p>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+                runTooltip();
+
+                $('.btnRow-hapusPenyakit').on('click', function() {
+                    const btn = $(this);
+                    const id = $(this).data('id');
+
+                    Swal.fire({
+                        icon: "info",
+                        title: "Hapus Data?",
+                        text: "Riwayat penyakit peserta didik akan dihapus permanen. Apakah anda yakin?",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Hapus",
+                        cancelButtonText: "Batal",
+                        customClass: {
+                            confirmButton: "bg-danger",
+                        },
+                        showLoaderOnConfirm: true,
+                        backdrop: true,
+                        allowOutsideClick: () => !Swal.isLoading(),
+                        preConfirm: async () => {
+                            return await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/penyakit/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                        },
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            toast(result.value.message);
+                            dtAdminBukuIndukPd.ajax.reload(null, false);
+                            $('#tabs-penyakit-tab').trigger('click');
+                        }
+                    });
+                });
+            });
+
+            $('#tabs-tambah-penyakit-tab').on('click', e => $('#formData-tabsTambahPenyakitPd').trigger('reset').find('option').remove());
+
+            $('#btnRun-savePeriodik').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsTambahPeriodikPd');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+                if (!validationElm(['tabsTambahPeriodik-namaPeriodik', 'tabsTambahPeriodik-tahunRiwayat'], ['', null])) return;
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/periodik/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('select').remove();
+                    $('#tabs-periodik-tab').trigger('click');
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#tabs-periodik-tab').on('click', function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const listElm = $('#listPeriodikPd');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-periodik-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-periodik-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listPeriodikPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/periodik/' + id);
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold">${tanggal(v.tanggal,'d mmmm Y')}</h6>
+                                                <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusPeriodik" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <p class="mb-0 text-black">Tinggi badan: ${v.tinggi_badan} cm</p>
+                                            <p class="mb-0 text-black">Berat badan: ${v.berat_badan} kg</p>
+                                            <p class="mb-0 text-black">Lingkar kepala: ${v.lingkar_kepala} cm</p>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+                runTooltip();
+
+                $('.btnRow-hapusPeriodik').on('click', function() {
+                    const btn = $(this);
+                    const id = $(this).data('id');
+
+                    Swal.fire({
+                        icon: "info",
+                        title: "Hapus Data?",
+                        text: "Riwayat periodik peserta didik akan dihapus permanen. Apakah anda yakin?",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Hapus",
+                        cancelButtonText: "Batal",
+                        customClass: {
+                            confirmButton: "bg-danger",
+                        },
+                        showLoaderOnConfirm: true,
+                        backdrop: true,
+                        allowOutsideClick: () => !Swal.isLoading(),
+                        preConfirm: async () => {
+                            return await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/periodik/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                        },
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            toast(result.value.message);
+                            dtAdminBukuIndukPd.ajax.reload(null, false);
+                            $('#tabs-periodik-tab').trigger('click');
+                        }
+                    });
+                });
+            });
+
+            $('#tabs-tambah-periodik-tab').on('click', e => $('#formData-tabsTambahPeriodikPd').trigger('reset').find('option').remove());
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',
