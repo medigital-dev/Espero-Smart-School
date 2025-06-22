@@ -5,6 +5,7 @@ namespace App\Controllers\Api;
 use App\Controllers\BaseController;
 use App\Libraries\Referensi as LibrariesReferensi;
 use App\Models\RefAgamaModel;
+use App\Models\RefBidangPrestasiModel;
 use App\Models\RefJenisBeasiswaModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\RefJenisKelaminModel;
@@ -17,6 +18,7 @@ use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
 use App\Models\RefSatuanModel;
+use App\Models\RefTingkatPrestasiModel;
 use App\Models\RefTransportasiModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -89,6 +91,14 @@ class Referensi extends BaseController
 
             case 'kurikulum':
                 $model = new RefKurikulumModel();
+                break;
+
+            case 'bidangPrestasi':
+                $model = new RefBidangPrestasiModel();
+                break;
+
+            case 'tingkatPrestasi':
+                $model = new RefTingkatPrestasiModel();
                 break;
 
             default:

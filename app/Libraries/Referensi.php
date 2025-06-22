@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\RefAgamaModel;
+use App\Models\RefBidangPrestasiModel;
 use App\Models\RefJenisBeasiswaModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\RefJenisKelaminModel;
@@ -15,6 +16,7 @@ use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
 use App\Models\RefSatuanModel;
+use App\Models\RefTingkatPrestasiModel;
 use App\Models\RefTransportasiModel;
 use InvalidArgumentException;
 
@@ -84,6 +86,14 @@ class Referensi
 
             case 'kurikulum':
                 $this->model = new RefKurikulumModel();
+                break;
+
+            case 'bidangPrestasi':
+                $this->model = new RefBidangPrestasiModel();
+                break;
+
+            case 'tingkatPrestasi':
+                $this->model = new RefTingkatPrestasiModel();
                 break;
 
             default:
