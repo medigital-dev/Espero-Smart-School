@@ -16,6 +16,7 @@ use App\Models\PassFotoModel;
 use App\Models\PenyakitModel;
 use App\Models\PeriodikModel;
 use App\Models\PesertaDidikModel;
+use App\Models\PrestasiModel;
 use App\Models\RegistrasiPesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -614,5 +615,58 @@ class PesertaDidik extends BaseController
         if (!$cPeriodik) return $this->fail('Riwayat periodik tidak ditemukan.');
         if (!$mPeriodik->delete($cPeriodik['id'], true)) return $this->fail('Riwayat periodik gagal dihapus.');
         return $this->respond(['message' => 'Riwayat periodik berhasil dihapus permanen.']);
+    }
+
+    public function showPrestasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mPrestasi = new PrestasiModel();
+        $dataPrestasi = $mPrestasi
+            ->select([
+                'prestasi_id as id',
+                'tahun',
+                'nik',
+                'penyelenggara',
+                'prestasi.nama',
+                'hasil',
+                'ref_bidang_prestasi.id as bidang_id',
+                'ref_bidang_prestasi.nama as bidang_str',
+                'ref_tingkat_prestasi.id as tingkat_id',
+                'ref_tingkat_prestasi.nama as tingkat_str',
+            ])
+            ->join('ref_bidang_prestasi', 'ref_bidang_prestasi.ref_id = prestasi.bidang_id', 'left')
+            ->join('ref_tingkat_prestasi', 'ref_tingkat_prestasi.ref_id = prestasi.tingkat_id', 'left')
+            ->where('nik', $cPd['nik'])
+            ->findAll();
+        return $this->respond($dataPrestasi);
+    }
+
+    public function savePrestasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mPrestasi = new PrestasiModel();
+        $set = $this->request->getPost();
+        $set['nik'] = $cPd['nik'];
+        $set['prestasi_id'] = idUnik($mPrestasi, 'prestasi_id');
+        if (!$mPrestasi->save($set)) return $this->fail('Data prestasi gagal disimpan.');
+        return $this->respond(['message' => 'Data prestasi berhasil disimpan.', 'id' => $set['prestasi_id']]);
+    }
+
+    public function deletePrestasi($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID prestasi diperlukan.');
+        $mPrestasi = new PrestasiModel();
+        $cPrestasi = $mPrestasi->where('prestasi_id', $id)->first();
+        if (!$cPrestasi) return $this->fail('Riwayat prestasi tidak ditemukan.');
+        if (!$mPrestasi->delete($cPrestasi['id'], true)) return $this->fail('Riwayat prestasi gagal dihapus.');
+        return $this->respond(['message' => 'Riwayat prestasi berhasil dihapus permanen.']);
     }
 }

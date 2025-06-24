@@ -318,6 +318,7 @@
     <script src="<?= base_url('plugins/inputmask/jquery.inputmask.js'); ?>"></script>
     <script src="<?= base_url('plugins/fetchData/fetchData.js'); ?>"></script>
     <script src="<?= base_url('plugins/fancyapps/fancybox.umd.js'); ?>"></script>
+    <script src="<?= base_url('plugins/chart.js/Chart.bundle.min.js'); ?>"></script>
     <script src="<?= base_url('assets/js/adminlte.min.js'); ?>"></script>
     <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
     <script src="<?= base_url('assets/js/global.js'); ?>"></script>
@@ -2251,6 +2252,7 @@
                 listElm.html('<i>Tidak ada data.</i>');
                 $(this).tab('show');
                 $('#tabs-list-periodik-tab').attr('data-id', id).trigger('click');
+                $('#tabs-grafik-periodik-tab').attr('data-id', id);
             });
 
             $('#tabs-list-periodik-tab').on('click', async function(e) {
@@ -2316,7 +2318,200 @@
                 });
             });
 
+            let pengukuranChart = null;
+
+            $('#tabs-grafik-periodik-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+
+                const data = await fetchData('/api/v0/buku-induk/peserta-didik/periodik/' + id);
+                if (data.length > 0) {
+                    const labels = data.map(item => tanggal(item.tanggal, 'd/mm/yy'));
+                    const tinggiBadan = data.map(item => item.tinggi_badan !== null ? parseFloat(item.tinggi_badan) : null);
+                    const beratBadan = data.map(item => item.berat_badan !== null ? parseFloat(item.berat_badan) : null);
+                    const lingkarKepala = data.map(item => item.lingkar_kepala !== null ? parseFloat(item.lingkar_kepala) : null);
+
+                    const ctx = document.getElementById('pengukuranChart').getContext('2d');
+
+                    // Hancurkan chart lama jika sudah ada
+                    if (pengukuranChart !== null) {
+                        pengukuranChart.destroy();
+                    }
+
+                    // Buat chart baru
+                    pengukuranChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                    label: 'Tinggi Badan (cm)',
+                                    data: tinggiBadan,
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                    tension: 0.3,
+                                    spanGaps: true
+                                },
+                                {
+                                    label: 'Berat Badan (kg)',
+                                    data: beratBadan,
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    tension: 0.3,
+                                    spanGaps: true
+                                },
+                                {
+                                    label: 'Lingkar Kepala (cm)',
+                                    data: lingkarKepala,
+                                    borderColor: 'rgba(255, 206, 86, 1)',
+                                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                    tension: 0.3,
+                                    spanGaps: true
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            legend: {
+                                position: 'bottom',
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Grafik Periodik'
+                                },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false
+                                },
+                            },
+                            interaction: {
+                                mode: 'nearest',
+                                axis: 'x',
+                                intersect: false
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    title: {
+                                        display: true,
+                                        text: 'Ukuran'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Tanggal'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
             $('#tabs-tambah-periodik-tab').on('click', e => $('#formData-tabsTambahPeriodikPd').trigger('reset').find('option').remove());
+
+            $('#btnRun-savePrestasi').on('click', async function() {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsTambahPrestasiPd');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+                if (!validationElm(['tabsTambahPrestasi-namaPrestasi', 'tabsTambahPrestasi-tahunRiwayat'], ['', null])) return;
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/prestasi/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                dtAdminBukuIndukPd.ajax.reload(null, false);
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('select').remove();
+                    $('#tabs-prestasi-tab').trigger('click');
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#tabs-prestasi-tab').on('click', function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const listElm = $('#listPrestasiPd');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-prestasi-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-prestasi-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listPrestasiPd');
+                $(this).tab('show');
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/prestasi/' + id);
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold">${v.tahun}</h6>
+                                                <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusPrestasi" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <p class="mb-0 text-black">${v.nama}</p>
+                                            <p class="mb-0 text-black">${v.penyelenggara}</p>
+                                            <p class="mb-0 text-black">${v.hasil}</p>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+                runTooltip();
+
+                $('.btnRow-hapusPrestasi').on('click', function() {
+                    const btn = $(this);
+                    const id = $(this).data('id');
+
+                    Swal.fire({
+                        icon: "info",
+                        title: "Hapus Data?",
+                        text: "Riwayat prestasi peserta didik akan dihapus permanen. Apakah anda yakin?",
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Hapus",
+                        cancelButtonText: "Batal",
+                        customClass: {
+                            confirmButton: "bg-danger",
+                        },
+                        showLoaderOnConfirm: true,
+                        backdrop: true,
+                        allowOutsideClick: () => !Swal.isLoading(),
+                        preConfirm: async () => {
+                            return await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/prestasi/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                        },
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            toast(result.value.message);
+                            dtAdminBukuIndukPd.ajax.reload(null, false);
+                            $('#tabs-prestasi-tab').trigger('click');
+                        }
+                    });
+                });
+            });
+
+            $('#tabs-tambah-prestasi-tab').on('click', e => $('#formData-tabsTambahPrestasiPd').trigger('reset').find('option').remove());
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',

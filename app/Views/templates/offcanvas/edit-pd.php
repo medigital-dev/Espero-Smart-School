@@ -28,8 +28,59 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kesejahteraan" id="tabs-kesejahteraan-tab" data-toggle="tab" href="#tabs-kesejahteraan" role="tab" aria-controls="tabs-kesejahteraan" aria-selected="false"><i class="fas fa-hands-helping fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Riwayat Penyakit" id="tabs-penyakit-tab" data-toggle="tab" href="#tabs-penyakit" role="tab" aria-controls="tabs-penyakit" aria-selected="false"><i class="fas fa-book-medical fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Data Periodik" id="tabs-periodik-tab" data-toggle="tab" href="#tabs-periodik" role="tab" aria-controls="tabs-periodik" aria-selected="false"><i class="fas fa-chart-line fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Prestasi" id="tabs-prestasi-tab" data-toggle="tab" href="#tabs-prestasi" role="tab" aria-controls="tabs-prestasi" aria-selected="false"><i class="fas fa-trophy fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-prestasi" role="tabpanel" aria-labelledby="tabs-prestasi-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Prestasi</h6>
+                            </div>
+                            <ul class="nav nav-tabs" id="prestasi-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-list-prestasi-tab" data-toggle="tab" href="#tabs-list-prestasi" role="tab" aria-controls="tabs-list-prestasi" aria-selected="true">List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-tambah-prestasi-tab" data-toggle="tab" href="#tabs-tambah-prestasi" role="tab" aria-controls="tabs-tambah-prestasi" aria-selected="false">Tambah</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabPrestasi">
+                            <div class="tab-pane fade" id="tabs-tambah-prestasi" role="tabpanel" aria-labelledby="tabs-tambah-prestasi-tab">
+                                <form id="formData-tabsTambahPrestasiPd">
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahKesejahteraan-bidangPrestasi" class="small mb-1">Bidang Prestasi</label>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="bidangPrestasi" data-tags="true" id="tabsTambahKesejahteraan-bidangPrestasi" name="bidang_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahKesejahteraan-tingkatPrestasi" class="small mb-1">Tingkat Prestasi</label>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="tingkatPrestasi" data-tags="true" id="tabsTambahKesejahteraan-tingkatPrestasi" name="bidang_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPrestasi-nama">Nama Kejuaraan/Perlombaan</label>
+                                        <textarea id="tabsTambahPrestasi-nama" name="nama" class="form-control" rows="2" aria-describedby="namaHelp"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPrestasi-penyelenggara">Penyelenggara</label>
+                                        <textarea id="tabsTambahPrestasi-penyelenggara" name="penyelenggara" class="form-control" rows="2" aria-describedby="penyelenggaraHelp"></textarea>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPrestasi-tahun">Tahun</label>
+                                        <input type="text" id="tabsTambahPrestasi-tahun" name="tahun" class="form-control onlyInt" aria-describedby="tahunHelp">
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahPrestasi-hasil">Hasil</label>
+                                        <input type="text" id="tabsTambahPrestasi-hasil" name="hasil" class="form-control" aria-describedby="hasilHelp">
+                                    </div>
+                                </form>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-savePrestasi"><i class="fas fa-save mr-1"></i>Simpan</button>
+                            </div>
+                            <div class="tab-pane fade active show" id="tabs-list-prestasi" role="tabpanel" aria-labelledby="tabs-list-prestasi-tab">
+                                <div class="list-group" id="listPrestasiPd"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="tabs-periodik" role="tabpanel" aria-labelledby="tabs-periodik-tab">
                         <div class="pt-1 sticky-top align-items-center bg-white mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
@@ -40,11 +91,17 @@
                                     <a class="nav-link active" id="tabs-list-periodik-tab" data-toggle="tab" href="#tabs-list-periodik" role="tab" aria-controls="tabs-list-periodik" aria-selected="true">List</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" id="tabs-grafik-periodik-tab" data-toggle="tab" href="#tabs-grafik-periodik" role="tab" aria-controls="tabs-grafik-periodik" aria-selected="true">Grafik</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" id="tabs-tambah-periodik-tab" data-toggle="tab" href="#tabs-tambah-periodik" role="tab" aria-controls="tabs-tambah-periodik" aria-selected="false">Tambah</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="tab-content mb-4" id="tabs-tabPeriodik">
+                            <div class="tab-pane fade" id="tabs-grafik-periodik" role="tabpanel" aria-labelledby="tabs-grafik-periodik-tab">
+                                <canvas id="pengukuranChart" class="w-100" height="300"></canvas>
+                            </div>
                             <div class="tab-pane fade" id="tabs-tambah-periodik" role="tabpanel" aria-labelledby="tabs-tambah-periodik-tab">
                                 <form id="formData-tabsTambahPeriodikPd">
                                     <div class="form-group mb-2">
