@@ -754,7 +754,7 @@ class Dapodik extends BaseController
         $mPd = new PesertaDidikModel();
         $req = syncDapodik('getPesertaDidik');
         if (!$req['success']) return $this->fail($req['message']);
-        $na = [];
+        $send = [];
         foreach ($req['data'] as $row) {
             $cPd = $mPd
                 ->where('peserta_didik_id', $row['peserta_didik_id'])
@@ -763,41 +763,82 @@ class Dapodik extends BaseController
                 ->orWhere('nisn', $row['nisn'])
                 ->first();
             if (!$cPd) {
-                $na[] = $row['peserta_didik_id'];
+                $send[] = [
+                    'peserta_didik_id' => $row["peserta_didik_id"],
+                    'nama' => $row["nama"],
+                    'peserta_didik' => [
+                        'peserta_didik_id' => $row["peserta_didik_id"],
+                        'nama' => $row["nama"],
+                        'nisn' => $row["nisn"],
+                        'jenis_kelamin' => $row["jenis_kelamin"],
+                        'nik' => $row["nik"],
+                        'tempat_lahir' => $row["tempat_lahir"],
+                        'tanggal_lahir' => $row["tanggal_lahir"],
+                        'agama_id' => saveReferensi('agama', $row["agama_id_str"]),
+                    ],
+                    'registrasi_peserta_didik' => [
+                        'registrasi_id' => $row["registrasi_id"],
+                        'peserta_didik_id' => $row["peserta_didik_id"],
+                        'jenis_registrasi' => saveReferensi('jenisRegistrasi', $row['jenis_pendaftaran_id_str']),
+                        'nipd' => $row["nipd"],
+                        'tanggal_registrasi' => $row["tanggal_masuk_sekolah"],
+                        'asal_Sekolah' => $row["sekolah_asal"],
+                    ],
+                    'kontak' => [
+                        'nik' => $row["nik"],
+                        'telepon' => $row["nomor_telepon_rumah"],
+                        'hp' => $row["nomor_telepon_seluler"],
+                        'email' => $row["email"],
+                    ],
+                    'orangtua_wali' => [
+                        'ayah' => [
+                            'nama' => $row["nama_ayah"],
+                            'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_ayah_id_str"]),
+                        ],
+                        'ibu' => [
+                            'nama' => $row["nama_ibu"],
+                            'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_ibu_id_str"]),
+                        ],
+                        'wali' => [
+                            'nama' => $row["nama_wali"],
+                            'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_wali_id_str"]),
+                        ],
+                    ],
+                    'periodik' => [
+                        'nik' => $row["nik"],
+                        'anak_ke' => $row["anak_keberapa"],
+                        'tinggi_badan' => $row["tinggi_badan"],
+                        'berat_badan' => $row["berat_badan"],
+                    ],
+                    'rombongan_belajar' => [
+                        'rombel_id' => $row["rombongan_belajar_id"],
+                        'semester_id' => $row["semester_id"],
+                        'tingkat_pendidikan' => $row["tingkat_pendidikan_id"],
+                        'nama' => $row["nama_rombel"],
+                        'kurikulum_id' => saveReferensi('kurikulum', $row["kurikulum_id_str"],)
+                    ],
+                    'anggota_rombel' => [
+                        'peserta_didik_id' => $row["peserta_didik_id"],
+                        'anggota_id' => $row["anggota_rombel_id"],
+                        'rombel_id' => $row["rombongan_belajar_id"],
+                        'jenis_registrasi_rombel' => saveReferensi('jenisRegistrasi', $row['jenis_pendaftaran_id_str']),
+                    ],
+                    'kebutuhan_khusus' => $row["kebutuhan_khusus"],
+                ];
             }
         }
-        return $this->respond($na);
+        return $this->respond($send);
     }
 
-    public function getNewPd(): ResponseInterface
+    public function getNewPd($id): ResponseInterface
     {
-        $mPd = new PesertaDidikModel();
         $req = syncDapodik('getPesertaDidik');
         if (!$req['success']) return $this->fail($req['message']);
-        $na = [];
         foreach ($req['data'] as $row) {
-            $cPd = $mPd
-                ->where('peserta_didik_id', $row['peserta_didik_id'])
-                ->orWhere('nama', $row['nama'])
-                ->orWhere('nik', $row['nik'])
-                ->orWhere('nisn', $row['nisn'])
-                ->first();
-            if (!$cPd) {
-                $setIdentitas = [
-                    'peserta_didik_id' => $row['peserta_didik_id'],
-                    'nama' => eyd($row['nama']),
-                    'jenis_kelamin' => $row['jenis_kelamin'],
-                    'tempat_lahir' => $row['tempat_lahir'],
-                    'tanggal_lahir' => $row['tanggal_lahir'],
-                    'nisn' => $row['nisn'],
-                    'nik' => $row['nik'],
-                    'agama_id' => saveAgama($row['agama_id_str'], ['kode' => $row['agama_id']]),
-                ];
-                if (!$mPd->save($setIdentitas)) return $this->fail('Data identitas peserta didik gagal disimpan.');
+            if ($id == $row['peserta_didik_id']) {
                 return $this->respond($row);
-                $na[] = $row['peserta_didik_id'];
             }
         }
-        return $this->respond($na);
+        return $this->respond([]);
     }
 }

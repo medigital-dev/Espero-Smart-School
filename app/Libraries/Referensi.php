@@ -104,6 +104,7 @@ class Referensi
 
     public function save(string $typeReferensi, string $namaReferensi, array $set = [])
     {
+        if ($namaReferensi == '') return '';
         $this->model($typeReferensi);
         $cek = $this->model->where('nama', $namaReferensi)->orWhere('kode', $namaReferensi)->first();
         if ($cek) {

@@ -2839,18 +2839,44 @@
                 if (resp.length > 0) {
                     btn.children('span').removeClass('d-none').text(resp.length);
                     toast(resp.length + ' peserta didik baru ditemukan.', 'info', 0);
-                } else
+                } else {
+                    toast('Tidak ditemukan peserta didik baru .', 'error', 0);
                     btn.children('span').addClass('d-none').text('');
+                }
             });
 
             $('#btnRun-SyncNewPd').on('click', async function() {
                 const btn = $(this);
+                const modal = $('#modalSync');
                 const resp = await fetchData({
-                    url: '/api/v0/dapodik/sync/peserta-didik/get/new',
+                    url: '/api/v0/dapodik/sync/peserta-didik/check/new',
                     button: btn
                 });
-                if (!resp) return;
-                console.log(resp);
+                if (resp.length == 0) {
+                    toast('Tidak ditemukan peserta didik baru.');
+                    return;
+                }
+                toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
+                let success = 0,
+                    i = 0,
+                    p = 0;
+                modal.modal('show');
+                for (const element of resp) {
+                    modal.find('.modal-body span').text('Sync: ' + element.nama);
+                    const saveResponse = await fetchData({
+                        url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
+                        button: btn,
+                        method: 'POST',
+                        data: element,
+                    });
+                    if (!saveResponse) toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
+                    else success++;
+                    i++;
+                    p = i / resp.length * 100;
+                    modal.find('.modal-body .progress-bar').css('width', p.toFixed(0).toString() + '%');
+                }
+                toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
+                setTimeout(() => modal.modal('hide'), 1000);
             });
 
             $('#btnSync-syncAllPd').on('click', async function() {

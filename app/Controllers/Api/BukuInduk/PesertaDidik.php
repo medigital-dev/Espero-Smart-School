@@ -669,4 +669,18 @@ class PesertaDidik extends BaseController
         if (!$mPrestasi->delete($cPrestasi['id'], true)) return $this->fail('Riwayat prestasi gagal dihapus.');
         return $this->respond(['message' => 'Riwayat prestasi berhasil dihapus permanen.']);
     }
+
+    public function savePd($id): ResponseInterface
+    {
+        $set = $this->request->getPost();
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if ($cPd) $set['id'] = $cPd['id'];
+        $mPesertaDidik = new PesertaDidikModel();
+
+        return $this->respond($set);
+    }
 }
