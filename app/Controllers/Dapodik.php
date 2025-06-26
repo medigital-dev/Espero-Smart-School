@@ -766,6 +766,9 @@ class Dapodik extends BaseController
                 $send[] = [
                     'peserta_didik_id' => $row["peserta_didik_id"],
                     'nama' => $row["nama"],
+                    'nik' => $row["nik"],
+                    'nisn' => $row["nisn"],
+                    'nipd' => $row["nipd"],
                     'peserta_didik' => [
                         'peserta_didik_id' => $row["peserta_didik_id"],
                         'nama' => $row["nama"],

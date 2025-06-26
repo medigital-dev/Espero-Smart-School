@@ -5,6 +5,7 @@ namespace App\Controllers\Api\BukuInduk;
 use App\Controllers\BaseController;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
+use App\Models\AnggotaRombelModel;
 use App\Models\BeasiswaModel;
 use App\Models\KelulusanPdModel;
 use App\Models\KesejahteraanModel;
@@ -679,6 +680,38 @@ class PesertaDidik extends BaseController
             ->where('peserta_didik.peserta_didik_id', $id)
             ->first();
         if ($cPd) $set['id'] = $cPd['id'];
+
+        $mAnggotaRombel = new AnggotaRombelModel();
+        $cekAnggotaRombel = $mAnggotaRombel->where('anggota_id', $set['anggota_rombel']['anggota_id']);
+        if ($cekAnggotaRombel) $set['anggota_rombel']['id'] = $cekAnggotaRombel['id'];
+        $mAnggotaRombel->save($set['anggota_rombel']);
+
+        $mKontak = new KontakModel();
+        $cKontak = $mKontak->where('nik', $set['nik'])->first();
+        if ($cKontak) $set['kontak']['id'] = $cKontak['id'];
+        else $set['kontak']['kontak_id'] = idUnik($mKontak, 'kontak_id');
+        $mKontak->save($set['kontak']);
+
+        $mOrtuWali = new OrangtuaWaliModel();
+        if ($set['orangtua_wali']['ayah']['nama'] !== '') {
+            $cAyah = $mOrtuWali->where('nama', $set['orangtua_wali']['ayah']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ayah']['pekerjaan_id'])->first();
+            if (!$cAyah) $set['orangtua_wali']['ayah']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+            else $set['orangtua_wali']['ayah']['orangtua_id'] = $cAyah['orangtua_id'];
+            $mOrtuWali->save($set['orangtua_wali']['ayah']);
+        }
+
+        $cibu = $mOrtuWali->where('nama', $set['orangtua_wali']['ibu']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ibu']['pekerjaan_id'])->first();
+        if (!$cibu) $set['orangtua_wali']['ibu']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+        else $set['orangtua_wali']['ibu']['orangtua_id'] = $cibu['orangtua_id'];
+        $mOrtuWali->save($set['orangtua_wali']['ibu']);
+
+        if ($set['orangtua_wali']['wali']['nama'] !== '') {
+            $cwali = $mOrtuWali->where('nama', $set['orangtua_wali']['wali']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['wali']['pekerjaan_id'])->first();
+            if (!$cwali) $set['orangtua_wali']['wali']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+            else $set['orangtua_wali']['wali']['orangtua_id'] = $cwali['orangtua_id'];
+            $mOrtuWali->save($set['orangtua_wali']['wali']);
+        }
+
         $mPesertaDidik = new PesertaDidikModel();
 
         return $this->respond($set);
