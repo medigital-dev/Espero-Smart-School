@@ -18,34 +18,47 @@ class Db0011 extends Migration
 
         $this->forge->dropColumn('periodik', 'anak_ke');
 
-        // Tabel: mapp_orangtua_wali
+        $this->forge->addColumn('orangtua_wali_pd', [
+            'hubungan_keluarga_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ],
+            'anak_ke' => [
+                'type' => 'INT',
+                'null' => true,
+                'default' => null,
+            ],
+        ]);
+
+        // Tabel: ref_hubungan_keluarga
         $this->forge->addField([
             'created_at' => ['type' => 'DATETIME',],
             'updated_at' => ['type' => 'DATETIME',],
             'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
             'id' => ['type' => 'INT', 'auto_increment' => true,],
-            'mapp_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
-            'peserta_didik_id' => [
+            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nama' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'null' => false,
             ],
-            'ortuwali_id' => [
+            'kode' => [
                 'type' => 'VARCHAR',
-                'constraint' => 128,
-                'null' => false,
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
             ],
-            'hubungan_keluarga_id' => [
+            'bg_color' => [
                 'type' => 'VARCHAR',
-                'constraint' => 128,
-                'null' => false,
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
             ],
-            'anak_ke' => [
-                'type' => 'VARCHAR'
-            ]
         ]);
         $this->forge->addKey('id', 'true');
-        $this->forge->createTable('mapp_orangtua_wali', true);
+        $this->forge->createTable('ref_hubungan_keluarga', true);
     }
 
     public function down()
@@ -58,6 +71,7 @@ class Db0011 extends Migration
                 'default' => null,
             ]
         ]);
-        $this->forge->dropTable('mapp_orangtua_wali', true);
+        $this->forge->dropColumn('orangtua_wali_pd', ['hubungan_keluarga_id', 'anak_ke']);
+        $this->forge->dropTable('ref_hubungan_keluarga', true);
     }
 }

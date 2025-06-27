@@ -2876,6 +2876,7 @@
                     modal.find('.modal-body .progress-bar').css('width', p.toFixed(0).toString() + '%');
                 }
                 toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
+                dtAdminBukuIndukPd.ajax.reload(null, false);
                 setTimeout(() => modal.modal('hide'), 1000);
             });
 

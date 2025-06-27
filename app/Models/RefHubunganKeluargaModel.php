@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PeriodikModel extends Model
+class RefHubunganKeluargaModel extends Model
 {
-    protected $table      = 'periodik';
+    protected $table      = 'ref_hubungan_keluarga';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
@@ -14,11 +14,9 @@ class PeriodikModel extends Model
 
     protected $allowedFields = [
         'deleted_at',
-        'periodik_id',
-        'nik',
-        'tanggal',
-        'tinggi_badan',
-        'berat_badan',
-        'lingkar_kepala',
+        'ref_id',
+        'nama',
+        'kode',
+        'bg_color',
     ];
 }

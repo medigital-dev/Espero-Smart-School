@@ -752,6 +752,7 @@ class Dapodik extends BaseController
     public function checkNewPd(): ResponseInterface
     {
         $mPd = new PesertaDidikModel();
+        $mSemester = new SemesterModel();
         $req = syncDapodik('getPesertaDidik');
         if (!$req['success']) return $this->fail($req['message']);
         $send = [];
@@ -763,6 +764,13 @@ class Dapodik extends BaseController
                 ->orWhere('nisn', $row['nisn'])
                 ->first();
             if (!$cPd) {
+                $setSemester = ['kode' => $row['semester_id']];
+                $cSemester = $mSemester->select(['semester_id', 'id'])->where('kode', $row['semester_id'])->first();
+                if (!$cSemester) $setSemester['semester_id'] = idUnik($mSemester, 'semester_id');
+                else {
+                    $setSemester['semester_id'] = $cSemester['semester_id'];
+                    $setSemester['id'] = $cSemester['id'];
+                }
                 $send[] = [
                     'peserta_didik_id' => $row["peserta_didik_id"],
                     'nama' => $row["nama"],
@@ -779,7 +787,7 @@ class Dapodik extends BaseController
                         'tanggal_lahir' => $row["tanggal_lahir"],
                         'agama_id' => saveReferensi('agama', $row["agama_id_str"]),
                     ],
-                    'registrasi_peserta_didik' => [
+                    'registrasi' => [
                         'registrasi_id' => $row["registrasi_id"],
                         'peserta_didik_id' => $row["peserta_didik_id"],
                         'jenis_registrasi' => saveReferensi('jenisRegistrasi', $row['jenis_pendaftaran_id_str']),
@@ -806,16 +814,16 @@ class Dapodik extends BaseController
                             'nama' => $row["nama_wali"],
                             'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_wali_id_str"]),
                         ],
+                        'anak_ke' => $row["anak_keberapa"],
                     ],
                     'periodik' => [
                         'nik' => $row["nik"],
-                        'anak_ke' => $row["anak_keberapa"],
                         'tinggi_badan' => $row["tinggi_badan"],
                         'berat_badan' => $row["berat_badan"],
                     ],
                     'rombongan_belajar' => [
                         'rombel_id' => $row["rombongan_belajar_id"],
-                        'semester_id' => $row["semester_id"],
+                        'semester_id' => $setSemester['semester_id'],
                         'tingkat_pendidikan' => $row["tingkat_pendidikan_id"],
                         'nama' => $row["nama_rombel"],
                         'kurikulum_id' => saveReferensi('kurikulum', $row["kurikulum_id_str"],)

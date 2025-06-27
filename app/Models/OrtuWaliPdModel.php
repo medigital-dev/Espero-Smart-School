@@ -19,5 +19,7 @@ class OrtuWaliPdModel extends Model
         'ayah_id',
         'ibu_id',
         'wali_id',
+        'hubungan_keluarga_id',
+        'anak_ke',
     ];
 }

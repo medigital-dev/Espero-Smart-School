@@ -19,5 +19,6 @@ class RombelModel extends Model
         'tingkat_pendidikan',
         'semester_id',
         'ptk_id',
+        'kurikulum_id',
     ];
 }
