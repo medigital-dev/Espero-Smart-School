@@ -779,7 +779,7 @@ class Dapodik extends BaseController
                     'nipd' => $row["nipd"],
                     'peserta_didik' => [
                         'peserta_didik_id' => $row["peserta_didik_id"],
-                        'nama' => $row["nama"],
+                        'nama' => eyd($row["nama"]),
                         'nisn' => $row["nisn"],
                         'jenis_kelamin' => $row["jenis_kelamin"],
                         'nik' => $row["nik"],

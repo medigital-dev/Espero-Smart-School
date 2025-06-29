@@ -16,6 +16,20 @@ if (!function_exists('saveAgama')) {
     }
 }
 
+if (!function_exists('saveBidangPrestasi')) {
+    /**
+     * Helper menyimpan referensi agama berdasarkan nama agama
+     * @param string $nama Nama Agama
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik agama
+     * @return false Jika agama gagal disimpan 
+     */
+    function saveBidangPrestasi(string $nama, array $set = [])
+    {
+        return service('referensi')->saveAgama($nama, $set);
+    }
+}
+
 if (!function_exists('savePekerjaan')) {
     /**
      * Helper menyimpan referensi Pekerjaan berdasarkan nama Pekerjaan
@@ -97,29 +111,5 @@ if (!function_exists('saveJenisMutasi')) {
     function saveJenisMutasi(string $nama, array $set = [])
     {
         return service('referensi')->saveJenisMutasi($nama, $set);
-    }
-}
-
-if (!function_exists('getReferensi')) {
-    /**
-     * Helper mengambil data referensi berdasarkan nama atau kode
-     * @param string $typeReferensi Referensi yang akan diambil
-     * @param string $keyword ID atau Nama referensi atau kode
-     * @param string|array $output Output yang ditampilkan
-     * @return string Mengembalikan id unik
-     * @return false Jika gagal disimpan 
-     */
-    function getReferensi(string $typeReferensi, string $keyword = null, array|string $output = [])
-    {
-        $ref = new Referensi();
-        return $ref->get($typeReferensi, $keyword, $output);
-    }
-}
-
-if (!function_exists('saveReferensi')) {
-    function saveReferensi(string $typeReferensi, string $namaReferensi, array $set = [])
-    {
-        $ref = new Referensi();
-        return $ref->save($typeReferensi, $namaReferensi, $set);
     }
 }
