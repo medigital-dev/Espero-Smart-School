@@ -2831,6 +2831,17 @@
 
             $('#btnSync-checkNewPd').on('click', async function() {
                 const btn = $(this);
+                const confirm = await Swal.fire({
+                    icon: 'question',
+                    text: 'Cek peserta didik baru di aplikasi dapodik?',
+                    showCancelButton: true,
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Ya',
+                    width: 500
+                });
+                if (!confirm.isConfirmed)
+                    return;
+
                 const resp = await fetchData({
                     url: '/api/v0/dapodik/sync/peserta-didik/check/new',
                     button: btn
@@ -2847,7 +2858,17 @@
 
             $('#btnRun-SyncNewPd').on('click', async function() {
                 const btn = $(this);
-                const modal = $('#modalSync');
+                const confirm = await Swal.fire({
+                    icon: 'question',
+                    text: 'Tarik data peserta didik baru di aplikasi dapodik?',
+                    showCancelButton: true,
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Ya',
+                    width: 500
+                });
+                if (!confirm.isConfirmed)
+                    return;
+
                 const resp = await fetchData({
                     url: '/api/v0/dapodik/sync/peserta-didik/check/new',
                     button: btn
@@ -2857,31 +2878,37 @@
                     return;
                 }
                 toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
-                let success = 0,
-                    i = 0,
-                    p = 0;
-                modal.modal('show');
+                let success = 0;
                 for (const element of resp) {
-                    modal.find('.modal-body span').text('Sync: ' + element.nama);
                     const saveResponse = await fetchData({
                         url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
                         button: btn,
                         method: 'POST',
                         data: element,
                     });
-                    if (!saveResponse) toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
-                    else success++;
-                    i++;
-                    p = i / resp.length * 100;
-                    modal.find('.modal-body .progress-bar').css('width', p.toFixed(0).toString() + '%');
+                    if (!saveResponse) {
+                        toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
+                    } else {
+                        success++;
+                        toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
+                    }
                 }
                 toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
                 dtAdminBukuIndukPd.ajax.reload(null, false);
-                setTimeout(() => modal.modal('hide'), 1000);
             });
 
             $('#btnSync-syncAllPd').on('click', async function() {
                 const btn = $(this);
+                const confirm = await Swal.fire({
+                    icon: 'question',
+                    text: 'Sinkronkan seluruh peserta didik dengan aplikasi dapodik?',
+                    showCancelButton: true,
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Ya',
+                    width: 500
+                });
+                if (!confirm.isConfirmed)
+                    return;
                 const resp = await fetchData({
                     url: '/api/v0/dapodik/sync/peserta-didik/get/all',
                     button: btn

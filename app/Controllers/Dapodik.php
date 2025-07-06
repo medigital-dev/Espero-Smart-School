@@ -785,12 +785,12 @@ class Dapodik extends BaseController
                         'nik' => $row["nik"],
                         'tempat_lahir' => $row["tempat_lahir"],
                         'tanggal_lahir' => $row["tanggal_lahir"],
-                        'agama_id' => saveReferensi('agama', $row["agama_id_str"]),
+                        'agama_id' => saveAgama($row["agama_id_str"]),
                     ],
                     'registrasi' => [
                         'registrasi_id' => $row["registrasi_id"],
                         'peserta_didik_id' => $row["peserta_didik_id"],
-                        'jenis_registrasi' => saveReferensi('jenisRegistrasi', $row['jenis_pendaftaran_id_str']),
+                        'jenis_registrasi' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
                         'nipd' => $row["nipd"],
                         'tanggal_registrasi' => $row["tanggal_masuk_sekolah"],
                         'asal_Sekolah' => $row["sekolah_asal"],
@@ -804,15 +804,15 @@ class Dapodik extends BaseController
                     'orangtua_wali' => [
                         'ayah' => [
                             'nama' => $row["nama_ayah"],
-                            'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_ayah_id_str"]),
+                            'pekerjaan_id' => savePekerjaan($row["pekerjaan_ayah_id_str"]),
                         ],
                         'ibu' => [
                             'nama' => $row["nama_ibu"],
-                            'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_ibu_id_str"]),
+                            'pekerjaan_id' => savePekerjaan($row["pekerjaan_ibu_id_str"]),
                         ],
                         'wali' => [
                             'nama' => $row["nama_wali"],
-                            'pekerjaan_id' => saveReferensi('pekerjaan', $row["pekerjaan_wali_id_str"]),
+                            'pekerjaan_id' => savePekerjaan($row["pekerjaan_wali_id_str"]),
                         ],
                         'anak_ke' => $row["anak_keberapa"],
                     ],
@@ -826,13 +826,13 @@ class Dapodik extends BaseController
                         'semester_id' => $setSemester['semester_id'],
                         'tingkat_pendidikan' => $row["tingkat_pendidikan_id"],
                         'nama' => $row["nama_rombel"],
-                        'kurikulum_id' => saveReferensi('kurikulum', $row["kurikulum_id_str"],)
+                        'kurikulum_id' => saveKurikulum($row["kurikulum_id_str"],)
                     ],
                     'anggota_rombel' => [
                         'peserta_didik_id' => $row["peserta_didik_id"],
                         'anggota_id' => $row["anggota_rombel_id"],
                         'rombel_id' => $row["rombongan_belajar_id"],
-                        'jenis_registrasi_rombel' => saveReferensi('jenisRegistrasi', $row['jenis_pendaftaran_id_str']),
+                        'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
                     ],
                     'kebutuhan_khusus' => $row["kebutuhan_khusus"],
                 ];

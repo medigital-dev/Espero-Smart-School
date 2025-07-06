@@ -18,15 +18,141 @@ if (!function_exists('saveAgama')) {
 
 if (!function_exists('saveBidangPrestasi')) {
     /**
-     * Helper menyimpan referensi agama berdasarkan nama agama
-     * @param string $nama Nama Agama
+     * Helper menyimpan referensi bidang prestasi berdasarkan nama bidang prestasi
+     * @param string $nama Nama bidang prestasi
      * @param array $set Variable tambahan dalam array
-     * @return string Mengembalikan id unik agama
-     * @return false Jika agama gagal disimpan 
+     * @return string Mengembalikan id unik bidang prestasi
+     * @return false Jika bidang prestasi gagal disimpan 
      */
     function saveBidangPrestasi(string $nama, array $set = [])
     {
         return service('referensi')->saveAgama($nama, $set);
+    }
+}
+
+if (!function_exists('saveHubunganKeluarga')) {
+    /**
+     * Helper menyimpan referensi hubungan keluarga berdasarkan nama hubungan keluarga
+     * @param string $nama Nama hubungan keluarga
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik hubungan keluarga
+     * @return false Jika hubungan keluarga gagal disimpan 
+     */
+    function saveHubunganKeluarga(string $nama, array $set = [])
+    {
+        return service('referensi')->saveHubunganKeluarga($nama, $set);
+    }
+}
+
+if (!function_exists('saveJenisBeasiswa')) {
+    /**
+     * Helper menyimpan referensi jenis beasiswa berdasarkan nama jenis beasiswa
+     * @param string $nama Nama jenis beasiswa
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik jenis beasiswa
+     * @return false Jika jenis beasiswa gagal disimpan 
+     */
+    function saveJenisBeasiswa(string $nama, array $set = [])
+    {
+        return service('referensi')->saveJenisBeasiswa($nama, $set);
+    }
+}
+
+if (!function_exists('saveSatuan')) {
+    /**
+     * Helper menyimpan referensi satuan berdasarkan nama satuan
+     * @param string $nama Nama satuan
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik satuan
+     * @return false Jika satuan gagal disimpan 
+     */
+    function saveSatuan(string $nama, array $set = [])
+    {
+        return service('referensi')->saveSatuan($nama, $set);
+    }
+}
+
+if (!function_exists('saveJenisKebutuhanKhusus')) {
+    /**
+     * Helper menyimpan referensi jenis kebutuhan khusus berdasarkan nama jenis kebutuhan khusus
+     * @param string $nama Nama jenis kebutuhan khusus
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik jenis kebutuhan khusus
+     * @return false Jika jenis kebutuhan khusus gagal disimpan 
+     */
+    function saveJenisKebutuhanKhusus(string $nama, array $set = [])
+    {
+        return service('referensi')->saveJenisKebutuhanKhusus($nama, $set);
+    }
+}
+
+if (!function_exists('saveJenisKelamin')) {
+    /**
+     * Helper menyimpan referensi jenis kelamin berdasarkan nama jenis kelamin
+     * @param string $nama Nama jenis kelamin
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik jenis kelamin
+     * @return false Jika jenis kelamin gagal disimpan 
+     */
+    function saveJenisKelamin(string $nama, array $set = [])
+    {
+        return service('referensi')->saveJenisKelamin($nama, $set);
+    }
+}
+
+if (!function_exists('saveJenisKesejahteraan')) {
+    /**
+     * Helper menyimpan referensi jenis kesejahteraan berdasarkan nama jenis kesejahteraan
+     * @param string $nama Nama jenis kesejahteraan
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik jenis kesejahteraan
+     * @return false Jika jenis kesejahteraan gagal disimpan 
+     */
+    function saveJenisKesejahteraan(string $nama, array $set = [])
+    {
+        return service('referensi')->saveJenisKesejahteraan($nama, $set);
+    }
+}
+
+if (!function_exists('saveJenisTinggal')) {
+    /**
+     * Helper menyimpan referensi jenis tinggal berdasarkan nama jenis tinggal
+     * @param string $nama Nama jenis tinggal
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik jenis tinggal
+     * @return false Jika jenis tinggal gagal disimpan 
+     */
+    function saveJenisTinggal(string $nama, array $set = [])
+    {
+        return service('referensi')->saveJenisTinggal($nama, $set);
+    }
+}
+
+if (!function_exists('saveTingkatPrestasi')) {
+    /**
+     * Helper menyimpan referensi tingkat prestasi berdasarkan nama tingkat prestasi
+     * @param string $nama Nama tingkat prestasi
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik tingkat prestasi
+     * @return false Jika tingkat prestasi gagal disimpan 
+     */
+    function saveTingkatPrestasi(string $nama, array $set = [])
+    {
+        return service('referensi')->saveTingkatPrestasi($nama, $set);
+    }
+}
+
+if (!function_exists('saveKurikulum')) {
+    /**
+     * Helper menyimpan referensi kurikulum berdasarkan nama kurikulum
+     * @param string $nama Nama kurikulum
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik kurikulum
+     * @return false Jika kurikulum gagal disimpan 
+     */
+    function saveKurikulum(string $nama, array $set = [])
+    {
+        return service('referensi')->saveKurikulum($nama, $set);
     }
 }
 
