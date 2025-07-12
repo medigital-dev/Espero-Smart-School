@@ -2910,10 +2910,31 @@
                 if (!confirm.isConfirmed)
                     return;
                 const resp = await fetchData({
-                    url: '/api/v0/dapodik/sync/peserta-didik/get/all',
+                    url: '/api/v0/dapodik/sync/peserta-didik/check/all',
                     button: btn
                 });
-                console.log(resp);
+                if (resp.length == 0) {
+                    toast('Tidak ditemukan peserta didik baru.');
+                    return;
+                }
+                toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
+                let success = 0;
+                for (const element of resp) {
+                    const saveResponse = await fetchData({
+                        url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
+                        button: btn,
+                        method: 'POST',
+                        data: element,
+                    });
+                    if (!saveResponse) {
+                        toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
+                    } else {
+                        success++;
+                        toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
+                    }
+                }
+                toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
+                dtAdminBukuIndukPd.ajax.reload(null, false);
 
             });
 

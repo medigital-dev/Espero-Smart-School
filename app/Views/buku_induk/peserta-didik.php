@@ -29,12 +29,13 @@
                             <i class="fas fa-sync-alt fa-fw"></i>
                             <span class="badge bg-danger d-none"></span>
                         </button>
-                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon btn-tooltip" data-title="Menu Sinkronisasi" data-autoclose="false" data-toggle="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon btn-tooltip" data-title="Menu Sinkronisasi" data-toggle="dropdown">
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <div class="dropdown-menu">
                             <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Tarik data hanya Peserta Didik Baru" id="btnRun-SyncNewPd"><i class="fas fa-download fa-fw mr-1"></i><span>Tarik PD Baru</span></button>
                             <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Sinkronkan semua Peserta Didik dengan data Dapodik" id="btnSync-syncAllPd"><i class="fas fa-retweet fa-fw mr-1"></i><span>Sync Semua PD</span></button>
+                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalDapodikSync-pd" data-title="Tarik data Dapodik"><i class="fas fa-angle-double-down fa-fw mr-1"></i><span>Tarik Dapodik</span></button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
@@ -130,7 +131,7 @@
         </div>
     </div>
 </div>
-<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi', 'sync']); ?>
+<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi', 'sync-pd']); ?>
 <?= offcanvas(['filter-pd', 'edit-pd']); ?>
 
 <?= $this->endSection(); ?>

@@ -30,8 +30,9 @@ $routes->post('/api/v0/dapodik/sync/gtk', 'Dapodik::syncGtk');
 $routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
 $routes->get('/api/v0/dapodik/sync/peserta-didik/check/new', 'Dapodik::checkNewPd');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/check/all', 'Dapodik::checkAllPd');
 $routes->get('/api/v0/dapodik/sync/peserta-didik/get/(:segment)', 'Dapodik::getNewPd/$1');
-$routes->get('/api/v0/dapodik/sync/peserta-didik/get/all', 'Dapodik::syncPd');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/get/all', 'Dapodik::getAllPd');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
