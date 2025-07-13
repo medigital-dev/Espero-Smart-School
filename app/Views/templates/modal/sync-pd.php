@@ -8,94 +8,108 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formSync-pd">
-                    <div class="form-group row mb-2">
-                        <label class="col-sm-3 col-form-label">Status</label>
-                        <div class="col-sm-9">
-                            <div class="icheck-primary form-check-inline">
-                                <input class="form-check-input" type="radio" id="radioDt-allPd" name="radioDt-statusPd" value="all" checked>
-                                <label class="form-check-label" for="radioDt-allPd">
-                                    Semua
-                                </label>
-                            </div>
-                            <div class="icheck-primary form-check-inline">
-                                <input class="form-check-input" type="radio" id="checkbox-newPd" name="radioDt-statusPd" value="new">
-                                <label class="form-check-label" for="checkbox-newPd">
-                                    PD Baru
-                                </label>
-                            </div>
-                            <div class="icheck-primary form-check-inline">
-                                <input class="form-check-input" type="radio" id="checkbox-checkedPd" name="radioDt-statusPd" value="checked">
-                                <label class="form-check-label" for="checkbox-checkedPd">
-                                    PD Terpilih
-                                </label>
-                            </div>
+                <div id="syncStatus"></div>
+                <div class="form-group row mb-2">
+                    <label class="col-sm-3 col-form-label">Status</label>
+                    <div class="col-sm-9">
+                        <div class="icheck-primary form-check-inline">
+                            <input class="form-check-input" type="radio" id="radioForm-newPd" name="radioForm-statusPd" value="new" checked>
+                            <label class="form-check-label" for="radioForm-newPd">
+                                PD Baru
+                            </label>
+                        </div>
+                        <div class="icheck-primary form-check-inline">
+                            <input class="form-check-input" type="radio" id="radioForm-checkedPd" name="radioForm-statusPd" value="checked">
+                            <label class="form-check-label" for="radioForm-checkedPd">
+                                PD Terpilih
+                            </label>
+                        </div>
+                        <div class="icheck-primary form-check-inline">
+                            <input class="form-check-input" type="radio" id="radioForm-allPd" name="radioForm-statusPd" value="all">
+                            <label class="form-check-label" for="radioForm-allPd">
+                                Semua
+                            </label>
                         </div>
                     </div>
+                </div>
+                <form id="formSync-pd">
                     <div class="form-group row mb-2 clearfix">
                         <label for="" class="col-sm-3 col-form-label">Jenis Data</label>
-                        <div class="col-sm-9 d-flex flex-column">
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3" checked>
-                                <label for="checkboxPrimary3">
-                                    Individu
-                                </label>
+                        <div class="col-sm-9">
+                            <div class="row row-cols-2">
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkIndividu" name="identitas" checked>
+                                        <label for="formSync-checkIndividu">
+                                            Individu
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkRegistrasi" name="registrasi">
+                                        <label for="formSync-checkRegistrasi">
+                                            Registrasi
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkKontak" name="kontak">
+                                        <label for="formSync-checkKontak">
+                                            Kontak
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkAyah" name="ayah">
+                                        <label for="formSync-checkAyah">
+                                            Ayah
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkIbu" name="ibu">
+                                        <label for="formSync-checkIbu">
+                                            Ibu
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkWali" name="wali">
+                                        <label for="formSync-checkWali">
+                                            Wali
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkPeriodik" name="periodik">
+                                        <label for="formSync-checkPeriodik">
+                                            Periodik
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkOrtuPd" name="ortuwalipd">
+                                        <label for="formSync-checkOrtuPd">
+                                            Orangtua/Wali
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkAnggotaRombel" name="anggota_rombel">
+                                        <label for="formSync-checkAnggotaRombel">
+                                            Anggota Rombel
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Registrasi
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Kontak
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Ayah
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Ibu
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Wali
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Periodik
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Orangtua/Wali
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Rombongan Belajar
-                                </label>
-                            </div>
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="checkboxPrimary3">
-                                <label for="checkboxPrimary3">
-                                    Anggota Rombel
-                                </label>
-                            </div>
-
                         </div>
                     </div>
                 </form>

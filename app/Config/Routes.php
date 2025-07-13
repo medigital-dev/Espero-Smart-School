@@ -31,8 +31,8 @@ $routes->post('/api/v0/dapodik/import/pd', 'Dapodik::importPd');
 
 $routes->get('/api/v0/dapodik/sync/peserta-didik/check/new', 'Dapodik::checkNewPd');
 $routes->get('/api/v0/dapodik/sync/peserta-didik/check/all', 'Dapodik::checkAllPd');
-$routes->get('/api/v0/dapodik/sync/peserta-didik/get/(:segment)', 'Dapodik::getNewPd/$1');
-$routes->get('/api/v0/dapodik/sync/peserta-didik/get/all', 'Dapodik::getAllPd');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/get', 'Dapodik::getFromDapodik');
+$routes->get('/api/v0/dapodik/sync/peserta-didik/get/(:segment)', 'Dapodik::getFromDapodik/$1');
 
 $routes->post('/api/v0/peserta-didik/baru/getTable', 'PesertaDidik::getTablePdBaru');
 
@@ -46,9 +46,9 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->post('mutasi/peserta-didik/set', 'MutasiPd::set');
 
     $routes->post('datatables/bukuInduk/pd', 'Datatables::bukuIndukPd');
-    $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');
-    $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
-    $routes->get('buku-induk/peserta-didik/show/(:segment)', 'PesertaDidik::show/$1');
+    // $routes->get('buku-induk/peserta-didik/get', 'PesertaDidik::get');
+    // $routes->get('buku-induk/peserta-didik/get/(:segment)', 'PesertaDidik::get/$1');
+    // $routes->get('buku-induk/peserta-didik/show/(:segment)', 'PesertaDidik::show/$1');
     // $routes->post('buku-induk/peserta-didik/identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
 
     $routes->resource('kelulusan');
@@ -84,9 +84,9 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
 
     $routes->post('identitas/(:segment)', 'PesertaDidik::saveIdentitas/$1');
     $routes->post('alamat/(:segment)', 'PesertaDidik::saveAlamat/$1');
-    $routes->post('ortuwali/save', 'PesertaDidik::saveOrtuwali');
+    $routes->post('ortuwali', 'PesertaDidik::saveOrtuwali');
     $routes->post('ortuwali/(:segment)', 'PesertaDidik::saveOrtuwali/$1');
-    $routes->post('ortuwalipd/save', 'PesertaDidik::saveOrtuwaliPd');
+    $routes->post('ortuwalipd', 'PesertaDidik::saveOrtuwaliPd');
     $routes->post('ortuwalipd/(:segment)', 'PesertaDidik::saveOrtuwaliPd/$1');
     $routes->post('kontak/(:segment)', 'PesertaDidik::saveKontak/$1');
     $routes->post('beasiswa/(:segment)', 'PesertaDidik::saveBeasiswa/$1');

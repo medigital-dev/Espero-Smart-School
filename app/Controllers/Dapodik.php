@@ -776,4 +776,19 @@ class Dapodik extends BaseController
 
         return $this->respond($req['data']);
     }
+
+    public function getFromDapodik($id = null): ResponseInterface
+    {
+        $request = syncDapodik('getPesertaDidik');
+        if (!$request['success']) return $this->fail($request['message']);
+        $response = [];
+        if ($id) {
+            foreach ($request['data'] as $row) {
+                if ($row['peserta_didik_id'] == $id) {
+                    return $this->respond($row);
+                }
+            }
+        } else $response = $request['data'];
+        return $this->respond($response);
+    }
 }

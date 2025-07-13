@@ -831,12 +831,12 @@
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
-            $(".modal").on("hide.bs.modal", (e) => {
-                const elm = $(e.target);
-                elm.find("input").val("").trigger('change');
-                bsCustomFileInput.destroy();
-                bsCustomFileInput.init();
-            });
+            // $(".modal").on("hide.bs.modal", (e) => {
+            //     const elm = $(e.target);
+            //     elm.find("input").val("").trigger('change');
+            //     bsCustomFileInput.destroy();
+            //     bsCustomFileInput.init();
+            // });
 
             $('#btnReloadTable').on('click', function() {
                 $(this).prop('disabled', true).children('i').addClass('fa-spin');
@@ -947,9 +947,9 @@
                         data: "peserta_didik_id",
                         className: "text-center",
                         orderable: false,
-                        render: (data) => {
+                        render: (data, type, rows, meta) => {
                             return `<div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input dtCheckbox" type="checkbox" id="${data}" value="${data}">
+                                        <input class="custom-control-input dtCheckbox" type="checkbox" data-nama="${rows.nama}" id="${data}" value="${data}">
                                         <label for="${data}" class="custom-control-label"></label>
                                     </div>`;
                         }
@@ -1346,7 +1346,7 @@
 
                 loading.removeClass('d-none');
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwali' + (id !== '' ? '/' + id : ''),
                     data: set,
                     method: 'POST',
                     button: btn,
@@ -1360,7 +1360,7 @@
                 }
 
                 const respData2 = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/save',
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd',
                     data: {
                         peserta_didik_id: $('#detailPd-id').val(),
                         ayah_id: respData.id
@@ -1431,7 +1431,7 @@
 
                 loading.removeClass('d-none');
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwali' + (id !== '' ? '/' + id : ''),
                     data: set,
                     method: 'POST',
                     button: btn,
@@ -1443,7 +1443,7 @@
                     dtAdminBukuIndukPd.ajax.reload(null, false);
                 }
                 const respData2 = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/save',
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd',
                     data: {
                         peserta_didik_id: $('#detailPd-id').val(),
                         ibu_id: respData.id
@@ -1511,7 +1511,7 @@
 
                 loading.removeClass('d-none');
                 const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/ortuwali/save' + (id !== '' ? '/' + id : ''),
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwali' + (id !== '' ? '/' + id : ''),
                     data: set,
                     method: 'POST',
                     button: btn,
@@ -1523,7 +1523,7 @@
                     dtAdminBukuIndukPd.ajax.reload(null, false);
                 }
                 const respData2 = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/save',
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd',
                     data: {
                         peserta_didik_id: $('#detailPd-id').val(),
                         wali_id: respData.id
@@ -2513,6 +2513,221 @@
 
             $('#tabs-tambah-prestasi-tab').on('click', e => $('#formData-tabsTambahPrestasiPd').trigger('reset').find('option').remove());
 
+            $('#btnSync-checkNewPd').on('click', async function() {
+                const btn = $(this);
+                const confirm = await Swal.fire({
+                    icon: 'question',
+                    text: 'Cek peserta didik baru di aplikasi dapodik?',
+                    showCancelButton: true,
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Ya',
+                    width: 500
+                });
+                if (!confirm.isConfirmed)
+                    return;
+
+                const resp = await fetchData({
+                    url: '/api/v0/dapodik/sync/peserta-didik/check/new',
+                    button: btn
+                });
+                if (!resp) return;
+                if (resp.length > 0) {
+                    btn.children('span').removeClass('d-none').text(resp.length);
+                    toast(resp.length + ' peserta didik baru ditemukan.', 'info', 0);
+                } else {
+                    toast('Tidak ditemukan peserta didik baru .', 'error', 0);
+                    btn.children('span').addClass('d-none').text('');
+                }
+            });
+
+            $('#btnRun-tarikDapodik').on('click', async function() {
+                const btn = $(this);
+                const formElm = $('#formSync-pd');
+                const data = formElm.serializeArray();
+                const pd = $('input[name="radioForm-statusPd"]:checked').val();
+                const alertElm = $('#syncStatus');
+                let i = 0;
+                let ids = [];
+                if (pd == 'new') {
+                    alertElm.html('').html(`
+                            <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                                <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                Mengambil data peserta didik baru.
+                            </div>
+                        `);
+                    const resp = await fetchData({
+                        url: '/api/v0/dapodik/sync/peserta-didik/check/new',
+                        button: btn
+                    });
+                    if (!resp) {
+                        alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Koneksi ke aplikasi dapodik Error.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                        return;
+                    };
+                    if (resp.length > 0) {
+                        alertElm.html('').html(`
+                            <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                                ${resp.length} Peserta didik baru ditemukan.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                        for (const elem of resp)
+                            ids.push(elem.peserta_didik_id);
+                    } else
+                        alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Peserta didik baru tidak ditemukan.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                } else if (pd == 'checked') {
+                    if (selectedRows.length > 0)
+                        for (const elem of selectedRows)
+                            ids.push(elem);
+                    else
+                        alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                               Tidak ada Peserta didik yang dipilih.
+                               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                } else if (pd == 'all') {
+                    alertElm.html('').html(`
+                            <div class="alert alert-primary fade show mb-2" role="alert">
+                                <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                Mengambil data semua peserta didik.
+                            </div>
+                        `);
+                    const resp = await fetchData({
+                        url: '/api/v0/dapodik/sync/peserta-didik/check/all',
+                        button: btn
+                    });
+                    if (!resp) {
+                        alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Koneksi ke aplikasi dapodik Error.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                        return;
+                    }
+                    if (resp.length > 0) {
+                        alertElm.html('').html(`
+                            <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                                ${resp.length} Peserta didik ditemukan.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                        for (const elem of resp)
+                            ids.push(elem.peserta_didik_id);
+                    } else {
+                        alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Peserta didik tidak ditemukan.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                    }
+                } else {
+                    alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Error: Status pilihan peserta didik.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                }
+                alertElm.html('').html(`
+                            <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                                <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                Mengambil data pada aplikasi dapodik....
+                            </div>
+                        `);
+                for (const id of ids) {
+                    const result = await fetchData('/api/v0/dapodik/sync/peserta-didik/get/' + id);
+                    if (result.length == 0) {
+                        alertElm.html('').html(`
+                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Peserta didik dengan id <strong>${id}</strong> tidak ditemukan di aplikasi dapodik.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                    } else {
+                        alertElm.html('').html(`
+                            <div class="alert alert-primary mb-2" role="alert">
+                                 <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                Menyimpan data an <strong>${result.nama}</strong>...
+                            </div>
+                        `);
+                    }
+                    for (const val of data) {
+                        const respSimpan = await fetchData({
+                            url: '/api/v0/buku-induk/peserta-didik/' + val.name + '/' + id,
+                            method: 'POST',
+                            data: result,
+                            button: btn,
+                        });
+                        if (!respSimpan) {
+                            alertElm.html('').html(`
+                                <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                    Koneksi ke aplikasi dapodik Error.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `);
+                            return;
+                        }
+                        alertElm.html('').html(`
+                            <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                                Data an <strong>${result.nama}</strong> berhasil disimpan.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                        i++;
+                    }
+                }
+                alertElm.html('').html(`
+                        <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                            Tarik data dari aplikasi dapodik berhasil dilakukan. ${i} data tersimpan.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `);
+            });
+
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({
                 dom: 't',
                 processing: true,
@@ -2829,114 +3044,87 @@
                 ],
             });
 
-            $('#btnSync-checkNewPd').on('click', async function() {
-                const btn = $(this);
-                const confirm = await Swal.fire({
-                    icon: 'question',
-                    text: 'Cek peserta didik baru di aplikasi dapodik?',
-                    showCancelButton: true,
-                    cancelButtonText: 'Batal',
-                    confirmButtonText: 'Ya',
-                    width: 500
-                });
-                if (!confirm.isConfirmed)
-                    return;
+            // $('#btnRun-SyncNewPd').on('click', async function() {
+            //     const btn = $(this);
+            //     const confirm = await Swal.fire({
+            //         icon: 'question',
+            //         text: 'Tarik data peserta didik baru di aplikasi dapodik?',
+            //         showCancelButton: true,
+            //         cancelButtonText: 'Batal',
+            //         confirmButtonText: 'Ya',
+            //         width: 500
+            //     });
+            //     if (!confirm.isConfirmed)
+            //         return;
 
-                const resp = await fetchData({
-                    url: '/api/v0/dapodik/sync/peserta-didik/check/new',
-                    button: btn
-                });
-                if (!resp) return;
-                if (resp.length > 0) {
-                    btn.children('span').removeClass('d-none').text(resp.length);
-                    toast(resp.length + ' peserta didik baru ditemukan.', 'info', 0);
-                } else {
-                    toast('Tidak ditemukan peserta didik baru .', 'error', 0);
-                    btn.children('span').addClass('d-none').text('');
-                }
-            });
+            //     const resp = await fetchData({
+            //         url: '/api/v0/dapodik/sync/peserta-didik/check/new',
+            //         button: btn
+            //     });
+            //     if (resp.length == 0) {
+            //         toast('Tidak ditemukan peserta didik baru.');
+            //         return;
+            //     }
+            //     toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
+            //     let success = 0;
+            //     for (const element of resp) {
+            //         const saveResponse = await fetchData({
+            //             url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
+            //             button: btn,
+            //             method: 'POST',
+            //             data: element,
+            //         });
+            //         if (!saveResponse) {
+            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
+            //         } else {
+            //             success++;
+            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
+            //         }
+            //     }
+            //     toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
+            //     dtAdminBukuIndukPd.ajax.reload(null, false);
+            // });
 
-            $('#btnRun-SyncNewPd').on('click', async function() {
-                const btn = $(this);
-                const confirm = await Swal.fire({
-                    icon: 'question',
-                    text: 'Tarik data peserta didik baru di aplikasi dapodik?',
-                    showCancelButton: true,
-                    cancelButtonText: 'Batal',
-                    confirmButtonText: 'Ya',
-                    width: 500
-                });
-                if (!confirm.isConfirmed)
-                    return;
+            // $('#btnSync-syncAllPd').on('click', async function() {
+            //     const btn = $(this);
+            //     const confirm = await Swal.fire({
+            //         icon: 'question',
+            //         text: 'Sinkronkan seluruh peserta didik dengan aplikasi dapodik?',
+            //         showCancelButton: true,
+            //         cancelButtonText: 'Batal',
+            //         confirmButtonText: 'Ya',
+            //         width: 500
+            //     });
+            //     if (!confirm.isConfirmed)
+            //         return;
+            //     const resp = await fetchData({
+            //         url: '/api/v0/dapodik/sync/peserta-didik/check/all',
+            //         button: btn
+            //     });
+            //     if (resp.length == 0) {
+            //         toast('Tidak ditemukan peserta didik baru.');
+            //         return;
+            //     }
+            //     toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
+            //     let success = 0;
+            //     for (const element of resp) {
+            //         const saveResponse = await fetchData({
+            //             url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
+            //             button: btn,
+            //             method: 'POST',
+            //             data: element,
+            //         });
+            //         if (!saveResponse) {
+            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
+            //         } else {
+            //             success++;
+            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
+            //         }
+            //     }
+            //     toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
+            //     dtAdminBukuIndukPd.ajax.reload(null, false);
 
-                const resp = await fetchData({
-                    url: '/api/v0/dapodik/sync/peserta-didik/check/new',
-                    button: btn
-                });
-                if (resp.length == 0) {
-                    toast('Tidak ditemukan peserta didik baru.');
-                    return;
-                }
-                toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
-                let success = 0;
-                for (const element of resp) {
-                    const saveResponse = await fetchData({
-                        url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
-                        button: btn,
-                        method: 'POST',
-                        data: element,
-                    });
-                    if (!saveResponse) {
-                        toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
-                    } else {
-                        success++;
-                        toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
-                    }
-                }
-                toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
-                dtAdminBukuIndukPd.ajax.reload(null, false);
-            });
-
-            $('#btnSync-syncAllPd').on('click', async function() {
-                const btn = $(this);
-                const confirm = await Swal.fire({
-                    icon: 'question',
-                    text: 'Sinkronkan seluruh peserta didik dengan aplikasi dapodik?',
-                    showCancelButton: true,
-                    cancelButtonText: 'Batal',
-                    confirmButtonText: 'Ya',
-                    width: 500
-                });
-                if (!confirm.isConfirmed)
-                    return;
-                const resp = await fetchData({
-                    url: '/api/v0/dapodik/sync/peserta-didik/check/all',
-                    button: btn
-                });
-                if (resp.length == 0) {
-                    toast('Tidak ditemukan peserta didik baru.');
-                    return;
-                }
-                toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
-                let success = 0;
-                for (const element of resp) {
-                    const saveResponse = await fetchData({
-                        url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
-                        button: btn,
-                        method: 'POST',
-                        data: element,
-                    });
-                    if (!saveResponse) {
-                        toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
-                    } else {
-                        success++;
-                        toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
-                    }
-                }
-                toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
-                dtAdminBukuIndukPd.ajax.reload(null, false);
-
-            });
+            // });
 
             // Unduh DT Peserta Didik
             $('#btnUnduhExcel-bukuIndukPd').on('click', async function() {
