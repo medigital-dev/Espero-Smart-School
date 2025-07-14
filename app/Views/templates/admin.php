@@ -2543,18 +2543,18 @@
             $('#btnRun-tarikDapodik').on('click', async function() {
                 const btn = $(this);
                 const formElm = $('#formSync-pd');
-                const data = formElm.serializeArray();
+                const dataType = formElm.serializeArray();
                 const pd = $('input[name="radioForm-statusPd"]:checked').val();
                 const alertElm = $('#syncStatus');
                 let i = 0;
-                let ids = [];
+                let set = [];
                 if (pd == 'new') {
                     alertElm.html('').html(`
                             <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
                                 <div class="spinner-border spinner-border-sm mr-1" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>
-                                Mengambil data peserta didik baru.
+                                Mengambil data peserta didik baru...
                             </div>
                         `);
                     const resp = await fetchData({
@@ -2575,15 +2575,15 @@
                     if (resp.length > 0) {
                         alertElm.html('').html(`
                             <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
-                                ${resp.length} Peserta didik baru ditemukan.
+                                ${resp.length} Peserta didik baru ditemukan. Mulai menarik data...
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                         `);
                         for (const elem of resp)
-                            ids.push(elem.peserta_didik_id);
-                    } else
+                            set.push(elem);
+                    } else {
                         alertElm.html('').html(`
                             <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
                                 Peserta didik baru tidak ditemukan.
@@ -2592,26 +2592,55 @@
                                 </button>
                             </div>
                         `);
+                        return;
+                    }
                 } else if (pd == 'checked') {
-                    if (selectedRows.length > 0)
-                        for (const elem of selectedRows)
-                            ids.push(elem);
-                    else
+                    if (selectedRows.length > 0) {
+                        let j = 1;
+                        for (const id of selectedRows) {
+                            alertElm.html('').html(`
+                                <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                                    <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    ${j++}/${selectedRows.length} Mengambil data peserta didik terpilih.
+                                </div>
+                            `);
+                            const dataPd = await fetchData({
+                                url: '/api/v0/dapodik/sync/peserta-didik/get/' + id,
+                                button: btn,
+                            });
+                            if (!dataPd) {
+                                alertElm.html('').html(`
+                                    <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                        Peserta didik baru tidak ditemukan.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                `);
+                                return;
+                            }
+                            set.push(dataPd);
+                        }
+                    } else {
                         alertElm.html('').html(`
-                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                               Tidak ada Peserta didik yang dipilih.
-                               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        `);
+                                <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                Tidak ada Peserta didik yang dipilih.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `);
+                        return;
+                    }
                 } else if (pd == 'all') {
                     alertElm.html('').html(`
                             <div class="alert alert-primary fade show mb-2" role="alert">
                                 <div class="spinner-border spinner-border-sm mr-1" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>
-                                Mengambil data semua peserta didik.
+                                Mengambil data semua peserta didik...
                             </div>
                         `);
                     const resp = await fetchData({
@@ -2638,8 +2667,29 @@
                                 </button>
                             </div>
                         `);
+                        if (resp.length > 500) {
+                            const konfirmasi = await Swal.fire({
+                                icon: 'question',
+                                text: `Jumlah peserta didik lebih dari 500. Proses tarik data kemungkinan akan memakan waktu yang lama. Apakah akan dilanjutkan?`,
+                                showCancelButton: true,
+                                cancelButtonText: 'Batal',
+                                confirmButtonText: 'Ya, Lanjut',
+                                width: 500
+                            });
+                            if (!konfirmasi.isConfirmed) {
+                                alertElm.html('').html(`
+                                    <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                        Proses tarik data Peserta Didik dibatalkan.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                `);
+                                return;
+                            }
+                        }
                         for (const elem of resp)
-                            ids.push(elem.peserta_didik_id);
+                            set.push(elem);
                     } else {
                         alertElm.html('').html(`
                             <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
@@ -2652,48 +2702,38 @@
                     }
                 } else {
                     alertElm.html('').html(`
-                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                                Error: Status pilihan peserta didik.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        `);
+                        <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                            Error: Status pilihan peserta didik tidak ditemukan.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `);
                 }
                 alertElm.html('').html(`
-                            <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
-                                <div class="spinner-border spinner-border-sm mr-1" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                                Mengambil data pada aplikasi dapodik....
+                    <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                        <div class="spinner-border spinner-border-sm mr-1" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        ${i}/${set.length} Menyimpan data....
+                    </div>
+                `);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                for (const dataSet of set) {
+                    i++;
+                    alertElm.html('').html(`
+                        <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                            <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                <span class="sr-only">Loading...</span>
                             </div>
-                        `);
-                for (const id of ids) {
-                    const result = await fetchData('/api/v0/dapodik/sync/peserta-didik/get/' + id);
-                    if (result.length == 0) {
-                        alertElm.html('').html(`
-                            <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                                Peserta didik dengan id <strong>${id}</strong> tidak ditemukan di aplikasi dapodik.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        `);
-                    } else {
-                        alertElm.html('').html(`
-                            <div class="alert alert-primary mb-2" role="alert">
-                                 <div class="spinner-border spinner-border-sm mr-1" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                                Menyimpan data an <strong>${result.nama}</strong>...
-                            </div>
-                        `);
-                    }
-                    for (const val of data) {
+                            ${i}/${set.length} Menyimpan data an. <strong>${dataSet.nama}</strong>
+                        </div>
+                    `);
+                    for (const val of dataType) {
                         const respSimpan = await fetchData({
-                            url: '/api/v0/buku-induk/peserta-didik/' + val.name + '/' + id,
+                            url: '/api/v0/buku-induk/peserta-didik/' + val.name + '/' + dataSet.peserta_didik_id,
                             method: 'POST',
-                            data: result,
+                            data: dataSet[val.name],
                             button: btn,
                         });
                         if (!respSimpan) {
@@ -2707,25 +2747,17 @@
                             `);
                             return;
                         }
-                        alertElm.html('').html(`
-                            <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
-                                Data an <strong>${result.nama}</strong> berhasil disimpan.
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        `);
-                        i++;
                     }
                 }
                 alertElm.html('').html(`
-                        <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
-                            Tarik data dari aplikasi dapodik berhasil dilakukan. ${i} data tersimpan.
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    `);
+                    <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                        Tarik data dari aplikasi dapodik berhasil dilakukan. ${i} data Peserta Didik tersimpan.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `);
+                dtAdminBukuIndukPd.ajax.reload(null, false);
             });
 
             const tabelKoneksiDapodik = $('#tabelKoneksiDapodik').DataTable({

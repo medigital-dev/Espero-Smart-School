@@ -66,6 +66,7 @@ class PesertaDidik extends BaseController
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
         $this->baseData->select([
+            'peserta_didik.peserta_didik_id',
             'peserta_didik.nama',
             'peserta_didik.tempat_lahir as tempat_lahir',
             'peserta_didik.tanggal_lahir as tanggal_lahir',

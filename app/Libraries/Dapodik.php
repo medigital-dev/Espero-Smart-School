@@ -107,7 +107,7 @@ class Dapodik
                         'nik' => $row["nik"],
                         'nisn' => $row["nisn"],
                         'nipd' => $row["nipd"],
-                        'peserta_didik' => [
+                        'identitas' => [
                             'peserta_didik_id' => $row["peserta_didik_id"],
                             'nama' => eyd($row["nama"]),
                             'nisn' => $row["nisn"],
