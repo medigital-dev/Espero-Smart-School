@@ -1238,6 +1238,7 @@
                 $('#tabsIdentitas-nomorAkte').val(respData.nomor_akte);
                 $('#tabsIdentitas-nomorKk').val(respData.nomor_kk);
                 $('#tabsIdentitas-nik').val(respData.nik);
+                $('#tabsIdentitas-anakKe').val(respData.anak_ke);
                 opt = new Option(respData.agama_str, respData.agama_id, false, true);
                 $('#tabsIdentitas-agama').append(opt);
                 offcanvasElm.find('.overlay').addClass('d-none');
@@ -1334,6 +1335,111 @@
                     $('#tabsAyah-penghasilan').append(optpenghasilan);
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-deleteAyah').on('click', async function() {
+                const konfirmasi = await Swal.fire({
+                    icon: "info",
+                    title: "Hapus Ayah?",
+                    text: "Data ayah peserta didik akan dihapus. Apakah anda yakin?",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-danger",
+                    },
+                });
+                if (!konfirmasi.isConfirmed) return;
+                const btn = $(this);
+                const tabsElm = $('#tabs-ayah-tab');
+                const idAyahElm = $('#idAyah');
+                const id = $('#detailPd-id').val();
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/' + id + '?t=ayah_id',
+                    method: 'DELETE',
+                    button: btn,
+                });
+                if (respData) {
+                    toast(respData.message);
+                    tabsElm.attr('data-id', '').trigger('click');
+                    idAyahElm.val('');
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#btnRun-deleteIbu').on('click', async function() {
+                const konfirmasi = await Swal.fire({
+                    icon: "info",
+                    title: "Hapus Ibu?",
+                    text: "Data ibu peserta didik akan dihapus. Apakah anda yakin?",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-danger",
+                    },
+                });
+                if (!konfirmasi.isConfirmed) return;
+                const btn = $(this);
+                const tabsElm = $('#tabs-ibu-tab');
+                const idIbuElm = $('#idIbu');
+                const id = $('#detailPd-id').val();
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/' + id + '?t=ibu_id',
+                    method: 'DELETE',
+                    button: btn,
+                });
+                if (respData) {
+                    toast(respData.message);
+                    tabsElm.attr('data-id', '').trigger('click');
+                    idIbuElm.val('');
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
+                loading.addClass('d-none');
+            });
+
+            $('#btnRun-deleteWali').on('click', async function() {
+                const konfirmasi = await Swal.fire({
+                    icon: "info",
+                    title: "Hapus Wali?",
+                    text: "Data wali peserta didik akan dihapus. Apakah anda yakin?",
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus",
+                    cancelButtonText: "Batal",
+                    customClass: {
+                        confirmButton: "bg-danger",
+                    },
+                });
+                if (!konfirmasi.isConfirmed) return;
+                const btn = $(this);
+                const tabsElm = $('#tabs-wali-tab');
+                const idWaliElm = $('#idWali');
+                const id = $('#detailPd-id').val();
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/ortuwalipd/' + id + '?t=wali_id',
+                    method: 'DELETE',
+                    button: btn,
+                });
+                if (respData) {
+                    toast(respData.message);
+                    tabsElm.attr('data-id', '').trigger('click');
+                    idWaliElm.val('');
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
+                loading.addClass('d-none');
             });
 
             $('#btnRun-saveAyah').on('click', async function() {
@@ -1536,7 +1642,8 @@
                 loading.addClass('d-none');
             });
 
-            $('#btnSave-ortuwali').on('click', e => $(e.target).parents('.tab-pane').find('.active.show button').trigger('click'));
+            $('#btnSave-ortuwali').on('click', e => $(e.target).parents('.tab-pane').find('.active.show button.save').trigger('click'));
+            $('#btnDelete-ortuwali').on('click', e => $(e.target).parents('.tab-pane').find('.active.show button.delete').trigger('click'));
 
             $('#btnSave-identitasPd').on('click', async function() {
                 const btn = $(this);
@@ -2667,10 +2774,10 @@
                                 </button>
                             </div>
                         `);
-                        if (resp.length > 500) {
+                        if (resp.length > 200) {
                             const konfirmasi = await Swal.fire({
                                 icon: 'question',
-                                text: `Jumlah peserta didik lebih dari 500. Proses tarik data kemungkinan akan memakan waktu yang lama. Apakah akan dilanjutkan?`,
+                                text: `Jumlah peserta didik lebih dari 200. Proses tarik data kemungkinan akan memakan waktu yang lama. Apakah akan dilanjutkan?`,
                                 showCancelButton: true,
                                 cancelButtonText: 'Batal',
                                 confirmButtonText: 'Ya, Lanjut',

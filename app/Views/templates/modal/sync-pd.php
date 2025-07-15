@@ -39,7 +39,7 @@
                             <div class="row row-cols-2">
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formSync-checkIndividu" name="identitas" checked>
+                                        <input type="checkbox" id="formSync-checkIndividu" name="identitas">
                                         <label for="formSync-checkIndividu">
                                             Individu
                                         </label>

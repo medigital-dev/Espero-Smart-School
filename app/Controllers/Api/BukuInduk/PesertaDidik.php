@@ -67,6 +67,7 @@ class PesertaDidik extends BaseController
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
         $this->baseData->select([
             'peserta_didik.peserta_didik_id',
+            'peserta_didik.anak_ke',
             'peserta_didik.nama',
             'peserta_didik.tempat_lahir as tempat_lahir',
             'peserta_didik.tanggal_lahir as tanggal_lahir',
@@ -182,7 +183,8 @@ class PesertaDidik extends BaseController
                 'nik',
                 'tempat_lahir',
                 'tanggal_lahir',
-                'jenis_kelamin',
+                'ref_jenis_kelamin.ref_id as jenis_kelamin_id',
+                'ref_jenis_kelamin.nama as jenis_kelamin_str',
                 'agama_id',
                 'pekerjaan_id',
                 'pendidikan_id',
@@ -196,6 +198,7 @@ class PesertaDidik extends BaseController
             ->join('ref_pendidikan', 'ref_pendidikan.ref_id = orangtua_wali.pendidikan_id', 'left')
             ->join('ref_pekerjaan', 'ref_pekerjaan.ref_id = orangtua_wali.pekerjaan_id', 'left')
             ->join('ref_penghasilan', 'ref_penghasilan.ref_id = orangtua_wali.penghasilan_id', 'left')
+            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = orangtua_wali.jenis_kelamin', 'left')
             ->where('orangtua_id', $id)
             ->first();
         return $this->respond($response);
@@ -768,5 +771,73 @@ class PesertaDidik extends BaseController
         $mRombel->save($set['rombongan_belajar']);
 
         return $this->respond(true);
+    }
+
+    public function deleteOrtuWaliPd($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID prestasi diperlukan.');
+        $type = $this->request->getGet('t');
+        $mOrtuwaliPd = new OrtuWaliPdModel();
+        $cek = $mOrtuwaliPd->where('peserta_didik_id', $id)->first();
+        if (!$cek) return $this->fail('Orangtua/Wali Peserta Didik tidak ditemukan');
+        $set[$type] = null;
+        $set['id'] = $cek['id'];
+        if (!$mOrtuwaliPd->save($set)) return $this->fail('Orangtua/Wali Peserta Didik gagal dihapus.');
+        return $this->respond(['message' => 'Orangtua/Wali Peserta Didik berhasil dihapus.']);
+    }
+
+    public function saveOrtuJenis($id, string $jenis): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID peserta didik diperlukan.');
+
+        $set = $this->request->getPost();
+        $orangtuaId = $this->saveOrangtuaWali($set);
+        if (!$orangtuaId) return $this->fail('Orangtua/Wali peserta didik gagal disimpan.');
+
+        $mOrtuWalipd = new OrtuWaliPdModel();
+        $cOrtuWaliPd = $mOrtuWalipd->where('peserta_didik_id', $id)->first();
+
+        $temp = ['peserta_didik_id' => $id, "{$jenis}_id" => $orangtuaId];
+        $temp[$cOrtuWaliPd ? 'id' : 'ortupd_id'] = $cOrtuWaliPd['id'] ?? idUnik($mOrtuWalipd, 'ortupd_id');
+
+        if (!$mOrtuWalipd->save($temp)) {
+            return $this->fail('Mapping orangtua/wali peserta didik gagal disimpan.');
+        }
+
+        return $this->respond(['message' => ucfirst($jenis) . ' peserta didik berhasil disimpan']);
+    }
+
+    public function saveAyah($id)
+    {
+        return $this->saveOrtuJenis($id, 'ayah');
+    }
+
+    public function saveIbu($id)
+    {
+        return $this->saveOrtuJenis($id, 'ibu');
+    }
+
+    public function saveWali($id)
+    {
+        return $this->saveOrtuJenis($id, 'wali');
+    }
+
+    private function saveOrangtuaWali(array $set)
+    {
+        $mOrtuWali = new OrangtuaWaliModel();
+
+        $cOrtuwali = $mOrtuWali->where('nama', $set['nama'])
+            ->where('pekerjaan_id', $set['pekerjaan_id'])
+            ->first();
+
+        if ($cOrtuwali) {
+            $set['id'] = $cOrtuwali['id'];
+        } else {
+            $set['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+        }
+
+        if (!$mOrtuWali->save($set)) return false;
+
+        return $set['orangtua_id'] ?? $cOrtuwali['orangtua_id'];
     }
 }

@@ -132,8 +132,9 @@ if (!function_exists('eyd')) {
      * @param string $nama Nama yang akan diubah
      * @return string Nama yang sudah diformat
      */
-    function eyd(string $nama): string
+    function eyd(string|null $nama): string|null
     {
+        if ($nama == null || $nama == '' || $nama == false) return null;
         $nama = preg_replace("/[^a-zA-Z\s'\-]/", '', $nama);
         $nama = strtolower($nama);
         $nama = preg_replace('/\s+/', ' ', trim($nama));

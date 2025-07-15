@@ -26,28 +26,6 @@ class PesertaDidikModel extends Model
         'nomor_kk',
         'nomor_akte',
         'foto_id',
+        'anak_ke',
     ];
-
-    /**
-     * Menyimpan data peserta didik, insert jika unix key tidak ditemukan, update jika ditemukan.
-     *
-     * @param array $data
-     * @param string|null $whereUnixKey
-     * @return bool
-     */
-    public function saveData(array $data, string|null $whereUnixKey = null)
-    {
-        helper('string');
-
-        if ($whereUnixKey) {
-            $this->where($this->unixKey, $whereUnixKey);
-            $result = $this->first();
-            if ($result) {
-                $data['id'] = $result['id'];
-            } else {
-                $data[$this->unixKey] = unik($this, $this->unixKey);
-            }
-        }
-        return (bool) $this->save($data);
-    }
 }

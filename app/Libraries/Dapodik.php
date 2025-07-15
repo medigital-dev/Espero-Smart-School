@@ -116,6 +116,7 @@ class Dapodik
                             'tempat_lahir' => $row["tempat_lahir"],
                             'tanggal_lahir' => $row["tanggal_lahir"],
                             'agama_id' => saveAgama($row["agama_id_str"]),
+                            'anak_ke' => $row["anak_keberapa"],
                         ],
                         'registrasi' => [
                             'registrasi_id' => $row["registrasi_id"],
@@ -132,19 +133,16 @@ class Dapodik
                             'email' => $row["email"],
                         ],
                         'ayah' => [
-                            'nama' => $row["nama_ayah"],
+                            'nama' => eyd($row["nama_ayah"]),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_ayah_id_str"]),
                         ],
                         'ibu' => [
-                            'nama' => $row["nama_ibu"],
+                            'nama' => eyd($row["nama_ibu"]),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_ibu_id_str"]),
                         ],
                         'wali' => [
-                            'nama' => $row["nama_wali"],
+                            'nama' => eyd($row["nama_wali"]),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_wali_id_str"]),
-                        ],
-                        'ortuwali_pd' => [
-                            'anak_ke' => $row["anak_keberapa"],
                         ],
                         'periodik' => [
                             'nik' => $row["nik"],

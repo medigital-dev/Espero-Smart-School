@@ -237,7 +237,7 @@
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Kelulusan</h6>
                             <div>
-                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveKelulusanPd"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveKelulusanPd"><i class="fas fa-save"></i></button>
                                 <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Batalkan" id="btnRun-deleteKelulusanPd"><i class="fas fa-ban"></i></button>
                             </div>
                         </div>
@@ -270,7 +270,7 @@
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Peserta Didik Keluar</h6>
                             <div>
-                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveMutasiPd"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveMutasiPd"><i class="fas fa-save"></i></button>
                                 <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Batalkan" id="btnRun-deleteMutasiPd"><i class="fas fa-ban"></i></button>
                             </div>
                         </div>
@@ -303,7 +303,7 @@
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Registrasi</h6>
                             <div>
-                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveRegistrasiPd"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveRegistrasiPd"><i class="fas fa-save"></i></button>
                                 <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Batalkan" id="btnRun-deleteRegistrasiPd"><i class="fas fa-ban"></i></button>
                             </div>
                         </div>
@@ -403,7 +403,7 @@
                     <div class="tab-pane fade" id="tabs-kontak" role="tabpanel" aria-labelledby="tabs-kontak-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Kontak</h6>
-                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveKontakPd"><i class="fas fa-save"></i></button>
+                            <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveKontakPd"><i class="fas fa-save"></i></button>
                         </div>
                         <form id="formData-tabsKontak">
                             <div class="form-group mb-2">
@@ -427,7 +427,7 @@
                     <div class="tab-pane fade" id="tabs-identitas" role="tabpanel" aria-labelledby="tabs-identitas-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Identitas</h6>
-                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-identitasPd"><i class="fas fa-save"></i></button>
+                            <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-identitasPd"><i class="fas fa-save"></i></button>
                         </div>
                         <form id="formData-tabsIdentitas">
                             <div class="form-group mb-2">
@@ -453,8 +453,12 @@
                                 </div>
                             </div>
                             <div class="form-group mb-2">
+                                <label for="tabsIdentitas-agama" class="small mb-1">Agama</label>
+                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIdentitas-agama" name="agama_id"></select>
+                            </div>
+                            <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nisn" aria-describedby="nisnHelp">NISN</label>
-                                <input type="text" class="form-control" id="tabsIdentitas-nisn" name="nisn">
+                                <input type="text" class="form-control onlyInt" id="tabsIdentitas-nisn" name="nisn">
                                 <small id="nisnHelp" class="form-text text-muted">Nomor Induk Siswa Nasional</small>
                             </div>
                             <div class="form-group mb-2">
@@ -464,17 +468,17 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nik">NIK</label>
-                                <input type="text" class="form-control" id="tabsIdentitas-nik" name="nik" aria-describedby="nikHelp">
+                                <input type="text" class="form-control onlyInt" id="tabsIdentitas-nik" name="nik" aria-describedby="nikHelp">
                                 <small id="nikHelp" class="form-text text-muted">Nomor Induk Kependudukan</small>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nomorKk">Nomor KK</label>
-                                <input type="text" class="form-control" id="tabsIdentitas-nomorKk" name="nomor_kk" aria-describedby="noKKHelp">
+                                <input type="text" class="form-control onlyInt" id="tabsIdentitas-nomorKk" name="nomor_kk" aria-describedby="noKKHelp">
                                 <small id="noKKHelp" class="form-text text-muted">Nomor Kartu Kependudukan</small>
                             </div>
                             <div class="form-group mb-2">
-                                <label for="tabsIdentitas-agama" class="small mb-1">Agama</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIdentitas-agama" name="agama_id"></select>
+                                <label for="tabsIdentitas-anakKe" class="small mb-1">Anak Ke</label>
+                                <input type="text" class="form-control onlyInt" id="tabsIdentitas-anakKe" name="anak_ke" aria-describedby="anakKeHelp">
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsIdentitas-photoProfil" class="small mb-1">Pass Foto</label>
@@ -527,7 +531,7 @@
                     <div class="tab-pane fade" id="tabs-alamat" role="tabpanel" aria-labelledby="tabs-alamat-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold m-0">Alamat</h6>
-                            <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-alamatPd"><i class="fas fa-save"></i></button>
+                            <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-alamatPd"><i class="fas fa-save"></i></button>
                         </div>
                         <form id="formData-tabsAlamat">
                             <div class="form-group mb-2">
@@ -538,13 +542,13 @@
                                 <div class="col">
                                     <div class="form-group mb-2">
                                         <label for="tabsAlamat-rt" class="small mb-1">RT</label>
-                                        <input type="number" name="rt" id="tabsAlamat-rt" class="form-control">
+                                        <input type="number" name="rt" id="tabsAlamat-rt" class="form-control onlyInt">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group mb-2">
                                         <label for="tabsAlamat-rw" class="small mb-1">RW</label>
-                                        <input type="number" name="rw" id="tabsAlamat-rw" class="form-control">
+                                        <input type="number" name="rw" id="tabsAlamat-rw" class="form-control onlyInt">
                                     </div>
                                 </div>
                             </div>
@@ -570,7 +574,7 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsAlamat-kodePos" class="small mb-1">Kode Pos</label>
-                                <input type="text" name="kode_pos" id="tabsAlamat-kodePos" class="form-control">
+                                <input type="text" name="kode_pos" id="tabsAlamat-kodePos" class="form-control onlyInt">
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsAlamat-lintang" class="small mb-1">Lintang</label>
@@ -602,11 +606,11 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsAlamat-jenisTinggal" class="small mb-1">Jenis Tinggal</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisTinggal" id="tabsAlamat-jenisTinggal" name="jenis_tinggal_id"></select>
+                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisTinggal" id="tabsAlamat-jenisTinggal" name="jenis_tinggal_id" data-tags="true"></select>
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsAlamat-alatTransportasi" class="small mb-1">Alat Transportasi</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="alatTransportasi" id="tabsAlamat-alatTransportasi" name="alat_transportasi_id"></select>
+                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="alatTransportasi" id="tabsAlamat-alatTransportasi" name="alat_transportasi_id" data-tags="true"></select>
                             </div>
                         </form>
                     </div>
@@ -614,7 +618,10 @@
                         <div class="pt-1 sticky-top align-items-center bg-white mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
                                 <h6 class="text-bold">Orang Tua/Wali</h6>
-                                <button class="btn btn-sms btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-ortuwali"><i class="fas fa-save"></i></button>
+                                <div>
+                                    <button class="btn btn-sm btn-link text-danger" data-toggle="tooltip" data-title="Hapus" id="btnDelete-ortuwali"><i class="fas fa-trash-alt"></i></button>
+                                    <button class="btn btn-sm btn-link" data-toggle="tooltip" data-title="Simpan" id="btnSave-ortuwali"><i class="fas fa-save"></i></button>
+                                </div>
                             </div>
                             <ul class="nav nav-tabs" id="ortuwali-tab" role="tablist">
                                 <li class="nav-item">
@@ -656,7 +663,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-nik" class="small mb-1">NIK</label>
-                                        <input type="text" name="nik" id="tabsAyah-nik" class="form-control">
+                                        <input type="text" name="nik" id="tabsAyah-nik" class="form-control onlyInt">
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-agama" class="small mb-1">Agama</label>
@@ -675,7 +682,10 @@
                                         <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsAyah-penghasilan" name="penghasilan_id"></select>
                                     </div>
                                     <hr>
-                                    <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveAyah"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <button type="button" class="btn btn-danger btn-sm delete" id="btnRun-deleteAyah"><i class="fas fa-trash-alt mr-1"></i>Hapus</button>
+                                        <button type="button" class="btn btn-primary btn-sm save" id="btnRun-saveAyah"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                    </div>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="tabs-ibu" role="tabpanel" aria-labelledby="tabs-ibu-tab">
@@ -705,7 +715,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-nik" class="small mb-1">NIK</label>
-                                        <input type="text" name="nik" id="tabsIbu-nik" class="form-control">
+                                        <input type="text" name="nik" id="tabsIbu-nik" class="form-control onlyInt">
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-agama" class="small mb-1">Agama</label>
@@ -724,7 +734,10 @@
                                         <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsIbu-penghasilan" name="penghasilan_id"></select>
                                     </div>
                                     <hr>
-                                    <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveIbu"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <button type="button" class="btn btn-danger btn-sm mb-2 delete" id="btnRun-deleteIbu"><i class="fas fa-trash-alt mr-1"></i>Hapus</button>
+                                        <button type="button" class="btn btn-primary btn-sm mb-2 save" id="btnRun-saveIbu"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                    </div>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="tabs-wali" role="tabpanel" aria-labelledby="tabs-wali-tab">
@@ -754,7 +767,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-nik" class="small mb-1">NIK</label>
-                                        <input type="text" name="nik" id="tabsWali-nik" class="form-control">
+                                        <input type="text" name="nik" id="tabsWali-nik" class="form-control onlyInt">
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-agama" class="small mb-1">Agama</label>
@@ -773,7 +786,10 @@
                                         <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsWali-penghasilan" name="penghasilan_id"></select>
                                     </div>
                                     <hr>
-                                    <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveWali"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <button type="button" class="btn btn-danger btn-sm mb-2 delete" id="btnRun-deleteWali"><i class="fas fa-trash-alt mr-1"></i>Hapus</button>
+                                        <button type="button" class="btn btn-primary btn-sm mb-2 save" id="btnRun-saveWali"><i class="fas fa-save mr-1"></i>Simpan</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
