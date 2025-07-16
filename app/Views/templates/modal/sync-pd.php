@@ -13,7 +13,7 @@
                     <label class="col-sm-3 col-form-label">Pilih PD</label>
                     <div class="col-sm-9">
                         <div class="icheck-primary form-check-inline">
-                            <input class="form-check-input" type="radio" id="radioForm-newPd" name="radioForm-statusPd" value="new" checked>
+                            <input class="form-check-input" type="radio" id="radioForm-newPd" name="radioForm-statusPd" value="new">
                             <label class="form-check-label" for="radioForm-newPd">
                                 PD Baru
                             </label>
@@ -106,6 +106,14 @@
                                         <input type="checkbox" id="formSync-checkAnggotaRombel" name="anggota_rombel">
                                         <label for="formSync-checkAnggotaRombel">
                                             Anggota Rombel
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkDifabel" name="difabel">
+                                        <label for="formSync-checkDifabel">
+                                            Kebutuhan Khusus
                                         </label>
                                     </div>
                                 </div>

@@ -7,6 +7,7 @@ use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
 use App\Models\AnggotaRombelModel;
 use App\Models\BeasiswaModel;
+use App\Models\KebutuhanKhususModel;
 use App\Models\KelulusanPdModel;
 use App\Models\KesejahteraanModel;
 use App\Models\KontakModel;
@@ -839,5 +840,48 @@ class PesertaDidik extends BaseController
         if (!$mOrtuWali->save($set)) return false;
 
         return $set['orangtua_id'] ?? $cOrtuwali['orangtua_id'];
+    }
+
+    public function showDifabel($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mDifabel = new KebutuhanKhususModel();
+        $data = $mDifabel
+            ->select(['ref_kebutuhan_khusus.nama', 'kebutuhan_khusus_id as id', 'ref_kebutuhan_khusus.kode as kode'])
+            ->join('ref_kebutuhan_khusus', 'ref_kebutuhan_khusus.ref_id = kebutuhan_khusus.ref_id', 'left')
+            ->where('nik', $cPd['nik'])
+            ->findAll();
+        return $this->respond($data);
+    }
+
+    public function saveDifabel($id = null): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mDifabel = new KebutuhanKhususModel();
+        $set = $this->request->getPost();
+        if (!isset($set['nik']))
+            $set['nik'] = $cPd['nik'];
+        $set['kebutuhan_khusus_id'] = idUnik($mDifabel, 'kebutuhan_khusus_id');
+        if ($mDifabel->where('nik', $cPd['nik'])->where('ref_id', $set['ref_id'])->first()) return $this->fail('Data kebutuhan khusus sudah ada.');
+        if (!$mDifabel->save($set)) return $this->fail('Data kebutuhan khusus gagal disimpan.');
+        return $this->respond(['message' => 'Data kebutuhan khusus berhasil disimpan.', 'id' => $set['kebutuhan_khusus_id']]);
+    }
+
+    public function deleteDifabel($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID kebutuhan khusus diperlukan.');
+        $mDifabel = new KebutuhanKhususModel();
+        $cDifabel = $mDifabel->where('kebutuhan_khusus_id', $id)->first();
+        if (!$cDifabel) return $this->fail('Riwayat kebutuhan khusus tidak ditemukan.');
+        if (!$mDifabel->delete($cDifabel['id'], true)) return $this->fail('Riwayat kebutuhan khusus gagal dihapus.');
+        return $this->respond(['message' => 'Riwayat kebutuhan khusus berhasil dihapus permanen.']);
     }
 }

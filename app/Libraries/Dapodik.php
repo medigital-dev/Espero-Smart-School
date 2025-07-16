@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\DapodikSyncModel;
+use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\SemesterModel;
 
 class Dapodik
@@ -162,7 +163,7 @@ class Dapodik
                             'rombel_id' => $row["rombongan_belajar_id"],
                             'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
                         ],
-                        'kebutuhan_khusus' => explode(',', $row["kebutuhan_khusus"]),
+                        'difabel' => $this->renderKebutuhanKhusus($row['nik'], $row['kebutuhan_khusus']),
                     ];
                 }
                 return $response;
@@ -172,5 +173,39 @@ class Dapodik
                 return [];
                 break;
         }
+    }
+
+    private function renderKebutuhanKhusus($nik, $data): array|string
+    {
+        $mRef = new RefJenisKebutuhanKhususModel();
+        if ($data == 'Tidak ada') return [];
+        $array = explode(',', $data);
+        $send = [];
+        if (count($array) == 1) {
+            list($kode, $nama) = array_map('trim', explode(' - ', $data, 2));
+            $c = $mRef->where('kode', $kode)->first();
+            $temp = ['nama' => $nama, 'kode' => $kode];
+            if ($c) {
+                $temp['ref_id'] = $c['ref_id'];
+                $temp['id'] = $c['id'];
+            } else $temp['ref_id'] = idUnik($mRef, 'ref_id');
+            if (!$mRef->save($temp)) throw new \Exception('Referensi kebutuhan khusus gagal disimpan.');
+            $send[] = ['nik' => $nik, 'ref_id' => $temp['ref_id']];
+        } else {
+            foreach ($array as $row) {
+                $temp = ['kode' => $row];
+                $c = $mRef->where('kode', $row)->first();
+                if (!$c) {
+                    $temp['ref_id'] = idUnik($mRef, 'ref_id');
+                    $temp['nama'] = '';
+                } else {
+                    $temp['ref_id'] = $c['ref_id'];
+                    $temp['id'] = $c['id'];
+                }
+                if (!$mRef->save($temp)) throw new \Exception('Referensi kebutuhan khusus gagal disimpan.');
+                $send[] = ['nik' => $nik, 'ref_id' => $temp['ref_id']];
+            }
+        }
+        return $send;
     }
 }

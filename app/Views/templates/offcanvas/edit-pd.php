@@ -29,8 +29,29 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Riwayat Penyakit" id="tabs-penyakit-tab" data-toggle="tab" href="#tabs-penyakit" role="tab" aria-controls="tabs-penyakit" aria-selected="false"><i class="fas fa-book-medical fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Data Periodik" id="tabs-periodik-tab" data-toggle="tab" href="#tabs-periodik" role="tab" aria-controls="tabs-periodik" aria-selected="false"><i class="fas fa-chart-line fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Prestasi" id="tabs-prestasi-tab" data-toggle="tab" href="#tabs-prestasi" role="tab" aria-controls="tabs-prestasi" aria-selected="false"><i class="fas fa-trophy fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kebutuhan Khusus" id="tabs-difabel-tab" data-toggle="tab" href="#tabs-difabel" role="tab" aria-controls="tabs-difabel" aria-selected="false"><i class="fas fa-wheelchair fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-difabel" role="tabpanel" aria-labelledby="tabs-difabel-tab">
+                        <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
+                            <h6 class="text-bold">Kebutuhan Khusus</h6>
+                        </div>
+                        <form id="formData-tabsTambahDifabelPd">
+                            <div class="form-group mb-2">
+                                <label for="tabsDifabel-bidangDifabel" class="small mb-1">Tambah Kebutuhan Khusus</label>
+                                <div class="input-group">
+                                    <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisKebutuhanKhusus" data-tags="true" id="tabsDifabel-bidangDifabel" name="ref_id"></select>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" data-toggle="tooltip" data-title="Simpan" id="btnRun-saveDifabel">
+                                            <div class="fas fa-save"></div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                        <div class="list-group" id="listDifabelPd"></div>
+                    </div>
                     <div class="tab-pane fade" id="tabs-prestasi" role="tabpanel" aria-labelledby="tabs-prestasi-tab">
                         <div class="pt-1 sticky-top align-items-center bg-white mb-2">
                             <div class="d-flex justify-content-between align-items-center mb-2 mt-2">

@@ -17,7 +17,8 @@ class Db0012 extends Migration
                 'default' => null,
             ],
         ]);
-        $this->forge->dropColumn('orangtua_wali_pd', ['anak_ke']);
+        $this->forge->dropColumn('orangtua_wali_pd', ['anak_ke', 'hubungan_keluarga_id']);
+        $this->forge->dropColumn('kebutuhan_khusus', ['tanggal_mulai', 'tanggal_akhir']);
 
         $db = $this->db->table('ref_kebutuhan_khusus');
         $date = date('Y-m-d H:i:s');
@@ -140,9 +141,27 @@ class Db0012 extends Migration
     public function down()
     {
         $this->forge->dropColumn('peserta_didik', ['anak_ke']);
-        $this->forge->addColumn('orantua_wali_pd', [
+        $this->forge->addColumn('orangtua_wali_pd', [
             'anak_ke' => [
                 'type' => 'INT',
+                'null' => true,
+                'default' => null,
+            ],
+            'hubungan_keluarga_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ]
+        ]);
+        $this->forge->addColumn('kebutuhan_khusus', [
+            'tanggal_mulai' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
+            'tanggal_akhir' => [
+                'type' => 'DATE',
                 'null' => true,
                 'default' => null,
             ],
