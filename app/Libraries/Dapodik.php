@@ -150,16 +150,16 @@ class Dapodik
                             'tinggi_badan' => $row["tinggi_badan"],
                             'berat_badan' => $row["berat_badan"],
                         ],
-                        'rombongan_belajar' => [
+                        'rombel' => [
                             'rombel_id' => $row["rombongan_belajar_id"],
                             'semester_id' => $setSemester['semester_id'],
                             'tingkat_pendidikan' => $row["tingkat_pendidikan_id"],
                             'nama' => $row["nama_rombel"],
                             'kurikulum_id' => saveKurikulum($row["kurikulum_id_str"],)
                         ],
-                        'anggota_rombel' => [
-                            'peserta_didik_id' => $row["peserta_didik_id"],
+                        'anggotaRombel' => [
                             'anggota_id' => $row["anggota_rombel_id"],
+                            'peserta_didik_id' => $row["peserta_didik_id"],
                             'rombel_id' => $row["rombongan_belajar_id"],
                             'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
                         ],

@@ -36,7 +36,7 @@
                     <div class="form-group row mb-2 clearfix">
                         <label for="" class="col-sm-3 col-form-label">Jenis Data</label>
                         <div class="col-sm-9">
-                            <div class="row row-cols-2">
+                            <div class="row row-cols-1 row-cols-sm-2">
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
                                         <input type="checkbox" id="formSync-checkIndividu" name="identitas">
@@ -55,9 +55,9 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formSync-checkKontak" name="kontak">
-                                        <label for="formSync-checkKontak">
-                                            Kontak
+                                        <input type="checkbox" id="formSync-checkDifabel" name="difabel">
+                                        <label for="formSync-checkDifabel">
+                                            Kebutuhan Khusus
                                         </label>
                                     </div>
                                 </div>
@@ -87,9 +87,9 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formSync-checkPeriodik" name="periodik">
-                                        <label for="formSync-checkPeriodik">
-                                            Periodik
+                                        <input type="checkbox" id="formSync-checkKontak" name="kontak">
+                                        <label for="formSync-checkKontak">
+                                            Kontak
                                         </label>
                                     </div>
                                 </div>
@@ -103,17 +103,25 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formSync-checkAnggotaRombel" name="anggota_rombel">
-                                        <label for="formSync-checkAnggotaRombel">
-                                            Anggota Rombel
+                                        <input type="checkbox" id="formSync-checkPeriodik" name="periodik">
+                                        <label for="formSync-checkPeriodik">
+                                            Periodik
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formSync-checkDifabel" name="difabel">
-                                        <label for="formSync-checkDifabel">
-                                            Kebutuhan Khusus
+                                        <input type="checkbox" id="formSync-checkRombel" name="rombel">
+                                        <label for="formSync-checkRombel">
+                                            Rombongan Belajar
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formSync-checkAnggotaRombel" name="anggotaRombel">
+                                        <label for="formSync-checkAnggotaRombel">
+                                            Anggota Rombel
                                         </label>
                                     </div>
                                 </div>

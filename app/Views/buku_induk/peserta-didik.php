@@ -25,31 +25,30 @@
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Bersihkan pilihan" id="btnClearSelected"><i class="fas fa-dot-circle fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cek Peserta Didik Baru" id="btnSync-checkNewPd">
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cek Peserta Didik Baru di Dapodik" id="btnSync-checkNewPd">
                             <i class="fas fa-sync-alt fa-fw"></i>
                             <span class="badge bg-danger d-none"></span>
                         </button>
-                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon btn-tooltip" data-title="Menu Sinkronisasi" data-toggle="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon btn-tooltip" data-title="Menu update data dengan Aplikasi Dapodik" data-toggle="dropdown" data-display="static">
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
-                        <div class="dropdown-menu">
-                            <!-- <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Tarik data hanya Peserta Didik Baru" id="btnRun-SyncNewPd"><i class="fas fa-download fa-fw mr-1"></i><span>Tarik PD Baru</span></button>
-                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Sinkronkan semua Peserta Didik dengan data Dapodik" id="btnSync-syncAllPd"><i class="fas fa-retweet fa-fw mr-1"></i><span>Sync Semua PD</span></button> -->
-                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalDapodikSync-pd" data-title="Tarik data Dapodik"><i class="fas fa-angle-double-down fa-fw mr-1"></i><span>Tarik Dapodik</span></button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
+                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalImportDapodik" data-title="Import dari unduhan Aplikasi Dapodik"><i class="fas fa-file-import fa-fw mr-1"></i><span>Import File Dapodik</span></button>
+                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalDapodikSync-pd" data-title="Tarik data dari Aplikasi Dapodik"><i class="fas fa-angle-double-down fa-fw mr-1"></i><span>Tarik Dapodik</span></button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary btn-tooltip" data-title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduhan" id="btnDropdown-unduhPd" data-autoclose="false"><i class="fas fa-download fa-fw"></i></button>
-                        <div class="dropdown-menu">
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduhan" id="btnDropdown-unduhPd" data-autoclose="false" data-display="static"><i class="fas fa-download fa-fw"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
                             <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Unduh tabel beserta filter" id="btnUnduhExcel-bukuIndukPd"><i class="fas fa-file-excel fa-fw mr-1"></i><span>Unduh Excel</span></button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Mutasi"><i class="fas fa-people-arrows fa-fw"></i></button>
-                        <div class="dropdown-menu">
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Mutasi" data-display="static"><i class="fas fa-people-arrows fa-fw"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
                             <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalMutasiPd" data-title="Keluarkan peserta didik"><i class="fas fa-sign-out-alt fa-fw mr-1"></i><span>PD Keluar</span></button>
                             <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalKelulusanPd" data-title="Kelulusan peserta didik"><i class="fas fa-user-graduate fa-fw mr-1"></i><span>Kelulusan</span></button>
                             <div class="dropdown-divider"></div>

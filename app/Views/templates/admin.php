@@ -2741,7 +2741,7 @@
                 const alertElm = $('#syncStatus');
                 let i = 0;
                 let set = [];
-                if (dataType.length == 0 || pd == '') {
+                if (dataType.length == 0 || pd == '' || !pd) {
                     alertElm.html('').html(`
                         <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
                             Error: Peserta Didik/Jenis data belum dipilih.

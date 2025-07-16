@@ -70,12 +70,12 @@
                             <div class="tab-pane fade" id="tabs-tambah-prestasi" role="tabpanel" aria-labelledby="tabs-tambah-prestasi-tab">
                                 <form id="formData-tabsTambahPrestasiPd">
                                     <div class="form-group mb-2">
-                                        <label for="tabsTambahKesejahteraan-bidangPrestasi" class="small mb-1">Bidang Prestasi</label>
-                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="bidangPrestasi" data-tags="true" id="tabsTambahKesejahteraan-bidangPrestasi" name="bidang_id"></select>
+                                        <label for="tabsTambahPrestasi-bidangPrestasi" class="small mb-1">Bidang Prestasi</label>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="bidangPrestasi" data-tags="true" id="tabsTambahPrestasi-bidangPrestasi" name="bidang_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
-                                        <label for="tabsTambahKesejahteraan-tingkatPrestasi" class="small mb-1">Tingkat Prestasi</label>
-                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="tingkatPrestasi" data-tags="true" id="tabsTambahKesejahteraan-tingkatPrestasi" name="bidang_id"></select>
+                                        <label for="tabsTambahPrestasi-tingkatPrestasi" class="small mb-1">Tingkat Prestasi</label>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="tingkatPrestasi" data-tags="true" id="tabsTambahPrestasi-tingkatPrestasi" name="bidang_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label class="small mb-1" for="tabsTambahPrestasi-nama">Nama Kejuaraan/Perlombaan</label>
