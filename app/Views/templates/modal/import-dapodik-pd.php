@@ -20,20 +20,20 @@
                     <label class="col-sm-3 col-form-label">Pilih PD</label>
                     <div class="col-sm-9">
                         <div class="icheck-primary form-check-inline">
-                            <input class="form-check-input" type="radio" id="radioForm-newPd" name="radioForm-statusPd" value="new">
-                            <label class="form-check-label" for="radioForm-newPd">
+                            <input class="form-check-input" type="radio" id="radioFormImport-newPd" name="radioFormImport-statusPd" value="new">
+                            <label class="form-check-label" for="radioFormImport-newPd">
                                 PD Baru
                             </label>
                         </div>
                         <div class="icheck-primary form-check-inline">
-                            <input class="form-check-input" type="radio" id="radioForm-checkedPd" name="radioForm-statusPd" value="checked">
-                            <label class="form-check-label" for="radioForm-checkedPd">
+                            <input class="form-check-input" type="radio" id="radioFormImport-checkedPd" name="radioFormImport-statusPd" value="checked">
+                            <label class="form-check-label" for="radioFormImport-checkedPd">
                                 PD Terpilih
                             </label>
                         </div>
                         <div class="icheck-primary form-check-inline">
-                            <input class="form-check-input" type="radio" id="radioForm-allPd" name="radioForm-statusPd" value="all">
-                            <label class="form-check-label" for="radioForm-allPd">
+                            <input class="form-check-input" type="radio" id="radioFormImport-allPd" name="radioFormImport-statusPd" value="all">
+                            <label class="form-check-label" for="radioFormImport-allPd">
                                 Semua
                             </label>
                         </div>

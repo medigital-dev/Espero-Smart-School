@@ -792,29 +792,28 @@ class Dapodik extends BaseController
         return $this->respond($response);
     }
 
-    public function getFromFileImport($id = null): ResponseInterface
+    public function getFromFileImport($type): ResponseInterface
     {
         $mPd = new PesertaDidikModel();
         $file = $this->request->getFile('fileUpload');
+        $dataId = explode(',', $this->request->getPost('dataId'));
+
         if (!$file) return $this->fail('File untuk di import tidak ditemukan.');
         $result = importDapodik($file, 'pesertaDidik');
         if (!$result['success']) return $this->fail($result['message']);
         $rows = $result['data'];
-        if ($id) {
-            if ((int)$rows[0] > 0) {
-                foreach ($rows as $row) {
-                    $cPd = $mPd->select('peserta_didik_id')
-                        ->where('nik', $row['nik'])
-                        ->where('nisn', $row['nisn'])
-                        ->first();
-                    if ($cPd) {
-                        return $row;
-                    } else {
-                        return $this->fail('Peserta didik tidak ditemukan dalam file import.');
-                    }
-                }
-            }
+        $response = [];
+        foreach ($rows as $row) {
+            $cPd = $mPd->select('peserta_didik_id')
+                ->where('nik', $row['nik'])
+                ->where('nisn', $row['nisn'])
+                ->first();
+            $id = $cPd['peserta_didik_id'] ?? null;
+            if ($type === 'new' && $id) continue;
+            if ($type === 'checked' && (!$id || !in_array($id, $dataId))) continue;
+            if ($type === 'all' && !$id) continue;
+            $response[] = $row;
         }
-        return $this->respond($rows);
+        return $this->respond($response);
     }
 }

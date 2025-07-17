@@ -2733,6 +2733,57 @@
                 }
             });
 
+            $('#btnRun-ImportDapodik').on('click', async function() {
+                const btn = $(this);
+                const formElm = $('#formImport-pd');
+                const dataType = formElm.serializeArray();
+                const pd = $('input[name="radioFormImport-statusPd"]:checked').val();
+                const alertElm = $('#importStatus');
+                const inputElm = $('#inputFile');
+                const file = inputElm.prop('files')[0];
+                let i = 0,
+                    set = [],
+                    data = new FormData();
+
+                if (dataType.length == 0 || !pd) {
+                    alertElm.html('').html(`
+                        <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                            Error: Peserta Didik/Jenis data belum dipilih.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `);
+                    return;
+                }
+
+                data.append('fileUpload', file);
+                data.append('dataId', selectedRows);
+
+                alertElm.html('').html(`
+                        <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                                <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            Mengambil data pada file import...
+                        </div>
+                    `);
+                const result = await fetchData({
+                    url: '/api/v0/dapodik/import/peserta-didik/get/' + pd,
+                    data: data,
+                    method: 'POST',
+                    button: btn,
+                });
+                console.log(result);
+                return;
+                if (!result) return;
+                console.log(result.result.error);
+                inputElm.val('').trigger('change');
+                $('#modalImportDapodik').modal('hide');
+                toast(result.message);
+                dtAdminBukuIndukPd.ajax.reload();
+            });
+
             $('#btnRun-tarikDapodik').on('click', async function() {
                 const btn = $(this);
                 const formElm = $('#formSync-pd');
@@ -3034,29 +3085,6 @@
                         className: 'text-center'
                     },
                 ],
-            });
-
-            $('#btnRun-ImportDapodik').on('click', async function() {
-                const inputElm = $('#inputFile');
-                const file = inputElm.prop('files')[0];
-                const btn = $(this);
-
-                let data = new FormData();
-                data.append('fileUpload', file);
-                const result = await fetchData({
-                    url: '/api/v0/dapodik/import/peserta-didik/get',
-                    data: data,
-                    method: 'POST',
-                    button: btn,
-                });
-                console.log(result);
-                return;
-                if (!result) return;
-                console.log(result.result.error);
-                inputElm.val('').trigger('change');
-                $('#modalImportDapodik').modal('hide');
-                toast(result.message);
-                dtAdminBukuIndukPd.ajax.reload();
             });
 
             tabelKoneksiDapodik.on('draw', function() {

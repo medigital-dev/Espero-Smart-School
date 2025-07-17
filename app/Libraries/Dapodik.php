@@ -298,7 +298,7 @@ class Dapodik
                 foreach ($data as $row) {
                     if ((int)$row[0] > 0) {
                         $send[] = [
-                            'nama' => $row[1],
+                            'nama' => eyd($row[1]),
                             'nik' => $row[7],
                             'nisn' => $row[4],
                             'nipd' => $row[2],
