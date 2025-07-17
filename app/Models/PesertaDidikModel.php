@@ -27,5 +27,6 @@ class PesertaDidikModel extends Model
         'nomor_akte',
         'foto_id',
         'anak_ke',
+        'jumlah_saudara'
     ];
 }

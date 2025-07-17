@@ -3044,11 +3044,13 @@
                 let data = new FormData();
                 data.append('fileUpload', file);
                 const result = await fetchData({
-                    url: '/api/v0/dapodik/import/pd',
+                    url: '/api/v0/dapodik/import/peserta-didik/get',
                     data: data,
                     method: 'POST',
                     button: btn,
                 });
+                console.log(result);
+                return;
                 if (!result) return;
                 console.log(result.result.error);
                 inputElm.val('').trigger('change');

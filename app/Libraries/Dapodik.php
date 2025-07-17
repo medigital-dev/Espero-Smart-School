@@ -5,12 +5,13 @@ namespace App\Libraries;
 use App\Models\DapodikSyncModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\SemesterModel;
+use CodeIgniter\HTTP\Files\UploadedFile;
 
 class Dapodik
 {
     public function __construct()
     {
-        helper(['string', 'indonesia', 'referensi']);
+        helper(['string', 'indonesia', 'referensi', 'file']);
     }
 
     public function config(): array|null
@@ -112,7 +113,7 @@ class Dapodik
                             'peserta_didik_id' => $row["peserta_didik_id"],
                             'nama' => eyd($row["nama"]),
                             'nisn' => $row["nisn"],
-                            'jenis_kelamin' => $row["jenis_kelamin"],
+                            'jenis_kelamin' => saveJenisKelamin($row["jenis_kelamin"]),
                             'nik' => $row["nik"],
                             'tempat_lahir' => $row["tempat_lahir"],
                             'tanggal_lahir' => $row["tanggal_lahir"],
@@ -135,10 +136,12 @@ class Dapodik
                         ],
                         'ayah' => [
                             'nama' => eyd($row["nama_ayah"]),
+                            'jenis_kelamin' => saveJenisKelamin('Laki-laki'),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_ayah_id_str"]),
                         ],
                         'ibu' => [
                             'nama' => eyd($row["nama_ibu"]),
+                            'jenis_kelamin' => saveJenisKelamin('Perempuan'),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_ibu_id_str"]),
                         ],
                         'wali' => [
@@ -205,6 +208,201 @@ class Dapodik
                 if (!$mRef->save($temp)) throw new \Exception('Referensi kebutuhan khusus gagal disimpan.');
                 $send[] = ['nik' => $nik, 'ref_id' => $temp['ref_id']];
             }
+        }
+        return $send;
+    }
+
+    public function import(UploadedFile $file, $type): array
+    {
+        $data = [];
+        try {
+            $result = importExcel($file);
+
+            if (!$result['status']) return $result;
+
+            $rows = $result['data'];
+            if ($type == 'pesertaDidik') {
+                // validasi file peserta didik dari dapodik
+                if ($rows[0][0] !== "Daftar Peserta Didik")
+                    return [
+                        'success' => false,
+                        'http_code' => 400,
+                        'status_code' => 'error',
+                        'message' => 'File yang di upload bukan hasil unduhan Daftar Peserta Didik di Aplikasi Dapodik',
+                        'data' => [],
+                    ];
+
+                // validasi header tabel
+                $headerFile = $rows[4];
+                $header1 = ["No", "Nama", "NIPD", "JK", "NISN", "Tempat Lahir", "Tanggal Lahir", "NIK", "Agama", "Alamat", "RT", "RW", "Dusun", "Kelurahan", "Kecamatan", "Kode Pos", "Jenis Tinggal", "Alat Transportasi", "Telepon", "HP", "E-Mail", "SKHUN", "Penerima KPS", "No. KPS", "Data Ayah", "", "", "", "", "", "Data Ibu", "", "", "", "", "", "Data Wali", "", "", "", "", "", "Rombel Saat Ini", "No Peserta Ujian Nasional", "No Seri Ijazah", "Penerima KIP", "Nomor KIP", "Nama di KIP", "Nomor KKS", "No Registrasi Akta Lahir", "Bank", "Nomor Rekening Bank", "Rekening Atas Nama", "Layak PIP (usulan dari sekolah)", "Alasan Layak PIP", "Kebutuhan Khusus", "Sekolah Asal", "Anak ke-berapa", "Lintang", "Bujur", "No KK", "Berat Badan", "Tinggi Badan", "Lingkar Kepala", "Jml. Saudara\nKandung", "Jarak Rumah\nke Sekolah (KM)"];
+                $headerFile2 = $rows[5];
+                $header2 = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "Nama", "Tahun Lahir", "Jenjang Pendidikan", "Pekerjaan", "Penghasilan", "NIK", "Nama", "Tahun Lahir", "Jenjang Pendidikan", "Pekerjaan", "Penghasilan", "NIK", "Nama", "Tahun Lahir", "Jenjang Pendidikan", "Pekerjaan", "Penghasilan", "NIK", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
+                if (count($header1) !== count($headerFile))
+                    return [
+                        'success' => false,
+                        'http_code' => 400,
+                        'status_code' => 'error',
+                        'message' => 'Jumlah Header tabel pada file import telah mengalami perubahan.',
+                        'data' => [],
+                    ];
+                $invalid = [];
+                foreach ($header1 as $index => $expectedHeader) {
+                    $actualHeader = strtolower(trim($headerFile[$index] ?? ''));
+                    $expectedHeader = strtolower(trim($expectedHeader));
+                    if ($actualHeader !== $expectedHeader) {
+                        $invalid[] = "Header Pertama pada kolom ke-{$index} harus '{$expectedHeader}', ditemukan '{$headerFile[$index]}'";
+                    }
+                }
+
+                foreach ($header2 as $index => $expectedHeader) {
+                    $actualHeader = strtolower(trim($headerFile2[$index] ?? ''));
+                    $expectedHeader = strtolower(trim($expectedHeader));
+                    if ($actualHeader !== $expectedHeader) {
+                        $invalid[] = ["Header Kedua pada kolom ke-{$index} harus '{$expectedHeader}', ditemukan '{$headerFile2[$index]}'"];
+                    }
+                }
+                if (count($invalid) > 0)
+                    return [
+                        'success' => false,
+                        'http_code' => 400,
+                        'status_code' => 'error',
+                        'message' => 'Judul Header tabel pada file import telah mengalami perubahan.',
+                        'data' => $invalid,
+                    ];
+
+                $data = $this->renderDataImport($rows, $type);
+            }
+            return  [
+                'success' => true,
+                'http_code' => 200,
+                'status_code' => 'success',
+                'message' => 'Data berhasil di import dari file import.',
+                'data' => $data,
+            ];
+        } catch (\Exception $e) {
+            return  [
+                'success' => false,
+                'http_code' => 400,
+                'status_code' => 'error',
+                'message' => $e->getMessage(),
+                'data' => [],
+            ];
+        }
+    }
+
+    public function renderDataImport($data, $type)
+    {
+        $send = [];
+        switch ($type) {
+            case 'pesertaDidik':
+                foreach ($data as $row) {
+                    if ((int)$row[0] > 0) {
+                        $send[] = [
+                            'nama' => $row[1],
+                            'nik' => $row[7],
+                            'nisn' => $row[4],
+                            'nipd' => $row[2],
+                            'identitas' => [
+                                'nama' => eyd($row[1]),
+                                'jenis_kelamin' => saveJenisKelamin($row[3]),
+                                'tempat_lahir' => $row[5],
+                                'tanggal_lahir' => $row[6],
+                                'nisn' => $row[4],
+                                'nik' => $row[7],
+                                'agama_id' => saveAgama($row[8]),
+                                'nomor_akte' => $row[49],
+                                'nomor_kk' => $row[60],
+                                'anak_ke' => (int)$row[57],
+                                'jumlah_saudara' => (int)$row[64],
+                            ],
+                            'registrasi' => [
+                                'nipd' => $row[2],
+                                'asal_sekolah' => $row[56],
+                            ],
+                            'alamat' => [
+                                'alamat_jalan' => $row[9],
+                                'rt' => (int)$row[10],
+                                'rw' => (int) $row[11],
+                                'dusun' => $row[12],
+                                'desa' => $row[13],
+                                'kecamatan' => $row[14],
+                                'kode_pos' => $row[15],
+                                'lintang' => $row[58],
+                                'bujur' => $row[59],
+                                'jarak_rumah' => (int)$row[65],
+                                'alat_transportasi_id' => saveTransportasi($row[17]),
+                                'jenis_tinggal_id' => saveJenisTinggal($row[16]),
+                            ],
+                            'kontak' => [
+                                'telepon' => $row[18],
+                                'hp' => $row[19],
+                                'email' => $row[20],
+                            ],
+                            'ayah' => [
+                                'nama' => eyd($row[24]),
+                                'jenis_kelamin' => saveJenisKelamin('L'),
+                                'pendidikan_id' => savePendidikan($row[26]),
+                                'pekerjaan_id' => savePekerjaan($row[27]),
+                                'penghasilan_id' => savePenghasilan($row[28]),
+                                'nik' => $row[29],
+                            ],
+                            'ibu' => [
+                                'nama' => eyd($row[30]),
+                                'jenis_kelamin' => saveJenisKelamin('P'),
+                                'pendidikan_id' => savePendidikan($row[32]),
+                                'pekerjaan_id' => savePekerjaan($row[33]),
+                                'penghasilan_id' => savePenghasilan($row[34]),
+                                'nik' => $row[35],
+                            ],
+                            'wali' => [
+                                'nama' => eyd($row[36]),
+                                'pendidikan_id' => savePendidikan($row[38]),
+                                'pekerjaan_id' => savePekerjaan($row[39]),
+                                'penghasilan_id' => savePenghasilan($row[40]),
+                                'nik' => $row[41],
+                            ],
+                            'difabel' => $this->renderKebutuhanKhusus($row[7], $row[55]),
+                            'periodik' => [
+                                'tinggi_badan' => $row[62],
+                                'berat_badan' => $row[61],
+                                'lingkat_kepala' => $row[63],
+                            ],
+                            'sekolah_sebelumnya' => [
+                                'nomor_skhun' => $row[21],
+                                'nomor_ijazah' => $row[44],
+                                'nomor_ujian' => $row[43],
+                            ],
+                            'kesejahteraan' => [
+                                [
+                                    'jenis_id' => saveJenisKesejahteraan('Kartu Perlindungan Sosial', ['kode' => 'KPS']),
+                                    'nomor_kartu' => $row[23],
+                                ],
+                                [
+                                    'jenis_id' => saveJenisKesejahteraan('Kartu Indonesia Pintar', ['kode' => 'KIP']),
+                                    'nomor_kartu' => $row[46],
+                                    'nama_kartu' => $row[47],
+                                ],
+                                [
+                                    'jenis_id' => saveJenisKesejahteraan('Kartu Keluarga Sejahtera', ['kode' => 'KKS']),
+                                    'nomor_kartu' => $row[48]
+                                ]
+                            ],
+                            'pip' => [
+                                'bank' => $row[50],
+                                'nomor_rekening' => $row[51],
+                                'atas_nama' => $row[52],
+                            ],
+                            'layak_pip' => [
+                                'status' => $row[53],
+                                'alasan' => $row[54],
+                            ]
+                        ];
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
         return $send;
     }

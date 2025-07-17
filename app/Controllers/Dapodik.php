@@ -205,299 +205,299 @@ class Dapodik extends BaseController
         return view('dapodik/riwayat-test', $data);
     }
 
-    public function syncPd()
-    {
-        $mPesertaDidik = new PesertaDidikModel();
-        $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $mOrtuWali = new OrangtuaWaliModel();
-        $mOrtuWaliPd = new OrtuWaliPdModel();
-        $mRombel = new RombelModel();
-        $mAnggotaRombel = new AnggotaRombelModel();
-        $mSemester = new SemesterModel();
-        $mKontak = new KontakModel();
-        $mPeriodik = new PeriodikModel();
+    // public function syncPd()
+    // {
+    //     $mPesertaDidik = new PesertaDidikModel();
+    //     $mRegistrasi = new RegistrasiPesertaDidikModel();
+    //     $mOrtuWali = new OrangtuaWaliModel();
+    //     $mOrtuWaliPd = new OrtuWaliPdModel();
+    //     $mRombel = new RombelModel();
+    //     $mAnggotaRombel = new AnggotaRombelModel();
+    //     $mSemester = new SemesterModel();
+    //     $mKontak = new KontakModel();
+    //     $mPeriodik = new PeriodikModel();
 
-        $request = syncDapodik('getPesertaDidik');
+    //     $request = syncDapodik('getPesertaDidik');
 
-        if (!$request['success']) return $this->fail($request['message']);
-        $error = [];
-        $success = 0;
-        foreach ($request['data'] as $row) {
-            $idPd = $row['peserta_didik_id'];
-            $nik = $row['nik'];
+    //     if (!$request['success']) return $this->fail($request['message']);
+    //     $error = [];
+    //     $success = 0;
+    //     foreach ($request['data'] as $row) {
+    //         $idPd = $row['peserta_didik_id'];
+    //         $nik = $row['nik'];
 
-            $setRegistrasi = [
-                'registrasi_id' => $row['registrasi_id'],
-                'peserta_didik_id' => $row['peserta_didik_id'],
-                'jenis_registrasi' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str'], ['ref_id' => $row['jenis_pendaftaran_id']]),
-                'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
-                'nipd' => $row['nipd'],
-                'asal_sekolah' => $row['sekolah_asal'],
-            ];
-            $cReg = $mRegistrasi
-                ->groupStart()
-                ->where('peserta_didik_id', $idPd)
-                ->orWhere('nipd', $row['nipd'])
-                ->groupEnd()
-                ->first();
-            if ($cReg) $setRegistrasi['id'] = $cReg['id'];
-            if (!$mRegistrasi->save($setRegistrasi))
-                $error[] = [
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'peserta_didik_id' => $idPd,
-                    'nama' => $row['nama'],
-                    'type' => 'saveRegistrasi',
-                    'message' => 'Data registrasi gagal disimpan.',
-                    'data' => $setRegistrasi,
-                ];
+    //         $setRegistrasi = [
+    //             'registrasi_id' => $row['registrasi_id'],
+    //             'peserta_didik_id' => $row['peserta_didik_id'],
+    //             'jenis_registrasi' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str'], ['ref_id' => $row['jenis_pendaftaran_id']]),
+    //             'tanggal_registrasi' => $row['tanggal_masuk_sekolah'],
+    //             'nipd' => $row['nipd'],
+    //             'asal_sekolah' => $row['sekolah_asal'],
+    //         ];
+    //         $cReg = $mRegistrasi
+    //             ->groupStart()
+    //             ->where('peserta_didik_id', $idPd)
+    //             ->orWhere('nipd', $row['nipd'])
+    //             ->groupEnd()
+    //             ->first();
+    //         if ($cReg) $setRegistrasi['id'] = $cReg['id'];
+    //         if (!$mRegistrasi->save($setRegistrasi))
+    //             $error[] = [
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'peserta_didik_id' => $idPd,
+    //                 'nama' => $row['nama'],
+    //                 'type' => 'saveRegistrasi',
+    //                 'message' => 'Data registrasi gagal disimpan.',
+    //                 'data' => $setRegistrasi,
+    //             ];
 
-            $setPd = [
-                'peserta_didik_id' => $row['peserta_didik_id'],
-                'nama' => $row['nama'],
-                'jenis_kelamin' => $row['jenis_kelamin'],
-                'tempat_lahir' => $row['tempat_lahir'],
-                'tanggal_lahir' => $row['tanggal_lahir'],
-                'nisn' => $row['nisn'],
-                'nik' => $row['nik'],
-                'agama_id' => saveAgama($row['agama_id_str']),
-            ];
-            $cPd = $mPesertaDidik
-                ->groupStart()
-                ->where('peserta_didik_id', $idPd)
-                ->orWhere('nisn', $row['nisn'])
-                ->orWhere('nik', $row['nik'])
-                ->orWhere('nama', $row['nama'])
-                ->groupEnd()
-                ->first();
-            if ($cPd) $setPd['id'] = $cPd['id'];
-            if (!$mPesertaDidik->save($setPd)) $error[] = [
-                'created_at' => date('Y-m-d H:i:s'),
-                'peserta_didik_id' => $idPd,
-                'nama' => $row['nama'],
-                'type' => 'savePd',
-                'message' => 'Data peserta didik gagal disimpan.',
-                'data' => $setPd,
-            ];
+    //         $setPd = [
+    //             'peserta_didik_id' => $row['peserta_didik_id'],
+    //             'nama' => $row['nama'],
+    //             'jenis_kelamin' => $row['jenis_kelamin'],
+    //             'tempat_lahir' => $row['tempat_lahir'],
+    //             'tanggal_lahir' => $row['tanggal_lahir'],
+    //             'nisn' => $row['nisn'],
+    //             'nik' => $row['nik'],
+    //             'agama_id' => saveAgama($row['agama_id_str']),
+    //         ];
+    //         $cPd = $mPesertaDidik
+    //             ->groupStart()
+    //             ->where('peserta_didik_id', $idPd)
+    //             ->orWhere('nisn', $row['nisn'])
+    //             ->orWhere('nik', $row['nik'])
+    //             ->orWhere('nama', $row['nama'])
+    //             ->groupEnd()
+    //             ->first();
+    //         if ($cPd) $setPd['id'] = $cPd['id'];
+    //         if (!$mPesertaDidik->save($setPd)) $error[] = [
+    //             'created_at' => date('Y-m-d H:i:s'),
+    //             'peserta_didik_id' => $idPd,
+    //             'nama' => $row['nama'],
+    //             'type' => 'savePd',
+    //             'message' => 'Data peserta didik gagal disimpan.',
+    //             'data' => $setPd,
+    //         ];
 
-            $setKontakPd = [
-                'nik' => $nik,
-                'telepon' => $row['nomor_telepon_rumah'],
-                'hp' => $row['nomor_telepon_seluler'],
-                'email' => $row['email'],
-            ];
-            $cKontak = $mKontak->where('nik', $nik)->first();
-            if ($cKontak) $setKontakPd['id'] = $cKontak['id'];
-            else $setKontakPd['kontak_id'] = idUnik($mKontak, 'kontak_id');
-            if (!$mKontak->save($setKontakPd))
-                $error[] = [
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'peserta_didik_id' => $idPd,
-                    'nama' => $row['nama'],
-                    'type' => 'saveContact',
-                    'message' => 'Data kontak gagal disimpan.',
-                    'data' => $setKontakPd,
-                ];
+    //         $setKontakPd = [
+    //             'nik' => $nik,
+    //             'telepon' => $row['nomor_telepon_rumah'],
+    //             'hp' => $row['nomor_telepon_seluler'],
+    //             'email' => $row['email'],
+    //         ];
+    //         $cKontak = $mKontak->where('nik', $nik)->first();
+    //         if ($cKontak) $setKontakPd['id'] = $cKontak['id'];
+    //         else $setKontakPd['kontak_id'] = idUnik($mKontak, 'kontak_id');
+    //         if (!$mKontak->save($setKontakPd))
+    //             $error[] = [
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'peserta_didik_id' => $idPd,
+    //                 'nama' => $row['nama'],
+    //                 'type' => 'saveContact',
+    //                 'message' => 'Data kontak gagal disimpan.',
+    //                 'data' => $setKontakPd,
+    //             ];
 
-            // Orangtua
-            $idAyah = $idIbu = $idWali = null;
-            // Mulai Ortu: Ayah
-            if ($row['nama_ayah']) {
-                $setOrtuAyah = [
-                    'nama' => $row['nama_ayah'],
-                    'pekerjaan_id' => savePekerjaan($row['pekerjaan_ayah_id_str']),
-                    'jenis_kelamin' => 'L',
-                ];
-                $cAyah = $mOrtuWali->where('nama', $setOrtuAyah['nama'])->first();
-                if (!$cAyah) {
-                    $setOrtuAyah['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-                } else {
-                    $setOrtuAyah['id'] = $cAyah['id'];
-                    $setOrtuAyah['orangtua_id'] = $cAyah['orangtua_id'];
-                };
-                if (!$mOrtuWali->save($setOrtuAyah))
-                    $error[] = [
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'peserta_didik_id' => $idPd,
-                        'nama' => $row['nama'],
-                        'type' => 'saveAyah',
-                        'message' => 'Data ayah gagal disimpan.',
-                        'data' => $setOrtuAyah,
-                    ];
-                $idAyah = $setOrtuAyah['orangtua_id'];
-            }
-            // Akhir Ortu: Ayah
+    //         // Orangtua
+    //         $idAyah = $idIbu = $idWali = null;
+    //         // Mulai Ortu: Ayah
+    //         if ($row['nama_ayah']) {
+    //             $setOrtuAyah = [
+    //                 'nama' => $row['nama_ayah'],
+    //                 'pekerjaan_id' => savePekerjaan($row['pekerjaan_ayah_id_str']),
+    //                 'jenis_kelamin' => 'L',
+    //             ];
+    //             $cAyah = $mOrtuWali->where('nama', $setOrtuAyah['nama'])->first();
+    //             if (!$cAyah) {
+    //                 $setOrtuAyah['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+    //             } else {
+    //                 $setOrtuAyah['id'] = $cAyah['id'];
+    //                 $setOrtuAyah['orangtua_id'] = $cAyah['orangtua_id'];
+    //             };
+    //             if (!$mOrtuWali->save($setOrtuAyah))
+    //                 $error[] = [
+    //                     'created_at' => date('Y-m-d H:i:s'),
+    //                     'peserta_didik_id' => $idPd,
+    //                     'nama' => $row['nama'],
+    //                     'type' => 'saveAyah',
+    //                     'message' => 'Data ayah gagal disimpan.',
+    //                     'data' => $setOrtuAyah,
+    //                 ];
+    //             $idAyah = $setOrtuAyah['orangtua_id'];
+    //         }
+    //         // Akhir Ortu: Ayah
 
-            // Mulai Ortu: Ibu
-            if ($row['nama_ibu']) {
-                $setOrtuIbu = [
-                    'nama' => $row['nama_ibu'],
-                    'pekerjaan_id' => savePekerjaan($row['pekerjaan_ibu_id_str']),
-                    'jenis_kelamin' => 'P',
-                ];
-                $cIbu = $mOrtuWali->where('nama', $setOrtuIbu['nama'])->first();
-                if (!$cIbu) {
-                    $setOrtuIbu['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-                } else {
-                    $setOrtuIbu['id'] = $cIbu['id'];
-                    $setOrtuIbu['orangtua_id'] = $cIbu['orangtua_id'];
-                }
-                if (!$mOrtuWali->save($setOrtuIbu))
-                    $error[] = [
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'peserta_didik_id' => $idPd,
-                        'nama' => $row['nama'],
-                        'type' => 'saveIbu',
-                        'message' => 'Data ibu gagal disimpan.',
-                        'data' => $setOrtuIbu,
-                    ];
-                $idIbu = $setOrtuIbu['orangtua_id'];
-            }
-            // Akhir Ortu: Ibu
+    //         // Mulai Ortu: Ibu
+    //         if ($row['nama_ibu']) {
+    //             $setOrtuIbu = [
+    //                 'nama' => $row['nama_ibu'],
+    //                 'pekerjaan_id' => savePekerjaan($row['pekerjaan_ibu_id_str']),
+    //                 'jenis_kelamin' => 'P',
+    //             ];
+    //             $cIbu = $mOrtuWali->where('nama', $setOrtuIbu['nama'])->first();
+    //             if (!$cIbu) {
+    //                 $setOrtuIbu['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+    //             } else {
+    //                 $setOrtuIbu['id'] = $cIbu['id'];
+    //                 $setOrtuIbu['orangtua_id'] = $cIbu['orangtua_id'];
+    //             }
+    //             if (!$mOrtuWali->save($setOrtuIbu))
+    //                 $error[] = [
+    //                     'created_at' => date('Y-m-d H:i:s'),
+    //                     'peserta_didik_id' => $idPd,
+    //                     'nama' => $row['nama'],
+    //                     'type' => 'saveIbu',
+    //                     'message' => 'Data ibu gagal disimpan.',
+    //                     'data' => $setOrtuIbu,
+    //                 ];
+    //             $idIbu = $setOrtuIbu['orangtua_id'];
+    //         }
+    //         // Akhir Ortu: Ibu
 
-            // Mulai Ortu: Wali
-            if ($row['nama_wali']) {
-                $setOrtuWali = [
-                    'nama' => $row['nama_wali'],
-                    'pekerjaan_id' => savePekerjaan($row['pekerjaan_wali_id_str']),
-                ];
-                $cWali = $mOrtuWali->where('nama', $setOrtuWali['nama'])->first();
-                if (!$cWali) {
-                    $setOrtuWali['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-                } else {
-                    $setOrtuWali['id'] = $cWali['id'];
-                    $setOrtuWali['orangtua_id'] = $cWali['orangtua_id'];
-                }
-                if (!$mOrtuWali->save($setOrtuWali))
-                    $error[] = [
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'peserta_didik_id' => $idPd,
-                        'nama' => $row['nama'],
-                        'type' => 'saveWali',
-                        'message' => 'Data wali gagal disimpan.',
-                        'data' => $setOrtuWali,
-                    ];
-                $idWali = $setOrtuWali['orangtua_id'];
-            }
-            // Akhir Ortu: Wali
+    //         // Mulai Ortu: Wali
+    //         if ($row['nama_wali']) {
+    //             $setOrtuWali = [
+    //                 'nama' => $row['nama_wali'],
+    //                 'pekerjaan_id' => savePekerjaan($row['pekerjaan_wali_id_str']),
+    //             ];
+    //             $cWali = $mOrtuWali->where('nama', $setOrtuWali['nama'])->first();
+    //             if (!$cWali) {
+    //                 $setOrtuWali['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+    //             } else {
+    //                 $setOrtuWali['id'] = $cWali['id'];
+    //                 $setOrtuWali['orangtua_id'] = $cWali['orangtua_id'];
+    //             }
+    //             if (!$mOrtuWali->save($setOrtuWali))
+    //                 $error[] = [
+    //                     'created_at' => date('Y-m-d H:i:s'),
+    //                     'peserta_didik_id' => $idPd,
+    //                     'nama' => $row['nama'],
+    //                     'type' => 'saveWali',
+    //                     'message' => 'Data wali gagal disimpan.',
+    //                     'data' => $setOrtuWali,
+    //                 ];
+    //             $idWali = $setOrtuWali['orangtua_id'];
+    //         }
+    //         // Akhir Ortu: Wali
 
-            // Set Orangtua Wali Pd
-            $setOrtuWaliPd = [
-                'peserta_didik_id' => $idPd,
-                'ayah_id' => $idAyah,
-                'ibu_id' => $idIbu,
-                'wali_id' => $idWali,
-            ];
-            $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->first();
-            if (!$cOrtuWaliPd) $setOrtuWaliPd['ortupd_id'] = idUnik($mOrtuWaliPd, 'ortupd_id');
-            else $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
-            if (!$mOrtuWaliPd->save($setOrtuWaliPd))
-                $error[] = [
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'peserta_didik_id' => $idPd,
-                    'nama' => $row['nama'],
-                    'type' => 'saveOrtuWaliPd',
-                    'message' => 'Data orangtua/wali peserta didik gagal disimpan.',
-                    'data' => $setOrtuWaliPd,
-                ];
+    //         // Set Orangtua Wali Pd
+    //         $setOrtuWaliPd = [
+    //             'peserta_didik_id' => $idPd,
+    //             'ayah_id' => $idAyah,
+    //             'ibu_id' => $idIbu,
+    //             'wali_id' => $idWali,
+    //         ];
+    //         $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $idPd)->first();
+    //         if (!$cOrtuWaliPd) $setOrtuWaliPd['ortupd_id'] = idUnik($mOrtuWaliPd, 'ortupd_id');
+    //         else $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
+    //         if (!$mOrtuWaliPd->save($setOrtuWaliPd))
+    //             $error[] = [
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'peserta_didik_id' => $idPd,
+    //                 'nama' => $row['nama'],
+    //                 'type' => 'saveOrtuWaliPd',
+    //                 'message' => 'Data orangtua/wali peserta didik gagal disimpan.',
+    //                 'data' => $setOrtuWaliPd,
+    //             ];
 
-            $cPeriodik = $mPeriodik
-                ->where('nik', $nik)
-                ->where('tinggi_badan', $row['tinggi_badan'])
-                ->where('berat_badan', $row['berat_badan'])
-                ->where('anak_ke', $row['anak_keberapa'])
-                ->first();
+    //         $cPeriodik = $mPeriodik
+    //             ->where('nik', $nik)
+    //             ->where('tinggi_badan', $row['tinggi_badan'])
+    //             ->where('berat_badan', $row['berat_badan'])
+    //             ->where('anak_ke', $row['anak_keberapa'])
+    //             ->first();
 
-            $setPeriodik = [
-                'tinggi_badan' => $row['tinggi_badan'],
-                'berat_badan' => $row['berat_badan'],
-                'anak_ke' => $row['anak_keberapa'],
-                'nik' => $nik,
-                'tanggal' => date('Y-m-d'),
-            ];
-            if (!$cPeriodik) {
-                $setPeriodik['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
-                if (!$mPeriodik->save($setPeriodik))
-                    $error[] = [
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'peserta_didik_id' => $idPd,
-                        'nama' => $row['nama'],
-                        'type' => 'savePeriodik',
-                        'message' => 'Data periodik peserta didik gagal disimpan.',
-                        'data' => $setPeriodik
-                    ];
-            }
+    //         $setPeriodik = [
+    //             'tinggi_badan' => $row['tinggi_badan'],
+    //             'berat_badan' => $row['berat_badan'],
+    //             'anak_ke' => $row['anak_keberapa'],
+    //             'nik' => $nik,
+    //             'tanggal' => date('Y-m-d'),
+    //         ];
+    //         if (!$cPeriodik) {
+    //             $setPeriodik['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
+    //             if (!$mPeriodik->save($setPeriodik))
+    //                 $error[] = [
+    //                     'created_at' => date('Y-m-d H:i:s'),
+    //                     'peserta_didik_id' => $idPd,
+    //                     'nama' => $row['nama'],
+    //                     'type' => 'savePeriodik',
+    //                     'message' => 'Data periodik peserta didik gagal disimpan.',
+    //                     'data' => $setPeriodik
+    //                 ];
+    //         }
 
-            $setSemester = [
-                'kode' => $row['semester_id'],
-                'status' => true,
-            ];
-            $mSemester->where('status', true)->set('status', false)->update();
-            $cSemester = $mSemester->where('kode', $row['semester_id'])
-                ->first();
-            if (!$cSemester)
-                $setSemester['semester_id'] = idUnik($mSemester, 'semester_id');
-            else {
-                $setSemester['id'] = $cSemester['id'];
-                $setSemester['semester_id'] = $cSemester['semester_id'];
-            };
-            if (!$mSemester->save($setSemester))
-                $error[] = [
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'peserta_didik_id' => $idPd,
-                    'nama' => $row['nama'],
-                    'type' => 'saveSemester',
-                    'message' => 'Data semester gagal disimpan.',
-                    'data' => $setSemester,
-                ];
+    //         $setSemester = [
+    //             'kode' => $row['semester_id'],
+    //             'status' => true,
+    //         ];
+    //         $mSemester->where('status', true)->set('status', false)->update();
+    //         $cSemester = $mSemester->where('kode', $row['semester_id'])
+    //             ->first();
+    //         if (!$cSemester)
+    //             $setSemester['semester_id'] = idUnik($mSemester, 'semester_id');
+    //         else {
+    //             $setSemester['id'] = $cSemester['id'];
+    //             $setSemester['semester_id'] = $cSemester['semester_id'];
+    //         };
+    //         if (!$mSemester->save($setSemester))
+    //             $error[] = [
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'peserta_didik_id' => $idPd,
+    //                 'nama' => $row['nama'],
+    //                 'type' => 'saveSemester',
+    //                 'message' => 'Data semester gagal disimpan.',
+    //                 'data' => $setSemester,
+    //             ];
 
-            $setRombel = [
-                'rombel_id' => $row['rombongan_belajar_id'],
-                'tingkat_pendidikan' => $row['tingkat_pendidikan_id'],
-                'nama' => $row['nama_rombel'],
-                'semester_id' => $setSemester['semester_id']
-            ];
-            $cRombel = $mRombel->where('rombel_id', $setRombel['rombel_id'])->first();
-            if ($cRombel)
-                $setRombel['id'] = $cRombel['id'];
-            if (!$mRombel->save($setRombel))
-                $error[] = [
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'peserta_didik_id' => $idPd,
-                    'nama' => $row['nama'],
-                    'type' => 'saveRombel',
-                    'message' => 'Data rombongan belajar gagal disimpan.',
-                    'data' => $setRombel,
-                ];
+    //         $setRombel = [
+    //             'rombel_id' => $row['rombongan_belajar_id'],
+    //             'tingkat_pendidikan' => $row['tingkat_pendidikan_id'],
+    //             'nama' => $row['nama_rombel'],
+    //             'semester_id' => $setSemester['semester_id']
+    //         ];
+    //         $cRombel = $mRombel->where('rombel_id', $setRombel['rombel_id'])->first();
+    //         if ($cRombel)
+    //             $setRombel['id'] = $cRombel['id'];
+    //         if (!$mRombel->save($setRombel))
+    //             $error[] = [
+    //                 'created_at' => date('Y-m-d H:i:s'),
+    //                 'peserta_didik_id' => $idPd,
+    //                 'nama' => $row['nama'],
+    //                 'type' => 'saveRombel',
+    //                 'message' => 'Data rombongan belajar gagal disimpan.',
+    //                 'data' => $setRombel,
+    //             ];
 
-            $cAnggotaRombel = $mAnggotaRombel->where('rombel_id', $row['rombongan_belajar_id'])
-                ->where('peserta_didik_id', $idPd)
-                ->first();
-            if (!$cAnggotaRombel) {
-                $setAnggotaRombel = [
-                    'anggota_id' => $row['anggota_rombel_id'],
-                    'rombel_id' => $row['rombongan_belajar_id'],
-                    'jenis_registrasi_rombel' => $row['jenis_pendaftaran_id_str'],
-                    'peserta_didik_id' => $idPd,
-                ];
-                if (!$mAnggotaRombel->save($setAnggotaRombel))
-                    $error[] = [
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'peserta_didik_id' => $idPd,
-                        'nama' => $row['nama'],
-                        'type' => 'saveAnggotaRombel',
-                        'message' => 'Data anggota rombongan belajar gagal disimpan.',
-                        'data' => $setAnggotaRombel,
-                    ];
-            }
-        }
+    //         $cAnggotaRombel = $mAnggotaRombel->where('rombel_id', $row['rombongan_belajar_id'])
+    //             ->where('peserta_didik_id', $idPd)
+    //             ->first();
+    //         if (!$cAnggotaRombel) {
+    //             $setAnggotaRombel = [
+    //                 'anggota_id' => $row['anggota_rombel_id'],
+    //                 'rombel_id' => $row['rombongan_belajar_id'],
+    //                 'jenis_registrasi_rombel' => $row['jenis_pendaftaran_id_str'],
+    //                 'peserta_didik_id' => $idPd,
+    //             ];
+    //             if (!$mAnggotaRombel->save($setAnggotaRombel))
+    //                 $error[] = [
+    //                     'created_at' => date('Y-m-d H:i:s'),
+    //                     'peserta_didik_id' => $idPd,
+    //                     'nama' => $row['nama'],
+    //                     'type' => 'saveAnggotaRombel',
+    //                     'message' => 'Data anggota rombongan belajar gagal disimpan.',
+    //                     'data' => $setAnggotaRombel,
+    //                 ];
+    //         }
+    //     }
 
-        $response = [
-            'status' => true,
-            'message' => count($request['data']) . ' Data peserta didik berhasil disinkronkan.',
-            'errors' => $error
-        ];
-        return $this->respond($response);
-    }
+    //     $response = [
+    //         'status' => true,
+    //         'message' => count($request['data']) . ' Data peserta didik berhasil disinkronkan.',
+    //         'errors' => $error
+    //     ];
+    //     return $this->respond($response);
+    // }
 
     public function importPd()
     {
@@ -790,5 +790,31 @@ class Dapodik extends BaseController
             }
         } else $response = $request['data'];
         return $this->respond($response);
+    }
+
+    public function getFromFileImport($id = null): ResponseInterface
+    {
+        $mPd = new PesertaDidikModel();
+        $file = $this->request->getFile('fileUpload');
+        if (!$file) return $this->fail('File untuk di import tidak ditemukan.');
+        $result = importDapodik($file, 'pesertaDidik');
+        if (!$result['success']) return $this->fail($result['message']);
+        $rows = $result['data'];
+        if ($id) {
+            if ((int)$rows[0] > 0) {
+                foreach ($rows as $row) {
+                    $cPd = $mPd->select('peserta_didik_id')
+                        ->where('nik', $row['nik'])
+                        ->where('nisn', $row['nisn'])
+                        ->first();
+                    if ($cPd) {
+                        return $row;
+                    } else {
+                        return $this->fail('Peserta didik tidak ditemukan dalam file import.');
+                    }
+                }
+            }
+        }
+        return $this->respond($rows);
     }
 }

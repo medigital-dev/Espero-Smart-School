@@ -35,7 +35,7 @@
                 <form id="formSync-pd">
                     <div class="form-group row mb-2 clearfix">
                         <label for="" class="col-sm-3 col-form-label">Jenis Data</label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 p-2">
                             <div class="row row-cols-1 row-cols-sm-2">
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">

@@ -22,3 +22,16 @@ if (!function_exists('configDapodik')) {
         return $dapodik->config();
     }
 }
+
+if (!function_exists('importDapodik')) {
+    /**
+     * @param $file Uploaded File
+     * @param $type Tipe data ['pesertaDidik','guru','staff']
+     * @return array
+     */
+    function importDapodik($file, $type)
+    {
+        $service = service('dapodik');
+        return $service->import($file, $type);
+    }
+}
