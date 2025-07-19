@@ -95,14 +95,6 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formSync-checkOrtuPd" name="ortuwalipd">
-                                        <label for="formSync-checkOrtuPd">
-                                            Orangtua/Wali
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col mb-2">
-                                    <div class="icheck-primary d-inline">
                                         <input type="checkbox" id="formSync-checkPeriodik" name="periodik">
                                         <label for="formSync-checkPeriodik">
                                             Periodik

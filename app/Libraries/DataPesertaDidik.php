@@ -137,7 +137,6 @@ class DataPesertaDidik
     public function active()
     {
         $this->query
-            ->select('rombongan_belajar.nama as kelas')
             ->where('semester.status', true)
             ->where('mutasi_pd.id');
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);

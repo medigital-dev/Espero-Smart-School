@@ -1240,6 +1240,7 @@
                 $('#tabsIdentitas-nomorKk').val(respData.nomor_kk);
                 $('#tabsIdentitas-nik').val(respData.nik);
                 $('#tabsIdentitas-anakKe').val(respData.anak_ke);
+                $('#tabsIdentitas-jumlahSaudara').val(respData.jumlah_saudara);
                 opt = new Option(respData.agama_str, respData.agama_id, false, true);
                 $('#tabsIdentitas-agama').append(opt);
                 offcanvasElm.find('.overlay').addClass('d-none');
@@ -2742,6 +2743,7 @@
                 const inputElm = $('#inputFile');
                 const file = inputElm.prop('files')[0];
                 let i = 0,
+                    l = 0,
                     set = [],
                     data = new FormData();
 
@@ -2768,19 +2770,119 @@
                             Mengambil data pada file import...
                         </div>
                     `);
+
                 const result = await fetchData({
                     url: '/api/v0/dapodik/import/peserta-didik/get/' + pd,
                     data: data,
                     method: 'POST',
                     button: btn,
                 });
-                console.log(result);
-                return;
-                if (!result) return;
-                console.log(result.result.error);
-                inputElm.val('').trigger('change');
-                $('#modalImportDapodik').modal('hide');
-                toast(result.message);
+                if (!result || result.length == 0) {
+                    alertElm.html('').html(`
+                        <div class="alert alert-${!result ? 'danger' : 'warning'} alert-dismissible fade show mb-2" role="alert">
+                           ${result.length == 0 ? 'Peserta didik tidak ditemukan.' : 'Error: Cek notifikasi.'}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    `);
+                    return;
+                }
+                alertElm.html('').html(`
+                            <div class="alert alert-success alert-dismissible fade show mb-2" role="alert">
+                                ${result.length} Peserta didik ditemukan.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                const konfirmasi = await Swal.fire({
+                    icon: 'question',
+                    text: `${result.length} peserta didik ditemukan. Mulai menyimpan data peserta didik?`,
+                    showCancelButton: true,
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Ya, Simpan',
+                    customClass: {
+                        confirmButton: 'bg-success'
+                    },
+                    width: 500
+                });
+                if (!konfirmasi.isConfirmed) {
+                    alertElm.html('').html(`
+                                    <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
+                                        Proses menyimpan data Peserta Didik dibatalkan.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                `);
+                    return;
+                }
+
+                alertElm.html('').html(`
+                    <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                        <div class="spinner-border spinner-border-sm mr-1" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        0% Menyimpan data peserta didik....
+                    </div>
+                `);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                for (const dataSet of result) {
+                    i++;
+                    alertElm.html('').html(`
+                        <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
+                            <div class="spinner-border spinner-border-sm mr-1" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            ${formatNumber(parseInt(i)/parseInt(result.length)*100)}% Menyimpan data an. <strong>${dataSet.nama}</strong>
+                        </div>
+
+                    `);
+                    let k = 0;
+                    for (const val of dataType) {
+                        const send = dataSet[val.name];
+
+                        if (send == null ||
+                            (typeof send === 'string' && send.trim() === '') ||
+                            (Array.isArray(send) && send.length === 0) ||
+                            (typeof send === 'object' && !Array.isArray(send) && Object.keys(send).length === 0)) {
+                            toast(`Warning: Data ${val.name} an <strong>${dataSet.nama}</strong> kosong. (Proses dilewati)`, 'warning');
+                            continue;
+                        }
+                        let respSimpan;
+                        if (Array.isArray(send)) {
+                            for (const element of send) {
+                                respSimpan = await fetchData({
+                                    url: '/api/v0/buku-induk/peserta-didik/' + val.name + '/' + dataSet.peserta_didik_id,
+                                    method: 'POST',
+                                    data: element,
+                                    button: btn,
+                                });
+                            }
+                        } else {
+                            respSimpan = await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/' + val.name + '/' + dataSet.peserta_didik_id,
+                                method: 'POST',
+                                data: send,
+                                button: btn,
+                            });
+                        }
+                        if (!respSimpan) {
+                            toast(`Error: Data ${val.name} an. <strong>${dataSet.nama}</strong> gagal disimpan.`, 'error', );
+                        } else k++;
+                    }
+                    if (k > 0) l++;
+                }
+                alertElm.html('').html(`
+                    <div class="alert alert-${l == 0 ? 'warning' : 'success'} alert-dismissible fade show mb-2" role="alert">
+                        ${l == 0 ? 'Tidak ada data peserta didik yang tersimpan.' : `${l}/${result.length} data peserta didik telah disimpan.`}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `);
                 dtAdminBukuIndukPd.ajax.reload();
             });
 

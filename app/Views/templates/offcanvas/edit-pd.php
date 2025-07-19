@@ -502,6 +502,10 @@
                                 <input type="text" class="form-control onlyInt" id="tabsIdentitas-anakKe" name="anak_ke" aria-describedby="anakKeHelp">
                             </div>
                             <div class="form-group mb-2">
+                                <label for="tabsIdentitas-jumlahSaudara" class="small mb-1">Jumlah Saudara</label>
+                                <input type="text" class="form-control onlyInt" id="tabsIdentitas-jumlahSaudara" name="jumlah_saudara" aria-describedby="jumlahSaudaraHelp">
+                            </div>
+                            <div class="form-group mb-2">
                                 <label for="tabsIdentitas-photoProfil" class="small mb-1">Pass Foto</label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="tabsIdentitas-photoProfil" name="foto_id" accept="image/jpg, image/jpeg, image/png">

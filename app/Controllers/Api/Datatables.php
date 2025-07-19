@@ -26,7 +26,7 @@ class Datatables extends BaseController
                 'peserta_didik.nik',
                 'ref_agama.ref_id as agama_id',
                 'peserta_didik.nama',
-                'peserta_didik.jenis_kelamin',
+                'ref_jenis_kelamin.kode as jenis_kelamin',
                 'peserta_didik.tempat_lahir',
                 'peserta_didik.tanggal_lahir',
                 'mutasi_pd.tanggal as tanggal_mutasi',

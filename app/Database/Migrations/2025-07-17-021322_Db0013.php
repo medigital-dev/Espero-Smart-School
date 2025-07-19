@@ -58,6 +58,131 @@ class Db0013 extends Migration
                 'default' => null,
             ]
         ]);
+
+        // Tabel: pip
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'pip_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'nominal' => [
+                'type' => 'INT',
+                'null' => true,
+                'default' => null,
+            ],
+            'no_rekening' => [
+                'type' => 'VARCHAR',
+                'constraint' => 32,
+                'null' => true,
+                'default' => null,
+            ],
+            'tahap_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 32,
+                'null' => true,
+                'default' => null,
+            ],
+            'nomor_sk' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ],
+            'tanggal_sk' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
+            'nama_rekening' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ],
+            'nama_bank' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
+            ],
+            'virtual_acc' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ],
+            'semester_kode' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ],
+            'tanggal_cair' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
+            'status_cair' => [
+                'type' => 'BOOLEAN',
+                'null' => true,
+                'default' => null,
+            ],
+            'tahap_keterangan' => [
+                'type' => 'TEXT',
+                'null' => true,
+                'default' => null,
+            ],
+            'pengusul' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => true,
+                'default' => null,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('pip', true);
+
+        // Tabel: usulan_pip
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'usulan_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'status' => [
+                'type' => 'BOOLEAN'
+            ],
+            'alasan' => [
+                'type' => 'TEXT',
+            ],
+            'peserta_didik_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('usulan_pip', true);
+
+        $this->forge->modifyColumn('peserta_didik', [
+            'jenis_kelamin' => [
+                'name' => 'jenis_kelamin',
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ]
+        ]);
+
+        $this->forge->modifyColumn('orangtua_wali', [
+            'jenis_kelamin' => [
+                'name' => 'jenis_kelamin',
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ]
+        ]);
     }
 
     public function down()
@@ -71,6 +196,22 @@ class Db0013 extends Migration
                 'constraint' => 128,
                 'null' => true,
                 'default' => null,
+            ]
+        ]);
+        $this->forge->dropTable('pip', true);
+        $this->forge->dropTable('usulan_pip', true);
+        $this->forge->modifyColumn('peserta_didik', [
+            'jenis_kelamin' => [
+                'name' => 'jenis_kelamin',
+                'type' => 'ENUM',
+                'constraint' => ['L', 'P'],
+            ]
+        ]);
+        $this->forge->modifyColumn('orangtua_wali', [
+            'jenis_kelamin' => [
+                'name' => 'jenis_kelamin',
+                'type' => 'VARCHAR',
+                'constraint' => 8,
             ]
         ]);
     }

@@ -102,14 +102,6 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formImport-checkOrtuPd" name="ortuwalipd">
-                                        <label for="formImport-checkOrtuPd">
-                                            Orangtua/Wali
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col mb-2">
-                                    <div class="icheck-primary d-inline">
                                         <input type="checkbox" id="formImport-checkPeriodik" name="periodik">
                                         <label for="formImport-checkPeriodik">
                                             Periodik
@@ -118,17 +110,41 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formImport-checkRombel" name="rombel">
-                                        <label for="formImport-checkRombel">
-                                            Rombongan Belajar
+                                        <input type="checkbox" id="formImport-checkAlamat" name="alamat">
+                                        <label for="formImport-checkAlamat">
+                                            Alamat
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formImport-checkAnggotaRombel" name="anggotaRombel">
-                                        <label for="formImport-checkAnggotaRombel">
-                                            Anggota Rombel
+                                        <input type="checkbox" id="formImport-checkKesejahteraan" name="kesejahteraan">
+                                        <label for="formImport-checkKesejahteraan">
+                                            Kesejahteraan
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formImport-checkLayakPip" name="layak_pip">
+                                        <label for="formImport-checkLayakPip">
+                                            Usulan PIP
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formImport-checkPip" name="pip">
+                                        <label for="formImport-checkPip">
+                                            Data PIP
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formImport-checkSekolahSebelumnya" name="sekolah_sebelumnya">
+                                        <label for="formImport-checkSekolahSebelumnya">
+                                            Data Sekolah Jenjang Sebelumnya
                                         </label>
                                     </div>
                                 </div>

@@ -76,6 +76,7 @@ class PesertaDidik extends BaseController
             'nomor_akte',
             'peserta_didik.nik',
             'nomor_kk',
+            'jumlah_saudara',
             'ref_agama.ref_id as agama_id',
             'ref_agama.nama as agama_str',
             'ref_jenis_kelamin.ref_id as jenis_kelamin_id',
@@ -134,6 +135,7 @@ class PesertaDidik extends BaseController
         $result = $this->mPesertaDidik->where('peserta_didik.peserta_didik_id', $id)->first();
         if ($result)
             $set['id'] = $result['id'];
+        else $set['peserta_didik_id'] = $id;
 
         if (!$this->mPesertaDidik->save($set)) return $this->fail('Data peserta didik gagal disimpan.');
 
@@ -351,8 +353,10 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
         $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $id)->first();
-        if (!$cRegistrasi) $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
-        else $set['id'] = $cRegistrasi['id'];
+        if (!$cRegistrasi) {
+            $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
+            $set['peserta_didik_id'] = $id;
+        } else $set['id'] = $cRegistrasi['id'];
         if (!$mRegistrasi->save($set)) return $this->fail('Data registrasi peserta didik gagal disimpan.');
         return $this->respond(['message' => 'Data registrasi peserta didik berhasil disimpan.']);
     }
@@ -607,11 +611,17 @@ class PesertaDidik extends BaseController
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $mPeriodik = new PeriodikModel();
         $set = $this->request->getPost();
-        $set['nik'] = $cPd['nik'];
-        $set['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
-        $set['tanggal'] = date('Y-m-d');
+        $cPeriodik = $mPeriodik->where('nik', $cPd['nik'])
+            ->where('tinggi_badan', $set['tinggi_badan'])
+            ->where('berat_badan', $set['berat_badan'])
+            ->first();
+        if (!$cPeriodik) {
+            $set['nik'] = $cPd['nik'];
+            $set['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
+            $set['tanggal'] = date('Y-m-d');
+        } else $set['id'] = $cPeriodik['id'];
         if (!$mPeriodik->save($set)) return $this->fail('Data periodik gagal disimpan.');
-        return $this->respond(['message' => 'Data periodik berhasil disimpan.', 'id' => $set['periodik_id']]);
+        return $this->respond(['message' => 'Data periodik berhasil disimpan.', 'id' => $set['periodik_id'] ?? $cPeriodik['periodik_id']]);
     }
 
     public function deletePeriodik($id): ResponseInterface

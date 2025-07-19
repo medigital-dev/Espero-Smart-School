@@ -499,210 +499,210 @@ class Dapodik extends BaseController
     //     return $this->respond($response);
     // }
 
-    public function importPd()
-    {
-        $mPd = new PesertaDidikModel();
-        $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $mOrangtuaWali = new OrangtuaWaliModel();
-        $mOrtuWaliPd = new OrtuWaliPdModel();
-        $mAlamat = new AlamatModel();
-        $mRefTransportasi = new RefTransportasiModel();
+    // public function importPd()
+    // {
+    //     $mPd = new PesertaDidikModel();
+    //     $mRegistrasi = new RegistrasiPesertaDidikModel();
+    //     $mOrangtuaWali = new OrangtuaWaliModel();
+    //     $mOrtuWaliPd = new OrtuWaliPdModel();
+    //     $mAlamat = new AlamatModel();
+    //     $mRefTransportasi = new RefTransportasiModel();
 
-        $file = $this->request->getFile('fileUpload');
-        $result = importExcel($file);
-        if (!$result['status']) return $this->fail($result);
-        $rows = $result['data'];
-        if ($rows[0][0] !== 'Daftar Peserta Didik' || $rows[4][0] !== 'No' || $rows[4][1] !== 'Nama' || $rows[4][2] !== 'NIPD' || $rows[4][3] !== 'JK' || $rows[4][4] !== 'NISN' || $rows[4][5] !== 'Tempat Lahir' || $rows[4][6] !== 'Tanggal Lahir' || $rows[4][7] !== 'NIK' || $rows[4][8] !== 'Agama')
-            return $this->fail('File yang diupload bukan hasil unduh daftar Peserta Didik di aplikasi dapodik atau file telah mengalami perubahan.');
-        $importStatus = [
-            'success' => [],
-            'error' => [],
-        ];
-        foreach ($rows as $row) {
-            if ((int)$row[0] > 0) {
-                $nisn = $row[4];
+    //     $file = $this->request->getFile('fileUpload');
+    //     $result = importExcel($file);
+    //     if (!$result['status']) return $this->fail($result);
+    //     $rows = $result['data'];
+    //     if ($rows[0][0] !== 'Daftar Peserta Didik' || $rows[4][0] !== 'No' || $rows[4][1] !== 'Nama' || $rows[4][2] !== 'NIPD' || $rows[4][3] !== 'JK' || $rows[4][4] !== 'NISN' || $rows[4][5] !== 'Tempat Lahir' || $rows[4][6] !== 'Tanggal Lahir' || $rows[4][7] !== 'NIK' || $rows[4][8] !== 'Agama')
+    //         return $this->fail('File yang diupload bukan hasil unduh daftar Peserta Didik di aplikasi dapodik atau file telah mengalami perubahan.');
+    //     $importStatus = [
+    //         'success' => [],
+    //         'error' => [],
+    //     ];
+    //     foreach ($rows as $row) {
+    //         if ((int)$row[0] > 0) {
+    //             $nisn = $row[4];
 
-                // Start Peserta Didik
-                $idPd = idUnik($mPd, 'peserta_didik_id');
-                $setPd = [
-                    'nama' => $row[1],
-                    'jenis_kelamin' => $row[3],
-                    'tempat_lahir' => $row[5],
-                    'tanggal_lahir' => $row[6],
-                    'nik' => $row[7],
-                    'agama_id' => saveAgama($row[8]),
-                    'nisn' => $nisn,
-                ];
+    //             // Start Peserta Didik
+    //             $idPd = idUnik($mPd, 'peserta_didik_id');
+    //             $setPd = [
+    //                 'nama' => $row[1],
+    //                 'jenis_kelamin' => $row[3],
+    //                 'tempat_lahir' => $row[5],
+    //                 'tanggal_lahir' => $row[6],
+    //                 'nik' => $row[7],
+    //                 'agama_id' => saveAgama($row[8]),
+    //                 'nisn' => $nisn,
+    //             ];
 
-                $cPd = $mPd
-                    ->groupStart()
-                    ->where('nisn', $nisn)
-                    ->orWhere('nik', $row[7])
-                    ->orWhere('nama', $row[1])
-                    ->groupEnd()
-                    ->first();
-                if ($cPd) {
-                    $setPd['id'] = $cPd['id'];
-                    $setPd['peserta_didik_id'] = $cPd['peserta_didik_id'];
-                } else $setPd['peserta_didik_id'] = $idPd;
+    //             $cPd = $mPd
+    //                 ->groupStart()
+    //                 ->where('nisn', $nisn)
+    //                 ->orWhere('nik', $row[7])
+    //                 ->orWhere('nama', $row[1])
+    //                 ->groupEnd()
+    //                 ->first();
+    //             if ($cPd) {
+    //                 $setPd['id'] = $cPd['id'];
+    //                 $setPd['peserta_didik_id'] = $cPd['peserta_didik_id'];
+    //             } else $setPd['peserta_didik_id'] = $idPd;
 
-                if (!$mPd->save($setPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'savePd', 'nisn' => $nisn, 'message' => $mPd->errors()];
-                else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'savePd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                // End Peserta Didik
+    //             if (!$mPd->save($setPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'savePd', 'nisn' => $nisn, 'message' => $mPd->errors()];
+    //             else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'savePd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //             // End Peserta Didik
 
-                // Start Registrasi
-                $cRegistrasi = $mRegistrasi
-                    ->groupStart()
-                    ->where('nipd', $row[2])
-                    ->orWhere('peserta_didik_id', $setPd['peserta_didik_id'])
-                    ->groupEnd()
-                    ->first();
-                if (!$cRegistrasi) {
-                    $setRegistrasi = [
-                        'registrasi_id' => idUnik($mRegistrasi, 'registrasi_id'),
-                        'nipd' => $row[2],
-                        'peserta_didik_id' => $setPd['peserta_didik_id'],
-                        'asal_sekolah' => $row[56],
-                    ];
-                    if (!$mRegistrasi->save($setRegistrasi)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveRegistrasi', 'nisn' => $nisn, 'message' => $mRegistrasi->errors()];
-                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveRegistrasi', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                }
-                // End Registrasi
+    //             // Start Registrasi
+    //             $cRegistrasi = $mRegistrasi
+    //                 ->groupStart()
+    //                 ->where('nipd', $row[2])
+    //                 ->orWhere('peserta_didik_id', $setPd['peserta_didik_id'])
+    //                 ->groupEnd()
+    //                 ->first();
+    //             if (!$cRegistrasi) {
+    //                 $setRegistrasi = [
+    //                     'registrasi_id' => idUnik($mRegistrasi, 'registrasi_id'),
+    //                     'nipd' => $row[2],
+    //                     'peserta_didik_id' => $setPd['peserta_didik_id'],
+    //                     'asal_sekolah' => $row[56],
+    //                 ];
+    //                 if (!$mRegistrasi->save($setRegistrasi)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveRegistrasi', 'nisn' => $nisn, 'message' => $mRegistrasi->errors()];
+    //                 else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveRegistrasi', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //             }
+    //             // End Registrasi
 
-                // Start Alat Transportasi
-                $setTranspot = ['nama' => $row[17]];
-                $cTranspot = $mRefTransportasi
-                    ->where('nama', $row[17])
-                    ->first();
-                if (!$cTranspot) {
-                    $setTranspot['ref_id'] = idUnik($mRefTransportasi, 'ref_id');
-                    if (!$mRefTransportasi->save($setTranspot)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => $mRefTransportasi->errors()];
-                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                } else {
-                    $setTranspot['id'] = $cTranspot['id'];
-                    $setTranspot['ref_id'] = $cTranspot['ref_id'];
-                }
-                // End Alat Transportasi
+    //             // Start Alat Transportasi
+    //             $setTranspot = ['nama' => $row[17]];
+    //             $cTranspot = $mRefTransportasi
+    //                 ->where('nama', $row[17])
+    //                 ->first();
+    //             if (!$cTranspot) {
+    //                 $setTranspot['ref_id'] = idUnik($mRefTransportasi, 'ref_id');
+    //                 if (!$mRefTransportasi->save($setTranspot)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => $mRefTransportasi->errors()];
+    //                 else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveTranspot', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //             } else {
+    //                 $setTranspot['id'] = $cTranspot['id'];
+    //                 $setTranspot['ref_id'] = $cTranspot['ref_id'];
+    //             }
+    //             // End Alat Transportasi
 
-                // Start Alamat
-                $setAlamat = [
-                    'nik' => $row[7],
-                    'alamat_jalan' => $row[9],
-                    'rt' => $row[10],
-                    'rw' => $row[11],
-                    'dusun' => $row[12],
-                    'desa' => str_replace('Desa/Kel. ', '', $row[13]),
-                    'kecamatan' => str_replace('Kec. ', '', $row[14]),
-                    'kode_pos' => $row[15],
-                    'lintang' => $row[58],
-                    'bujur' => $row[59],
-                    'jarak_rumah' => $row[65],
-                    'alat_transportasi_id' => $setTranspot['ref_id'],
-                ];
-                $cAlamat = $mAlamat
-                    ->where('nik', $row[7])
-                    ->first();
-                if (!$cAlamat) $setAlamat['alamat_id'] = idUnik($mAlamat, 'alamat_id');
-                else {
-                    $setAlamat['id'] = $cAlamat['id'];
-                    $setAlamat['alamat_id'] = $cAlamat['alamat_id'];
-                }
-                if (!$mAlamat->save($setAlamat)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAlamat', 'nisn' => $nisn, 'message' => $mAlamat->errors()];
-                else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAlamat', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                // End Alamat
+    //             // Start Alamat
+    //             $setAlamat = [
+    //                 'nik' => $row[7],
+    //                 'alamat_jalan' => $row[9],
+    //                 'rt' => $row[10],
+    //                 'rw' => $row[11],
+    //                 'dusun' => $row[12],
+    //                 'desa' => str_replace('Desa/Kel. ', '', $row[13]),
+    //                 'kecamatan' => str_replace('Kec. ', '', $row[14]),
+    //                 'kode_pos' => $row[15],
+    //                 'lintang' => $row[58],
+    //                 'bujur' => $row[59],
+    //                 'jarak_rumah' => $row[65],
+    //                 'alat_transportasi_id' => $setTranspot['ref_id'],
+    //             ];
+    //             $cAlamat = $mAlamat
+    //                 ->where('nik', $row[7])
+    //                 ->first();
+    //             if (!$cAlamat) $setAlamat['alamat_id'] = idUnik($mAlamat, 'alamat_id');
+    //             else {
+    //                 $setAlamat['id'] = $cAlamat['id'];
+    //                 $setAlamat['alamat_id'] = $cAlamat['alamat_id'];
+    //             }
+    //             if (!$mAlamat->save($setAlamat)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAlamat', 'nisn' => $nisn, 'message' => $mAlamat->errors()];
+    //             else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAlamat', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //             // End Alamat
 
-                $idAyah = $idIbu = $idWali = null;
-                // Start Ayah
-                if ($row[24]) {
-                    $setAyah = [
-                        'nama' => $row[24],
-                        'jenis_kelamin' => 'L',
-                        'pendidikan_id' => savePendidikan($row[26]),
-                        'pekerjaan_id' => savePekerjaan($row[27]),
-                        'penghasilan_id' => savePenghasilan($row[28]),
-                        'nik' => $row[29],
-                    ];
-                    $mOrangtuaWali->where('nama', $row[30]);
-                    if ($row[29] !== null)
-                        $mOrangtuaWali->orWhere('nik', $row[35]);
-                    $cAyah = $mOrangtuaWali->first();
-                    if ($cAyah) {
-                        $setAyah['id'] = $cAyah['id'];
-                        $setAyah['orangtua_id'] = $cAyah['orangtua_id'];
-                    } else $setAyah['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
-                    if (!$mOrangtuaWali->save($setAyah)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
-                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                    $idAyah = $setAyah['orangtua_id'];
-                }
-                // End Ayah
-                // Start Ibu
-                if ($row[30]) {
-                    $setIbu = [
-                        'nama' => $row[30],
-                        'jenis_kelamin' => 'P',
-                        'pendidikan_id' => savePendidikan($row[32]),
-                        'pekerjaan_id' => savePekerjaan($row[33]),
-                        'penghasilan_id' => savePenghasilan($row[34]),
-                        'nik' => $row[35],
-                    ];
-                    $mOrangtuaWali->where('nama', $row[30]);
-                    if ($row[35] !== null)
-                        $mOrangtuaWali->orWhere('nik', $row[35]);
-                    $cIbu = $mOrangtuaWali->first();
-                    if ($cIbu) {
-                        $setIbu['id'] = $cIbu['id'];
-                        $setIbu['orangtua_id'] = $cIbu['orangtua_id'];
-                    } else $setIbu['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
-                    if (!$mOrangtuaWali->save($setIbu)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
-                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                    $idIbu = $setIbu['orangtua_id'];
-                }
-                // End Ibu
-                // Start Wali
-                if ($row[36]) {
-                    $setWali = [
-                        'nama' => $row[36],
-                        'pendidikan_id' => savePendidikan($row[38]),
-                        'pekerjaan_id' => savePekerjaan($row[39]),
-                        'penghasilan_id' => savePenghasilan($row[40]),
-                        'nik' => $row[41],
-                    ];
-                    $mOrangtuaWali->where('nama', $row[30]);
-                    if ($row[41] !== null)
-                        $mOrangtuaWali->orWhere('nik', $row[35]);
-                    $cWali = $mOrangtuaWali->first();
-                    if ($cWali) {
-                        $setWali['id'] = $cWali['id'];
-                        $setWali['orangtua_id'] = $cWali['orangtua_id'];
-                    } else $setWali['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
-                    if (!$mOrangtuaWali->save($setWali)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
-                    else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                    $idWali = $setWali['orangtua_id'];
-                }
-                // End Wali
+    //             $idAyah = $idIbu = $idWali = null;
+    //             // Start Ayah
+    //             if ($row[24]) {
+    //                 $setAyah = [
+    //                     'nama' => $row[24],
+    //                     'jenis_kelamin' => 'L',
+    //                     'pendidikan_id' => savePendidikan($row[26]),
+    //                     'pekerjaan_id' => savePekerjaan($row[27]),
+    //                     'penghasilan_id' => savePenghasilan($row[28]),
+    //                     'nik' => $row[29],
+    //                 ];
+    //                 $mOrangtuaWali->where('nama', $row[30]);
+    //                 if ($row[29] !== null)
+    //                     $mOrangtuaWali->orWhere('nik', $row[35]);
+    //                 $cAyah = $mOrangtuaWali->first();
+    //                 if ($cAyah) {
+    //                     $setAyah['id'] = $cAyah['id'];
+    //                     $setAyah['orangtua_id'] = $cAyah['orangtua_id'];
+    //                 } else $setAyah['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
+    //                 if (!$mOrangtuaWali->save($setAyah)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
+    //                 else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveAyah', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //                 $idAyah = $setAyah['orangtua_id'];
+    //             }
+    //             // End Ayah
+    //             // Start Ibu
+    //             if ($row[30]) {
+    //                 $setIbu = [
+    //                     'nama' => $row[30],
+    //                     'jenis_kelamin' => 'P',
+    //                     'pendidikan_id' => savePendidikan($row[32]),
+    //                     'pekerjaan_id' => savePekerjaan($row[33]),
+    //                     'penghasilan_id' => savePenghasilan($row[34]),
+    //                     'nik' => $row[35],
+    //                 ];
+    //                 $mOrangtuaWali->where('nama', $row[30]);
+    //                 if ($row[35] !== null)
+    //                     $mOrangtuaWali->orWhere('nik', $row[35]);
+    //                 $cIbu = $mOrangtuaWali->first();
+    //                 if ($cIbu) {
+    //                     $setIbu['id'] = $cIbu['id'];
+    //                     $setIbu['orangtua_id'] = $cIbu['orangtua_id'];
+    //                 } else $setIbu['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
+    //                 if (!$mOrangtuaWali->save($setIbu)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
+    //                 else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveIbu', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //                 $idIbu = $setIbu['orangtua_id'];
+    //             }
+    //             // End Ibu
+    //             // Start Wali
+    //             if ($row[36]) {
+    //                 $setWali = [
+    //                     'nama' => $row[36],
+    //                     'pendidikan_id' => savePendidikan($row[38]),
+    //                     'pekerjaan_id' => savePekerjaan($row[39]),
+    //                     'penghasilan_id' => savePenghasilan($row[40]),
+    //                     'nik' => $row[41],
+    //                 ];
+    //                 $mOrangtuaWali->where('nama', $row[30]);
+    //                 if ($row[41] !== null)
+    //                     $mOrangtuaWali->orWhere('nik', $row[35]);
+    //                 $cWali = $mOrangtuaWali->first();
+    //                 if ($cWali) {
+    //                     $setWali['id'] = $cWali['id'];
+    //                     $setWali['orangtua_id'] = $cWali['orangtua_id'];
+    //                 } else $setWali['orangtua_id'] = idUnik($mOrangtuaWali, 'orangtua_id');
+    //                 if (!$mOrangtuaWali->save($setWali)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => $mOrangtuaWali->errors()];
+    //                 else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveWali', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //                 $idWali = $setWali['orangtua_id'];
+    //             }
+    //             // End Wali
 
-                // Start Orangtua Wali Pd
-                $setOrtuWaliPd = [
-                    'peserta_didik_id' => $setPd['peserta_didik_id'],
-                    'ayah_id' => $idAyah,
-                    'ibu_id' => $idIbu,
-                    'wali_id' => $idWali,
-                ];
-                $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setPd['peserta_didik_id'])->first();
-                if ($cOrtuWaliPd) $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
-                else $setOrtuWaliPd['ortupd_id'] = idUnik($mOrtuWaliPd, 'ortupd_id');
-                if (!$mOrtuWaliPd->save($setOrtuWaliPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => $mOrtuWaliPd->errors()];
-                else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
-                // End Orangtua Wali Pd
-            }
-        }
-        $response = [
-            'status' => true,
-            'message' => 'Data berhasil diimport.',
-            'result' => $importStatus,
-        ];
-        return $this->respond($response);
-    }
+    //             // Start Orangtua Wali Pd
+    //             $setOrtuWaliPd = [
+    //                 'peserta_didik_id' => $setPd['peserta_didik_id'],
+    //                 'ayah_id' => $idAyah,
+    //                 'ibu_id' => $idIbu,
+    //                 'wali_id' => $idWali,
+    //             ];
+    //             $cOrtuWaliPd = $mOrtuWaliPd->where('peserta_didik_id', $setPd['peserta_didik_id'])->first();
+    //             if ($cOrtuWaliPd) $setOrtuWaliPd['id'] = $cOrtuWaliPd['id'];
+    //             else $setOrtuWaliPd['ortupd_id'] = idUnik($mOrtuWaliPd, 'ortupd_id');
+    //             if (!$mOrtuWaliPd->save($setOrtuWaliPd)) $importStatus['error'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => $mOrtuWaliPd->errors()];
+    //             else $importStatus['success'][] = ['nama' => $row[1], 'type' => 'saveOrtuWaliPd', 'nisn' => $nisn, 'message' => 'Import berhasil.'];
+    //             // End Orangtua Wali Pd
+    //         }
+    //     }
+    //     $response = [
+    //         'status' => true,
+    //         'message' => 'Data berhasil diimport.',
+    //         'result' => $importStatus,
+    //     ];
+    //     return $this->respond($response);
+    // }
 
     public function syncGtk()
     {
@@ -812,6 +812,8 @@ class Dapodik extends BaseController
             if ($type === 'new' && $id) continue;
             if ($type === 'checked' && (!$id || !in_array($id, $dataId))) continue;
             if ($type === 'all' && !$id) continue;
+
+            $row['peserta_didik_id'] = $id ?: idUnik($mPd, 'peserta_didik_id');
             $response[] = $row;
         }
         return $this->respond($response);

@@ -113,7 +113,7 @@ class Dapodik
                             'peserta_didik_id' => $row["peserta_didik_id"],
                             'nama' => eyd($row["nama"]),
                             'nisn' => $row["nisn"],
-                            'jenis_kelamin' => saveJenisKelamin($row["jenis_kelamin"]),
+                            'jenis_kelamin' => saveJenisKelamin($row['jenis_kelamin'] == 'L' ? 'Laki-laki' : ($row['jenis_kelamin'] == 'P' ? 'Perempuan' : ''), ['kode' => $row["jenis_kelamin"]]),
                             'nik' => $row["nik"],
                             'tempat_lahir' => $row["tempat_lahir"],
                             'tanggal_lahir' => $row["tanggal_lahir"],
@@ -136,12 +136,12 @@ class Dapodik
                         ],
                         'ayah' => [
                             'nama' => eyd($row["nama_ayah"]),
-                            'jenis_kelamin' => saveJenisKelamin('Laki-laki'),
+                            'jenis_kelamin' => saveJenisKelamin('Laki-laki', ['kode' => 'L']),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_ayah_id_str"]),
                         ],
                         'ibu' => [
                             'nama' => eyd($row["nama_ibu"]),
-                            'jenis_kelamin' => saveJenisKelamin('Perempuan'),
+                            'jenis_kelamin' => saveJenisKelamin('Perempuan', ['kode' => 'P']),
                             'pekerjaan_id' => savePekerjaan($row["pekerjaan_ibu_id_str"]),
                         ],
                         'wali' => [
@@ -304,7 +304,7 @@ class Dapodik
                             'nipd' => $row[2],
                             'identitas' => [
                                 'nama' => eyd($row[1]),
-                                'jenis_kelamin' => saveJenisKelamin($row[3]),
+                                'jenis_kelamin' => saveJenisKelamin($row[3] == 'L' ? 'Laki-laki' : ($row[3] == 'P' ? 'Perempuan' : '')),
                                 'tempat_lahir' => $row[5],
                                 'tanggal_lahir' => $row[6],
                                 'nisn' => $row[4],
@@ -340,7 +340,7 @@ class Dapodik
                             ],
                             'ayah' => [
                                 'nama' => eyd($row[24]),
-                                'jenis_kelamin' => saveJenisKelamin('L'),
+                                'jenis_kelamin' => saveJenisKelamin('Laki-laki', ['kode' => 'L']),
                                 'pendidikan_id' => savePendidikan($row[26]),
                                 'pekerjaan_id' => savePekerjaan($row[27]),
                                 'penghasilan_id' => savePenghasilan($row[28]),
@@ -348,7 +348,7 @@ class Dapodik
                             ],
                             'ibu' => [
                                 'nama' => eyd($row[30]),
-                                'jenis_kelamin' => saveJenisKelamin('P'),
+                                'jenis_kelamin' => saveJenisKelamin('Perempuan', ['kode' => 'P']),
                                 'pendidikan_id' => savePendidikan($row[32]),
                                 'pekerjaan_id' => savePekerjaan($row[33]),
                                 'penghasilan_id' => savePenghasilan($row[34]),
