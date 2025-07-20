@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Models\RefAgamaModel;
+use App\Models\RefAlasanPipModel;
 use App\Models\RefBidangPrestasiModel;
 use App\Models\RefHubunganKeluargaModel;
 use App\Models\RefJenisBeasiswaModel;
@@ -295,6 +296,22 @@ class Referensi
                 $set['ref_id'] = idUnik($model, 'ref_id');
             $set['nama'] = $nama;
             if (!$model->save($set)) throw new InvalidArgumentException('Data referensi hubungan keluarga dengan nama ' . $nama . ' gagal disimpan.');
+            $id = $set['ref_id'];
+        }
+        return $id;
+    }
+
+    public function saveAlasanPip(string $nama, array $set = [])
+    {
+        if ($nama == '') return '';
+        $model = new RefAlasanPipModel();
+        $cek = $model->where('nama', $nama)->first();
+        if ($cek) $id = $cek['ref_id'];
+        else {
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = idUnik($model, 'ref_id');
+            $set['nama'] = $nama;
+            if (!$model->save($set)) throw new InvalidArgumentException('Data referensi alasan layak PIP dengan nama ' . $nama . ' gagal disimpan.');
             $id = $set['ref_id'];
         }
         return $id;

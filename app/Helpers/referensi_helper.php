@@ -239,3 +239,17 @@ if (!function_exists('saveJenisMutasi')) {
         return service('referensi')->saveJenisMutasi($nama, $set);
     }
 }
+
+if (!function_exists('saveAlasanPip')) {
+    /**
+     * Helper menyimpan referensi Alasan Layak PIP Peserta Didik berdasarkan nama Alasan Layak PIP Peserta Didik
+     * @param string $nama Nama Alasan Layak PIP Peserta Didik
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik Alasan Layak PIP Peserta Didik
+     * @return false Jika Alasan Layak PIP Peserta Didik gagal disimpan 
+     */
+    function saveAlasanPip(string $nama, array $set = [])
+    {
+        return service('referensi')->saveAlasanPip($nama, $set);
+    }
+}

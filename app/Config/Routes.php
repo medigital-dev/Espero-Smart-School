@@ -105,6 +105,9 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->post('periodik/(:segment)', 'PesertaDidik::savePeriodik/$1');
     $routes->post('prestasi/(:segment)', 'PesertaDidik::savePrestasi/$1');
     $routes->post('difabel/(:segment)', 'PesertaDidik::saveDifabel/$1');
+    $routes->post('anggotaRombel/(:segment)', 'PesertaDidik::saveAnggotaRombel/$1');
+    $routes->post('rombel/(:segment)', 'PesertaDidik::saveRombel/$1');
+    $routes->post('layak_pip/(:segment)', 'PesertaDidik::saveLayakPip/$1');
 
     $routes->delete('beasiswa/(:segment)', 'PesertaDidik::deleteBeasiswa/$1');
     $routes->delete('registrasi/(:segment)', 'PesertaDidik::deleteRegistrasi/$1');

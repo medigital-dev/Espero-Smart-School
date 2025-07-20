@@ -9,16 +9,25 @@
             </div>
             <div class="modal-body">
                 <div id="importStatus"></div>
-                <div class="form-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                        <label class="custom-file-label" for="inputFile">Pilih file</label>
+                <div class="form-group row">
+                    <label for="" class="col-sm-3 col-form-label">Pilih File</label>
+                    <div class="col-sm-9">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <label class="custom-file-label" for="inputFile">Pilih file</label>
+                        </div>
+                        <small id="fileHelp" class="form-text text-muted">Pilih file excel hasil unduh daftar peserta didik di Aplikasi Dapodik</small>
                     </div>
-                    <small id="fileHelp" class="form-text text-muted">Pilih file excel hasil unduh daftar peserta didik di Aplikasi Dapodik</small>
                 </div>
                 <div class="form-group row mb-2">
                     <label class="col-sm-3 col-form-label">Pilih PD</label>
                     <div class="col-sm-9">
+                        <div class="icheck-primary form-check-inline">
+                            <input class="form-check-input" type="radio" id="radioFormImport-dbPd" name="radioFormImport-statusPd" value="database">
+                            <label class="form-check-label" for="radioFormImport-dbPd">
+                                PD Database
+                            </label>
+                        </div>
                         <div class="icheck-primary form-check-inline">
                             <input class="form-check-input" type="radio" id="radioFormImport-newPd" name="radioFormImport-statusPd" value="new">
                             <label class="form-check-label" for="radioFormImport-newPd">

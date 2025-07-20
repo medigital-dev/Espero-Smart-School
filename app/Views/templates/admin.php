@@ -2844,11 +2844,11 @@
                     for (const val of dataType) {
                         const send = dataSet[val.name];
 
-                        if (send == null ||
+                        if (send == null || send == false ||
                             (typeof send === 'string' && send.trim() === '') ||
                             (Array.isArray(send) && send.length === 0) ||
                             (typeof send === 'object' && !Array.isArray(send) && Object.keys(send).length === 0)) {
-                            toast(`Warning: Data ${val.name} an <strong>${dataSet.nama}</strong> kosong. (Proses dilewati)`, 'warning');
+                            toast(`Warning: Data ${val.name} an <strong>${dataSet.nama}</strong> kosong. (Proses dilewati)`, 'warning', 3000);
                             continue;
                         }
                         let respSimpan;

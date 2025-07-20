@@ -11,6 +11,7 @@ use App\Models\KebutuhanKhususModel;
 use App\Models\KelulusanPdModel;
 use App\Models\KesejahteraanModel;
 use App\Models\KontakModel;
+use App\Models\LayakPipModel;
 use App\Models\MutasiPdModel;
 use App\Models\OrangtuaWaliModel;
 use App\Models\OrtuWaliPdModel;
@@ -893,5 +894,54 @@ class PesertaDidik extends BaseController
         if (!$cDifabel) return $this->fail('Riwayat kebutuhan khusus tidak ditemukan.');
         if (!$mDifabel->delete($cDifabel['id'], true)) return $this->fail('Riwayat kebutuhan khusus gagal dihapus.');
         return $this->respond(['message' => 'Riwayat kebutuhan khusus berhasil dihapus permanen.']);
+    }
+
+    public function saveAnggotaRombel($id = null): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mAnggotaRombel = new AnggotaRombelModel();
+        $set = $this->request->getPost();
+        $cAnggota = $mAnggotaRombel->where('anggota_id', $set['anggota_id'])
+            ->first();
+        if (!$cAnggota) if ($mAnggotaRombel->save($set)) return $this->fail('Data anggota rombongan belajar gagal disimpan.');
+        return $this->respond(['message' => 'Data anggota rombongan belajar berhasil disimpan.']);
+    }
+
+    public function saveRombel($id = null): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mRombel = new RombonganBelajarModel();
+        $set = $this->request->getPost();
+        $cRombel = $mRombel->where('rombel_id', $set['rombel_id'])
+            ->first();
+        if (!$cRombel) if ($mRombel->save($set)) return $this->fail('Data rombongan belajar gagal disimpan.');
+        return $this->respond(['message' => 'Data rombongan belajar berhasil disimpan.']);
+    }
+
+    public function saveLayakPip($id = null): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mLayakPip = new LayakPipModel();
+        $set = $this->request->getPost();
+        $cLayak = $mLayakPip->where('peserta_didik_id', $id)->first();
+        if ($cLayak) $set['id'] = $cLayak['id'];
+        else {
+            $set['layak_id'] = idUnik($mLayakPip, 'layak_id');
+            $set['peserta_didik_id'] = $id;
+        }
+        if (!$mLayakPip->save($set)) return $this->fail('Kelayakan PIP gagal disimpan.');
+        return $this->respond(['message' => 'Kelayakan PIP berhasil disimpan']);
     }
 }

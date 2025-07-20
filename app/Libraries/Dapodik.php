@@ -120,6 +120,7 @@ class Dapodik
                             'agama_id' => saveAgama($row["agama_id_str"]),
                             'anak_ke' => $row["anak_keberapa"],
                         ],
+                        'registrasi_id' => $row["registrasi_id"],
                         'registrasi' => [
                             'registrasi_id' => $row["registrasi_id"],
                             'peserta_didik_id' => $row["peserta_didik_id"],
@@ -153,6 +154,7 @@ class Dapodik
                             'tinggi_badan' => $row["tinggi_badan"],
                             'berat_badan' => $row["berat_badan"],
                         ],
+                        'rombel_id' => $row["rombongan_belajar_id"],
                         'rombel' => [
                             'rombel_id' => $row["rombongan_belajar_id"],
                             'semester_id' => $setSemester['semester_id'],
@@ -160,6 +162,7 @@ class Dapodik
                             'nama' => $row["nama_rombel"],
                             'kurikulum_id' => saveKurikulum($row["kurikulum_id_str"],)
                         ],
+                        'anggota_id' => $row["anggota_rombel_id"],
                         'anggotaRombel' => [
                             'anggota_id' => $row["anggota_rombel_id"],
                             'peserta_didik_id' => $row["peserta_didik_id"],
@@ -297,7 +300,7 @@ class Dapodik
             case 'pesertaDidik':
                 foreach ($data as $row) {
                     if ((int)$row[0] > 0) {
-                        $send[] = [
+                        $temp = [
                             'nama' => eyd($row[1]),
                             'nik' => $row[7],
                             'nisn' => $row[4],
@@ -338,14 +341,7 @@ class Dapodik
                                 'hp' => $row[19],
                                 'email' => $row[20],
                             ],
-                            'ayah' => [
-                                'nama' => eyd($row[24]),
-                                'jenis_kelamin' => saveJenisKelamin('Laki-laki', ['kode' => 'L']),
-                                'pendidikan_id' => savePendidikan($row[26]),
-                                'pekerjaan_id' => savePekerjaan($row[27]),
-                                'penghasilan_id' => savePenghasilan($row[28]),
-                                'nik' => $row[29],
-                            ],
+                            'ayah' => false,
                             'ibu' => [
                                 'nama' => eyd($row[30]),
                                 'jenis_kelamin' => saveJenisKelamin('Perempuan', ['kode' => 'P']),
@@ -354,49 +350,67 @@ class Dapodik
                                 'penghasilan_id' => savePenghasilan($row[34]),
                                 'nik' => $row[35],
                             ],
-                            'wali' => [
-                                'nama' => eyd($row[36]),
-                                'pendidikan_id' => savePendidikan($row[38]),
-                                'pekerjaan_id' => savePekerjaan($row[39]),
-                                'penghasilan_id' => savePenghasilan($row[40]),
-                                'nik' => $row[41],
-                            ],
+                            'wali' => false,
                             'difabel' => $this->renderKebutuhanKhusus($row[7], $row[55]),
                             'periodik' => [
                                 'tinggi_badan' => $row[62],
                                 'berat_badan' => $row[61],
-                                'lingkat_kepala' => $row[63],
+                                'lingkar_kepala' => $row[63],
                             ],
                             'sekolah_sebelumnya' => [
                                 'nomor_skhun' => $row[21],
                                 'nomor_ijazah' => $row[44],
                                 'nomor_ujian' => $row[43],
                             ],
-                            'kesejahteraan' => [
-                                [
-                                    'jenis_id' => saveJenisKesejahteraan('Kartu Perlindungan Sosial', ['kode' => 'KPS']),
-                                    'nomor_kartu' => $row[23],
-                                ],
-                                [
-                                    'jenis_id' => saveJenisKesejahteraan('Kartu Indonesia Pintar', ['kode' => 'KIP']),
-                                    'nomor_kartu' => $row[46],
-                                    'nama_kartu' => $row[47],
-                                ],
-                                [
-                                    'jenis_id' => saveJenisKesejahteraan('Kartu Keluarga Sejahtera', ['kode' => 'KKS']),
-                                    'nomor_kartu' => $row[48]
-                                ]
-                            ],
-                            'pip' => [
-                                'bank' => $row[50],
-                                'nomor_rekening' => $row[51],
-                                'atas_nama' => $row[52],
-                            ],
-                            'layak_pip' => [
-                                'status' => $row[53],
-                                'alasan' => $row[54],
-                            ]
+                            'pip' => false,
+                            'layak_pip' => false,
+                            'kesejahteraan' => [],
                         ];
+
+                        if (!empty($row[24])) $temp['ayah'] = [
+                            'nama' => eyd($row[24]),
+                            'jenis_kelamin' => saveJenisKelamin('Laki-laki', ['kode' => 'L']),
+                            'pendidikan_id' => savePendidikan($row[26]),
+                            'pekerjaan_id' => savePekerjaan($row[27]),
+                            'penghasilan_id' => savePenghasilan($row[28]),
+                            'nik' => $row[29],
+                        ];
+
+                        if (!empty($row[36])) $temp['wali'] = [
+                            'nama' => eyd($row[36]),
+                            'pendidikan_id' => savePendidikan($row[38]),
+                            'pekerjaan_id' => savePekerjaan($row[39]),
+                            'penghasilan_id' => savePenghasilan($row[40]),
+                            'nik' => $row[41],
+                        ];
+
+                        if (!empty($row[51])) $temp['pip'] = [
+                            'bank' => $row[50],
+                            'nomor_rekening' => $row[51],
+                            'atas_nama' => $row[52],
+                        ];
+
+                        if ($row[53] == 'Ya' || !empty($row[54])) $temp['layak_pip'] =                            [
+                            'status' => $row[53] == 'Ya' ? 1 : 0,
+                            'alasan_id' => saveAlasanPip($row[54]),
+                        ];
+
+                        if (!empty($row[23])) $temp['kesejahteraan'][] = [
+                            'jenis_id' => saveJenisKesejahteraan('Kartu Perlindungan Sosial', ['kode' => 'KPS']),
+                            'nomor_kartu' => $row[23],
+                        ];
+
+                        if (!empty($row[46])) $temp['kesejahteraan'][] = [
+                            'jenis_id' => saveJenisKesejahteraan('Kartu Indonesia Pintar', ['kode' => 'KIP']),
+                            'nomor_kartu' => $row[46],
+                            'nama_kartu' => $row[47],
+                        ];
+
+                        if (!empty($row[48])) $temp['kesejahteraan'][] = [
+                            'jenis_id' => saveJenisKesejahteraan('Kartu Keluarga Sejahtera', ['kode' => 'KKS']),
+                            'nomor_kartu' => $row[48]
+                        ];
+                        $send[] = $temp;
                     }
                 }
                 break;

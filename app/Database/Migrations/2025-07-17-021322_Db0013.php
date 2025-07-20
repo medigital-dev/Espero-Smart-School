@@ -147,18 +147,19 @@ class Db0013 extends Migration
         $this->forge->addKey('id', 'true');
         $this->forge->createTable('pip', true);
 
-        // Tabel: usulan_pip
+        // Tabel: layak_pip
         $this->forge->addField([
             'created_at' => ['type' => 'DATETIME',],
             'updated_at' => ['type' => 'DATETIME',],
             'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
             'id' => ['type' => 'INT', 'auto_increment' => true,],
-            'usulan_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'layak_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
             'status' => [
                 'type' => 'BOOLEAN'
             ],
-            'alasan' => [
-                'type' => 'TEXT',
+            'alasan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
             ],
             'peserta_didik_id' => [
                 'type' => 'VARCHAR',
@@ -166,7 +167,35 @@ class Db0013 extends Migration
             ]
         ]);
         $this->forge->addKey('id', 'true');
-        $this->forge->createTable('usulan_pip', true);
+        $this->forge->createTable('layak_pip', true);
+
+        // Tabel: ref_alasan_pip
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'kode' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
+            ],
+            'bg_color' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('ref_alasan_pip', true);
 
         $this->forge->modifyColumn('peserta_didik', [
             'jenis_kelamin' => [
@@ -199,7 +228,8 @@ class Db0013 extends Migration
             ]
         ]);
         $this->forge->dropTable('pip', true);
-        $this->forge->dropTable('usulan_pip', true);
+        $this->forge->dropTable('layak_pip', true);
+        $this->forge->dropTable('ref_alasan_pip', true);
         $this->forge->modifyColumn('peserta_didik', [
             'jenis_kelamin' => [
                 'name' => 'jenis_kelamin',
