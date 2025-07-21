@@ -351,10 +351,6 @@
                                 <label class="small mb-1" for="tabsRegistrasi-asalSekolah">Asal Sekolah</label>
                                 <textarea name="asal_sekolah" id="tabsRegistrasi-asalSekolah" class="form-control" rows="2"></textarea>
                             </div>
-                            <div class="form-group mb-2">
-                                <label class="small mb-1" for="tabsRegistrasi-sekolahJenjangSebelumnya">Sekolah Jenjang Sebelumnya</label>
-                                <textarea name="sekolah_jenjang_sebelumnya" id="tabsRegistrasi-sekolahJenjangSebelumnya" class="form-control" rows="2"></textarea>
-                            </div>
                         </form>
                     </div>
                     <div class="tab-pane fade" id="tabs-beasiswa" role="tabpanel" aria-labelledby="tabs-beasiswa-tab">
@@ -530,26 +526,33 @@
                             <span data-toggle="tooltip" data-title="NISN" class="badge bg-danger mx-1" id="tabsProfile-nisn"></span>
                         </div>
                         <ul class="list-group list-group-unbordered">
-                            <li class="list-group-item">
-                                <strong>Jenis Kelamin</strong> <a class="float-right" id="tabsProfile-jk"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Jenis Kelamin</p>
+                                <a class="" id="tabsProfile-jk"></a>
                             </li>
-                            <li class="list-group-item">
-                                <strong>Tmp Lahir</strong> <a class="float-right" id="tabsProfile-tempatLahir"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Tempat Lahir</p>
+                                <a class="" id="tabsProfile-tempatLahir"></a>
                             </li>
-                            <li class="list-group-item">
-                                <strong>Tgl Lahir</strong> <a class="float-right" id="tabsProfile-tanggalLahir"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Tanggal Lahir</p>
+                                <a class="" id="tabsProfile-tanggalLahir"></a>
                             </li>
-                            <li class="list-group-item">
-                                <strong>NIK</strong> <a class="float-right" id="tabsProfile-nik"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">NIK</p>
+                                <a class="" id="tabsProfile-nik"></a>
                             </li>
-                            <li class="list-group-item">
-                                <strong>Ibu</strong> <a class="float-right" id="tabsProfile-ibu"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Nama Ibu Kandung</p>
+                                <a class="" id="tabsProfile-ibu"></a>
                             </li>
-                            <li class="list-group-item">
-                                <strong>HP</strong> <a class="float-right" id="tabsProfile-hp"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Nomor HP</p>
+                                <a class="" id="tabsProfile-hp"></a>
                             </li>
-                            <li class="list-group-item">
-                                <strong>Alamat</strong> <a class="float-right" id="tabsProfile-alamat"></a>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Alamat</p>
+                                <a class="" id="tabsProfile-alamat"></a>
                             </li>
                         </ul>
                     </div>

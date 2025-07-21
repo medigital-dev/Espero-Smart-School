@@ -8,24 +8,24 @@ class Db0013 extends Migration
 {
     public function up()
     {
-        // Tabel: sekolah_sebelumnya
-        $this->forge->addField([
-            'created_at' => ['type' => 'DATETIME',],
-            'updated_at' => ['type' => 'DATETIME',],
-            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
-            'id' => ['type' => 'INT', 'auto_increment' => true,],
-            'sekolah_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
-            'nama' => [
+        // Tabel: kelulusan
+        $this->forge->addColumn('kelulusan', [
+            'nama_sekolah' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
+                'null' => false,
+            ],
+            'npsn' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'null' => false,
+            ],
+            'jenjang_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'null' => false,
             ],
             'nomor_skhun' => [
-                'type' => 'VARCHAR',
-                'constraint' => 64,
-                'null' => true,
-                'default' => null,
-            ],
-            'nomor_ijazah' => [
                 'type' => 'VARCHAR',
                 'constraint' => 64,
                 'null' => true,
@@ -38,8 +38,6 @@ class Db0013 extends Migration
                 'default' => null,
             ],
         ]);
-        $this->forge->addKey('id', 'true');
-        $this->forge->createTable('sekolah_sebelumnya', true);
 
         $this->forge->addColumn('peserta_didik', [
             'jumlah_saudara' => [
@@ -49,15 +47,7 @@ class Db0013 extends Migration
             ]
         ]);
 
-        $this->forge->modifyColumn('registrasi_peserta_didik', [
-            'sekolah_jenjang_sebelumnya' => [
-                'name' => 'sekolah_sebelumnya_id',
-                'type' => 'VARCHAR',
-                'constraint' => 128,
-                'null' => true,
-                'default' => null,
-            ]
-        ]);
+        $this->forge->dropColumn('registrasi_peserta_didik', ['sekolah_jenjang_sebelumnya']);
 
         // Tabel: pip
         $this->forge->addField([
@@ -212,15 +202,69 @@ class Db0013 extends Migration
                 'constraint' => 128,
             ]
         ]);
+
+        // Tabel: rekening_bank
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'rekening_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'bank_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+            'nomor' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('rekening_bank', true);
+
+        // Tabel: ref_bank
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'kode' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
+            ],
+            'bg_color' => [
+                'type' => 'VARCHAR',
+                'constraint' => 64,
+                'null' => true,
+                'default' => null,
+            ],
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('ref_bank', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('sekolah_sebelumnya', true);
+        $this->forge->dropColumn('kelulusan', ['nama_sekolah', 'npsn', 'jenjang_id', 'nomor_skhun', 'nomor_ijazah', 'nomor_ujian']);
         $this->forge->dropColumn('peserta_didik', 'jumlah_saudara');
-        $this->forge->modifyColumn('registrasi_peserta_didik', [
-            'sekolah_sebelumnya_id' => [
-                'name' => 'sekolah_jenjang_sebelumnya',
+        $this->forge->addColumn('registrasi_peserta_didik', [
+            'sekolah_jenjang_sebelumnya' => [
                 'type' => 'VARCHAR',
                 'constraint' => 128,
                 'null' => true,
@@ -244,5 +288,7 @@ class Db0013 extends Migration
                 'constraint' => 8,
             ]
         ]);
+        $this->forge->dropTable('rekening_bank', true);
+        $this->forge->dropTable('ref_bank', true);
     }
 }

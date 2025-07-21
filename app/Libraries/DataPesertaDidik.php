@@ -51,7 +51,7 @@ class DataPesertaDidik
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
-            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.kode = peserta_didik.jenis_kelamin', 'left')
+            ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
             ->join('ref_jenis_tinggal', 'ref_jenis_tinggal.ref_id = alamat_tinggal.jenis_tinggal_id', 'left')
         ;
     }

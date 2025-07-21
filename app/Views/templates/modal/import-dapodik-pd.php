@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="form-group row mb-2">
-                    <label class="col-sm-3 col-form-label">Pilih PD</label>
+                    <label class="col-sm-3 col-form-label">Pilih PD <button class="btn btn-sm btn-link text-muted" type="button" data-toggle="popover" data-title="Keterangan" data-html="true" data-content="<strong>PD Database</strong> - Hanya memilih peserta didik yang ada di database<br><strong>PD Baru</strong> - Hanya memilih peserta didik yang belum ada di database"><i class="fas fa-question-circle"></i></button></label>
                     <div class="col-sm-9">
                         <div class="icheck-primary form-check-inline">
                             <input class="form-check-input" type="radio" id="radioFormImport-dbPd" name="radioFormImport-statusPd" value="database">
@@ -143,17 +143,17 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formImport-checkPip" name="pip">
+                                        <input type="checkbox" id="formImport-checkPip" name="rekening">
                                         <label for="formImport-checkPip">
-                                            Data PIP
+                                            Rekening PIP
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col mb-2">
                                     <div class="icheck-primary d-inline">
-                                        <input type="checkbox" id="formImport-checkSekolahSebelumnya" name="sekolah_sebelumnya">
-                                        <label for="formImport-checkSekolahSebelumnya">
-                                            Data Sekolah Jenjang Sebelumnya
+                                        <input type="checkbox" id="formImport-checkKelulusan" name="kelulusan">
+                                        <label for="formImport-checkKelulusan">
+                                            Kelulusan
                                         </label>
                                     </div>
                                 </div>

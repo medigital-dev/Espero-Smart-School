@@ -357,14 +357,16 @@ class Dapodik
                                 'berat_badan' => $row[61],
                                 'lingkar_kepala' => $row[63],
                             ],
-                            'sekolah_sebelumnya' => [
-                                'nomor_skhun' => $row[21],
-                                'nomor_ijazah' => $row[44],
-                                'nomor_ujian' => $row[43],
-                            ],
-                            'pip' => false,
+                            'kelulusan' => false,
+                            'rekening' => false,
                             'layak_pip' => false,
                             'kesejahteraan' => [],
+                        ];
+
+                        if ($row[44]) $temp['kelulusan'] = [
+                            'nomor_skhun' => $row[21],
+                            'nomor_ijazah' => $row[44],
+                            'nomor_ujian' => $row[43],
                         ];
 
                         if (!empty($row[24])) $temp['ayah'] = [
@@ -384,10 +386,10 @@ class Dapodik
                             'nik' => $row[41],
                         ];
 
-                        if (!empty($row[51])) $temp['pip'] = [
-                            'bank' => $row[50],
-                            'nomor_rekening' => $row[51],
-                            'atas_nama' => $row[52],
+                        if (!empty($row[51])) $temp['rekening'] = [
+                            'bank_id' => saveBank($row[50]),
+                            'nomor' => $row[51],
+                            'nama' => $row[52],
                         ];
 
                         if ($row[53] == 'Ya' || !empty($row[54])) $temp['layak_pip'] =                            [

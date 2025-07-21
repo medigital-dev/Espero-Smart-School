@@ -375,6 +375,10 @@
             });
         }
 
+        function runPopover() {
+            $('[data-toggle="popover"]').popover();
+        }
+
         function runOnlyInt() {
             $(".onlyInt")
                 .on("input", function() {
@@ -423,6 +427,7 @@
             runOnlyInt();
             runSelect2();
             runTooltip();
+            runPopover();
             runBsDropdownAutoClose();
             runBsCustomFileInput();
             runFancyBox();
@@ -1009,9 +1014,7 @@
                         data: "peserta_didik_id",
                         orderable: false,
                         render: (data, type, rows, meta) => {
-                            if (rows.alamat_jalan !== null)
-                                return `${rows.dusun} ${rows.rt}/${rows.rw}, ${rows.desa}, ${rows.kecamatan}`;
-                            else return '';
+                            return `${rows.dusun ?? ''}`;
                         }
                     },
                     {
@@ -1900,7 +1903,6 @@
                         .datetimepicker('date', tanggal(respData.tanggal_registrasi, 'dd/mm/Y'));
                     $('#tabsRegistrasi-nipd').val(respData.nipd);
                     $('#tabsRegistrasi-asalSekolah').val(respData.asal_sekolah);
-                    $('#tabsRegistrasi-sekolahJenjangSebelumnya').val(respData.Sekolah_jenjang_sebelumnya);
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
@@ -2848,7 +2850,6 @@
                             (typeof send === 'string' && send.trim() === '') ||
                             (Array.isArray(send) && send.length === 0) ||
                             (typeof send === 'object' && !Array.isArray(send) && Object.keys(send).length === 0)) {
-                            toast(`Warning: Data ${val.name} an <strong>${dataSet.nama}</strong> kosong. (Proses dilewati)`, 'warning', 3000);
                             continue;
                         }
                         let respSimpan;
@@ -3103,11 +3104,10 @@
                     for (const val of dataType) {
                         const send = dataSet[val.name];
 
-                        if (send == null ||
+                        if (send == null || send == false ||
                             (typeof send === 'string' && send.trim() === '') ||
                             (Array.isArray(send) && send.length === 0) ||
                             (typeof send === 'object' && !Array.isArray(send) && Object.keys(send).length === 0)) {
-                            toast(`Warning: Data ${val.name} an <strong>${dataSet.nama}</strong> kosong. (Proses dilewati)`, 'warning');
                             continue;
                         }
                         let respSimpan;

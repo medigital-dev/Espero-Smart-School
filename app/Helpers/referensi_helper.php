@@ -253,3 +253,17 @@ if (!function_exists('saveAlasanPip')) {
         return service('referensi')->saveAlasanPip($nama, $set);
     }
 }
+
+if (!function_exists('saveBank')) {
+    /**
+     * Helper menyimpan referensi Bank Peserta Didik berdasarkan nama Bank Peserta Didik
+     * @param string $nama Nama Bank Peserta Didik
+     * @param array $set Variable tambahan dalam array
+     * @return string Mengembalikan id unik Bank Peserta Didik
+     * @return false Jika Bank Peserta Didik gagal disimpan 
+     */
+    function saveBank(string $nama, array $set = [])
+    {
+        return service('referensi')->saveBank($nama, $set);
+    }
+}

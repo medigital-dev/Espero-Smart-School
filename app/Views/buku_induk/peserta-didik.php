@@ -21,7 +21,7 @@
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Reload Tabel" id="btnReloadTable"><i class="fas fa-redo-alt fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Pilih Semua/Balikkan pilihan" id="btnSelectRow"><i class="fas fa-check-circle fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Pilih Semua/Balikkan pilihan" id="btnSelectRow"><i class="fas fa-check-circle fa-fw"></i><span></span></button>
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Bersihkan pilihan" id="btnClearSelected"><i class="fas fa-dot-circle fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">

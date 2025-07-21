@@ -19,8 +19,10 @@ use App\Models\PassFotoModel;
 use App\Models\PenyakitModel;
 use App\Models\PeriodikModel;
 use App\Models\PesertaDidikModel;
+use App\Models\PipModel;
 use App\Models\PrestasiModel;
 use App\Models\RegistrasiPesertaDidikModel;
+use App\Models\RekeningBankModel;
 use App\Models\RombonganBelajarModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -337,7 +339,6 @@ class PesertaDidik extends BaseController
             'tanggal_registrasi',
             'nipd',
             'asal_sekolah',
-            'sekolah_jenjang_sebelumnya',
         ])
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
             ->where('peserta_didik_id', $id);
@@ -451,20 +452,21 @@ class PesertaDidik extends BaseController
     public function saveKelulusan($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $cPd = $this->mPesertaDidik->select(['peserta_didik.peserta_didik_id', 'tingkat_pendidikan as tingkat', 'mutasi_pd.mutasi_id'])
-            ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
-            ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            ->where('semester.status', true)
+        $cPd = $this->mPesertaDidik
+            // ->select(['peserta_didik.peserta_didik_id', 'tingkat_pendidikan as tingkat', 'mutasi_pd.mutasi_id'])
+            // ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            // ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            // ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
+            // ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            // ->where('semester.status', true)
             ->where('peserta_didik.peserta_didik_id', $id)
             ->first();
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
-        if ($cPd['mutasi_id'] !== null) return $this->fail('Peserta didik terdeteksi sebagai peserta didik keluar.');
-        if ((int)$cPd['tingkat'] !== 9) return $this->fail('Kelulusan hanya hanya pada kelas 9.');
+        // if ($cPd['mutasi_id'] !== null) return $this->fail('Peserta didik terdeteksi sebagai peserta didik keluar.');
+        // if ((int)$cPd['tingkat'] !== 9) return $this->fail('Kelulusan hanya hanya pada kelas 9.');
         $set = $this->request->getPost();
         $mKelulusan = new KelulusanPdModel();
-        $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->first();
+        $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->where('nomor_ijazah', $set['nomor_ijazah'])->first();
         if (!$cKelulusan) {
             $set['kelulusan_id'] = idUnik($mKelulusan, 'kelulusan_id');
             $set['peserta_didik_id'] = $id;
@@ -688,102 +690,102 @@ class PesertaDidik extends BaseController
         return $this->respond(['message' => 'Riwayat prestasi berhasil dihapus permanen.']);
     }
 
-    public function savePd($id): ResponseInterface
-    {
-        $set = $this->request->getPost();
-        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+    // public function savePd($id): ResponseInterface
+    // {
+    //     $set = $this->request->getPost();
+    //     if (!$id) return $this->fail('ID Peserta didik diperlukan.');
 
-        $mAnggotaRombel = new AnggotaRombelModel();
-        $cekAnggotaRombel = $mAnggotaRombel->where('anggota_id', $set['anggota_rombel']['anggota_id'])->first();
-        if ($cekAnggotaRombel) $set['anggota_rombel']['id'] = $cekAnggotaRombel['id'];
-        $mAnggotaRombel->save($set['anggota_rombel']);
+    //     $mAnggotaRombel = new AnggotaRombelModel();
+    //     $cekAnggotaRombel = $mAnggotaRombel->where('anggota_id', $set['anggota_rombel']['anggota_id'])->first();
+    //     if ($cekAnggotaRombel) $set['anggota_rombel']['id'] = $cekAnggotaRombel['id'];
+    //     $mAnggotaRombel->save($set['anggota_rombel']);
 
-        $mKontak = new KontakModel();
-        $cKontak = $mKontak->where('nik', $set['nik'])->first();
-        if ($cKontak) $set['kontak']['id'] = $cKontak['id'];
-        else $set['kontak']['kontak_id'] = idUnik($mKontak, 'kontak_id');
-        $mKontak->save($set['kontak']);
+    //     $mKontak = new KontakModel();
+    //     $cKontak = $mKontak->where('nik', $set['nik'])->first();
+    //     if ($cKontak) $set['kontak']['id'] = $cKontak['id'];
+    //     else $set['kontak']['kontak_id'] = idUnik($mKontak, 'kontak_id');
+    //     $mKontak->save($set['kontak']);
 
-        $mOrtuWali = new OrangtuaWaliModel();
-        $idAyah = $idIbu = $idWali = null;
-        if ($set['orangtua_wali']['ayah']['nama'] !== '') {
-            $cAyah = $mOrtuWali->where('nama', $set['orangtua_wali']['ayah']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ayah']['pekerjaan_id'])->first();
-            if (!$cAyah) $set['orangtua_wali']['ayah']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-            else {
-                $set['orangtua_wali']['ayah']['orangtua_id'] = $cAyah['orangtua_id'];
-                $set['orangtua_wali']['ayah']['id'] = $cAyah['id'];
-            }
-            $mOrtuWali->save($set['orangtua_wali']['ayah']);
-            $idAyah = $set['orangtua_wali']['ayah']['orangtua_id'];
-        }
+    //     $mOrtuWali = new OrangtuaWaliModel();
+    //     $idAyah = $idIbu = $idWali = null;
+    //     if ($set['orangtua_wali']['ayah']['nama'] !== '') {
+    //         $cAyah = $mOrtuWali->where('nama', $set['orangtua_wali']['ayah']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ayah']['pekerjaan_id'])->first();
+    //         if (!$cAyah) $set['orangtua_wali']['ayah']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+    //         else {
+    //             $set['orangtua_wali']['ayah']['orangtua_id'] = $cAyah['orangtua_id'];
+    //             $set['orangtua_wali']['ayah']['id'] = $cAyah['id'];
+    //         }
+    //         $mOrtuWali->save($set['orangtua_wali']['ayah']);
+    //         $idAyah = $set['orangtua_wali']['ayah']['orangtua_id'];
+    //     }
 
-        $cibu = $mOrtuWali->where('nama', $set['orangtua_wali']['ibu']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ibu']['pekerjaan_id'])->first();
-        if (!$cibu) $set['orangtua_wali']['ibu']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-        else {
-            $set['orangtua_wali']['ibu']['orangtua_id'] = $cibu['orangtua_id'];
-            $set['orangtua_wali']['ibu']['id'] = $cibu['id'];
-        }
-        $mOrtuWali->save($set['orangtua_wali']['ibu']);
-        $idIbu = $set['orangtua_wali']['ibu']['orangtua_id'];
+    //     $cibu = $mOrtuWali->where('nama', $set['orangtua_wali']['ibu']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ibu']['pekerjaan_id'])->first();
+    //     if (!$cibu) $set['orangtua_wali']['ibu']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+    //     else {
+    //         $set['orangtua_wali']['ibu']['orangtua_id'] = $cibu['orangtua_id'];
+    //         $set['orangtua_wali']['ibu']['id'] = $cibu['id'];
+    //     }
+    //     $mOrtuWali->save($set['orangtua_wali']['ibu']);
+    //     $idIbu = $set['orangtua_wali']['ibu']['orangtua_id'];
 
-        if ($set['orangtua_wali']['wali']['nama'] !== '') {
-            $cwali = $mOrtuWali->where('nama', $set['orangtua_wali']['wali']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['wali']['pekerjaan_id'])->first();
-            if (!$cwali) $set['orangtua_wali']['wali']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-            else {
-                $set['orangtua_wali']['wali']['orangtua_id'] = $cwali['orangtua_id'];
-                $set['orangtua_wali']['wali']['id'] = $cwali['id'];
-            }
-            $mOrtuWali->save($set['orangtua_wali']['wali']);
-            $idAyah = $set['orangtua_wali']['wali']['orangtua_id'];
-        }
+    //     if ($set['orangtua_wali']['wali']['nama'] !== '') {
+    //         $cwali = $mOrtuWali->where('nama', $set['orangtua_wali']['wali']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['wali']['pekerjaan_id'])->first();
+    //         if (!$cwali) $set['orangtua_wali']['wali']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
+    //         else {
+    //             $set['orangtua_wali']['wali']['orangtua_id'] = $cwali['orangtua_id'];
+    //             $set['orangtua_wali']['wali']['id'] = $cwali['id'];
+    //         }
+    //         $mOrtuWali->save($set['orangtua_wali']['wali']);
+    //         $idAyah = $set['orangtua_wali']['wali']['orangtua_id'];
+    //     }
 
-        $mOrtuPd = new OrtuWaliPdModel();
-        $setOrtuPd = [
-            'peserta_didik_id' => $set['peserta_didik_id'],
-            'ayah_id' => $idAyah,
-            'ibu_id' => $idIbu,
-            'wali_id' => $idWali,
-            'anak_ke' => $set['orangtua_wali']['anak_ke'],
-        ];
-        $cOrtuPd = $mOrtuPd->where('peserta_didik_id', $set['peserta_didik_id'])->first();
-        if ($cOrtuPd) $setOrtuPd['id'] = $cOrtuPd['id'];
-        else $setOrtuPd['ortupd_id'] = idUnik($mOrtuPd, 'ortupd_id');
-        $mOrtuPd->save($setOrtuPd);
+    //     $mOrtuPd = new OrtuWaliPdModel();
+    //     $setOrtuPd = [
+    //         'peserta_didik_id' => $set['peserta_didik_id'],
+    //         'ayah_id' => $idAyah,
+    //         'ibu_id' => $idIbu,
+    //         'wali_id' => $idWali,
+    //         'anak_ke' => $set['orangtua_wali']['anak_ke'],
+    //     ];
+    //     $cOrtuPd = $mOrtuPd->where('peserta_didik_id', $set['peserta_didik_id'])->first();
+    //     if ($cOrtuPd) $setOrtuPd['id'] = $cOrtuPd['id'];
+    //     else $setOrtuPd['ortupd_id'] = idUnik($mOrtuPd, 'ortupd_id');
+    //     $mOrtuPd->save($setOrtuPd);
 
-        $mPeriodik = new PeriodikModel();
-        $cPeriodik = $mPeriodik->where('nik', $set['nik'])
-            ->where('tinggi_badan', $set['periodik']['tinggi_badan'])
-            ->where('berat_badan', $set['periodik']['berat_badan'])
-            ->first();
-        if (!$cPeriodik) $set['periodik']['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
-        else $set['periodik']['id'] = $cPeriodik['id'];
-        $mPeriodik->save($set['periodik']);
+    //     $mPeriodik = new PeriodikModel();
+    //     $cPeriodik = $mPeriodik->where('nik', $set['nik'])
+    //         ->where('tinggi_badan', $set['periodik']['tinggi_badan'])
+    //         ->where('berat_badan', $set['periodik']['berat_badan'])
+    //         ->first();
+    //     if (!$cPeriodik) $set['periodik']['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
+    //     else $set['periodik']['id'] = $cPeriodik['id'];
+    //     $mPeriodik->save($set['periodik']);
 
-        $mPesertaDidik = new PesertaDidikModel();
-        $cPd = $mPesertaDidik->where('peserta_didik_id', $set['peserta_didik_id'])
-            ->orWhere('nik', $set['nik'])
-            ->orWhere('nisn', $set['nisn'])
-            ->orWhere('nama', $set['nama'])
-            ->first();
-        if ($cPd) $set['peserta_didik']['id'] = $cPd['id'];
-        $mPesertaDidik->save($set['peserta_didik']);
+    //     $mPesertaDidik = new PesertaDidikModel();
+    //     $cPd = $mPesertaDidik->where('peserta_didik_id', $set['peserta_didik_id'])
+    //         ->orWhere('nik', $set['nik'])
+    //         ->orWhere('nisn', $set['nisn'])
+    //         ->orWhere('nama', $set['nama'])
+    //         ->first();
+    //     if ($cPd) $set['peserta_didik']['id'] = $cPd['id'];
+    //     $mPesertaDidik->save($set['peserta_didik']);
 
-        $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $set['peserta_didik_id'])
-            ->orWhere('nipd', $set['nipd'])
-            ->first();
-        if ($cRegistrasi) $set['registrasi']['id'] = $cRegistrasi['id'];
-        else $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
-        $mRegistrasi->save($set['registrasi']);
+    //     $mRegistrasi = new RegistrasiPesertaDidikModel();
+    //     $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $set['peserta_didik_id'])
+    //         ->orWhere('nipd', $set['nipd'])
+    //         ->first();
+    //     if ($cRegistrasi) $set['registrasi']['id'] = $cRegistrasi['id'];
+    //     else $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
+    //     $mRegistrasi->save($set['registrasi']);
 
-        $mRombel = new RombonganBelajarModel();
-        $cRombel = $mRombel->where('rombel_id', $set['rombongan_belajar']['rombel_id'])
-            ->first();
-        if ($cRombel) $set['rombongan_belajar']['id'] = $cRombel['id'];
-        $mRombel->save($set['rombongan_belajar']);
+    //     $mRombel = new RombonganBelajarModel();
+    //     $cRombel = $mRombel->where('rombel_id', $set['rombongan_belajar']['rombel_id'])
+    //         ->first();
+    //     if ($cRombel) $set['rombongan_belajar']['id'] = $cRombel['id'];
+    //     $mRombel->save($set['rombongan_belajar']);
 
-        return $this->respond(true);
-    }
+    //     return $this->respond(true);
+    // }
 
     public function deleteOrtuWaliPd($id): ResponseInterface
     {
@@ -943,5 +945,26 @@ class PesertaDidik extends BaseController
         }
         if (!$mLayakPip->save($set)) return $this->fail('Kelayakan PIP gagal disimpan.');
         return $this->respond(['message' => 'Kelayakan PIP berhasil disimpan']);
+    }
+
+    public function saveRekening($id = null): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mRekening = new RekeningBankModel();
+        $set = $this->request->getPost();
+        $cRekening = $mRekening->where('nik', $cPd['nik'])
+            ->where('nomor', $set['nomor'])
+            ->first();
+        if ($cRekening) $set['id'] = $cRekening['id'];
+        else {
+            $set['rekening_id'] = idUnik($mRekening, 'rekening_id');
+            $set['nik'] = $cPd['nik'];
+        }
+        if (!$mRekening->save($set)) return $this->fail('Data rekening bank gagal disimpan');
+        return $this->respond(['message' => 'Data rekening bank berhasil disimpan.']);
     }
 }

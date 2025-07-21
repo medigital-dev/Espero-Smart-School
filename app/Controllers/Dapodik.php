@@ -812,6 +812,7 @@ class Dapodik extends BaseController
             if ($type === 'new' && $id) continue;
             if ($type === 'checked' && (!$id || !in_array($id, $dataId))) continue;
             if ($type === 'all' && !$id) continue;
+            if ($type === 'database' && !$id) continue;
 
             $row['peserta_didik_id'] = $id ?: idUnik($mPd, 'peserta_didik_id');
             $response[] = $row;

@@ -19,6 +19,12 @@ class KelulusanPdModel extends Model
         'kurikulum',
         'nomor_ijazah',
         'penandatangan',
-        'tanggal'
+        'tanggal',
+        'nama_sekolah',
+        'npsn',
+        'jenjang_id',
+        'nomor_skhun',
+        'nomor_ijazah',
+        'nomor_ujian',
     ];
 }
