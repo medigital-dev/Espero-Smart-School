@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="<?= base_url('plugins/icheck-bootstrap/icheck-bootstrap.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('plugins/fancyapps/fancybox.css'); ?>">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="<?= base_url('assets/css/adminlte.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/global.css'); ?>">
     <style>
@@ -319,12 +320,14 @@
     <script src="<?= base_url('plugins/fetchData/fetchData.js'); ?>"></script>
     <script src="<?= base_url('plugins/fancyapps/fancybox.umd.js'); ?>"></script>
     <script src="<?= base_url('plugins/chart.js/Chart.bundle.min.js'); ?>"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="<?= base_url('assets/js/adminlte.min.js'); ?>"></script>
     <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
     <script src="<?= base_url('assets/js/global.js'); ?>"></script>
     <!-- functions -->
     <script>
-        let selectedRows = [];
+        let selectedRows = [],
+            filtered = 0;
 
         function checkRowDt() {
             $(".dtCheckbox").on("change", function() {
@@ -337,7 +340,14 @@
                     selectedRows = selectedRows.filter(item => item !== id);
                 }
                 stateBtnCheckAll();
+                runSelectedCount();
             });
+        }
+
+        function runSelectedCount() {
+            const countInfo = $('#dtCountChecked-bukuInduk');
+            if (selectedRows.length == 0) countInfo.html('');
+            else countInfo.html(`${selectedRows.length} terpilih | `);
         }
 
         function stateBtnCheckAll() {
@@ -376,7 +386,10 @@
         }
 
         function runPopover() {
-            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'hover',
+            });
         }
 
         function runOnlyInt() {
@@ -431,6 +444,7 @@
             runBsDropdownAutoClose();
             runBsCustomFileInput();
             runFancyBox();
+            runSelectedCount();
         }
 
         function resetInput(elmInput, elmDatatables = false) {
@@ -862,6 +876,7 @@
                         selectedRows = selectedRows.filter(item => item !== id);
                     }
                 });
+                runSelectedCount();
             });
 
             $('#btnClearSelected').on('click', function() {
@@ -872,6 +887,7 @@
                 });
                 checked.prop('checked', false);
                 stateBtnCheckAll();
+                runSelectedCount();
             });
 
             $('#btnSelectRow').on('click', function() {
@@ -889,6 +905,7 @@
                     }
                 });
                 stateBtnCheckAll();
+                runSelectedCount();
             });
         })
     </script>
@@ -919,6 +936,7 @@
                     method: "POST",
                     url: "/api/v0/datatables/bukuInduk/pd",
                     data: (d) => {
+                        d.ids = selectedRows;
                         d.status_pd = $('[name="radioDt-statusPd"]:checked').val();
                         d.kelas = $('#selectDt-rombelPd').val();
                         d.tingkat = $('#selectDt-tingkatRombelPd').val();
@@ -1066,7 +1084,7 @@
 
                 let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
                 if (total !== filter) {
-                    text += ' (disaring dari ' + total + ' entri keseluruhan';
+                    text += ' (disaring dari ' + total + ' entri keseluruhan)';
                 }
                 pageInfoElm.text(text);
 
@@ -1159,34 +1177,34 @@
                 dtAdminBukuIndukPd.ajax.reload()
             });
 
-            $('#btnRun-importKelulusanPd').on('click', async function() {
-                const btn = $(this);
-                const fileElm = $('#inputFile-kelulusanPd');
-                const file = fileElm.prop('files');
-                if (file.length !== 1) {
-                    toast('File import belum dipilih.');
-                    fileElm.addClass('is-invalid');
-                    return;
-                }
-                $('.is-invalid').removeClass('is-invalid');
+            // $('#btnRun-importKelulusanPd').on('click', async function() {
+            //     const btn = $(this);
+            //     const fileElm = $('#inputFile-kelulusanPd');
+            //     const file = fileElm.prop('files');
+            //     if (file.length !== 1) {
+            //         toast('File import belum dipilih.');
+            //         fileElm.addClass('is-invalid');
+            //         return;
+            //     }
+            //     $('.is-invalid').removeClass('is-invalid');
 
-                let data = new FormData();
-                data.append('file', file[0]);
+            //     let data = new FormData();
+            //     data.append('file', file[0]);
 
-                const upload = await fetchData({
-                    url: '/api/v0/buku-induk/import/kelulusan-pd',
-                    data: data,
-                    method: 'POST',
-                    button: btn
-                });
-                if (!upload) return;
-                fileElm.val('');
-                bsCustomFileInput.destroy();
-                bsCustomFileInput.init();
-                $('#modalKelulusanPd').modal('hide');
-                dtAdminBukuIndukPd.ajax.reload(null, false);
-                toast(upload.message);
-            });
+            //     const upload = await fetchData({
+            //         url: '/api/v0/buku-induk/import/kelulusan-pd',
+            //         data: data,
+            //         method: 'POST',
+            //         button: btn
+            //     });
+            //     if (!upload) return;
+            //     fileElm.val('');
+            //     bsCustomFileInput.destroy();
+            //     bsCustomFileInput.init();
+            //     $('#modalKelulusanPd').modal('hide');
+            //     dtAdminBukuIndukPd.ajax.reload(null, false);
+            //     toast(upload.message);
+            // });
 
             $('#tabs-profil-tab').on('click', async function(e) {
                 e.preventDefault();
@@ -1257,27 +1275,52 @@
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/alamat/' + id);
-                if (!respData) return;
-                $('#tabsAlamat-alamatJalan').val(respData.alamat_jalan);
-                $('#tabsAlamat-rt').val(respData.rt);
-                $('#tabsAlamat-rw').val(respData.rw);
-                $('#tabsAlamat-dusun').val(respData.dusun);
-                $('#tabsAlamat-desa').val(respData.desa);
-                $('#tabsAlamat-kecamatan').val(respData.kecamatan);
-                $('#tabsAlamat-kabupaten').val(respData.kabupaten);
-                $('#tabsAlamat-provinsi').val(respData.provinsi);
-                $('#tabsAlamat-kodePos').val(respData.kode_pos);
-                $('#tabsAlamat-lintang').val(respData.lintang);
-                $('#tabsAlamat-bujur').val(respData.bujur);
-                $('#tabsAlamat-jarakRumah').val(respData.jarak_rumah);
-                $('#tabsAlamat-waktuTempuh').val(respData.waktu_tempuh);
-                if (respData.tinggal_id !== null) {
-                    const optTinggal = new Option(respData.tinggal_str, respData.tinggal_id, false, true);
-                    $('#tabsAlamat-jenisTinggal').append(optTinggal);
-                }
-                if (respData.transportasi_id !== null) {
-                    const optTransportasi = new Option(respData.transportasi_str, respData.transportasi_id, false, true);
-                    $('#tabsAlamat-alatTransportasi').append(optTransportasi);
+                if (respData) {
+                    $('#tabsAlamat-alamatJalan').val(respData.alamat_jalan);
+                    $('#tabsAlamat-rt').val(respData.rt);
+                    $('#tabsAlamat-rw').val(respData.rw);
+                    $('#tabsAlamat-dusun').val(respData.dusun);
+                    $('#tabsAlamat-desa').val(respData.desa);
+                    $('#tabsAlamat-kecamatan').val(respData.kecamatan);
+                    $('#tabsAlamat-kabupaten').val(respData.kabupaten);
+                    $('#tabsAlamat-provinsi').val(respData.provinsi);
+                    $('#tabsAlamat-kodePos').val(respData.kode_pos);
+                    $('#tabsAlamat-lintang').val(respData.lintang);
+                    $('#tabsAlamat-bujur').val(respData.bujur);
+                    $('#tabsAlamat-jarakRumah').val(respData.jarak_rumah);
+                    $('#tabsAlamat-waktuTempuh').val(respData.waktu_tempuh);
+                    if (respData.tinggal_id !== null) {
+                        const optTinggal = new Option(respData.tinggal_str, respData.tinggal_id, false, true);
+                        $('#tabsAlamat-jenisTinggal').append(optTinggal);
+                    }
+                    if (respData.transportasi_id !== null) {
+                        const optTransportasi = new Option(respData.transportasi_str, respData.transportasi_id, false, true);
+                        $('#tabsAlamat-alatTransportasi').append(optTransportasi);
+                    }
+                    if (respData.lintang && respData.bujur) {
+                        const elm = $('#maps');
+                        elm.height(200).html('');
+                        const latitude = respData.lintang;
+                        const longitude = respData.bujur;
+
+                        if (window.map) {
+                            window.map.remove(); // hapus map sebelumnya
+                            window.map = null;
+                        }
+
+                        window.map = L.map('maps').setView([latitude, longitude], 15);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 18,
+                        }).addTo(window.map);
+
+                        L.marker([latitude, longitude]).addTo(window.map);
+                    } else {
+                        if (window.map) {
+                            window.map.remove();
+                            window.map = null;
+                        }
+                        $('#maps').height('auto').html('<div class="text-muted text-center py-2 border bg-secondary">Koordinat tidak tersedia</div>');
+                    }
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
@@ -2054,23 +2097,145 @@
             $('#tabs-kelulusan-tab').on('click', async function(e) {
                 e.preventDefault();
                 const id = $(this).attr('data-id');
+                const listElm = $('#listKelulusan');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-kelulusan-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-kelulusan-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
                 const formElm = $('#formData-tabsKelulusan');
                 formElm.trigger('reset').find('option').remove();
                 const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listKelulusan');
                 $(this).tab('show');
                 if (id == undefined || id == '') {
                     return;
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kelulusan/' + id);
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold" data-toggle="collapse" data-target="#coll-${v.id}" aria-expanded="false" aria-controls="coll-${v.id}">${tanggal(v.tanggal, 'Y')} - ${v.jenjang_str}</h6>
+                                                <div>
+                                                    <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusKelulusan" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <a type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Ubah" class="text-decoration-none mr-1 small text-muted btnRow-ubahKelulusan" aria-label="Close">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="collapse mt-1" id="coll-${v.id}">
+                                                <ul class="list-group list-group-unbordered">
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Tanggal</p>
+                                                        <a class="">${tanggal(v.tanggal,'d mmmm Y')}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Jenjang</p>
+                                                        <a class="">${v.jenjang_str}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Nama Sekolah</p>
+                                                        <a class="">${v.nama_sekolah}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">NPSN</p>
+                                                        <a class="">${v.npsn}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Kurikulum</p>
+                                                        <a class="">${v.kurikulum_str}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Nomor Ijazah</p>
+                                                        <a class="">${v.nomor_ijazah}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Nomor SKHUN</p>
+                                                        <a class="">${v.nomor_skhun}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Nomor Peserta Ujian</p>
+                                                        <a class="">${v.nomor_ujian}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Penandatangan</p>
+                                                        <a class="">${v.penandatangan}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
 
-                if (respData) {
-                    $('#tabsKelulusan-tanggalKelulusan')
-                        .datetimepicker('date', tanggal(respData.tanggal, 'dd/mm/Y'));
-                    const opt = new Option(respData.kurikulum_str, respData.kurikulum_id, false, true);
-                    $('#tabsKelulusan-kurikulumKelulusan').append(opt);
-                    $('#tabsKelulusan-nomorIjazah').val(respData.nomor_ijazah);
-                    $('#tabsKelulusan-penandatangan').val(respData.penandatangan);
+                    $('.btnRow-ubahKelulusan').on('click', async function() {
+                        const btn = $(this);
+                        const idKelulusan = btn.attr('data-id');
+                        const id = $('#detailPd-id').val();
+                        const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kelulusan/' + id);
+                        if (respData.length > 0) {
+                            respData.forEach((val, i) => {
+                                if (val.id == idKelulusan) {
+                                    let opt;
+                                    $('#tabsKelulusan-tanggalKelulusan').datetimepicker('date', tanggal(val.tanggal, 'dd/mm/Y'));
+                                    if (val.jenjang_id) {
+                                        opt = new Option(val.jenjang_str, val.jenjang_id, false, true);
+                                        $('#tabsKelulusan-jenjangPendidikan').append(opt)
+                                    }
+                                    $('#tabsKelulusan-namaSekolah').val(val.nama_sekolah);
+                                    $('#tabsKelulusan-npsn').val(val.npsn);
+                                    if (val.kurikulum_id) {
+                                        opt = new Option(val.kurikulum_str, val.kurikulum_id, false, true);
+                                        $('#tabsKelulusan-kurikulumKelulusan').append(opt);
+                                    }
+                                    $('#tabsKelulusan-nomorIjazah').val(val.nomor_ijazah);
+                                    $('#tabsKelulusan-nomorSkhun').val(val.nomor_skhun);
+                                    $('#tabsKelulusan-nomorUjian').val(val.nomor_ujian);
+                                    $('#tabsKelulusan-penandatangan').val(val.penandatangan);
+                                }
+                            });
+                            $('#tabs-tambah-kelulusan-tab').trigger('click');
+                        }
+                    });
+
+                    $('.btnRow-hapusKelulusan').on('click', async function() {
+                        const btn = $(this);
+                        const id = btn.data('id');
+                        const confirm = await Swal.fire({
+                            icon: "info",
+                            title: "Hapus Kelulusan?",
+                            text: "Data kelulusan peserta didik akan dihapus permanen. Apakah anda yakin?",
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: "Ya, Hapus",
+                            cancelButtonText: "Batal",
+                            customClass: {
+                                confirmButton: "bg-danger",
+                            },
+                        });
+
+                        if (confirm.isConfirmed) {
+                            const delResp = await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/kelulusan/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                            if (delResp) {
+                                toast(delResp.message);
+                                dtAdminBukuIndukPd.ajax.reload(null, false);
+                                $('#tabs-kelulusan-tab').trigger('click');
+                            }
+                        }
+                    });
+
+                    runTooltip();
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
@@ -2106,34 +2271,7 @@
                 const btn = $(this);
                 const id = $('#detailPd-id').val();
 
-                Swal.fire({
-                    icon: "info",
-                    title: "Hapus Kelulusan?",
-                    text: "Data kelulusan peserta didik akan dihapus permanen. Apakah anda yakin?",
-                    showCloseButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Hapus",
-                    cancelButtonText: "Batal",
-                    customClass: {
-                        confirmButton: "bg-danger",
-                    },
-                    showLoaderOnConfirm: true,
-                    backdrop: true,
-                    allowOutsideClick: () => !Swal.isLoading(),
-                    preConfirm: () => {
-                        return fetchData({
-                            url: '/api/v0/buku-induk/peserta-didik/kelulusan/' + id,
-                            method: 'DELETE',
-                            button: btn
-                        });
-                    },
-                }).then((result) => {
-                    if (result.isConfirmed && result.value) {
-                        toast(result.value.message);
-                        dtAdminBukuIndukPd.ajax.reload(null, false);
-                        $('#tabs-kelulusan-tab').trigger('click');
-                    }
-                });
+
             });
 
             $('#btnRun-saveKesejahteraan').on('click', async function() {

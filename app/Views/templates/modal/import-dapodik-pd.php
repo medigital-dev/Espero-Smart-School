@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="form-group row mb-2">
-                    <label class="col-sm-3 col-form-label">Pilih PD <button class="btn btn-sm btn-link text-muted" type="button" data-toggle="popover" data-title="Keterangan" data-html="true" data-content="<strong>PD Database</strong> - Hanya memilih peserta didik yang ada di database<br><strong>PD Baru</strong> - Hanya memilih peserta didik yang belum ada di database"><i class="fas fa-question-circle"></i></button></label>
+                    <label class="col-sm-3 col-form-label">Pilih PD <button class="btn btn-sm btn-link text-muted" type="button" data-toggle="popover" data-title="Keterangan" data-content="<strong>PD Database</strong> - Hanya memilih peserta didik yang ada di database<br><strong>PD Baru</strong> - Hanya memilih peserta didik yang belum ada di database<br><strong>PD Terpilih</strong> - Hanya memilih peserta didik yang dicentang pada tabel<br><strong>Semua</strong> - Memilih semua peserta didik yang ada pada file"><i class="fas fa-question-circle"></i></button></label>
                     <div class="col-sm-9">
                         <div class="icheck-primary form-check-inline">
                             <input class="form-check-input" type="radio" id="radioFormImport-dbPd" name="radioFormImport-statusPd" value="database">

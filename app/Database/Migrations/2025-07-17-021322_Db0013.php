@@ -22,7 +22,7 @@ class Db0013 extends Migration
             ],
             'jenjang_id' => [
                 'type' => 'VARCHAR',
-                'constraint' => 16,
+                'constraint' => 128,
                 'null' => false,
             ],
             'nomor_skhun' => [
@@ -261,7 +261,7 @@ class Db0013 extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('kelulusan', ['nama_sekolah', 'npsn', 'jenjang_id', 'nomor_skhun', 'nomor_ijazah', 'nomor_ujian']);
+        $this->forge->dropColumn('kelulusan', ['nama_sekolah', 'npsn', 'jenjang_id', 'nomor_skhun', 'nomor_ujian']);
         $this->forge->dropColumn('peserta_didik', 'jumlah_saudara');
         $this->forge->addColumn('registrasi_peserta_didik', [
             'sekolah_jenjang_sebelumnya' => [

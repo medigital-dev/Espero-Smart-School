@@ -106,7 +106,8 @@
                 </table>
                 <div class="row mt-2">
                     <div class="col-sm-4 mb-2">
-                        <p class="text-center text-sm-left m-0" id="dtPageInfo-bukuInduk"></p>
+                        <span class="text-center text-sm-left" id="dtCountChecked-bukuInduk"></span>
+                        <span class="text-center text-sm-left" id="dtPageInfo-bukuInduk"></span>
                     </div>
                     <div class="col-sm-auto ml-auto mb-2">
                         <div class="input-group input-group-sm">

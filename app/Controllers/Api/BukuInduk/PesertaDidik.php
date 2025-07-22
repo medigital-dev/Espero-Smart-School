@@ -438,32 +438,32 @@ class PesertaDidik extends BaseController
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $mKelulusan = new KelulusanPdModel();
         $mKelulusan->select([
+            'ref_pendidikan.ref_id as jenjang_id',
+            'ref_pendidikan.nama as jenjang_str',
             'ref_kurikulum.ref_id as kurikulum_id',
             'ref_kurikulum.nama as kurikulum_str',
+            'nama_sekolah',
+            'npsn',
             'tanggal',
             'nomor_ijazah',
+            'nomor_skhun',
+            'nomor_ujian',
             'penandatangan',
+            'kelulusan.kelulusan_id as id'
         ])
             ->join('ref_kurikulum', 'ref_kurikulum.ref_id = kelulusan.kurikulum', 'left')
+            ->join('ref_pendidikan', 'ref_pendidikan.ref_id = kelulusan.jenjang_id', 'left')
             ->where('peserta_didik_id', $id);
-        return $this->respond($mKelulusan->first() ?? false);
+        return $this->respond($mKelulusan->findAll() ?? false);
     }
 
     public function saveKelulusan($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
         $cPd = $this->mPesertaDidik
-            // ->select(['peserta_didik.peserta_didik_id', 'tingkat_pendidikan as tingkat', 'mutasi_pd.mutasi_id'])
-            // ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            // ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-            // ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
-            // ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            // ->where('semester.status', true)
             ->where('peserta_didik.peserta_didik_id', $id)
             ->first();
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
-        // if ($cPd['mutasi_id'] !== null) return $this->fail('Peserta didik terdeteksi sebagai peserta didik keluar.');
-        // if ((int)$cPd['tingkat'] !== 9) return $this->fail('Kelulusan hanya hanya pada kelas 9.');
         $set = $this->request->getPost();
         $mKelulusan = new KelulusanPdModel();
         $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->where('nomor_ijazah', $set['nomor_ijazah'])->first();
@@ -478,15 +478,13 @@ class PesertaDidik extends BaseController
     public function deleteKelulusan($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id, nama')
-            ->where('peserta_didik.peserta_didik_id', $id)
-            ->first();
-        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $mKelulusan = new KelulusanPdModel();
-        $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->first();
+        $cKelulusan = $mKelulusan->select(['kelulusan.id', 'peserta_didik.nama'])
+            ->join('peserta_didik', 'peserta_didik.peserta_didik_id = kelulusan.peserta_didik_id', 'left')
+            ->where('kelulusan_id', $id)->first();
         if (!$cKelulusan) return $this->fail('Data kelulusan peserta didik tidak ditemukan.');
         if (!$mKelulusan->delete($cKelulusan['id'], true)) return $this->fail('Kelulusan peserta didik gagal dihapus.');
-        return $this->respond(['message' => 'Data kelulusan an. <strong>' . $cPd['nama'] . '</strong> berhasil dihapus permanen.']);
+        return $this->respond(['message' => 'Data kelulusan an. <strong>' . $cKelulusan['nama'] . '</strong> berhasil dihapus permanen.']);
     }
 
     public function showKesejahteraan($id): ResponseInterface
