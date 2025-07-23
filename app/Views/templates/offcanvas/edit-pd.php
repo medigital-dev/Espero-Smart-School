@@ -30,8 +30,43 @@
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Data Periodik" id="tabs-periodik-tab" data-toggle="tab" href="#tabs-periodik" role="tab" aria-controls="tabs-periodik" aria-selected="false"><i class="fas fa-chart-line fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Prestasi" id="tabs-prestasi-tab" data-toggle="tab" href="#tabs-prestasi" role="tab" aria-controls="tabs-prestasi" aria-selected="false"><i class="fas fa-trophy fa-fw"></i></a>
                     <a class="nav-link btn-tooltip idPd" data-placement="right" title="Kebutuhan Khusus" id="tabs-difabel-tab" data-toggle="tab" href="#tabs-difabel" role="tab" aria-controls="tabs-difabel" aria-selected="false"><i class="fas fa-wheelchair fa-fw"></i></a>
+                    <a class="nav-link btn-tooltip idPd" data-placement="right" title="Rombongan Belajar" id="tabs-rombel-tab" data-toggle="tab" href="#tabs-rombel" role="tab" aria-controls="tabs-rombel" aria-selected="false"><i class="fas fa-users fa-fw"></i></a>
                 </div>
                 <div class="tab-content w-100" id="tabs-tabContent">
+                    <div class="tab-pane fade" id="tabs-rombel" role="tabpanel" aria-labelledby="tabs-rombel-tab">
+                        <div class="pt-1 sticky-top align-items-center bg-white mb-2">
+                            <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                                <h6 class="text-bold">Rombongan Belajar</h6>
+                            </div>
+                            <ul class="nav nav-tabs" id="rombel-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tabs-list-rombel-tab" data-toggle="tab" href="#tabs-list-rombel" role="tab" aria-controls="tabs-list-rombel" aria-selected="true">List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tabs-tambah-rombel-tab" data-toggle="tab" href="#tabs-tambah-rombel" role="tab" aria-controls="tabs-tambah-rombel" aria-selected="false">Tambah</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content mb-4" id="tabs-tabRombel">
+                            <div class="tab-pane fade" id="tabs-tambah-rombel" role="tabpanel" aria-labelledby="tabs-tambah-rombel-tab">
+                                <form id="formData-tabsTambahRombel">
+                                    <div class="form-group mb-2">
+                                        <label for="tabsTambahRombel-namaRombel" class="small mb-1">Nama Rombel</label>
+                                        <select class="custom-select mb-2 select2-getRombel" id="tabsTambahRombel-namaRombel" name="rombel_id"></select>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small mb-1" for="tabsTambahRombel-jenisRegistrasi">Jenis Registrasi</label>
+                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisRegistrasi" data-tags="true" id="tabsTambahRombel-jenisRegistrasi" name="jenis_registrasi_rombel"></select>
+                                    </div>
+                                </form>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-sm mb-2" id="btnRun-saveRombel"><i class="fas fa-save mr-1"></i>Simpan</button>
+                            </div>
+                            <div class="tab-pane fade active show" id="tabs-list-rombel" role="tabpanel" aria-labelledby="tabs-list-rombel-tab">
+                                <div class="list-group" id="listRombel"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="tabs-difabel" role="tabpanel" aria-labelledby="tabs-difabel-tab">
                         <div class="py-2 sticky-top align-items-center border-bottom bg-white d-flex justify-content-between mb-2">
                             <h6 class="text-bold">Kebutuhan Khusus</h6>

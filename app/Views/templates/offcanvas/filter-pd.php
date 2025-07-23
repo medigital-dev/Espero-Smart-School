@@ -6,7 +6,7 @@
     <div class="offcanvas-body">
         <form id="formDt-filterPd">
             <div class="form-group row mb-2">
-                <label class="col-sm-3 col-form-label">Status</label>
+                <label class="col-sm-3 col-form-label">Tampilkan</label>
                 <div class="col-sm-9">
                     <div class="icheck-primary form-check-inline">
                         <input class="form-check-input" type="radio" id="radioDt-statusPdAll" name="radioDt-statusPd" value="all" checked>
@@ -24,6 +24,12 @@
                         <input class="form-check-input" type="radio" id="chckboxDt-statusPdMutasi" name="radioDt-statusPd" value="mutasi">
                         <label class="form-check-label" for="chckboxDt-statusPdMutasi">
                             Mutasi
+                        </label>
+                    </div>
+                    <div class="icheck-primary form-check-inline">
+                        <input class="form-check-input" type="radio" id="chckboxDt-statusPdChecked" name="radioDt-statusPd" value="checked">
+                        <label class="form-check-label" for="chckboxDt-statusPdChecked">
+                            Dicentang
                         </label>
                     </div>
                 </div>

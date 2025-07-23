@@ -103,6 +103,7 @@ class Dapodik
                         $setSemester['semester_id'] = $cSemester['semester_id'];
                         $setSemester['id'] = $cSemester['id'];
                     }
+                    $mSemester->save($setSemester);
                     $response[] = [
                         'peserta_didik_id' => $row["peserta_didik_id"],
                         'nama' => $row["nama"],
@@ -307,7 +308,7 @@ class Dapodik
                             'nipd' => $row[2],
                             'identitas' => [
                                 'nama' => eyd($row[1]),
-                                'jenis_kelamin' => saveJenisKelamin($row[3] == 'L' ? 'Laki-laki' : ($row[3] == 'P' ? 'Perempuan' : '')),
+                                'jenis_kelamin' => saveJenisKelamin($row[3] == 'L' ? 'Laki-laki' : ($row[3] == 'P' ? 'Perempuan' : ''), ['kode' => $row[3]]),
                                 'tempat_lahir' => $row[5],
                                 'tanggal_lahir' => $row[6],
                                 'nisn' => $row[4],
@@ -341,7 +342,7 @@ class Dapodik
                                 'hp' => $row[19],
                                 'email' => $row[20],
                             ],
-                            'ayah' => false,
+                            'ayah' => null,
                             'ibu' => [
                                 'nama' => eyd($row[30]),
                                 'jenis_kelamin' => saveJenisKelamin('Perempuan', ['kode' => 'P']),
@@ -350,16 +351,16 @@ class Dapodik
                                 'penghasilan_id' => savePenghasilan($row[34]),
                                 'nik' => $row[35],
                             ],
-                            'wali' => false,
+                            'wali' => null,
                             'difabel' => $this->renderKebutuhanKhusus($row[7], $row[55]),
                             'periodik' => [
                                 'tinggi_badan' => $row[62],
                                 'berat_badan' => $row[61],
                                 'lingkar_kepala' => $row[63],
                             ],
-                            'kelulusan' => false,
-                            'rekening' => false,
-                            'layak_pip' => false,
+                            'kelulusan' => null,
+                            'rekening' => null,
+                            'layak_pip' => null,
                             'kesejahteraan' => [],
                         ];
 

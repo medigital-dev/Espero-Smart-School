@@ -134,11 +134,14 @@ class PesertaDidik extends BaseController
             }
         }
 
-        $this->mPesertaDidik->select('peserta_didik.id');
-        $result = $this->mPesertaDidik->where('peserta_didik.peserta_didik_id', $id)->first();
-        if ($result)
-            $set['id'] = $result['id'];
-        else $set['peserta_didik_id'] = $id;
+        $cPd = $this->mPesertaDidik
+            ->where('nisn', $set['nisn'])->orWhere('nik', $set['nik'])->first();
+        if ($cPd)
+            $set['id'] = $cPd['id'];
+        else {
+            if (!isset($set['peserta_didik_id']))
+                $set['peserta_didik_id'] = $id;
+        }
 
         if (!$this->mPesertaDidik->save($set)) return $this->fail('Data peserta didik gagal disimpan.');
 
@@ -347,18 +350,15 @@ class PesertaDidik extends BaseController
 
     public function saveRegistrasi($id): ResponseInterface
     {
-        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $cPd = $this->mPesertaDidik->select('peserta_didik.peserta_didik_id')
-            ->where('peserta_didik.peserta_didik_id', $id)
-            ->first();
-        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $set = $this->request->getPost();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $id)->first();
+        $cRegistrasi = $mRegistrasi->where('nipd', $set['nipd'])->first();
         if (!$cRegistrasi) {
             $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
-            $set['peserta_didik_id'] = $id;
-        } else $set['id'] = $cRegistrasi['id'];
+            if (!isset($set['peserta_didik_id']))
+                $set['peserta_didik_id'] = $id;
+        } else
+            $set['id'] = $cRegistrasi['id'];
         if (!$mRegistrasi->save($set)) return $this->fail('Data registrasi peserta didik gagal disimpan.');
         return $this->respond(['message' => 'Data registrasi peserta didik berhasil disimpan.']);
     }
@@ -409,7 +409,8 @@ class PesertaDidik extends BaseController
         $cMutasi = $mMutasi->where('peserta_didik_id', $id)->first();
         if (!$cMutasi) {
             $set['mutasi_id'] = idUnik($mMutasi, 'mutasi_id');
-            $set['peserta_didik_id'] = $id;
+            if (!isset($set['peserta_didik_id']))
+                $set['peserta_didik_id'] = $id;
         } else $set['id'] = $cMutasi['id'];
         if (!$mMutasi->save($set)) return $this->fail('Data mutasi peserta didik gagal disimpan.');
         return $this->respond(['message' => 'Data mutasi peserta didik berhasil disimpan.']);
@@ -469,7 +470,8 @@ class PesertaDidik extends BaseController
         $cKelulusan = $mKelulusan->where('peserta_didik_id', $id)->where('nomor_ijazah', $set['nomor_ijazah'])->first();
         if (!$cKelulusan) {
             $set['kelulusan_id'] = idUnik($mKelulusan, 'kelulusan_id');
-            $set['peserta_didik_id'] = $id;
+            if (!isset($set['peserta_didik_id']))
+                $set['peserta_didik_id'] = $id;
         } else $set['id'] = $cKelulusan['id'];
         if (!$mKelulusan->save($set)) return $this->fail('Data kelulusan peserta didik gagal disimpan.');
         return $this->respond(['message' => 'Data kelulusan peserta didik berhasil disimpan.']);
@@ -939,7 +941,8 @@ class PesertaDidik extends BaseController
         if ($cLayak) $set['id'] = $cLayak['id'];
         else {
             $set['layak_id'] = idUnik($mLayakPip, 'layak_id');
-            $set['peserta_didik_id'] = $id;
+            if (!isset($set['peserta_didik_id']))
+                $set['peserta_didik_id'] = $id;
         }
         if (!$mLayakPip->save($set)) return $this->fail('Kelayakan PIP gagal disimpan.');
         return $this->respond(['message' => 'Kelayakan PIP berhasil disimpan']);
@@ -964,5 +967,22 @@ class PesertaDidik extends BaseController
         }
         if (!$mRekening->save($set)) return $this->fail('Data rekening bank gagal disimpan');
         return $this->respond(['message' => 'Data rekening bank berhasil disimpan.']);
+    }
+
+    public function showRombel($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Peserta didik diperlukan.');
+        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
+            ->where('peserta_didik.peserta_didik_id', $id)
+            ->first();
+        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $mAnggotaRombel = new AnggotaRombelModel();
+        $response = $mAnggotaRombel
+            ->select(['anggota_id as id', 'rombongan_belajar.nama as rombel_nama', 'ref_kurikulum.nama as kurikulum_str', 'tingkat_pendidikan as tingkat', 'semester.kode as semester_kode'])
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
+            ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
+            ->where('peserta_didik_id', $id)->findAll();
+        return $this->respond($response);
     }
 }

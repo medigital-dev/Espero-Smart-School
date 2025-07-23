@@ -146,6 +146,7 @@ class DataPesertaDidik
     public function withFilter()
     {
         $keyword = $this->request->getVar('key');
+        $ids = $this->request->getVar('ids');
         $status_pd = $this->request->getVar('status_pd');
         $kelas = $this->request->getVar('kelas');
         $tingkat = $this->request->getVar('tingkat');
@@ -175,6 +176,13 @@ class DataPesertaDidik
         if ($status_pd && $status_pd !== 'all') {
             if ($status_pd == 'aktif') $this->query->where('semester.status', true)->where('mutasi_pd.id');
             else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=');
+            else if ($status_pd == 'checked') {
+                $this->query->groupStart();
+                foreach ($ids as $id) {
+                    $this->query->orWhere('peserta_didik.peserta_didik_id', $id);
+                }
+                $this->query->groupEnd();
+            }
         }
         if ($nik) $this->query->where('peserta_didik.nik', $nik);
         if ($jenis_mutasi) $this->query->where('mutasi_pd.jenis', $jenis_mutasi);
@@ -188,7 +196,7 @@ class DataPesertaDidik
         if ($ayah) $this->query->like('ayah.nama', $ayah);
         if ($nipd) $this->query->like('nipd', $nipd);
         if ($nisn) $this->query->like('nisn', $nisn);
-        if ($jk && $jk !== 'all') $this->query->where('peserta_didik.jenis_kelamin', $jk);
+        if ($jk && $jk !== 'all') $this->query->where('ref_jenis_kelamin.kode', $jk);
         if ($tempat_lahir) $this->query->like('peserta_didik.tempat_lahir', $tempat_lahir);
         if ($tanggal_lahir_lengkap) {
             $setTagl = date_create_from_format('d/m/Y', $tanggal_lahir_lengkap);

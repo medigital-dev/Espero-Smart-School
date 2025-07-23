@@ -851,13 +851,6 @@
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
-            // $(".modal").on("hide.bs.modal", (e) => {
-            //     const elm = $(e.target);
-            //     elm.find("input").val("").trigger('change');
-            //     bsCustomFileInput.destroy();
-            //     bsCustomFileInput.init();
-            // });
-
             $('#btnReloadTable').on('click', function() {
                 $(this).prop('disabled', true).children('i').addClass('fa-spin');
                 $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).prop('disabled', false).children('i').removeClass('fa-spin'));
@@ -880,11 +873,8 @@
             });
 
             $('#btnClearSelected').on('click', function() {
+                selectedRows = [];
                 const checked = $('.dtCheckbox:checked');
-                checked.each(function() {
-                    const id = $(this).val();
-                    selectedRows = selectedRows.filter(item => item !== id);
-                });
                 checked.prop('checked', false);
                 stateBtnCheckAll();
                 runSelectedCount();
@@ -1111,29 +1101,30 @@
                     offcanvasElm.find('.overlay').removeClass('d-none');
                     $('#tabs-profil-tab').tab('show');
                     const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/' + id);
-                    if (!respData) return;
-                    $('.idPd').attr('data-id', id);
-                    $('#detailPd-id').val(id);
-                    $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
-                    $('#tabsProfile-jk').text(respData.jenis_kelamin);
-                    $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
-                    $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
-                    $('#tabsProfile-nisn').text(respData.nisn);
-                    $('#tabsProfile-nipd').text(respData.nipd);
-                    $('#tabsProfile-nik').text(respData.nik);
-                    $('#tabsProfile-ibu').text(respData.ibu);
-                    $('#tabsProfile-hp').text(respData.hp);
-                    $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
-                    if (respData.jenis_mutasi)
-                        $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
-                    else
-                        $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
-                    if (respData.foto_src) {
-                        $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
-                        $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
-                    } else {
-                        $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
-                        $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
+                    if (respData) {
+                        $('.idPd').attr('data-id', id);
+                        $('#detailPd-id').val(id);
+                        $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
+                        $('#tabsProfile-jk').text(respData.jenis_kelamin);
+                        $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
+                        $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
+                        $('#tabsProfile-nisn').text(respData.nisn);
+                        $('#tabsProfile-nipd').text(respData.nipd);
+                        $('#tabsProfile-nik').text(respData.nik);
+                        $('#tabsProfile-ibu').text(respData.ibu);
+                        $('#tabsProfile-hp').text(respData.hp);
+                        $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
+                        if (respData.jenis_mutasi)
+                            $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
+                        else
+                            $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
+                        if (respData.foto_src) {
+                            $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
+                            $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
+                        } else {
+                            $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
+                            $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
+                        }
                     }
                     offcanvasElm.find('.overlay').addClass('d-none');
                 });
@@ -2847,6 +2838,138 @@
 
             $('#tabs-tambah-prestasi-tab').on('click', e => $('#formData-tabsTambahPrestasiPd').trigger('reset').find('option').remove());
 
+            $('#tabs-rombel-tab').on('click', function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const listElm = $('#listRombel');
+                listElm.html('<i>Tidak ada data.</i>');
+                $(this).tab('show');
+                $('#tabs-list-rombel-tab').attr('data-id', id).trigger('click');
+            });
+
+            $('#tabs-list-rombel-tab').on('click', async function(e) {
+                e.preventDefault();
+                const id = $(this).attr('data-id');
+                const formElm = $('#formData-tabsRombel');
+                formElm.trigger('reset').find('option').remove();
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const listElm = $('#listRombel');
+                $(this).tab('show');
+                if (id == undefined || id == '') {
+                    return;
+                }
+                offcanvasElm.find('.overlay').removeClass('d-none');
+                const respData = await fetchData('/api/v0/buku-induk/peserta-didik/rombel/' + id);
+                console.log(respData);
+
+                if (respData.length > 0) {
+                    listElm.html('');
+                    respData.forEach(v => {
+                        const itemElm = `<div class="list-group-item">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1 text-bold" data-toggle="collapse" data-target="#coll-${v.id}" aria-expanded="false" aria-controls="coll-${v.id}">${v.semester_kode} - ${v.rombel_nama}</h6>
+                                                <div>
+                                                    <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusRombel" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <a type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Ubah" class="text-decoration-none mr-1 small text-muted btnRow-ubahRombel" aria-label="Close">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="collapse mt-1" id="coll-${v.id}">
+                                                <ul class="list-group list-group-unbordered">
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Tahun Ajaran</p>
+                                                        <a class="">${v.ta_nama}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Semester</p>
+                                                        <a class="">${v.semester_kode}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Nama Rombel</p>
+                                                        <a class="">${v.rombel_nama}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Tingkat</p>
+                                                        <a class="">${v.tingkat}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Kurikulum</p>
+                                                        <a class="">${v.kurikulum_str}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>`;
+                        listElm.append(itemElm);
+                    });
+
+                    // $('.btnRow-ubahKelulusan').on('click', async function() {
+                    //     const btn = $(this);
+                    //     const idKelulusan = btn.attr('data-id');
+                    //     const id = $('#detailPd-id').val();
+                    //     const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kelulusan/' + id);
+                    //     if (respData.length > 0) {
+                    //         respData.forEach((val, i) => {
+                    //             if (val.id == idKelulusan) {
+                    //                 let opt;
+                    //                 $('#tabsKelulusan-tanggalKelulusan').datetimepicker('date', tanggal(val.tanggal, 'dd/mm/Y'));
+                    //                 if (val.jenjang_id) {
+                    //                     opt = new Option(val.jenjang_str, val.jenjang_id, false, true);
+                    //                     $('#tabsKelulusan-jenjangPendidikan').append(opt)
+                    //                 }
+                    //                 $('#tabsKelulusan-namaSekolah').val(val.nama_sekolah);
+                    //                 $('#tabsKelulusan-npsn').val(val.npsn);
+                    //                 if (val.kurikulum_id) {
+                    //                     opt = new Option(val.kurikulum_str, val.kurikulum_id, false, true);
+                    //                     $('#tabsKelulusan-kurikulumKelulusan').append(opt);
+                    //                 }
+                    //                 $('#tabsKelulusan-nomorIjazah').val(val.nomor_ijazah);
+                    //                 $('#tabsKelulusan-nomorSkhun').val(val.nomor_skhun);
+                    //                 $('#tabsKelulusan-nomorUjian').val(val.nomor_ujian);
+                    //                 $('#tabsKelulusan-penandatangan').val(val.penandatangan);
+                    //             }
+                    //         });
+                    //         $('#tabs-tambah-kelulusan-tab').trigger('click');
+                    //     }
+                    // });
+
+                    // $('.btnRow-hapusKelulusan').on('click', async function() {
+                    //     const btn = $(this);
+                    //     const id = btn.data('id');
+                    //     const confirm = await Swal.fire({
+                    //         icon: "info",
+                    //         title: "Hapus Kelulusan?",
+                    //         text: "Data kelulusan peserta didik akan dihapus permanen. Apakah anda yakin?",
+                    //         showCloseButton: true,
+                    //         showCancelButton: true,
+                    //         confirmButtonText: "Ya, Hapus",
+                    //         cancelButtonText: "Batal",
+                    //         customClass: {
+                    //             confirmButton: "bg-danger",
+                    //         },
+                    //     });
+
+                    //     if (confirm.isConfirmed) {
+                    //         const delResp = await fetchData({
+                    //             url: '/api/v0/buku-induk/peserta-didik/kelulusan/' + id,
+                    //             method: 'DELETE',
+                    //             button: btn
+                    //         });
+                    //         if (delResp) {
+                    //             toast(delResp.message);
+                    //             dtAdminBukuIndukPd.ajax.reload(null, false);
+                    //             $('#tabs-kelulusan-tab').trigger('click');
+                    //         }
+                    //     }
+                    // });
+
+                    runTooltip();
+                }
+                offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
             $('#btnSync-checkNewPd').on('click', async function() {
                 const btn = $(this);
                 const confirm = await Swal.fire({
@@ -3577,88 +3700,6 @@
                     },
                 ],
             });
-
-            // $('#btnRun-SyncNewPd').on('click', async function() {
-            //     const btn = $(this);
-            //     const confirm = await Swal.fire({
-            //         icon: 'question',
-            //         text: 'Tarik data peserta didik baru di aplikasi dapodik?',
-            //         showCancelButton: true,
-            //         cancelButtonText: 'Batal',
-            //         confirmButtonText: 'Ya',
-            //         width: 500
-            //     });
-            //     if (!confirm.isConfirmed)
-            //         return;
-
-            //     const resp = await fetchData({
-            //         url: '/api/v0/dapodik/sync/peserta-didik/check/new',
-            //         button: btn
-            //     });
-            //     if (resp.length == 0) {
-            //         toast('Tidak ditemukan peserta didik baru.');
-            //         return;
-            //     }
-            //     toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
-            //     let success = 0;
-            //     for (const element of resp) {
-            //         const saveResponse = await fetchData({
-            //             url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
-            //             button: btn,
-            //             method: 'POST',
-            //             data: element,
-            //         });
-            //         if (!saveResponse) {
-            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
-            //         } else {
-            //             success++;
-            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
-            //         }
-            //     }
-            //     toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
-            //     dtAdminBukuIndukPd.ajax.reload(null, false);
-            // });
-
-            // $('#btnSync-syncAllPd').on('click', async function() {
-            //     const btn = $(this);
-            //     const confirm = await Swal.fire({
-            //         icon: 'question',
-            //         text: 'Sinkronkan seluruh peserta didik dengan aplikasi dapodik?',
-            //         showCancelButton: true,
-            //         cancelButtonText: 'Batal',
-            //         confirmButtonText: 'Ya',
-            //         width: 500
-            //     });
-            //     if (!confirm.isConfirmed)
-            //         return;
-            //     const resp = await fetchData({
-            //         url: '/api/v0/dapodik/sync/peserta-didik/check/all',
-            //         button: btn
-            //     });
-            //     if (resp.length == 0) {
-            //         toast('Tidak ditemukan peserta didik baru.');
-            //         return;
-            //     }
-            //     toast(resp.length + ' peserta didik ditemukan. Mulai sinkronisasi.');
-            //     let success = 0;
-            //     for (const element of resp) {
-            //         const saveResponse = await fetchData({
-            //             url: '/api/v0/buku-induk/peserta-didik/save/' + element.peserta_didik_id,
-            //             button: btn,
-            //             method: 'POST',
-            //             data: element,
-            //         });
-            //         if (!saveResponse) {
-            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> gagal.`, 'error', 0);
-            //         } else {
-            //             success++;
-            //             toast(`Sinkronisasi an <strong>${element.nama}</strong> berhasil.`, 'success');
-            //         }
-            //     }
-            //     toast('Sinkronisasi selesai. ' + success + ' data peserta didik berhasil disinkronkan dengan data dapodik.', 'success', 0);
-            //     dtAdminBukuIndukPd.ajax.reload(null, false);
-
-            // });
 
             // Unduh DT Peserta Didik
             $('#btnUnduhExcel-bukuIndukPd').on('click', async function() {

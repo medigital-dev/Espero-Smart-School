@@ -83,6 +83,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->get('periodik/(:segment)', 'PesertaDidik::showPeriodik/$1');
     $routes->get('prestasi/(:segment)', 'PesertaDidik::showPrestasi/$1');
     $routes->get('difabel/(:segment)', 'PesertaDidik::showDifabel/$1');
+    $routes->get('rombel/(:segment)', 'PesertaDidik::showRombel/$1');
 
     $routes->post('save/(:segment)', 'PesertaDidik::savePd/$1');
 
