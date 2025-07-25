@@ -85,13 +85,45 @@ class BukuInduk extends BaseController
                     'Penghasilan',
                 ];
                 $lib = new DataPesertaDidik;
-                $data = $lib->withRegistrasi()
-                    ->withRombel()
-                    ->withAlamat()
-                    ->withContact()
-                    ->withOrtuWali()
+                $data = $lib->select([
+                    'rombongan_belajar.nama as kelas',
+                    'peserta_didik.nama as nama',
+                    'ref_jenis_kelamin.kode as jenis_kelamin',
+                    'nipd',
+                    'nisn',
+                    'peserta_didik.tempat_lahir',
+                    'peserta_didik.tanggal_lahir',
+                    'peserta_didik.nik',
+                    'ref_agama.nama as agama',
+                    'alamat_jalan',
+                    'rt',
+                    'rw',
+                    'desa',
+                    'dusun',
+                    'kecamatan',
+                    'kode_pos',
+                    'lintang',
+                    'bujur',
+                    'ref_alat_transportasi.nama as transportasi',
+                    'telepon',
+                    'hp',
+                    'email',
+                    'asal_sekolah',
+                    'jarak_rumah',
+                    'ayah.nama as ayah',
+                    'ibu.nama as ibu',
+                    'wali.nama as wali',
+                    'pendidikan_ayah.nama as ayah_pendidikan',
+                    'pekerjaan_ayah.nama as ayah_pekerjaan',
+                    'penghasilan_ayah.nama as ayah_penghasilan',
+                    'pendidikan_ibu.nama as ibu_pendidikan',
+                    'pekerjaan_ibu.nama as ibu_pekerjaan',
+                    'penghasilan_ibu.nama as ibu_penghasilan',
+                    'pendidikan_wali.nama as wali_pendidikan',
+                    'pekerjaan_wali.nama as wali_pekerjaan',
+                    'penghasilan_wali.nama as wali_penghasilan',
+                ])
                     ->withFilter()
-                    ->forAdmin()
                     ->get();
 
                 $no = 1;
@@ -123,17 +155,17 @@ class BukuInduk extends BaseController
                         $row['asal_sekolah'],
                         $row['jarak_rumah'],
                         $row['ayah'],
-                        null,
-                        null,
-                        null,
+                        $row['ayah_pendidikan'],
+                        $row['ayah_pekerjaan'],
+                        $row['ayah_penghasilan'],
                         $row['ibu'],
-                        null,
-                        null,
-                        null,
+                        $row['ibu_pendidikan'],
+                        $row['ibu_pekerjaan'],
+                        $row['ibu_penghasilan'],
                         $row['wali'],
-                        null,
-                        null,
-                        null,
+                        $row['wali_pendidikan'],
+                        $row['wali_pekerjaan'],
+                        $row['wali_penghasilan'],
                     ];
                 }
                 break;

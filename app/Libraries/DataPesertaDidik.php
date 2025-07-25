@@ -15,7 +15,7 @@ class DataPesertaDidik
     protected $length;
     protected $searchValue;
     protected $columns;
-    protected $orders;
+    protected $orders = [];
     protected $filter = [];
 
     protected int $countAll = 0;
@@ -26,7 +26,6 @@ class DataPesertaDidik
         $this->request = service('request');
         $this->model = new PesertaDidikModel();
         $this->query = $this->model;
-        $this->query->orderBy('peserta_didik.nama', 'ASC');
         $this->joinTable();
     }
 
@@ -53,6 +52,16 @@ class DataPesertaDidik
             ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = registrasi_peserta_didik.jenis_registrasi', 'left')
             ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
             ->join('ref_jenis_tinggal', 'ref_jenis_tinggal.ref_id = alamat_tinggal.jenis_tinggal_id', 'left')
+            ->join('ref_pendidikan as pendidikan_ayah', 'pendidikan_ayah.ref_id = ayah.pendidikan_id', 'left')
+            ->join('ref_pendidikan as pendidikan_ibu', 'pendidikan_ibu.ref_id = ibu.pendidikan_id', 'left')
+            ->join('ref_pendidikan as pendidikan_wali', 'pendidikan_wali.ref_id = wali.pendidikan_id', 'left')
+            ->join('ref_pekerjaan as pekerjaan_ayah', 'pekerjaan_ayah.ref_id = ayah.pekerjaan_id', 'left')
+            ->join('ref_pekerjaan as pekerjaan_ibu', 'pekerjaan_ibu.ref_id = ibu.pekerjaan_id', 'left')
+            ->join('ref_pekerjaan as pekerjaan_wali', 'pekerjaan_wali.ref_id = wali.pekerjaan_id', 'left')
+            ->join('ref_penghasilan as penghasilan_ayah', 'penghasilan_ayah.ref_id = ayah.penghasilan_id', 'left')
+            ->join('ref_penghasilan as penghasilan_ibu', 'penghasilan_ibu.ref_id = ibu.penghasilan_id', 'left')
+            ->join('ref_penghasilan as penghasilan_wali', 'penghasilan_wali.ref_id = wali.penghasilan_id', 'left')
+
         ;
     }
 
@@ -63,7 +72,7 @@ class DataPesertaDidik
         $this->length = (int)$this->request->getPost('length');
         $this->searchValue = $this->request->getPost('search')['value'];
         $this->columns = $this->request->getPost('columns');
-        $this->orders = $this->request->getPost('order');
+        $this->orders = $this->request->getPost('order') ?? [];
         $this->filter = [];
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         $this->query
@@ -75,16 +84,21 @@ class DataPesertaDidik
             ->groupEnd();
         $this->countFiltered = $this->query->countAllResults(false);
 
-        if ($this->orders)
+        if (!empty($this->orders))
             foreach ($this->orders as $order) {
-                $this->query->orderBy($this->columns[$order['column']]['data'], $order['dir']);
+                $field = $this->columns[$order['column']]['name'];
+                $dir = $order['dir'];
+                $this->query->orderBy($field, $dir);
             }
+        else $this->query->orderBy('peserta_didik.nama', 'ASC');
     }
 
     public function toDataTable(): array
     {
         $this->initDt();
         return [
+            'orders' => $this->orders,
+            'columns' => $this->columns,
             'draw' => intval($this->draw),
             'paging' => ['length' => $this->length, 'start' => $this->start],
             'recordsTotal' => $this->countAll,
@@ -98,8 +112,8 @@ class DataPesertaDidik
         $this->length = 10;
         $this->start = (int) $this->request->getGet('page') ?: 1;
         $offset = ($this->start - 1) * $this->length;
-
-        $this->query->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'rombongan_belajar.nama as kelas', 'nisn', 'nipd']);
+        if (empty($this->query->select()))
+            $this->query->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'rombongan_belajar.nama as kelas', 'nisn', 'nipd']);
         $items = $this->query->findAll($this->length + 1, $offset);
 
         $hasMore = count($items) > $this->length;
@@ -146,7 +160,7 @@ class DataPesertaDidik
     public function withFilter()
     {
         $keyword = $this->request->getVar('key');
-        $ids = $this->request->getVar('ids');
+        $ids = $this->request->getVar('ids') ?? [''];
         $status_pd = $this->request->getVar('status_pd');
         $kelas = $this->request->getVar('kelas');
         $tingkat = $this->request->getVar('tingkat');
@@ -177,11 +191,9 @@ class DataPesertaDidik
             if ($status_pd == 'aktif') $this->query->where('semester.status', true)->where('mutasi_pd.id');
             else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=');
             else if ($status_pd == 'checked') {
-                $this->query->groupStart();
                 foreach ($ids as $id) {
                     $this->query->orWhere('peserta_didik.peserta_didik_id', $id);
                 }
-                $this->query->groupEnd();
             }
         }
         if ($nik) $this->query->where('peserta_didik.nik', $nik);

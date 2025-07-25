@@ -96,13 +96,14 @@ class Dapodik
             case 'getPesertaDidik':
                 $response = [];
                 foreach ($data as $row) {
-                    $setSemester = ['kode' => $row['semester_id']];
+                    $setSemester = ['kode' => $row['semester_id'], 'status' => true];
                     $cSemester = $mSemester->select(['semester_id', 'id'])->where('kode', $row['semester_id'])->first();
                     if (!$cSemester) $setSemester['semester_id'] = idUnik($mSemester, 'semester_id');
                     else {
                         $setSemester['semester_id'] = $cSemester['semester_id'];
                         $setSemester['id'] = $cSemester['id'];
                     }
+                    $mSemester->where('status', true)->set('status', true)->update();
                     $mSemester->save($setSemester);
                     $response[] = [
                         'peserta_didik_id' => $row["peserta_didik_id"],

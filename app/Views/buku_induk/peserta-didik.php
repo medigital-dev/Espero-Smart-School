@@ -22,7 +22,7 @@
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Pilih Semua/Balikkan pilihan" id="btnSelectRow"><i class="fas fa-check-circle fa-fw"></i><span></span></button>
-                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Bersihkan pilihan" id="btnClearSelected"><i class="fas fa-dot-circle fa-fw"></i></button>
+                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Bersihkan semua pilihan" id="btnClearSelected"><i class="fas fa-dot-circle fa-fw"></i></button>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary" data-toggle="tooltip" data-title="Cek Peserta Didik Baru di Dapodik" id="btnSync-checkNewPd">
@@ -38,21 +38,9 @@
                         </div>
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary btn-tooltip" data-title="Import Dapodik" data-target="#modalImportDapodik" data-toggle="modal"><i class="fas fa-file-import fa-fw"></i></button>
-                    </div>
-                    <div class="btn-group btn-group-sm my-1 mr-2" role="group">
                         <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Unduhan" id="btnDropdown-unduhPd" data-autoclose="false" data-display="static"><i class="fas fa-download fa-fw"></i></button>
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
                             <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Unduh tabel beserta filter" id="btnUnduhExcel-bukuIndukPd"><i class="fas fa-file-excel fa-fw mr-1"></i><span>Unduh Excel</span></button>
-                        </div>
-                    </div>
-                    <div class="btn-group btn-group-sm my-1 mr-2" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle btn-tooltip" data-toggle="dropdown" data-title="Mutasi" data-display="static"><i class="fas fa-people-arrows fa-fw"></i></button>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
-                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalMutasiPd" data-title="Keluarkan peserta didik"><i class="fas fa-sign-out-alt fa-fw mr-1"></i><span>PD Keluar</span></button>
-                            <button type="button" class="dropdown-item btn-tooltip" data-toggle="modal" data-target="#modalKelulusanPd" data-title="Kelulusan peserta didik"><i class="fas fa-user-graduate fa-fw mr-1"></i><span>Kelulusan</span></button>
-                            <div class="dropdown-divider"></div>
-                            <button type="button" class="dropdown-item" data-toggle="tooltip" data-title="Batalkan mutasi peserta didik" id="btnBatal-mutasiPd"><i class="fas fa-times-circle fa-fw mr-1"></i><span>Batalkan Mutasi</span></button>
                         </div>
                     </div>
                     <div class="my-1 mr-1 ml-sm-auto">
@@ -65,7 +53,7 @@
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-secondary btnPreviousDt-bukuInduk" data-toggle="tooltip" data-title="Halaman sebelumnya" type="button"><i class="fas fa-chevron-left"></i></button>
                         </div>
-                        <input type="number" class="form-control text-currentPage text-center" min="1" id="inputDtPage-bukuInduk" style="width: 60px;">
+                        <input type="text" class="form-control text-currentPage onlyInt text-center" min="1" id="inputDtPage-bukuInduk" style="width: 40px; min-width: auto;">
                         <div class="input-group-append">
                             <span class="input-group-text text-totalPage"></span>
                         </div>
@@ -112,7 +100,7 @@
                     <div class="col-sm-auto ml-auto mb-2">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary btnPreviousDt-bukuInduk" type="button"><i class="fas fa-chevron-left"></i></button>
+                                <button class="btn btn-outline-secondary btnPreviousDt-bukuInduk" data-toggle="tooltip" data-title="Halaman sebelumnya" type="button"><i class="fas fa-chevron-left"></i></button>
                             </div>
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Halaman:</span>
@@ -122,7 +110,7 @@
                                 <span class="input-group-text text-totalPage"></span>
                             </div>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btnNextDt-bukuInduk" type="button"><i class="fas fa-chevron-right"></i></button>
+                                <button class="btn btn-outline-secondary btnNextDt-bukuInduk" data-toggle="tooltip" data-title="Halaman selanjutnya" type="button"><i class="fas fa-chevron-right"></i></button>
                             </div>
                         </div>
                     </div>

@@ -24,19 +24,20 @@ class Datatables extends BaseController
             ->select([
                 'peserta_didik.peserta_didik_id',
                 'peserta_didik.nik',
-                'ref_agama.ref_id as agama_id',
                 'peserta_didik.nama',
-                'ref_jenis_kelamin.kode as jenis_kelamin',
+                'ref_jenis_kelamin.kode as jk_kode',
+                'ref_agama.nama as agama_str',
                 'peserta_didik.tempat_lahir',
                 'peserta_didik.tanggal_lahir',
-                'mutasi_pd.tanggal as tanggal_mutasi',
-                'ref_jenis_mutasi.nama as jenis_mutasi',
+                'mutasi_pd.tanggal as mutasi_tanggal',
+                'ref_jenis_mutasi.nama as mutasi_nama',
+                'ref_jenis_mutasi.kode as mutasi_kode',
+                'ref_jenis_mutasi.bg_color as mutasi_warna',
                 'peserta_didik.nisn',
                 'rombongan_belajar.nama as kelas',
                 'registrasi_peserta_didik.nipd',
                 'ref_jenis_registrasi.nama as jenis_registrasi',
                 'tanggal_registrasi',
-                'ref_agama.nama as agama',
                 'dusun',
                 'desa',
                 'kecamatan',
@@ -50,24 +51,7 @@ class Datatables extends BaseController
             ->withFilter()
             ->toDataTable();
 
-        $data = [];
-        foreach ($result['data'] as $row) {
-            $row['status'] = $row['tanggal_mutasi'] ? 'M' : ($row['tanggal_lulus'] ? 'L' : ($row['kelas'] ?? ''));
-            $row['tahun_registrasi'] = $row['tanggal_registrasi'] !== '0000-00-00' ? tanggal($row['tanggal_registrasi'], 'Y') : '';
-            $row['tanggal_lahir'] = tanggal($row['tanggal_lahir'], 'd/m/Y');
-            $row['tanggal_mutasi'] = $row['tanggal_mutasi'] ? tanggal($row['tanggal_mutasi'], 'd/m/Y') : '';
-            $row['tanggal_lulus'] = $row['tanggal_lulus'] ? tanggal($row['tanggal_lulus'], 'd/m/Y') : null;
-            $data[] = $row;
-        }
-
-        $response = [
-            'draw' => intval($result['draw']),
-            'recordsTotal' => $result['recordsTotal'],
-            'recordsFiltered' => $result['recordsFiltered'],
-            'data' => $data,
-        ];
-
-        return $this->respond($response);
+        return $this->respond($result);
     }
 
     public function publicPd()

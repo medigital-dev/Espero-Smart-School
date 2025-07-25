@@ -8,7 +8,6 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 $routes->get('/buku-induk/pd', 'BukuInduk::pesertaDidik');
-// $routes->get('/peserta-didik', 'PesertaDidik::aktif');
 $routes->get('/pengaturan/dapodik', 'Dapodik::index');
 
 $routes->group('', ['namespace' => 'App\Controllers\Public'], function ($routes) {
@@ -63,7 +62,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
 // Buku induk
 $routes->group('/api/v0/buku-induk', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('export/(:segment)', 'BukuInduk::export/$1');
-    $routes->post('import/kelulusan-pd', 'BukuInduk::importKelulusanPd');
+    // $routes->post('import/kelulusan-pd', 'BukuInduk::importKelulusanPd');
 });
 
 // API Buku Induk Peserta Didik
@@ -120,6 +119,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
     $routes->delete('prestasi/(:segment)', 'PesertaDidik::deletePrestasi/$1');
     $routes->delete('ortuwalipd/(:segment)', 'PesertaDidik::deleteOrtuWaliPd/$1');
     $routes->delete('difabel/(:segment)', 'PesertaDidik::deleteDifabel/$1');
+    $routes->delete('rombel/(:segment)', 'PesertaDidik::deleteRombel/$1');
 });
 
 // public

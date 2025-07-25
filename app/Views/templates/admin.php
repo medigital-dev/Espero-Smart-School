@@ -149,18 +149,23 @@
                         <span class="dropdown-item dropdown-header">15 Notifications</span>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
+                            <i class="fas fa-envelope fa-fw mr-2"></i> 4 new messages
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
+                            <i class="fas fa-users fa-fw mr-2"></i> 8 friend requests
                             <span class="float-right text-muted text-sm">12 hours</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
+                            <i class="fas fa-file fa-fw mr-2"></i> 3 new reports
                             <span class="float-right text-muted text-sm">2 days</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-list-alt fa-fw mr-2"></i> Log Events
+                            <span class="float-right text-muted text-sm">2 new</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
@@ -317,18 +322,22 @@
     <script src="<?= base_url('plugins/bs-custom-file-input/bs-custom-file-input.js'); ?>"></script>
     <script src="<?= base_url('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js'); ?>"></script>
     <script src="<?= base_url('plugins/inputmask/jquery.inputmask.js'); ?>"></script>
-    <script src="<?= base_url('plugins/fetchData/fetchData.js'); ?>"></script>
+    <!-- <script src="<?= base_url('plugins/fetchData/fetchData.js'); ?>"></script> -->
     <script src="<?= base_url('plugins/fancyapps/fancybox.umd.js'); ?>"></script>
     <script src="<?= base_url('plugins/chart.js/Chart.bundle.min.js'); ?>"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="<?= base_url('assets/js/adminlte.min.js'); ?>"></script>
     <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
     <script src="<?= base_url('assets/js/global.js'); ?>"></script>
-    <!-- functions -->
+
+    <!-- Global Constanta -->
     <script>
         let selectedRows = [],
-            filtered = 0;
+            isLoading = false;
+    </script>
 
+    <!-- functions -->
+    <script>
         function checkRowDt() {
             $(".dtCheckbox").on("change", function() {
                 let id = $(this).prop('id');
@@ -381,6 +390,7 @@
 
         function runTooltip() {
             $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
+                html: true,
                 trigger: 'hover',
             });
         }
@@ -393,7 +403,7 @@
         }
 
         function runOnlyInt() {
-            $(".onlyInt")
+            $(".onlyInt, .intOnly, .int")
                 .on("input", function() {
                     const $input = $(this);
                     const inputValue = $input.val();
@@ -435,7 +445,7 @@
             bsCustomFileInput.init();
         }
 
-        function initJS() {
+        function initJs() {
             runInputMask();
             runOnlyInt();
             runSelect2();
@@ -535,12 +545,46 @@
             }).format(number);
         }
 
-        function toast(message, type = "info", delay = 5000) {
+        function toast(message, type = "info", delay = 5000, position = 'bottom-center') {
+            function getPosition(poss) {
+                switch (position) {
+                    case 'top-left':
+                        return 'toast-top-left';
+                        break;
+
+                    case 'top-center':
+                        return 'toast-top-center';
+                        break;
+
+                    case 'top-right':
+                        return 'toast-top-right';
+                        break;
+
+                    case 'bottom-left':
+                        return 'toast-bottom-left';
+                        break;
+
+                    case 'bottom-center':
+                        return 'toast-bottom-center';
+                        break;
+
+                    case 'bottom-right':
+                        return 'toast-bottom-right';
+                        break;
+
+                    default:
+                        return 'toast-bottom-center';
+                        break;
+                }
+            }
+
             toastr.options = {
                 timeOut: delay,
                 progressBar: true,
                 newestOnTop: true,
-                positionClass: "toast-bottom-center",
+                positionClass: getPosition(position),
+                extendedTimeOut: delay == 0 ? 0 : 2000,
+                closeButton: delay == 0 ? true : false,
             };
 
             switch (type) {
@@ -568,9 +612,9 @@
 
         function errorHandle(err) {
             if (err.responseJSON && err.responseJSON.message) {
-                toast(err.responseJSON.message, "error", 0);
+                toast(err.responseJSON.message, "error");
             } else if (err.code === 400) {
-                toast(err.messages, "error", 0);
+                toast(err.messages, "error");
             } else if (err.code === 500 || err.status === 400) {
                 toast(
                     err.responseJSON ? err.responseJSON.messages.error : "Error server",
@@ -578,7 +622,95 @@
                     0
                 );
             } else {
-                toast("An error occurred", "error", 0);
+                toast("An error occurred", "error");
+            }
+        }
+
+        /**
+         * Mengambil data dari server dengan AJAX.
+         * Bisa menerima parameter sebagai objek konfigurasi atau individual parameter.
+         *
+         * @param {string|Object} urlOrConfig - URL request atau objek konfigurasi.
+         * @param {Object} [data={}] - Data yang dikirim (opsional, abaikan jika pakai objek konfigurasi).
+         * @param {string} [dataType="json"] - Tipe data yang dikembalikan (opsional, abaikan jika pakai objek konfigurasi).
+         * @param {string} [method="GET"] - Metode request (opsional, abaikan jika pakai objek konfigurasi).
+         * @returns {Promise<any>} - Promise yang mengembalikan hasil response AJAX.
+         * @throws {Error} - Jika terjadi error selama request.
+         */
+        async function fetchData(urlOrConfig, ...restParams) {
+            let config;
+            if (typeof urlOrConfig === "object") {
+                if (restParams.length > 0) {
+                    throw new Error(
+                        "fetchData() tidak boleh memiliki parameter tambahan jika menggunakan objek konfigurasi."
+                    );
+                }
+
+                config = {
+                    url: urlOrConfig.url,
+                    data: urlOrConfig.data || {},
+                    dataType: urlOrConfig.dataType || "json",
+                    method: urlOrConfig.method || "GET",
+                    button: urlOrConfig.button || null,
+                    headers: urlOrConfig.headers || null,
+                };
+            } else {
+                config = {
+                    url: urlOrConfig,
+                    data: restParams[0] || {},
+                    method: restParams[1] || "GET",
+                    dataType: restParams[2] || "json",
+                };
+            }
+
+            const btnText = config.button ? config.button.children("span").text() : null;
+            const btnIcon = config.button ? config.button.children("i") : null;
+            const iconClass = btnIcon ? btnIcon.prop("class") : null;
+
+            if (config.button) {
+                config.button.prop("disabled", true);
+
+                if (btnIcon) {
+                    config.button
+                        .children("i")
+                        .removeClass()
+                        .addClass("fas fa-pulse fa-spinner mr-1");
+                }
+            }
+
+            try {
+                let isFormData = config.data instanceof FormData;
+
+                let options = {
+                    url: config.url,
+                    method: config.method,
+                    dataType: config.dataType,
+                    cache: false,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                };
+
+                if (isFormData) {
+                    options.processData = false;
+                    options.contentType = false;
+                    options.enctype = "multipart/form-data";
+                    options.data = config.data;
+                } else {
+                    options.contentType = "application/x-www-form-urlencoded";
+                    options.data = $.param(config.data);
+                }
+                return await $.ajax(options);
+            } catch (error) {
+                console.log(error);
+                errorHandle(error);
+                return false;
+            } finally {
+                if (config.button) {
+                    config.button.prop("disabled", false);
+                    if (btnIcon)
+                        config.button.children("i").removeClass().addClass(iconClass);
+                }
             }
         }
     </script>
@@ -851,6 +983,8 @@
     <!-- Global Script -->
     <script>
         $(document).ready(function() {
+            initJs();
+
             $('#btnReloadTable').on('click', function() {
                 $(this).prop('disabled', true).children('i').addClass('fa-spin');
                 $('.table').DataTable().ajax.reload(null, false).on('draw', () => $(this).prop('disabled', false).children('i').removeClass('fa-spin'));
@@ -862,12 +996,10 @@
                     const id = $(this).prop('id');
                     $(this).prop('checked', isChecked);
                     if ($(this).is(':checked')) {
-                        if (!selectedRows.includes(id)) {
+                        if (!selectedRows.includes(id))
                             selectedRows.push(id);
-                        }
-                    } else {
+                    } else
                         selectedRows = selectedRows.filter(item => item !== id);
-                    }
                 });
                 runSelectedCount();
             });
@@ -897,7 +1029,7 @@
                 stateBtnCheckAll();
                 runSelectedCount();
             });
-        })
+        });
     </script>
     <!-- End Global Script -->
     <script>
@@ -919,7 +1051,6 @@
                             $(this).prop('checked', true);
                         }
                     });
-
                     stateBtnCheckAll();
                 },
                 ajax: {
@@ -969,24 +1100,29 @@
                         }
                     },
                     {
-                        data: "status",
+                        data: "mutasi_kode",
+                        name: 'mutasi.kode',
                         className: 'text-center',
                         orderable: false,
-                        render: (data, type, rows, meta) => {
-                            const warna = data == 'M' ? 'secondary' : (data == 'L' ? 'primary' : (rows.kelas ? 'success' : 'danger'));
-                            const text = rows.jenis_mutasi == null && rows.kelas == null && rows.tanggal_lulus == null ? '<i class="fas fa-minus-circle"></i>' : data;
-                            const title = data == 'M' ? rows.jenis_mutasi : (data == 'L' ? 'Lulus' : '');
-                            return `<span class="badge bg-${warna}" data-toggle="tooltip" data-title="${title}">${text}</span>`;
+                        render: (data, type, rows) => {
+                            const isKosong = data == null && rows.kelas == null;
+                            const warna = data ? rows.mutasi_warna : (rows.kelas ? 'bg-success' : 'bg-danger');
+                            const text = isKosong ? '<i class="fas fa-minus-circle"></i>' : (data || rows.kelas);
+                            const title = isKosong ? '' : (data ? rows.mutasi_nama : rows.kelas);
+
+                            return `<span class="badge ${warna}" data-toggle="tooltip" data-title="${title}">${text}</span>`;
                         }
                     },
                     {
                         data: "nama",
+                        name: 'peserta_didik.nama',
                         render: (data, type, rows, meta) => {
                             return `<a type="button" class="text-decoration-none btnRow-detailPd" data-toggle="tooltip" data-title="Detail Peserta Didik" data-id="${rows.peserta_didik_id}">${data}</a>`;
                         }
                     },
                     {
                         data: "nipd",
+                        name: 'nipd',
                         className: "text-lg-center",
                     },
                     {
@@ -1000,7 +1136,7 @@
                         className: "text-lg-center",
                     },
                     {
-                        data: "jenis_kelamin",
+                        data: "jk_kode",
                         orderable: false,
                         className: 'text-lg-center'
                     },
@@ -1011,10 +1147,13 @@
                     {
                         data: "tanggal_lahir",
                         orderable: false,
-                        className: 'text-lg-center'
+                        className: 'text-lg-center',
+                        render: data => {
+                            return tanggal(data, 'dd/mm/Y');
+                        }
                     },
                     {
-                        data: "agama",
+                        data: "agama_str",
                         orderable: false,
                         className: 'text-lg-center'
                     },
@@ -1042,16 +1181,23 @@
                         orderable: false,
                     },
                     {
-                        data: "tahun_registrasi",
+                        data: "tanggal_registrasi",
+                        orderable: false,
+                        customClass: 'text-center',
+                        render: (data) => {
+                            return tanggal(data, 'Y');
+                        }
+                    },
+                    {
+                        data: "mutasi_nama",
                         orderable: false,
                     },
                     {
-                        data: "jenis_mutasi",
+                        data: "mutasi_tanggal",
                         orderable: false,
-                    },
-                    {
-                        data: "tanggal_mutasi",
-                        orderable: false,
+                        render: data => {
+                            return tanggal(data, 'dd/mm/Y');
+                        }
                     },
                 ],
             }).on('draw', function() {
@@ -1168,35 +1314,6 @@
                 dtAdminBukuIndukPd.ajax.reload()
             });
 
-            // $('#btnRun-importKelulusanPd').on('click', async function() {
-            //     const btn = $(this);
-            //     const fileElm = $('#inputFile-kelulusanPd');
-            //     const file = fileElm.prop('files');
-            //     if (file.length !== 1) {
-            //         toast('File import belum dipilih.');
-            //         fileElm.addClass('is-invalid');
-            //         return;
-            //     }
-            //     $('.is-invalid').removeClass('is-invalid');
-
-            //     let data = new FormData();
-            //     data.append('file', file[0]);
-
-            //     const upload = await fetchData({
-            //         url: '/api/v0/buku-induk/import/kelulusan-pd',
-            //         data: data,
-            //         method: 'POST',
-            //         button: btn
-            //     });
-            //     if (!upload) return;
-            //     fileElm.val('');
-            //     bsCustomFileInput.destroy();
-            //     bsCustomFileInput.init();
-            //     $('#modalKelulusanPd').modal('hide');
-            //     dtAdminBukuIndukPd.ajax.reload(null, false);
-            //     toast(upload.message);
-            // });
-
             $('#tabs-profil-tab').on('click', async function(e) {
                 e.preventDefault();
                 const id = $(this).attr('data-id');
@@ -1204,29 +1321,30 @@
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/profil/' + id);
-                if (!respData) return;
-                $('.idPd').attr('data-id', id);
-                $('#detailPd-id').val(id);
-                $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
-                $('#tabsProfile-jk').text(respData.jenis_kelamin);
-                $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
-                $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
-                $('#tabsProfile-nisn').text(respData.nisn);
-                $('#tabsProfile-nipd').text(respData.nipd);
-                $('#tabsProfile-nik').text(respData.nik);
-                $('#tabsProfile-ibu').text(respData.ibu);
-                $('#tabsProfile-hp').text(respData.hp);
-                $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
-                if (respData.jenis_mutasi)
-                    $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
-                else
-                    $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
-                if (respData.foto_src) {
-                    $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
-                    $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
-                } else {
-                    $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
-                    $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
+                if (respData) {
+                    $('.idPd').attr('data-id', id);
+                    $('#detailPd-id').val(id);
+                    $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
+                    $('#tabsProfile-jk').text(respData.jenis_kelamin);
+                    $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
+                    $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
+                    $('#tabsProfile-nisn').text(respData.nisn);
+                    $('#tabsProfile-nipd').text(respData.nipd);
+                    $('#tabsProfile-nik').text(respData.nik);
+                    $('#tabsProfile-ibu').text(respData.ibu);
+                    $('#tabsProfile-hp').text(respData.hp);
+                    $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
+                    if (respData.jenis_mutasi)
+                        $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
+                    else
+                        $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
+                    if (respData.foto_src) {
+                        $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
+                        $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
+                    } else {
+                        $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
+                        $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
+                    }
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
@@ -1240,21 +1358,22 @@
                 $(this).tab('show');
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/identitas/' + id);
-                if (!respData) return;
-                $('#tabsIdentitas-nama').val(respData.nama);
-                opt = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
-                $('#tabsIdentitas-jenisKelamin').append(opt);
-                $('#tabsIdentitas-tempatLahir').val(respData.tempat_lahir);
-                $('#tabsIdentitas-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/Y'));
-                $('#tabsIdentitas-tanggalLahirDb').val(respData.tanggal_lahir);
-                $('#tabsIdentitas-nisn').val(respData.nisn);
-                $('#tabsIdentitas-nomorAkte').val(respData.nomor_akte);
-                $('#tabsIdentitas-nomorKk').val(respData.nomor_kk);
-                $('#tabsIdentitas-nik').val(respData.nik);
-                $('#tabsIdentitas-anakKe').val(respData.anak_ke);
-                $('#tabsIdentitas-jumlahSaudara').val(respData.jumlah_saudara);
-                opt = new Option(respData.agama_str, respData.agama_id, false, true);
-                $('#tabsIdentitas-agama').append(opt);
+                if (respData) {
+                    $('#tabsIdentitas-nama').val(respData.nama);
+                    opt = new Option(respData.jenis_kelamin_str, respData.jenis_kelamin_id, false, true);
+                    $('#tabsIdentitas-jenisKelamin').append(opt);
+                    $('#tabsIdentitas-tempatLahir').val(respData.tempat_lahir);
+                    $('#tabsIdentitas-tanggalLahir').val(tanggal(respData.tanggal_lahir, 'dd/mm/Y'));
+                    $('#tabsIdentitas-tanggalLahirDb').val(respData.tanggal_lahir);
+                    $('#tabsIdentitas-nisn').val(respData.nisn);
+                    $('#tabsIdentitas-nomorAkte').val(respData.nomor_akte);
+                    $('#tabsIdentitas-nomorKk').val(respData.nomor_kk);
+                    $('#tabsIdentitas-nik').val(respData.nik);
+                    $('#tabsIdentitas-anakKe').val(respData.anak_ke);
+                    $('#tabsIdentitas-jumlahSaudara').val(respData.jumlah_saudara);
+                    opt = new Option(respData.agama_str, respData.agama_id, false, true);
+                    $('#tabsIdentitas-agama').append(opt);
+                }
                 offcanvasElm.find('.overlay').addClass('d-none');
             });
 
@@ -2860,8 +2979,6 @@
                 }
                 offcanvasElm.find('.overlay').removeClass('d-none');
                 const respData = await fetchData('/api/v0/buku-induk/peserta-didik/rombel/' + id);
-                console.log(respData);
-
                 if (respData.length > 0) {
                     listElm.html('');
                     respData.forEach(v => {
@@ -2872,9 +2989,6 @@
                                                     <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusRombel" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
-                                                    <a type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Ubah" class="text-decoration-none mr-1 small text-muted btnRow-ubahRombel" aria-label="Close">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
                                                 </div>
                                             </div>
                                             <div class="collapse mt-1" id="coll-${v.id}">
@@ -2892,6 +3006,10 @@
                                                         <a class="">${v.rombel_nama}</a>
                                                     </li>
                                                     <li class="list-group-item py-2">
+                                                        <p class="text-bold mb-0 small">Jenis Registrasi</p>
+                                                        <a class="">${v.registrasi_nama}</a>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
                                                         <p class="text-bold mb-0 small">Tingkat</p>
                                                         <a class="">${v.tingkat}</a>
                                                     </li>
@@ -2905,69 +3023,63 @@
                         listElm.append(itemElm);
                     });
 
-                    // $('.btnRow-ubahKelulusan').on('click', async function() {
-                    //     const btn = $(this);
-                    //     const idKelulusan = btn.attr('data-id');
-                    //     const id = $('#detailPd-id').val();
-                    //     const respData = await fetchData('/api/v0/buku-induk/peserta-didik/kelulusan/' + id);
-                    //     if (respData.length > 0) {
-                    //         respData.forEach((val, i) => {
-                    //             if (val.id == idKelulusan) {
-                    //                 let opt;
-                    //                 $('#tabsKelulusan-tanggalKelulusan').datetimepicker('date', tanggal(val.tanggal, 'dd/mm/Y'));
-                    //                 if (val.jenjang_id) {
-                    //                     opt = new Option(val.jenjang_str, val.jenjang_id, false, true);
-                    //                     $('#tabsKelulusan-jenjangPendidikan').append(opt)
-                    //                 }
-                    //                 $('#tabsKelulusan-namaSekolah').val(val.nama_sekolah);
-                    //                 $('#tabsKelulusan-npsn').val(val.npsn);
-                    //                 if (val.kurikulum_id) {
-                    //                     opt = new Option(val.kurikulum_str, val.kurikulum_id, false, true);
-                    //                     $('#tabsKelulusan-kurikulumKelulusan').append(opt);
-                    //                 }
-                    //                 $('#tabsKelulusan-nomorIjazah').val(val.nomor_ijazah);
-                    //                 $('#tabsKelulusan-nomorSkhun').val(val.nomor_skhun);
-                    //                 $('#tabsKelulusan-nomorUjian').val(val.nomor_ujian);
-                    //                 $('#tabsKelulusan-penandatangan').val(val.penandatangan);
-                    //             }
-                    //         });
-                    //         $('#tabs-tambah-kelulusan-tab').trigger('click');
-                    //     }
-                    // });
+                    $('.btnRow-hapusRombel').on('click', async function() {
+                        const btn = $(this);
+                        const id = btn.data('id');
+                        const confirm = await Swal.fire({
+                            icon: "info",
+                            title: "Hapus Rombel?",
+                            text: "Data Rombongan Belajar peserta didik akan dihapus permanen. Apakah anda yakin?",
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: "Ya, Hapus",
+                            cancelButtonText: "Batal",
+                            customClass: {
+                                confirmButton: "bg-danger",
+                            },
+                        });
 
-                    // $('.btnRow-hapusKelulusan').on('click', async function() {
-                    //     const btn = $(this);
-                    //     const id = btn.data('id');
-                    //     const confirm = await Swal.fire({
-                    //         icon: "info",
-                    //         title: "Hapus Kelulusan?",
-                    //         text: "Data kelulusan peserta didik akan dihapus permanen. Apakah anda yakin?",
-                    //         showCloseButton: true,
-                    //         showCancelButton: true,
-                    //         confirmButtonText: "Ya, Hapus",
-                    //         cancelButtonText: "Batal",
-                    //         customClass: {
-                    //             confirmButton: "bg-danger",
-                    //         },
-                    //     });
-
-                    //     if (confirm.isConfirmed) {
-                    //         const delResp = await fetchData({
-                    //             url: '/api/v0/buku-induk/peserta-didik/kelulusan/' + id,
-                    //             method: 'DELETE',
-                    //             button: btn
-                    //         });
-                    //         if (delResp) {
-                    //             toast(delResp.message);
-                    //             dtAdminBukuIndukPd.ajax.reload(null, false);
-                    //             $('#tabs-kelulusan-tab').trigger('click');
-                    //         }
-                    //     }
-                    // });
+                        if (confirm.isConfirmed) {
+                            const delResp = await fetchData({
+                                url: '/api/v0/buku-induk/peserta-didik/rombel/' + id,
+                                method: 'DELETE',
+                                button: btn
+                            });
+                            if (delResp) {
+                                toast(delResp.message);
+                                dtAdminBukuIndukPd.ajax.reload(null, false);
+                                $('#tabs-rombel-tab').trigger('click');
+                            }
+                        }
+                    });
 
                     runTooltip();
                 }
                 offcanvasElm.find('.overlay').addClass('d-none');
+            });
+
+            $('#btnRun-saveRombel').on('click', async function(e) {
+                const btn = $(this);
+                const id = $('#detailPd-id').val();
+                const formElm = $('#formData-tabsTambahRombel');
+                const offcanvasElm = $('#offcanvasEdit-dataPd');
+                const loading = offcanvasElm.find('.overlay');
+                const set = formElm.serializeArray();
+                if (!validationElm(['tabsTambahRombel-namaRombel', 'tabsTambahRombel-jenisRegistrasi'], ['', null])) return;
+                loading.removeClass('d-none');
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/anggotaRombel/' + id,
+                    data: set,
+                    method: 'POST',
+                    button: btn
+                });
+                if (respData) {
+                    toast(respData.message);
+                    formElm.trigger('reset').find('option').remove();
+                    $('#tabs-rombel-tab').trigger('click');
+                    dtAdminBukuIndukPd.ajax.reload(null, false);
+                }
+                loading.addClass('d-none');
             });
 
             $('#btnSync-checkNewPd').on('click', async function() {
@@ -3145,7 +3257,7 @@
                         </button>
                     </div>
                 `);
-                dtAdminBukuIndukPd.ajax.reload();
+                dtAdminBukuIndukPd.ajax.reload(null, false);
             });
 
             $('#btnRun-tarikDapodik').on('click', async function() {
@@ -3344,7 +3456,7 @@
                         <div class="spinner-border spinner-border-sm mr-1" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
-                        0% Menyimpan data....
+                        <span id="progressPercent">0%</span> <span id="progressMessage">Menyimpan data....</span>
                     </div>
                 `);
                 await new Promise(resolve => setTimeout(resolve, 1000));
@@ -3352,15 +3464,8 @@
                 let l = 0;
                 for (const dataSet of set) {
                     i++;
-                    alertElm.html('').html(`
-                        <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">
-                            <div class="spinner-border spinner-border-sm mr-1" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                            ${formatNumber(parseInt(i)/parseInt(set.length)*100)}% Menyimpan data an. <strong>${dataSet.nama}</strong>
-                        </div>
-
-                    `);
+                    $('#progressPercent').text(`${formatNumber(parseInt(i)/parseInt(set.length)*100)}%`);
+                    $('#progressMessage').html(`Menyimpan data an. <strong>${dataSet.nama}</strong>`);
                     let k = 0;
                     for (const val of dataType) {
                         const send = dataSet[val.name];
@@ -3741,124 +3846,6 @@
                 if (!resp.status) return;
                 toast('Silahkan unduh file excel <a href="/' + resp.data.path + '" target="_blank" class="text-bold">di sini</a>', 'success', 0);
             });
-
-            // $('#btnRun-simpanMutasiPd').on('click', async function() {
-            //     const tanggalElm = $('#inputForm-tanggalMutasiPd');
-            //     const pdElm = $('#selectForm-namaMutasiPd');
-            //     const jenisElm = $('#selectForm-jenisMutasiPd');
-            //     const alasanElm = $('#textForm-alasanMutasiPd');
-            //     const sekolahElm = $('#inputForm-sekolahTujuanMutasiPd');
-
-            //     if (!validationElm([tanggalElm, pdElm, jenisElm, alasanElm], ['', null])) return;
-            //     const response = await fetchData({
-            //         url: '/api/v0/mutasi/peserta-didik/set',
-            //         data: {
-            //             tanggal: tanggalElm.val(),
-            //             peserta_didik_id: pdElm.val(),
-            //             jenis: jenisElm.val(),
-            //             alasan: alasanElm.val(),
-            //             sekolah_tujuan: sekolahElm.val(),
-            //         },
-            //         method: 'POST',
-            //         button: $(this),
-            //     });
-            //     if (!response) return;
-            //     toast(response.message, 'success');
-            //     dtAdminBukuIndukPd.ajax.reload(null, false);
-            //     pdElm.val('').change();
-            //     jenisElm.val('').change();
-            //     alasanElm.val('');
-            //     sekolahElm.val('');
-            //     $('#modalMutasiPd').modal('hide');
-            // });
-
-            // $('#selectForm-namaPdLulus').on('change', async function() {
-            //     const id = $(this).val();
-            //     const response = await fetchData('/api/v0/kelulusan/' + id);
-            //     if (response) {
-            //         $('#inputForm-kurikulumLulusPd').val(response.kurikulum);
-            //         $('#inputForm-tanggalLulusPd').val(response.tanggal);
-            //         $('#inputForm-noIjazahLulusPd').val(response.nomor_ijazah);
-            //         $('#inputForm-penandatanganLulusPd').val(response.penandatangan);
-            //         $('#inputForm-sekolahTujuanLulusPd').val(response.sekolah_tujuan);
-            //     } else {
-            //         $('#inputForm-kurikulumLulusPd').val('');
-            //         $('#inputForm-tanggalLulusPd').val('');
-            //         $('#inputForm-noIjazahLulusPd').val('');
-            //         $('#inputForm-penandatanganLulusPd').val('');
-            //         $('#inputForm-sekolahTujuanLulusPd').val('');
-            //     }
-            // });
-
-            // $('#btnRun-simpanKelulusanPd').on('click', async function() {
-            //     const btn = $(this);
-            //     const idPdElm = $('#selectForm-namaPdLulus');
-            //     const kurikulum = $('#inputForm-kurikulumLulusPd');
-            //     const tanggal = $('#inputForm-tanggalLulusPd');
-            //     const noIjazah = $('#inputForm-noIjazahLulusPd');
-            //     const ttd = $('#inputForm-penandatanganLulusPd');
-            //     const sekolah_tujuan = $('#inputForm-sekolahTujuanLulusPd');
-
-            //     if (!validationElm([idPdElm, kurikulum, tanggal, noIjazah, ttd], ['', null])) return;
-            //     const data = {
-            //         peserta_didik_id: idPdElm.val(),
-            //         kurikulum: kurikulum.val(),
-            //         nomor_ijazah: noIjazah.val(),
-            //         penandatangan: ttd.val(),
-            //         tanggal: tanggal.val(),
-            //         alasan: 'Lulus dari satuan pendidikan',
-            //         sekolah_tujuan: sekolah_tujuan.val(),
-            //     }
-            //     const respSetLulus = await fetchData({
-            //         url: '/api/v0/kelulusan',
-            //         data: data,
-            //         method: 'post',
-            //         button: btn
-            //     });
-
-            //     if (!respSetLulus) return;
-            //     $('#form-kelulusanPd').find('input').val('');
-            //     $('#form-kelulusanPd').find('select').val('').trigger('change');
-            //     toast(respSetLulus.message);
-            // });
-
-            // $('#btnBatal-mutasiPd').on('click', async function() {
-            //     if (selectedRows.length == 0) {
-            //         toast('Pilih peserta didik terlebih dahulu.');
-            //         return;
-            //     }
-            //     const list = $('#listBatalMutasiPd');
-            //     list.html('');
-            //     $('#modalBatalMutasiPd').modal('show');
-            //     let i = 1;
-            //     for (const value of selectedRows) {
-            //         const resp = await fetchData('/api/v0/mutasiPd/' + value);
-            //         if (resp)
-            //             list.append(`
-            //         <li class="list-group-item" id="list_${value}">${i++}. ${resp.nama} (${resp.jenis_mutasi})</li>
-            //         `);
-            //     }
-            //     if (i == 1) $('#btnRun-batalMutasiPd').prop('disabled', true);
-            // });
-
-            // $('#btnRun-batalMutasiPd').on('click', async function() {
-            //     const btn = $(this);
-            //     for (const value of selectedRows) {
-            //         const resp = await fetchData({
-            //             url: '/api/v0/mutasiPd/' + value,
-            //             method: 'DELETE',
-            //             button: btn,
-            //         });
-
-            //         if (resp) {
-            //             $('#list_' + value).remove();
-            //             selectedRows = selectedRows.filter(item => item !== value);
-            //             toast(resp.message);
-            //         }
-            //     }
-            //     if (selectedRows.length == 0) $('#modalBatalMutasiPd').modal('hide');
-            //     dtAdminBukuIndukPd.ajax.reload(null, false);
-            // });
         });
     </script>
 </body>

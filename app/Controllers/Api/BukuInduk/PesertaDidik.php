@@ -907,9 +907,15 @@ class PesertaDidik extends BaseController
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $mAnggotaRombel = new AnggotaRombelModel();
         $set = $this->request->getPost();
+        if (!isset($set['anggota_id']))
+            $set['anggota_id'] = idUnik($mAnggotaRombel, 'anggota_id');
         $cAnggota = $mAnggotaRombel->where('anggota_id', $set['anggota_id'])
             ->first();
-        if (!$cAnggota) if ($mAnggotaRombel->save($set)) return $this->fail('Data anggota rombongan belajar gagal disimpan.');
+        if ($cAnggota)
+            $set['id'] = $cAnggota['id'];
+        else
+            $set['peserta_didik_id'] = $id;
+        if (!$mAnggotaRombel->save($set)) return $this->fail('Data anggota rombongan belajar gagal disimpan.');
         return $this->respond(['message' => 'Data anggota rombongan belajar berhasil disimpan.']);
     }
 
@@ -924,7 +930,10 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
         $cRombel = $mRombel->where('rombel_id', $set['rombel_id'])
             ->first();
-        if (!$cRombel) if ($mRombel->save($set)) return $this->fail('Data rombongan belajar gagal disimpan.');
+        if (!$cRombel)
+            $set['rombel_id'] = idUnik($mRombel, 'rombel_id');
+        else $set['id'] = $cRombel['id'];
+        if (!$mRombel->save($set)) return $this->fail('Data rombongan belajar gagal disimpan.');
         return $this->respond(['message' => 'Data rombongan belajar berhasil disimpan.']);
     }
 
@@ -978,11 +987,22 @@ class PesertaDidik extends BaseController
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $mAnggotaRombel = new AnggotaRombelModel();
         $response = $mAnggotaRombel
-            ->select(['anggota_id as id', 'rombongan_belajar.nama as rombel_nama', 'ref_kurikulum.nama as kurikulum_str', 'tingkat_pendidikan as tingkat', 'semester.kode as semester_kode'])
+            ->select(['anggota_id as id', 'rombongan_belajar.nama as rombel_nama', 'ref_kurikulum.nama as kurikulum_str', 'ref_jenis_registrasi.nama as registrasi_nama', 'tingkat_pendidikan as tingkat', 'semester.kode as semester_kode'])
             ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
             ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
             ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
+            ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = anggota_rombongan_belajar.jenis_registrasi_rombel', 'left')
             ->where('peserta_didik_id', $id)->findAll();
         return $this->respond($response);
+    }
+
+    public function deleteRombel($id): ResponseInterface
+    {
+        if (!$id) return $this->fail('ID Rombingan Belajar diperlukan.');
+        $mAnggotaRombel = new AnggotaRombelModel();
+        $cAnggota = $mAnggotaRombel->where('anggota_id', $id)->first();
+        if (!$cAnggota) return $this->fail('Data anggota rombel tidak ditemukan.');
+        if (!$mAnggotaRombel->delete($cAnggota['id'], true)) return $this->fail('Data anggota rombel gagal dihapus.');
+        return $this->respond(['message' => 'Data anggota rombel berhasil dihapus permanen.']);
     }
 }
