@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 $routes->get('/buku-induk/pd', 'BukuInduk::pesertaDidik');
-$routes->get('/pengaturan/dapodik', 'Dapodik::index');
+$routes->get('/pengaturan/dapodik/koneksi', 'Dapodik::koneksi');
 
 $routes->group('', ['namespace' => 'App\Controllers\Public'], function ($routes) {
     $routes->get('peserta-didik', 'Homepage::pesertaDidik');

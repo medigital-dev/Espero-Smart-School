@@ -257,12 +257,46 @@
                                 <p>Rombongan Belajar</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $sidebar == 'dapodik' ? 'menu-open' : '' ?>">
+                            <a href="#" class="nav-link <?= $sidebar == 'dapodik' ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>
+                                    Pengaturan
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item <?= $sidebar == 'dapodik' ? 'menu-open' : '' ?>">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-database nav-icon"></i>
+                                        <p>
+                                            Aplikasi Dapodik
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview" style="display: none;">
+                                        <li class="nav-item <?= $sidebar == 'dapodik' ? 'menu-is-open' : '' ?>">
+                                            <a href="<?= base_url('pengaturan/dapodik/koneksi'); ?>" class="nav-link <?= $sidebar == 'dapodik' ? 'active' : '' ?>">
+                                                <i class="fas fa-exchange-alt nav-icon fa-fw"></i>
+                                                <p>Koneksi</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="#" class="nav-link">
+                                                <i class="fas fa-sync-alt nav-icon fa-fw"></i>
+                                                <p>Sinkron</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- <li class="nav-item">
                             <a href="<?= base_url('pengaturan/dapodik'); ?>" class="nav-link <?= $sidebar == 'dapodik' ? 'active' : ''; ?>">
                                 <i class="fas fa-sync-alt nav-icon"></i>
                                 <p>Koneksi Dapodik</p>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

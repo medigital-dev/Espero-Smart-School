@@ -19,12 +19,12 @@ class Dapodik extends BaseController
         helper(['string', 'indonesia', 'dapodik', 'files', 'referensi']);
     }
 
-    public function index(): string
+    public function koneksi(): string
     {
         $page = [
             'title' => 'SISPADU - Pengaturan Dapodik',
             'sidebar' => 'dapodik',
-            'breadcrumb' => [],
+            'breadcrumb' => ['Pengaturan', 'Dapodik', 'Koneksi'],
             'page' => 'Koneksi Aplikasi Dapodik',
             'data' => [],
         ];
