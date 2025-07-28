@@ -70,7 +70,7 @@ class Dapodik
                     'http_code' => 200,
                     'status_code' => 'success',
                     'message' => 'Data berhasil ditarik dari Aplikasi Dapodik.',
-                    'data' => $this->renderData($result['rows'], $type),
+                    'data' => $this->renderDataSync_v2026($result['rows'], $type),
                 ];
             } else {
                 $response = $result;
@@ -87,6 +87,84 @@ class Dapodik
                 'data' => [],
             ];
         }
+    }
+
+    private function renderDataSync_v2026($data, $type): array
+    {
+        $response = [];
+        switch ($type) {
+            case 'getPesertaDidik':
+                foreach ($data as $row) {
+                    $response[] = [
+                        'peserta_didik_id' => $row["peserta_didik_id"],
+                        'nama' => $row["nama"],
+                        'nik' => $row["nik"],
+                        'nisn' => $row["nisn"],
+                        'nipd' => $row["nipd"],
+                        'identitas' => [
+                            'peserta_didik_id' => $row["peserta_didik_id"],
+                            'nama' => eyd($row["nama"]),
+                            'nisn' => $row["nisn"],
+                            'jenis_kelamin' => saveJenisKelamin($row['jenis_kelamin'] == 'L' ? 'Laki-laki' : ($row['jenis_kelamin'] == 'P' ? 'Perempuan' : ''), ['kode' => $row["jenis_kelamin"]]),
+                            'nik' => $row["nik"],
+                            'tempat_lahir' => $row["tempat_lahir"],
+                            'tanggal_lahir' => $row["tanggal_lahir"],
+                            'agama_id' => saveAgama($row["agama_id_str"]),
+                            'anak_ke' => $row["anak_keberapa"],
+                        ],
+                        'registrasi_id' => $row["registrasi_id"],
+                        'registrasi' => [
+                            'registrasi_id' => $row["registrasi_id"],
+                            'peserta_didik_id' => $row["peserta_didik_id"],
+                            'jenis_registrasi' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
+                            'nipd' => $row["nipd"],
+                            'tanggal_registrasi' => $row["tanggal_masuk_sekolah"],
+                            'asal_Sekolah' => $row["sekolah_asal"],
+                        ],
+                        'kontak' => [
+                            'nik' => $row["nik"],
+                            'telepon' => $row["nomor_telepon_rumah"],
+                            'hp' => $row["nomor_telepon_seluler"],
+                            'email' => $row["email"],
+                        ],
+                        'ayah' => [
+                            'nama' => eyd($row["nama_ayah"]),
+                            'jenis_kelamin' => saveJenisKelamin('Laki-laki', ['kode' => 'L']),
+                            'pekerjaan_id' => savePekerjaan($row["pekerjaan_ayah_id_str"]),
+                        ],
+                        'ibu' => [
+                            'nama' => eyd($row["nama_ibu"]),
+                            'jenis_kelamin' => saveJenisKelamin('Perempuan', ['kode' => 'P']),
+                            'pekerjaan_id' => savePekerjaan($row["pekerjaan_ibu_id_str"]),
+                        ],
+                        'wali' => [
+                            'nama' => eyd($row["nama_wali"]),
+                            'pekerjaan_id' => savePekerjaan($row["pekerjaan_wali_id_str"]),
+                        ],
+                        'rombel_id' => $row["rombongan_belajar_id"],
+                        'rombel' => [
+                            'rombel_id' => $row["rombongan_belajar_id"],
+                            'semester_id' => saveSemester($row['semester_id'], ['kode', $row['semester_id']]),
+                            'tingkat_pendidikan' => $row["tingkat_pendidikan_id"],
+                            'nama' => $row["nama_rombel"],
+                            'kurikulum_id' => saveKurikulum($row["kurikulum_id_str"],)
+                        ],
+                        'anggota_id' => $row["anggota_rombel_id"],
+                        'anggotaRombel' => [
+                            'anggota_id' => $row["anggota_rombel_id"],
+                            'peserta_didik_id' => $row["peserta_didik_id"],
+                            'rombel_id' => $row["rombongan_belajar_id"],
+                            'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
+                        ],
+                        'difabel' => $this->renderKebutuhanKhusus($row['nik'], $row['kebutuhan_khusus']),
+                    ];
+                }
+                break;
+
+            default:
+                break;
+        }
+        return $response;
     }
 
     private function renderData($data, $type)

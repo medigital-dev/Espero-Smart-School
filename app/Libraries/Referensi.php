@@ -19,6 +19,7 @@ use App\Models\RefPekerjaanModel;
 use App\Models\RefPendidikanModel;
 use App\Models\RefPenghasilanModel;
 use App\Models\RefSatuanModel;
+use App\Models\RefSemesterModel;
 use App\Models\RefTingkatPrestasiModel;
 use App\Models\RefTransportasiModel;
 use InvalidArgumentException;
@@ -329,6 +330,22 @@ class Referensi
                 $set['ref_id'] = idUnik($model, 'ref_id');
             $set['nama'] = $nama;
             if (!$model->save($set)) throw new InvalidArgumentException('Data referensi Bank dengan nama ' . $nama . ' gagal disimpan.');
+            $id = $set['ref_id'];
+        }
+        return $id;
+    }
+
+    public function saveSemester(string $nama, array $set)
+    {
+        if ($nama == '') return '';
+        $model = new RefSemesterModel();
+        $cek = $model->where('nama', $nama)->first();
+        if ($cek) $id = $cek['ref_id'];
+        else {
+            if (!isset($set['ref_id']))
+                $set['ref_id'] = idUnik($model, 'ref_id');
+            $set['nama'] = $nama;
+            if (!$model->save($set)) throw new InvalidArgumentException('Data referensi Semester dengan nama ' . $nama . ' gagal disimpan.');
             $id = $set['ref_id'];
         }
         return $id;

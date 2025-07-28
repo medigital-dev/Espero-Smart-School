@@ -266,7 +266,7 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item <?= $sidebar == 'dapodik' ? 'menu-open' : '' ?>">
+                                <li class="nav-item <?= $sidebar == 'dapodik' ? 'menu-is-opening menu-open' : '' ?>">
                                     <a href="#" class="nav-link">
                                         <i class="fas fa-database nav-icon"></i>
                                         <p>
@@ -274,7 +274,7 @@
                                             <i class="right fas fa-angle-left"></i>
                                         </p>
                                     </a>
-                                    <ul class="nav nav-treeview" style="display: none;">
+                                    <ul class="nav nav-treeview" style="display: <?= $sidebar == 'dapodik' ? 'block' : 'none'; ?>;">
                                         <li class="nav-item <?= $sidebar == 'dapodik' ? 'menu-is-open' : '' ?>">
                                             <a href="<?= base_url('pengaturan/dapodik/koneksi'); ?>" class="nav-link <?= $sidebar == 'dapodik' ? 'active' : '' ?>">
                                                 <i class="fas fa-exchange-alt nav-icon fa-fw"></i>

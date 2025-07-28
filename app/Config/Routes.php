@@ -59,6 +59,11 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     $routes->presenter('backgroundColor');
 });
 
+// Datatables
+// $routes->group('/api/v0/datatables/', ['namespace' => 'App\Controllers\Api\Datatables'], function ($routes) {
+//     $routes->post('dapodik');
+// });
+
 // Buku induk
 $routes->group('/api/v0/buku-induk', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('export/(:segment)', 'BukuInduk::export/$1');

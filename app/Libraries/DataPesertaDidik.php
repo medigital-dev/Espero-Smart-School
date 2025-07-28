@@ -61,7 +61,6 @@ class DataPesertaDidik
             ->join('ref_penghasilan as penghasilan_ayah', 'penghasilan_ayah.ref_id = ayah.penghasilan_id', 'left')
             ->join('ref_penghasilan as penghasilan_ibu', 'penghasilan_ibu.ref_id = ibu.penghasilan_id', 'left')
             ->join('ref_penghasilan as penghasilan_wali', 'penghasilan_wali.ref_id = wali.penghasilan_id', 'left')
-
         ;
     }
 

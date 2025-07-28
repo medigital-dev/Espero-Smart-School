@@ -913,8 +913,10 @@ class PesertaDidik extends BaseController
             ->first();
         if ($cAnggota)
             $set['id'] = $cAnggota['id'];
-        else
-            $set['peserta_didik_id'] = $id;
+        else {
+            if (!isset($set['anggota_id']))
+                $set['peserta_didik_id'] = $id;
+        }
         if (!$mAnggotaRombel->save($set)) return $this->fail('Data anggota rombongan belajar gagal disimpan.');
         return $this->respond(['message' => 'Data anggota rombongan belajar berhasil disimpan.']);
     }
@@ -930,9 +932,12 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
         $cRombel = $mRombel->where('rombel_id', $set['rombel_id'])
             ->first();
-        if (!$cRombel)
-            $set['rombel_id'] = idUnik($mRombel, 'rombel_id');
-        else $set['id'] = $cRombel['id'];
+        if ($cRombel)
+            $set['id'] = $cRombel['id'];
+        else {
+            if (!isset($set['rombel_id']))
+                $set['rombel_id'] = idUnik($mRombel, 'rombel_id');
+        }
         if (!$mRombel->save($set)) return $this->fail('Data rombongan belajar gagal disimpan.');
         return $this->respond(['message' => 'Data rombongan belajar berhasil disimpan.']);
     }

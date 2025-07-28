@@ -4,7 +4,9 @@ namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
 use App\Libraries\DataPesertaDidik;
+use App\Models\DapodikSyncModel;
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Datatables extends BaseController
 {
@@ -76,6 +78,14 @@ class Datatables extends BaseController
             'data' => $data,
         ];
 
+        return $this->respond($response);
+    }
+
+    public function koneksiDapodik(): ResponseInterface
+    {
+        $model = new DapodikSyncModel();
+        $response = $model->select()
+            ->findAll();
         return $this->respond($response);
     }
 }
