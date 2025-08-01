@@ -458,7 +458,7 @@
         }
 
         function runSelect2() {
-            $(".select2").select2({
+            $("select.select2").select2({
                 placeholder: "Pilih...",
                 theme: "bootstrap4",
             });
@@ -828,7 +828,6 @@
                     },
                 });
             });
-
 
             $(".select2-getRombel").each(function() {
                 const $select = $(this);

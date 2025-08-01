@@ -2,6 +2,7 @@
 
 namespace App\Libraries;
 
+use App\Models\AnggotaRombelModel;
 use App\Models\PesertaDidikModel;
 
 class DataPesertaDidik
@@ -36,7 +37,7 @@ class DataPesertaDidik
             ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
             ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
             ->join('guru_pegawai', 'guru_pegawai.guru_pegawai_id = rombongan_belajar.ptk_id', 'left')
-            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
+            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
             ->join('kontak', 'kontak.nik = peserta_didik.nik', 'left')
             ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('kelulusan', 'kelulusan.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
@@ -46,6 +47,8 @@ class DataPesertaDidik
             ->join('orangtua_wali as wali', 'wali.orangtua_id = orangtua_wali_pd.wali_id', 'left')
             ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
             ->join('pass_foto', 'pass_foto.foto_id = peserta_didik.foto_id', 'left')
+            ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
+            ->join('ref_jenis_registrasi as refRegistrasiRombel', 'refRegistrasiRombel.ref_id = anggota_rombongan_belajar.jenis_registrasi_rombel', 'left')
             ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
@@ -79,7 +82,6 @@ class DataPesertaDidik
             ->like('peserta_didik.nama', $this->searchValue)
             ->orLike('nipd', $this->searchValue)
             ->orLike('nisn', $this->searchValue)
-            ->orLike('rombongan_belajar.nama', $this->searchValue)
             ->groupEnd();
         $this->countFiltered = $this->query->countAllResults(false);
 
@@ -112,7 +114,7 @@ class DataPesertaDidik
         $this->start = (int) $this->request->getGet('page') ?: 1;
         $offset = ($this->start - 1) * $this->length;
         if (empty($this->query->select()))
-            $this->query->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'rombongan_belajar.nama as kelas', 'nisn', 'nipd']);
+            $this->query->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'nisn', 'nipd']);
         $items = $this->query->findAll($this->length + 1, $offset);
 
         $hasMore = count($items) > $this->length;
@@ -126,7 +128,6 @@ class DataPesertaDidik
                 'text' => $item['nama'],
                 'nipd' => $item['nipd'],
                 'nisn' => $item['nisn'],
-                'kelas' => $item['kelas']
             ];
         }, $items);
 
@@ -161,7 +162,6 @@ class DataPesertaDidik
         $keyword = $this->request->getVar('key');
         $ids = $this->request->getVar('ids') ?? [''];
         $status_pd = $this->request->getVar('status_pd');
-        $kelas = $this->request->getVar('kelas');
         $tingkat = $this->request->getVar('tingkat');
         $nama = $this->request->getVar('nama');
         $nipd = $this->request->getVar('nipd');
@@ -200,7 +200,6 @@ class DataPesertaDidik
         if ($tahun_mutasi) $this->query->where('YEAR(mutasi_pd.tanggal)', $tahun_mutasi);
         if ($jenis_registrasi) $this->query->where('registrasi_peserta_didik.jenis_registrasi', $jenis_registrasi);
         if ($tahun_registrasi) $this->query->where('YEAR(registrasi_peserta_didik.tanggal_registrasi)', $tahun_registrasi);
-        if ($kelas) $this->query->where('rombongan_belajar.rombel_id', $kelas);
         if ($tingkat) $this->query->where('tingkat_pendidikan', $tingkat);
         if ($nama) $this->query->like('peserta_didik.nama', $nama);
         if ($ibu_kandung) $this->query->like('ibu.nama', $ibu_kandung);
@@ -241,7 +240,6 @@ class DataPesertaDidik
                 ->like('peserta_didik.nama', $keyword)
                 ->orLike('nipd', $keyword)
                 ->orLike('nisn', $keyword)
-                ->orLike('rombongan_belajar.nama', $keyword)
                 ->groupEnd();
         }
         if ($agama) $this->query->where('ref_agama.ref_id', $agama);

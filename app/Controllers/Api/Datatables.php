@@ -3,6 +3,7 @@
 namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
+use App\Libraries\baseData\Rombel;
 use App\Libraries\DataPesertaDidik;
 use App\Models\DapodikSyncModel;
 use CodeIgniter\API\ResponseTrait;
@@ -22,6 +23,8 @@ class Datatables extends BaseController
 
     public function bukuIndukPd()
     {
+        $rombelLib = new Rombel;
+
         $result = $this->getData
             ->select([
                 'peserta_didik.peserta_didik_id',
@@ -36,7 +39,6 @@ class Datatables extends BaseController
                 'ref_jenis_mutasi.kode as mutasi_kode',
                 'ref_jenis_mutasi.bg_color as mutasi_warna',
                 'peserta_didik.nisn',
-                'rombongan_belajar.nama as kelas',
                 'registrasi_peserta_didik.nipd',
                 'ref_jenis_registrasi.nama as jenis_registrasi',
                 'tanggal_registrasi',
@@ -50,10 +52,29 @@ class Datatables extends BaseController
                 'ibu.nama as ibu',
                 'kelulusan.tanggal as tanggal_lulus'
             ])
-            ->withFilter()
+            // ->withFilter()
             ->toDataTable();
+        $rows = [];
+        foreach ($result['data'] as $row) {
+            $row['rombel'] = $rombelLib->getDataRombelPd($row['peserta_didik_id'], true);
+            $rows[] = $row;
+        }
+        $result['data'] = $rows;
 
         return $this->respond($result);
+    }
+
+    private function filterData(array|null $data): array
+    {
+        if (empty($data)) return [];
+        $kelas = $this->request->getVar('kelas');
+        $rows = [];
+        foreach ($data as $row) {
+            if ($kelas) {
+                if ($row['id'] == $kelas) $rows[] = $row;
+            }
+        }
+        return $rows;
     }
 
     public function publicPd()

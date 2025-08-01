@@ -267,17 +267,3 @@ if (!function_exists('saveBank')) {
         return service('referensi')->saveBank($nama, $set);
     }
 }
-
-if (!function_exists('saveSemester')) {
-    /**
-     * Helper menyimpan referensi Semester berdasarkan nama Semester
-     * @param string $nama Nama Semester
-     * @param array $set Variable tambahan dalam array
-     * @return string Mengembalikan id unik Semester
-     * @return false Jika Semester gagal disimpan 
-     */
-    function saveSemester(string $nama, array $set = [])
-    {
-        return service('referensi')->saveSemester($nama, $set);
-    }
-}

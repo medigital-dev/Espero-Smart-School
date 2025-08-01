@@ -2,43 +2,60 @@
 
 namespace App\Database\Migrations;
 
+use App\Models\SemesterModel;
 use CodeIgniter\Database\Migration;
 
 class Db0014 extends Migration
 {
     public function up()
     {
-        // Tabel: ref_semester
-        $this->forge->addField([
-            'created_at' => ['type' => 'DATETIME',],
-            'updated_at' => ['type' => 'DATETIME',],
-            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
-            'id' => ['type' => 'INT', 'auto_increment' => true,],
-            'ref_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
-            'nama' => [
+        $mSemester = new SemesterModel();
+        $db = $this->db->table('rombongan_belajar');
+        $data = $db->get()->getResultArray();
+        $rows = [];
+        foreach ($data as $row) {
+            $cSemester = $mSemester->where('semester_id', $row['semester_id'])->first();
+            if ($cSemester) {
+                $row['semester_kode'] = $cSemester['kode'];
+                unset($row['semester_id']);
+                $rows[] = $row;
+            }
+        }
+        $db->emptyTable();
+
+        $this->forge->addColumn('rombongan_belajar', [
+            'semester_kode' => [
                 'type' => 'VARCHAR',
-                'constraint' => 128,
+                'constraint' => 32,
                 'null' => false,
-            ],
-            'kode' => [
-                'type' => 'VARCHAR',
-                'constraint' => 64,
-                'null' => true,
-                'default' => null,
-            ],
-            'bg_color' => [
-                'type' => 'VARCHAR',
-                'constraint' => 64,
-                'null' => true,
-                'default' => null,
-            ],
+            ]
         ]);
-        $this->forge->addKey('id', 'true');
-        $this->forge->createTable('ref_semester', true);
+        $this->forge->dropColumn('rombongan_belajar', 'semester_id');
+        $db->insertBatch($rows);
     }
 
     public function down()
     {
-        $this->forge->dropTable('ref_semester', true);
+        $mSemester = new SemesterModel();
+        $db = $this->db->table('rombongan_belajar');
+        $data = $db->get()->getResultArray();
+        $rows = [];
+        foreach ($data as $row) {
+            $cSemester = $mSemester->where('semester_kode', $row['semester_kode'])->first();
+            $row['semester_kode'] = $cSemester['kode'];
+            unset($row['semester_kode']);
+            $rows[] = $row;
+        }
+        $db->emptyTable();
+
+        $this->forge->addColumn('rombongan_belajar', [
+            'semester_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ]
+        ]);
+        $this->forge->dropColumn('rombongan_belajar', 'semester_kode');
+        $db->insertBatch($rows);
     }
 }
