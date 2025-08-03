@@ -5,6 +5,7 @@ namespace App\Controllers\Api;
 use App\Controllers\BaseController;
 use App\Libraries\baseData\Rombel;
 use App\Libraries\DataPesertaDidik;
+use App\Models\AnggotaRombelModel;
 use App\Models\DapodikSyncModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -52,11 +53,11 @@ class Datatables extends BaseController
                 'ibu.nama as ibu',
                 'kelulusan.tanggal as tanggal_lulus'
             ])
-            // ->withFilter()
+            ->withFilter()
             ->toDataTable();
         $rows = [];
         foreach ($result['data'] as $row) {
-            $row['rombel'] = $rombelLib->getDataRombelPd($row['peserta_didik_id'], true);
+            $row['rombel'] = $rombelLib->rombel($row['peserta_didik_id'], true);
             $rows[] = $row;
         }
         $result['data'] = $rows;
@@ -64,15 +65,22 @@ class Datatables extends BaseController
         return $this->respond($result);
     }
 
-    private function filterData(array|null $data): array
+    private function filterRombel(array|null $data): array
     {
         if (empty($data)) return [];
         $kelas = $this->request->getVar('kelas');
+        $dataIdAnggota = [];
+        if ($kelas) {
+            $mAnggotaRombel = new AnggotaRombelModel();
+            $dataAnggota = $mAnggotaRombel->where('rombel_id', $kelas)->findAll();
+            foreach ($dataAnggota as $anggota) {
+                $dataIdAnggota[] = $anggota['peserta_didik_id'];
+            }
+        }
         $rows = [];
         foreach ($data as $row) {
-            if ($kelas) {
-                if ($row['id'] == $kelas) $rows[] = $row;
-            }
+            if (in_array($row['peserta_didik_id'], $dataIdAnggota))
+                $rows[] = $row;
         }
         return $rows;
     }

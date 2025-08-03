@@ -305,6 +305,17 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group row mb-2">
+                <label for="selectDt-agamaPd" class="col-sm-3 col-form-label">Difable</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisKebutuhanKhusus" data-placeholder="Pilih jenis kebutuhan khusus..." id="selectDt-difabel"></select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-difabel','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
         <hr>
         <div class="d-flex justify-content-between">

@@ -851,7 +851,7 @@
                                 results: $.map(data, function(item) {
                                     return {
                                         id: item.id,
-                                        text: item.nama,
+                                        text: item.rombel_nama,
                                         tingkat: item.tingkat,
                                         // wali: item.wali,
                                         // semester: item.semester,=
@@ -1133,15 +1133,15 @@
                         }
                     },
                     {
-                        data: "mutasi_kode",
-                        name: 'mutasi.kode',
+                        data: "rombel",
+                        name: 'rombongan_belajar.nama',
                         className: 'text-center',
                         orderable: false,
                         render: (data, type, rows) => {
-                            const isKosong = data == null && rows.kelas == null;
-                            const warna = data ? rows.mutasi_warna : (rows.kelas ? 'bg-success' : 'bg-danger');
-                            const text = isKosong ? '<i class="fas fa-minus-circle"></i>' : (data || rows.kelas);
-                            const title = isKosong ? '' : (data ? rows.mutasi_nama : rows.kelas);
+                            const isRombel = Boolean(data);
+                            const warna = isRombel ? 'bg-success' : (rows.mutasi_warna || 'bg-danger');
+                            const text = isRombel ? rows.rombel : (rows.mutasi_kode || '<i class="fas fa-minus-circle"></i>');
+                            const title = isRombel ? rows.rombel : (rows.mutasi_nama || '');
 
                             return `<span class="badge ${warna}" data-toggle="tooltip" data-title="${title}">${text}</span>`;
                         }
@@ -1283,7 +1283,7 @@
                     if (respData) {
                         $('.idPd').attr('data-id', id);
                         $('#detailPd-id').val(id);
-                        $('#tabsProfile-nama, .offcanvas-header h5').text(respData.nama);
+                        $('#tabsProfile-nama, #offcanvasEdit-dataPd .offcanvas-header h5').text(respData.nama);
                         $('#tabsProfile-jk').text(respData.jenis_kelamin);
                         $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
                         $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
@@ -1296,7 +1296,7 @@
                         if (respData.jenis_mutasi)
                             $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
                         else
-                            $('#tabsProfile-status').text(respData.kelas).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
+                            $('#tabsProfile-status').text(respData.rombel_nama).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
                         if (respData.foto_src) {
                             $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
                             $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
@@ -3048,7 +3048,7 @@
                                                     </li>
                                                     <li class="list-group-item py-2">
                                                         <p class="text-bold mb-0 small">Kurikulum</p>
-                                                        <a class="">${v.kurikulum_str}</a>
+                                                        <a class="">${v.kurikulum_nama}</a>
                                                     </li>
                                                 </ul>
                                             </div>

@@ -166,7 +166,7 @@ class Dapodik
                         'anggota_id' => $row["anggota_rombel_id"],
                         'peserta_didik_id' => $row["peserta_didik_id"],
                         'rombel_id' => $row["rombongan_belajar_id"],
-                        'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
+                        // 'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
                     ];
                     $response[] = $temp;
                 }

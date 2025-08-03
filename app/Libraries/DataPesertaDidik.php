@@ -34,10 +34,6 @@ class DataPesertaDidik
     {
         $this->query
             ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
-            ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
-            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-            ->join('guru_pegawai', 'guru_pegawai.guru_pegawai_id = rombongan_belajar.ptk_id', 'left')
-            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
             ->join('kontak', 'kontak.nik = peserta_didik.nik', 'left')
             ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('kelulusan', 'kelulusan.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
@@ -47,8 +43,6 @@ class DataPesertaDidik
             ->join('orangtua_wali as wali', 'wali.orangtua_id = orangtua_wali_pd.wali_id', 'left')
             ->join('alamat_tinggal', 'alamat_tinggal.nik = peserta_didik.nik', 'left')
             ->join('pass_foto', 'pass_foto.foto_id = peserta_didik.foto_id', 'left')
-            ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
-            ->join('ref_jenis_registrasi as refRegistrasiRombel', 'refRegistrasiRombel.ref_id = anggota_rombongan_belajar.jenis_registrasi_rombel', 'left')
             ->join('ref_jenis_mutasi', 'ref_jenis_mutasi.ref_id = mutasi_pd.jenis', 'left')
             ->join('ref_agama', 'ref_agama.ref_id = peserta_didik.agama_id', 'left')
             ->join('ref_alat_transportasi', 'ref_alat_transportasi.ref_id = alamat_tinggal.alat_transportasi_id', 'left')
@@ -185,10 +179,22 @@ class DataPesertaDidik
         $tahun_mutasi = $this->request->getVar('tahun_mutasi');
         $jenis_registrasi = $this->request->getVar('jenis_registrasi');
         $tahun_registrasi = $this->request->getVar('tahun_registrasi');
+        $kelas = $this->request->getVar('kelas');
+        if ($kelas) {
+            $this->query
+                ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
+                ->where('anggota_rombongan_belajar.rombel_id', $kelas);
+        }
 
         if ($status_pd && $status_pd !== 'all') {
-            if ($status_pd == 'aktif') $this->query->where('semester.status', true)->where('mutasi_pd.id');
-            else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=');
+            if ($status_pd == 'aktif') {
+                $this->query
+                    ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
+                    ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+                    ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
+                    ->where('semester.status', true)
+                    ->where('mutasi_pd.id');
+            } else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=');
             else if ($status_pd == 'checked') {
                 foreach ($ids as $id) {
                     $this->query->orWhere('peserta_didik.peserta_didik_id', $id);
@@ -200,7 +206,14 @@ class DataPesertaDidik
         if ($tahun_mutasi) $this->query->where('YEAR(mutasi_pd.tanggal)', $tahun_mutasi);
         if ($jenis_registrasi) $this->query->where('registrasi_peserta_didik.jenis_registrasi', $jenis_registrasi);
         if ($tahun_registrasi) $this->query->where('YEAR(registrasi_peserta_didik.tanggal_registrasi)', $tahun_registrasi);
-        if ($tingkat) $this->query->where('tingkat_pendidikan', $tingkat);
+        if ($tingkat) {
+            $this->query
+                ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
+                ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+                ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
+                ->where('tingkat_pendidikan', $tingkat)
+                ->where('status', true);
+        }
         if ($nama) $this->query->like('peserta_didik.nama', $nama);
         if ($ibu_kandung) $this->query->like('ibu.nama', $ibu_kandung);
         if ($ayah) $this->query->like('ayah.nama', $ayah);

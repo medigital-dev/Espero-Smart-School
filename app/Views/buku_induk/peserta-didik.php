@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="my-1 mr-1 ml-sm-auto">
-                        <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" data-toggle="tooltip" data-title="Pencarian Nama/NIS/NISN/Kelas" placeholder="Cari..." aria-label="Search">
+                        <input class="form-control form-control-sm" type="text" id="searchDt-bukuInduk" data-toggle="tooltip" data-title="Pencarian Nama/NIS/NISN" placeholder="Cari..." aria-label="Search">
                     </div>
                     <div class="btn-group btn-group-sm my-1 mr-1" role="group">
                         <button type="button" class="btn btn-primary btn-tooltip" data-toggle="offcanvas" data-title="Filter Data" data-target="#offcanvasFilter-bukuIndukPd" id="btnFilter-bukuIndukPd"><i class="fas fa-filter fa-fw"></i></button>

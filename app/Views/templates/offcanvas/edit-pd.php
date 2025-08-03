@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label class="small mb-1" for="tabsTambahRombel-jenisRegistrasi">Jenis Registrasi</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisRegistrasi" data-tags="true" id="tabsTambahRombel-jenisRegistrasi" name="jenis_registrasi_rombel"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisRegistrasi" data-tags="true" id="tabsTambahRombel-jenisRegistrasi" name="jenis_registrasi_rombel"></select>
                                     </div>
                                 </form>
                                 <hr>

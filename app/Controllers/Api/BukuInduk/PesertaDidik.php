@@ -3,6 +3,7 @@
 namespace App\Controllers\Api\BukuInduk;
 
 use App\Controllers\BaseController;
+use App\Libraries\baseData\Rombel;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
 use App\Models\AnggotaRombelModel;
@@ -48,10 +49,10 @@ class PesertaDidik extends BaseController
             'peserta_didik.nama',
             'nisn',
             'nipd',
+            'peserta_didik.peserta_didik_id',
             'peserta_didik.nik',
             'peserta_didik.tanggal_lahir as tanggal_lahir',
             'peserta_didik.tempat_lahir as tempat_lahir',
-            'rombongan_belajar.nama as kelas',
             'ibu.nama as ibu',
             'kontak.hp',
             'alamat_tinggal.dusun',
@@ -63,7 +64,10 @@ class PesertaDidik extends BaseController
             'ref_jenis_mutasi.nama as jenis_mutasi',
             'ref_jenis_kelamin.nama as jenis_kelamin',
         ]);
-        return $this->respond($this->baseData->find($id));
+        $res = $this->baseData->find($id);
+        $lib = new Rombel();
+        $res['rombel_nama'] = $lib->rombel($res['peserta_didik_id']);
+        return $this->respond($res);
     }
 
     public function showIdentitas($id): ResponseInterface
@@ -914,7 +918,7 @@ class PesertaDidik extends BaseController
         if ($cAnggota)
             $set['id'] = $cAnggota['id'];
         else {
-            if (!isset($set['anggota_id']))
+            if (!isset($set['peserta_didik_id']))
                 $set['peserta_didik_id'] = $id;
         }
         if (!$mAnggotaRombel->save($set)) return $this->fail('Data anggota rombongan belajar gagal disimpan.');
@@ -990,15 +994,8 @@ class PesertaDidik extends BaseController
             ->where('peserta_didik.peserta_didik_id', $id)
             ->first();
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
-        $mAnggotaRombel = new AnggotaRombelModel();
-        $response = $mAnggotaRombel
-            ->select(['anggota_id as id', 'rombongan_belajar.nama as rombel_nama', 'ref_kurikulum.nama as kurikulum_str', 'ref_jenis_registrasi.nama as registrasi_nama', 'tingkat_pendidikan as tingkat', 'semester.kode as semester_kode'])
-            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-            ->join('semester', 'semester.semester_id = rombongan_belajar.semester_id', 'left')
-            ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
-            ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = anggota_rombongan_belajar.jenis_registrasi_rombel', 'left')
-            ->where('peserta_didik_id', $id)->findAll();
-        return $this->respond($response);
+        $lib = new Rombel();
+        return $this->respond($lib->getDataRombelPd($id));
     }
 
     public function deleteRombel($id): ResponseInterface
