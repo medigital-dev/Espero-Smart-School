@@ -9,131 +9,137 @@
                 <label class="col-sm-3 col-form-label">Tampilkan</label>
                 <div class="col-sm-9">
                     <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="radioDt-statusPdAll" name="radioDt-statusPd" value="all" checked>
-                        <label class="form-check-label" for="radioDt-statusPdAll">
+                        <input class="form-check-input" type="radio" id="filterOffcanvas-bukuIndukPd_statusPdAll" name="status_pd" value="all" checked>
+                        <label class="form-check-label" for="filterOffcanvas-bukuIndukPd_statusPdAll">
                             Semua
                         </label>
                     </div>
                     <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="chckboxDt-statusPdAktif" name="radioDt-statusPd" value="aktif">
-                        <label class="form-check-label" for="chckboxDt-statusPdAktif">
+                        <input class="form-check-input" type="radio" id="filterOffcanvas-bukuIndukPd_statusPdAktif" name="status_pd" value="aktif">
+                        <label class="form-check-label" for="filterOffcanvas-bukuIndukPd_statusPdAktif">
                             Aktif
                         </label>
                     </div>
                     <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="chckboxDt-statusPdMutasi" name="radioDt-statusPd" value="mutasi">
-                        <label class="form-check-label" for="chckboxDt-statusPdMutasi">
+                        <input class="form-check-input" type="radio" id="filterOffcanvas-bukuIndukPd_statusPdNa" name="status_pd" value="na">
+                        <label class="form-check-label" for="filterOffcanvas-bukuIndukPd_statusPdNa">
+                            Non Aktif
+                        </label>
+                    </div>
+                    <div class="icheck-primary form-check-inline">
+                        <input class="form-check-input" type="radio" id="filterOffcanvas-bukuIndukPd_statusPdMutasi" name="status_pd" value="mutasi">
+                        <label class="form-check-label" for="filterOffcanvas-bukuIndukPd_statusPdMutasi">
                             Mutasi
                         </label>
                     </div>
                     <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="chckboxDt-statusPdChecked" name="radioDt-statusPd" value="checked">
-                        <label class="form-check-label" for="chckboxDt-statusPdChecked">
+                        <input class="form-check-input" type="radio" id="filterOffcanvas-bukuIndukPd_statusPdChecked" name="status_pd" value="checked">
+                        <label class="form-check-label" for="filterOffcanvas-bukuIndukPd_statusPdChecked">
                             Dicentang
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="selectDt-rombelPd" class="col-sm-3 col-form-label">Kelas</label>
+                <label for="filterOffcanvas-bukuIndukPd_rombelPd" class="col-sm-3 col-form-label">Kelas</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <select class="custom-select select2-getRombel" id="selectDt-rombelPd"></select>
+                        <select class="custom-select select2-getRombel" id="filterOffcanvas-bukuIndukPd_rombelPd" name="kelas"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-rombelPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_rombelPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="selectDt-tingkatRombelPd" class="col-sm-3 col-form-label">Tingkat</label>
+                <label for="filterOffcanvas-bukuIndukPd_tingkatRombelPd" class="col-sm-3 col-form-label">Tingkat</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <select class="custom-select select2" id="selectDt-tingkatRombelPd">
+                        <select class="custom-select select2" id="filterOffcanvas-bukuIndukPd_tingkatRombelPd" name="tingkat">
                             <option></option>
                             <option value="7">Tingkat 7</option>
                             <option value="8">Tingkat 8</option>
                             <option value="9">Tingkat 9</option>
                         </select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-tingkatRombelPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tingkatRombelPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-namaPd" class="col-sm-3 col-form-label">Nama</label>
+                <label for="filterOffcanvas-bukuIndukPd_namaPd" class="col-sm-3 col-form-label">Nama</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-namaPd" placeholder="Nama peserta didik">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_namaPd" name="nama" placeholder="Nama peserta didik">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-namaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_namaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-nisPd" class="col-sm-3 col-form-label">NIS</label>
+                <label for="filterOffcanvas-bukuIndukPd_nipd" class="col-sm-3 col-form-label">NIS</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-nisPd" placeholder="NIS">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_nipd" name="nipd" placeholder="NIS">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-nisPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_nipd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-nisnPd" class="col-sm-3 col-form-label">NISN</label>
+                <label for="filterOffcanvas-bukuIndukPd_nisnPd" class="col-sm-3 col-form-label">NISN</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-nisnPd" placeholder="NISN">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_nisnPd" name="nisn" placeholder="NISN">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-nisnPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_nisnPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-nikPd" class="col-sm-3 col-form-label">NIK</label>
+                <label for="filterOffcanvas-bukuIndukPd_nikPd" class="col-sm-3 col-form-label">NIK</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-nikPd" placeholder="NIK">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_nikPd" name="nik" placeholder="NIK">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-nikPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_nikPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="selectDt-agamaPd" class="col-sm-3 col-form-label">Agama</label>
+                <label for="filterOffcanvas-bukuIndukPd_-agamaPd" class="col-sm-3 col-form-label">Agama</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <select class="custom-select select2-getReferensi" data-referensi="agama" data-placeholder="Pilih jenis agama..." id="selectDt-agamaPd"></select>
+                        <select class="custom-select select2-getReferensi" data-referensi="agama" data-placeholder="Pilih jenis agama..." id="filterOffcanvas-bukuIndukPd_-agamaPd" name="agama"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-agamaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_-agamaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-namaAyahPd" class="col-sm-3 col-form-label">Ayah</label>
+                <label for="filterOffcanvas-bukuIndukPd_namaAyahPd" class="col-sm-3 col-form-label">Ayah</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-namaAyahPd" placeholder="Nama ayah">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_namaAyahPd" name="ayah" placeholder="Nama ayah">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-namaAyahPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_namaAyahPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-namaIbuPd" class="col-sm-3 col-form-label">Ibu</label>
+                <label for="filterOffcanvas-bukuIndukPd_namaIbuPd" class="col-sm-3 col-form-label">Ibu</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-namaIbuPd" placeholder="Nama ibu kandung">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_namaIbuPd" name="ibu_kandung" placeholder="Nama ibu kandung">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-namaIbuPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_namaIbuPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
@@ -141,58 +147,51 @@
             <div class="form-group row mb-2">
                 <label class="col-sm-3 col-form-label">JK</label>
                 <div class="col-sm-9">
-                    <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="radioDt-jkPdL" name="radioDt-jkPd" value="L">
-                        <label class="form-check-label" for="radioDt-jkPdL">
-                            L
+                    <div class="btn-group btn-group-toggle w-100 mb-2" data-toggle="buttons">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminAll" value="all" checked> Semua
                         </label>
-                    </div>
-                    <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="chckboxDt-jkPdP" name="radioDt-jkPd" value="P">
-                        <label class="form-check-label" for="chckboxDt-jkPdP">
-                            P
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminL" value="L"> L
                         </label>
-                    </div>
-                    <div class="icheck-primary form-check-inline">
-                        <input class="form-check-input" type="radio" id="chckboxDt-jkPdAll" name="radioDt-jkPd" value="all" checked>
-                        <label class="form-check-label" for="chckboxDt-jkPdAll">
-                            Semua
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminP" value="P"> P
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="inputDt-tempatlahirPd" class="col-sm-3 col-form-label">Tm Lhr</label>
+                <label for="filterOffcanvas-bukuIndukPd_tempatlahirPd" class="col-sm-3 col-form-label">Tm Lhr</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputDt-tempatLahirPd" placeholder="Tempat lahir">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_tempatLahirPd" name="tempat_lahir" placeholder="Tempat lahir">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tempatLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tempatLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="inputDt-tanggalLahirPd" class="col-sm-3 col-form-label">Tgl Lhr</label>
+                <label for="filterOffcanvas-bukuIndukPd_tanggalLahirPd" class="col-sm-3 col-form-label">Tgl Lhr</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control tanggal" id="inputDt-tanggalLahirLengkapPd" data-inputmask-alias="datetime" placeholder="Tanggal lengkap" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                        <div class="input-group-append" data-target="#inputDt-tanggalLahirLengkapPd" data-toggle="datetimepicker">
+                        <input type="text" class="form-control tanggal" id="filterOffcanvas-bukuIndukPd_tanggalLahirLengkapPd" data-inputmask-alias="datetime" placeholder="Tanggal lengkap" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        <div class="input-group-append" data-target="#filterOffcanvas-bukuIndukPd_tanggalLahirLengkapPd" data-toggle="datetimepicker">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tanggalLahirLengkapPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tanggalLahirLengkapPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
-                        <input type="hidden" name="tanggal">
+                        <input type="hidden" name="tanggal_lahir_lengkap">
                     </div>
                     <div class="input-group mb-2">
-                        <input type="number" class="form-control" id="inputDt-tanggalLahirPd" placeholder="Tanggal Lahir">
+                        <input type="number" class="form-control" id="filterOffcanvas-bukuIndukPd_tanggalLahirPd" name="tanggal_lahir" placeholder="Tanggal Lahir">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tanggalLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tanggalLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
-                        <select type="text" class="custom-select custom-select-sm select2" id="inputDt-bulanLahirPd" data-placeholder="Pilih Bulan">
+                        <select type="text" class="custom-select custom-select-sm select2" id="filterOffcanvas-bukuIndukPd_bulanLahirPd" name="bulan_lahir" data-placeholder="Pilih Bulan">
                             <option></option>
                             <option value="01">Januari</option>
                             <option value="02">Februari</option>
@@ -208,110 +207,121 @@
                             <option value="12">Desember</option>
                         </select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-bulanLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_bulanLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="number" class="form-control" id="inputDt-tahunLahirPd" placeholder="Tahun">
+                        <input type="number" class="form-control" id="filterOffcanvas-bukuIndukPd_tahunLahirPd" name="tahun_lahir" placeholder="Tahun">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tahunLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tahunLahirPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="inputDt-usiaPdAwal" class="col-sm-3 col-form-label">Usia</label>
+                <label for="filterOffcanvas-bukuIndukPd_usiaPdAwal" class="col-sm-3 col-form-label">Usia</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Min</span>
                         </div>
-                        <input type="number" class="form-control" id="inputDt-usiaPdAwal" placeholder="Usia minimal">
+                        <input type="number" class="form-control" id="filterOffcanvas-bukuIndukPd_usiaPdAwal" name="usia_awal" placeholder="Usia minimal">
                         <div class="input-group-append">
                             <span class="input-group-text">tahun</span>
                         </div>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-usiaPdAwal','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_usiaPdAwal','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Max</span>
                         </div>
-                        <input type="number" class="form-control" id="inputDt-usiaPdAkhir" placeholder="Usia maksimal">
+                        <input type="number" class="form-control" id="filterOffcanvas-bukuIndukPd_usiaPdAkhir" name="usia_akhir" placeholder="Usia maksimal">
                         <div class="input-group-append">
                             <span class="input-group-text">tahun</span>
                         </div>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-usiaPdAkhir','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_usiaPdAkhir','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group mb-0 row">
-                <label for="inputDt-dusunPd" class="col-sm-3 col-form-label">Alamat</label>
+                <label for="filterOffcanvas-bukuIndukPd_dusunPd" class="col-sm-3 col-form-label">Alamat</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="inputDt-dusunPd" placeholder="Nama dusun">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_dusunPd" name="dusun" placeholder="Nama dusun">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-dusunPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_dusunPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="inputDt-desaPd" placeholder="Nama desa">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_desaPd" name="desa" placeholder="Nama desa">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-desaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_desaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="inputDt-kecamatanPd" placeholder="Nama kecamatan">
+                        <input type="text" class="form-control" id="filterOffcanvas-bukuIndukPd_kecamatanPd" name="kecamatan" placeholder="Nama kecamatan">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-kecamatanPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_kecamatanPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="selectDt-jenisMutasiPd" class="col-sm-3 col-form-label">Keluar</label>
+                <label for="filterOffcanvas-bukuIndukPd_-jenisMutasiPd" class="col-sm-3 col-form-label">Keluar</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectDt-jenisMutasiPd"></select>
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." name="jenis_mutasi" id="filterOffcanvas-bukuIndukPd_-jenisMutasiPd"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-jenisMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_-jenisMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="number" class="form-control" id="inputDt-tahunMutasiPd" placeholder="Tahun Mutasi">
+                        <input type="number" class="form-control" id="filterOffcanvas-bukuIndukPd_tahunMutasiPd" placeholder="Tahun Mutasi" name="tahun_mutasi">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tahunMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tahunMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="selectDt-jenisRegistrasiPd" class="col-sm-3 col-form-label">Registrasi</label>
+                <label for="filterOffcanvas-bukuIndukPd_-jenisRegistrasiPd" class="col-sm-3 col-form-label">Registrasi</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <select class="custom-select select2-getReferensi" data-referensi="jenisRegistrasi" data-placeholder="Pilih jenis registrasi..." id="selectDt-jenisRegistrasiPd"></select>
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisRegistrasi" data-placeholder="Pilih jenis registrasi..." id="filterOffcanvas-bukuIndukPd_-jenisRegistrasiPd" name="jenis_registrasi"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-jenisRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_-jenisRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
-                        <input type="number" class="form-control" id="inputDt-tahunRegistrasiPd" placeholder="Tahun registrasi">
+                        <input type="number" class="form-control" id="filterOffcanvas-bukuIndukPd_tahunRegistrasiPd" placeholder="Tahun registrasi" name="tahun_registrasi">
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputDt-tahunRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_tahunRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-group row mb-2">
-                <label for="selectDt-agamaPd" class="col-sm-3 col-form-label">Difable</label>
+            <div class="form-group row mb-0">
+                <label for="filterOffcanvas-bukuIndukPd_-agamaPd" class="col-sm-3 col-form-label">Difabel</label>
                 <div class="col-sm-9">
-                    <div class="input-group">
-                        <select class="custom-select select2-getReferensi" data-referensi="jenisKebutuhanKhusus" data-placeholder="Pilih jenis kebutuhan khusus..." id="selectDt-difabel"></select>
+                    <div class="btn-group btn-group-toggle w-100 mb-2" data-toggle="buttons">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableAll" value="all" checked> Semua
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableTrue" value="true"> Ya
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableFalse" value="false"> Tidak
+                        </label>
+                    </div>
+                    <div class="input-group mb-2 w-100">
+                        <select class="custom-select select2-getReferensi" multiple data-referensi="jenisKebutuhanKhusus" data-placeholder="Pilih jenis difabel..." id="filterOffcanvas-bukuIndukPd_jenisDifabel" name="jenis_difabel"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectDt-difabel','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_jenisDifabel','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>

@@ -492,7 +492,9 @@
         }
 
         function resetInput(elmInput, elmDatatables = false) {
-            $(elmInput).val("").trigger("change");
+            $(elmInput).val("");
+            $(elmInput).trigger("change");
+            $(elmInput).trigger("input");
             if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
         }
 
@@ -746,6 +748,26 @@
                         config.button.children("i").removeClass().addClass(iconClass);
                 }
             }
+        }
+
+        function parseFormArray(serializedArray) {
+            const result = {};
+
+            for (const field of serializedArray) {
+                const name = field.name.replace(/\[\]$/, '');
+                const value = field.value;
+
+                if (result[name]) {
+                    if (!Array.isArray(result[name])) {
+                        result[name] = [result[name]];
+                    }
+                    result[name].push(value);
+                } else {
+                    result[name] = value;
+                }
+            }
+
+            return result;
         }
     </script>
     <!-- end functions -->
@@ -1091,31 +1113,10 @@
                     url: "/api/v0/datatables/bukuInduk/pd",
                     data: (d) => {
                         d.ids = selectedRows;
-                        d.status_pd = $('[name="radioDt-statusPd"]:checked').val();
-                        d.kelas = $('#selectDt-rombelPd').val();
-                        d.tingkat = $('#selectDt-tingkatRombelPd').val();
-                        d.nama = $('#inputDt-namaPd').val();
-                        d.nipd = $('#inputDt-nisPd').val();
-                        d.nisn = $('#inputDt-nisnPd').val();
-                        d.nik = $('#inputDt-nikPd').val();
-                        d.agama = $('#selectDt-agamaPd').val();
-                        d.ayah = $('#inputDt-namaAyahPd').val();
-                        d.ibu_kandung = $('#inputDt-namaIbuPd').val();
-                        d.jk = $('[name="radioDt-jkPd"]:checked').val();
-                        d.tempat_lahir = $('#inputDt-tempatLahirPd').val();
-                        d.tanggal_lahir_lengkap = $('#inputDt-tanggalLahirLengkapPd').val();
-                        d.tanggal_lahir = $('#inputDt-tanggalLahirPd').val();
-                        d.bulan_lahir = $('#inputDt-bulanLahirPd').val();
-                        d.tahun_lahir = $('#inputDt-tahunLahirPd').val();
-                        d.usia_awal = $('#inputDt-usiaPdAwal').val();
-                        d.usia_akhir = $('#inputDt-usiaPdAkhir').val();
-                        d.dusun = $('#inputDt-dusunPd').val();
-                        d.desa = $('#inputDt-desaPd').val();
-                        d.kecamatan = $('#inputDt-kecamatanPd').val();
-                        d.jenis_mutasi = $('#selectDt-jenisMutasiPd').val();
-                        d.tahun_mutasi = $('#inputDt-tahunMutasiPd').val();
-                        d.jenis_registrasi = $('#selectDt-jenisRegistrasiPd').val();
-                        d.tahun_registrasi = $('#inputDt-tahunRegistrasiPd').val();
+                        const formData = $('#formDt-filterPd').serializeArray();
+                        formData.forEach(field => {
+                            d[field.name] = field.value;
+                        });
                     }
                 },
                 language: {

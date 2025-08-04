@@ -194,14 +194,15 @@ class DataPesertaDidik
                     ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
                     ->where('semester.status', true)
                     ->where('mutasi_pd.id');
-            } else if ($status_pd == 'mutasi') $this->query->where('mutasi_pd.id !=');
-            else if ($status_pd == 'checked') {
+            } else if ($status_pd == 'mutasi') {
+                $this->query->where('mutasi_pd.id !=');
+            } else if ($status_pd == 'checked') {
                 foreach ($ids as $id) {
                     $this->query->orWhere('peserta_didik.peserta_didik_id', $id);
                 }
             }
         }
-        if ($nik) $this->query->where('peserta_didik.nik', $nik);
+        if ($nik) $this->query->like('peserta_didik.nik', $nik);
         if ($jenis_mutasi) $this->query->where('mutasi_pd.jenis', $jenis_mutasi);
         if ($tahun_mutasi) $this->query->where('YEAR(mutasi_pd.tanggal)', $tahun_mutasi);
         if ($jenis_registrasi) $this->query->where('registrasi_peserta_didik.jenis_registrasi', $jenis_registrasi);

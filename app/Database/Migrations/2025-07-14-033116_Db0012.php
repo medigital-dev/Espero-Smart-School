@@ -21,6 +21,7 @@ class Db0012 extends Migration
         $this->forge->dropColumn('kebutuhan_khusus', ['tanggal_mulai', 'tanggal_akhir']);
 
         $db = $this->db->table('ref_kebutuhan_khusus');
+        $db->emptyTable();
         $date = date('Y-m-d H:i:s');
         $db->insertBatch([
             [
