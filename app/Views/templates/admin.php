@@ -498,6 +498,49 @@
             if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
         }
 
+        function resetInput2(containerSelector, elmDatatables = false) {
+            const container = $(containerSelector);
+
+            container.find('input, select, textarea').each(function() {
+                const elm = $(this);
+                const type = elm.attr('type');
+                const tag = elm.prop('tagName').toLowerCase();
+
+                // 1. Checkbox & Radio
+                if (type === 'checkbox' || type === 'radio') {
+                    elm.prop('checked', false).trigger('change');
+
+                    // 2. Select / Select2
+                } else if (tag === 'select') {
+                    if (elm.hasClass('select2-hidden-accessible')) {
+                        elm.val(null).trigger('change'); // for Select2
+                    } else {
+                        elm.val('').trigger('change');
+                    }
+
+                    // 3. Input & Textarea
+                } else if (tag === 'textarea' || tag === 'input') {
+                    elm.val('').trigger('input').trigger('change');
+
+                    // Jika ada datepicker
+                    elm.trigger('change.datetimepicker'); // Tempus Dominus
+                    elm.datepicker?.('update', ''); // Bootstrap-datepicker (jika ada)
+                }
+
+                // 4. Hilangkan class 'active' pada label terdekat jika ada
+                const label = elm.closest('label');
+                if (label.length) {
+                    label.removeClass('active');
+                }
+            });
+
+            // 5. Reload DataTables jika diberikan
+            if (elmDatatables !== false) {
+                $(elmDatatables).DataTable().ajax.reload();
+            }
+        }
+
+
         function tanggal(isoDate, format = "d-m-Y") {
             if (!isoDate) return "";
 
@@ -1327,6 +1370,7 @@
             });
 
             $('.tanggal').on('change.datetimepicker', e => $(e.target).siblings('input:hidden').val(e.date ? e.date.format('YYYY-MM-DD') : ''));
+            $('.tanggal').trigger('input').trigger('change');
 
             $('#tabsIdentitas-photoProfil').on('change', function() {
                 const prevElm = $('#previewPassfoto');

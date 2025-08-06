@@ -476,7 +476,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsTambahBeasiswa-satuan" class="small mb-1">Satuan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="satuan" data-tags="true" id="tabsTambahBeasiswa-satuan" name="satuan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="satuan" data-tags="true" id="tabsTambahBeasiswa-satuan" name="satuan_id"></select>
                                     </div>
                                 </form>
                                 <hr>
@@ -523,7 +523,7 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsIdentitas-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIdentitas-jenisKelamin" name="jenis_kelamin"></select>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIdentitas-jenisKelamin" name="jenis_kelamin"></select>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-tempatLahir">Tempat Lahir</label>
@@ -541,7 +541,7 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsIdentitas-agama" class="small mb-1">Agama</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIdentitas-agama" name="agama_id"></select>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="agama" id="tabsIdentitas-agama" name="agama_id"></select>
                             </div>
                             <div class="form-group mb-2">
                                 <label class="small mb-1" for="tabsIdentitas-nisn" aria-describedby="nisnHelp">NISN</label>
@@ -708,11 +708,11 @@
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsAlamat-jenisTinggal" class="small mb-1">Jenis Tinggal</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisTinggal" id="tabsAlamat-jenisTinggal" name="jenis_tinggal_id" data-tags="true"></select>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisTinggal" id="tabsAlamat-jenisTinggal" name="jenis_tinggal_id" data-tags="true"></select>
                             </div>
                             <div class="form-group mb-2">
                                 <label for="tabsAlamat-alatTransportasi" class="small mb-1">Alat Transportasi</label>
-                                <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="alatTransportasi" id="tabsAlamat-alatTransportasi" name="alat_transportasi_id" data-tags="true"></select>
+                                <select class="custom-select mb-2 select2-getReferensi" data-referensi="alatTransportasi" id="tabsAlamat-alatTransportasi" name="alat_transportasi_id" data-tags="true"></select>
                             </div>
                         </form>
                     </div>
@@ -747,7 +747,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsAyah-jenisKelamin" name="jenis_kelamin"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsAyah-jenisKelamin" name="jenis_kelamin"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-tempatLahir" class="small mb-1">Tempat Lahir</label>
@@ -769,19 +769,19 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-agama" class="small mb-1">Agama</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsAyah-agama" name="agama_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="agama" id="tabsAyah-agama" name="agama_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-pendidikan" class="small mb-1">Pendidikan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsAyah-pendidikan" name="pendidikan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsAyah-pendidikan" name="pendidikan_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-pekerjaan" class="small mb-1">Pekerjaan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsAyah-pekerjaan" name="pekerjaan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsAyah-pekerjaan" name="pekerjaan_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsAyah-penghasilan" class="small mb-1">Penghasilan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsAyah-penghasilan" name="penghasilan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsAyah-penghasilan" name="penghasilan_id"></select>
                                     </div>
                                     <hr>
                                     <div class="d-flex justify-content-between mb-2">
@@ -799,7 +799,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIbu-jenisKelamin" name="jenis_kelamin"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsIbu-jenisKelamin" name="jenis_kelamin"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-tempatLahir" class="small mb-1">Tempat Lahir</label>
@@ -821,19 +821,19 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-agama" class="small mb-1">Agama</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsIbu-agama" name="agama_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="agama" id="tabsIbu-agama" name="agama_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-pendidikan" class="small mb-1">Pendidikan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsIbu-pendidikan" name="pendidikan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsIbu-pendidikan" name="pendidikan_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-pekerjaan" class="small mb-1">Pekerjaan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsIbu-pekerjaan" name="pekerjaan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsIbu-pekerjaan" name="pekerjaan_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsIbu-penghasilan" class="small mb-1">Penghasilan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsIbu-penghasilan" name="penghasilan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsIbu-penghasilan" name="penghasilan_id"></select>
                                     </div>
                                     <hr>
                                     <div class="d-flex justify-content-between mb-2">
@@ -851,7 +851,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-jenisKelamin" class="small mb-1">Jenis Kelamin</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsWali-jenisKelamin" name="jenis_kelamin"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="jenisKelamin" id="tabsWali-jenisKelamin" name="jenis_kelamin"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-tempatLahir" class="small mb-1">Tempat Lahir</label>
@@ -873,19 +873,19 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-agama" class="small mb-1">Agama</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="agama" id="tabsWali-agama" name="agama_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="agama" id="tabsWali-agama" name="agama_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-pendidikan" class="small mb-1">Pendidikan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsWali-pendidikan" name="pendidikan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="pendidikan" id="tabsWali-pendidikan" name="pendidikan_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-pekerjaan" class="small mb-1">Pekerjaan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsWali-pekerjaan" name="pekerjaan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="pekerjaan" id="tabsWali-pekerjaan" name="pekerjaan_id"></select>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="tabsWali-penghasilan" class="small mb-1">Penghasilan</label>
-                                        <select class="custom-select select2 mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsWali-penghasilan" name="penghasilan_id"></select>
+                                        <select class="custom-select mb-2 select2-getReferensi" data-referensi="penghasilan" id="tabsWali-penghasilan" name="penghasilan_id"></select>
                                     </div>
                                     <hr>
                                     <div class="d-flex justify-content-between mb-2">

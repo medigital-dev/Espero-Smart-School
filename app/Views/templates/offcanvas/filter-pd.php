@@ -148,15 +148,15 @@
                 <label class="col-sm-3 col-form-label">JK</label>
                 <div class="col-sm-9">
                     <div class="btn-group btn-group-toggle w-100 mb-2" data-toggle="buttons">
-                        <label class="btn btn-outline-secondary active">
-                            <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminAll" value="all" checked> Semua
-                        </label>
                         <label class="btn btn-outline-secondary">
                             <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminL" value="L"> L
                         </label>
                         <label class="btn btn-outline-secondary">
                             <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminP" value="P"> P
                         </label>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput2(`#formDt-filterPd[name='jk']`,'#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -307,16 +307,18 @@
             <div class="form-group row mb-0">
                 <label for="filterOffcanvas-bukuIndukPd_-agamaPd" class="col-sm-3 col-form-label">Difabel</label>
                 <div class="col-sm-9">
-                    <div class="btn-group btn-group-toggle w-100 mb-2" data-toggle="buttons">
-                        <label class="btn btn-outline-secondary active">
-                            <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableAll" value="all" checked> Semua
-                        </label>
-                        <label class="btn btn-outline-secondary">
-                            <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableTrue" value="true"> Ya
-                        </label>
-                        <label class="btn btn-outline-secondary">
-                            <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableFalse" value="false"> Tidak
-                        </label>
+                    <div class="input-group mb-2">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary">
+                                <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableTrue" value="true"> Ya
+                            </label>
+                            <label class="btn btn-outline-secondary">
+                                <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableFalse" value="false"> Tidak
+                            </label>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput2('#formDt-filterPd[name=`status_difabel`]','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="input-group mb-2 w-100">
                         <select class="custom-select select2-getReferensi" multiple data-referensi="jenisKebutuhanKhusus" data-placeholder="Pilih jenis difabel..." id="filterOffcanvas-bukuIndukPd_jenisDifabel" name="jenis_difabel"></select>
