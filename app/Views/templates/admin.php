@@ -498,49 +498,6 @@
             if (elmDatatables !== false) $(elmDatatables).DataTable().ajax.reload();
         }
 
-        function resetInput2(containerSelector, elmDatatables = false) {
-            const container = $(containerSelector);
-
-            container.find('input, select, textarea').each(function() {
-                const elm = $(this);
-                const type = elm.attr('type');
-                const tag = elm.prop('tagName').toLowerCase();
-
-                // 1. Checkbox & Radio
-                if (type === 'checkbox' || type === 'radio') {
-                    elm.prop('checked', false).trigger('change');
-
-                    // 2. Select / Select2
-                } else if (tag === 'select') {
-                    if (elm.hasClass('select2-hidden-accessible')) {
-                        elm.val(null).trigger('change'); // for Select2
-                    } else {
-                        elm.val('').trigger('change');
-                    }
-
-                    // 3. Input & Textarea
-                } else if (tag === 'textarea' || tag === 'input') {
-                    elm.val('').trigger('input').trigger('change');
-
-                    // Jika ada datepicker
-                    elm.trigger('change.datetimepicker'); // Tempus Dominus
-                    elm.datepicker?.('update', ''); // Bootstrap-datepicker (jika ada)
-                }
-
-                // 4. Hilangkan class 'active' pada label terdekat jika ada
-                const label = elm.closest('label');
-                if (label.length) {
-                    label.removeClass('active');
-                }
-            });
-
-            // 5. Reload DataTables jika diberikan
-            if (elmDatatables !== false) {
-                $(elmDatatables).DataTable().ajax.reload();
-            }
-        }
-
-
         function tanggal(isoDate, format = "d-m-Y") {
             if (!isoDate) return "";
 
@@ -797,12 +754,13 @@
             const result = {};
 
             for (const field of serializedArray) {
+                const isArrayField = /\[\]$/.test(field.name);
                 const name = field.name.replace(/\[\]$/, '');
                 const value = field.value;
 
-                if (result[name]) {
-                    if (!Array.isArray(result[name])) {
-                        result[name] = [result[name]];
+                if (isArrayField) {
+                    if (!result[name]) {
+                        result[name] = [];
                     }
                     result[name].push(value);
                 } else {
@@ -1156,10 +1114,8 @@
                     url: "/api/v0/datatables/bukuInduk/pd",
                     data: (d) => {
                         d.ids = selectedRows;
-                        const formData = $('#formDt-filterPd').serializeArray();
-                        formData.forEach(field => {
-                            d[field.name] = field.value;
-                        });
+                        const rawData = $('#formDt-filterPd').serializeArray();
+                        return Object.assign(d, parseFormArray(rawData));
                     }
                 },
                 language: {

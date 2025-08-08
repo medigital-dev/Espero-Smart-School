@@ -112,12 +112,12 @@
                 </div>
             </div>
             <div class="form-group row mb-2">
-                <label for="filterOffcanvas-bukuIndukPd_-agamaPd" class="col-sm-3 col-form-label">Agama</label>
+                <label for="filterOffcanvas-bukuIndukPd_agamaPd" class="col-sm-3 col-form-label">Agama</label>
                 <div class="col-sm-9">
                     <div class="input-group">
-                        <select class="custom-select select2-getReferensi" data-referensi="agama" data-placeholder="Pilih jenis agama..." id="filterOffcanvas-bukuIndukPd_-agamaPd" name="agama"></select>
+                        <select class="custom-select select2-getReferensi" data-referensi="agama" data-placeholder="Pilih jenis agama..." id="filterOffcanvas-bukuIndukPd_agamaPd" name="agama"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_-agamaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_agamaPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
@@ -147,15 +147,10 @@
             <div class="form-group row mb-2">
                 <label class="col-sm-3 col-form-label">JK</label>
                 <div class="col-sm-9">
-                    <div class="btn-group btn-group-toggle w-100 mb-2" data-toggle="buttons">
-                        <label class="btn btn-outline-secondary">
-                            <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminL" value="L"> L
-                        </label>
-                        <label class="btn btn-outline-secondary">
-                            <input type="radio" name="jk" id="filterOffcanvas-bukuIndukPd_jenisKelaminP" value="P"> P
-                        </label>
+                    <div class="input-group">
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisKelamin" data-placeholder="Pilih jenis kelamin..." id="filterOffcanvas-bukuIndukPd_jenisKelamin" name="jk"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput2(`#formDt-filterPd[name='jk']`,'#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_jenisKelamin','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                 </div>
@@ -271,12 +266,12 @@
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="filterOffcanvas-bukuIndukPd_-jenisMutasiPd" class="col-sm-3 col-form-label">Keluar</label>
+                <label for="filterOffcanvas-bukuIndukPd_jenisMutasiPd" class="col-sm-3 col-form-label">Keluar</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." name="jenis_mutasi" id="filterOffcanvas-bukuIndukPd_-jenisMutasiPd"></select>
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." name="jenis_mutasi" id="filterOffcanvas-bukuIndukPd_jenisMutasiPd"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_-jenisMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_jenisMutasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
@@ -288,12 +283,12 @@
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="filterOffcanvas-bukuIndukPd_-jenisRegistrasiPd" class="col-sm-3 col-form-label">Registrasi</label>
+                <label for="filterOffcanvas-bukuIndukPd_jenisRegistrasiPd" class="col-sm-3 col-form-label">Registrasi</label>
                 <div class="col-sm-9">
                     <div class="input-group mb-2">
-                        <select class="custom-select select2-getReferensi" data-referensi="jenisRegistrasi" data-placeholder="Pilih jenis registrasi..." id="filterOffcanvas-bukuIndukPd_-jenisRegistrasiPd" name="jenis_registrasi"></select>
+                        <select class="custom-select select2-getReferensi" data-referensi="jenisRegistrasi" data-placeholder="Pilih jenis registrasi..." id="filterOffcanvas-bukuIndukPd_jenisRegistrasiPd" name="jenis_registrasi"></select>
                         <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_-jenisRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_jenisRegistrasiPd','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>
                     </div>
                     <div class="input-group mb-2">
@@ -305,23 +300,10 @@
                 </div>
             </div>
             <div class="form-group row mb-0">
-                <label for="filterOffcanvas-bukuIndukPd_-agamaPd" class="col-sm-3 col-form-label">Difabel</label>
+                <label for="filterOffcanvas-bukuIndukPd_statusDifabel" class="col-sm-3 col-form-label">Difabel</label>
                 <div class="col-sm-9">
-                    <div class="input-group mb-2">
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-secondary">
-                                <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableTrue" value="true"> Ya
-                            </label>
-                            <label class="btn btn-outline-secondary">
-                                <input type="radio" name="status_difabel" id="filterOffcanvas-bukuIndukPd_statusDifableFalse" value="false"> Tidak
-                            </label>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput2('#formDt-filterPd[name=`status_difabel`]','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
-                            </div>
-                        </div>
-                    </div>
                     <div class="input-group mb-2 w-100">
-                        <select class="custom-select select2-getReferensi" multiple data-referensi="jenisKebutuhanKhusus" data-placeholder="Pilih jenis difabel..." id="filterOffcanvas-bukuIndukPd_jenisDifabel" name="jenis_difabel"></select>
+                        <select class="custom-select select2-getReferensi" multiple data-referensi="jenisKebutuhanKhusus" data-placeholder="Pilih jenis difabel..." id="filterOffcanvas-bukuIndukPd_jenisDifabel" name="jenis_difabel[]"></select>
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#filterOffcanvas-bukuIndukPd_jenisDifabel','#dtPublic-pesertaDidik');"><i class="fas fa-eraser"></i></button>
                         </div>

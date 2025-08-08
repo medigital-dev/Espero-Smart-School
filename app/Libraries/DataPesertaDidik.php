@@ -28,6 +28,7 @@ class DataPesertaDidik
         $this->model = new PesertaDidikModel();
         $this->query = $this->model;
         $this->joinTable();
+        $this->countAll = $this->query->countAllResults(false);
     }
 
     private function joinTable()
@@ -70,7 +71,7 @@ class DataPesertaDidik
         $this->columns = $this->request->getPost('columns');
         $this->orders = $this->request->getPost('order') ?? [];
         $this->filter = [];
-        $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
+        // $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         $this->query
             ->groupStart()
             ->like('peserta_didik.nama', $this->searchValue)
@@ -99,6 +100,7 @@ class DataPesertaDidik
             'recordsTotal' => $this->countAll,
             'recordsFiltered' => $this->countFiltered,
             'data' => $this->query->findAll($this->length, $this->start),
+            '_post' => $this->request->getVar()
         ];
     }
 
@@ -153,6 +155,7 @@ class DataPesertaDidik
 
     public function withFilter()
     {
+        // $this->countAll = $this->query->countAllResults(false);
         $keyword = $this->request->getVar('key');
         $ids = $this->request->getVar('ids') ?? [''];
         $status_pd = $this->request->getVar('status_pd');
@@ -180,6 +183,7 @@ class DataPesertaDidik
         $jenis_registrasi = $this->request->getVar('jenis_registrasi');
         $tahun_registrasi = $this->request->getVar('tahun_registrasi');
         $kelas = $this->request->getVar('kelas');
+        $jenis_difabel = $this->request->getVar('jenis_difabel');
         if ($kelas) {
             $this->query
                 ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
@@ -220,7 +224,7 @@ class DataPesertaDidik
         if ($ayah) $this->query->like('ayah.nama', $ayah);
         if ($nipd) $this->query->like('nipd', $nipd);
         if ($nisn) $this->query->like('nisn', $nisn);
-        if ($jk && $jk !== 'all') $this->query->where('ref_jenis_kelamin.kode', $jk);
+        if ($jk) $this->query->where('ref_jenis_kelamin.ref_id', $jk);
         if ($tempat_lahir) $this->query->like('peserta_didik.tempat_lahir', $tempat_lahir);
         if ($tanggal_lahir_lengkap) {
             $setTagl = date_create_from_format('d/m/Y', $tanggal_lahir_lengkap);
@@ -257,6 +261,15 @@ class DataPesertaDidik
                 ->groupEnd();
         }
         if ($agama) $this->query->where('ref_agama.ref_id', $agama);
+        if ($jenis_difabel) {
+            $this->query->join('kebutuhan_khusus', 'kebutuhan_khusus.nik = peserta_didik.nik', 'left');
+            foreach ($jenis_difabel as $i => $row) {
+                if ($i == 0)
+                    $this->query->where('kebutuhan_khusus.ref_id', $row);
+                else
+                    $this->query->orWhere('kebutuhan_khusus.ref_id', $row);
+            }
+        }
         $this->countFiltered = $this->query->countAllResults(false);
         return $this;
     }
