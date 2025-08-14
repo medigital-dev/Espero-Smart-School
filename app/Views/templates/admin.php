@@ -1284,7 +1284,7 @@
                         $('.idPd').attr('data-id', id);
                         $('#detailPd-id').val(id);
                         $('#tabsProfile-nama, #offcanvasEdit-dataPd .offcanvas-header h5').text(respData.nama);
-                        $('#tabsProfile-jk').text(respData.jenis_kelamin);
+                        $('#tabsProfile-jk').text(respData.jenis_kelamin_nama);
                         $('#tabsProfile-tempatLahir').text(respData.tempat_lahir);
                         $('#tabsProfile-tanggalLahir').text(tanggal(respData.tanggal_lahir, 'd mmmm Y'));
                         $('#tabsProfile-nisn').text(respData.nisn);

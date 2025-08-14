@@ -3,6 +3,7 @@
 namespace App\Controllers\Api\BukuInduk;
 
 use App\Controllers\BaseController;
+use App\Libraries\baseData\Pesertadidik as BaseDataPesertadidik;
 use App\Libraries\baseData\Rombel;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
@@ -37,7 +38,7 @@ class PesertaDidik extends BaseController
 
     public function __construct()
     {
-        helper(['indonesia', 'string', 'files']);
+        helper(['indonesia', 'string', 'files', 'peserta_didik']);
         $this->baseData = new DataPesertaDidik();
         $this->mPesertaDidik = new PesertaDidikModel();
     }
@@ -45,29 +46,19 @@ class PesertaDidik extends BaseController
     public function showProfil($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $this->baseData->select([
+        $select = [
             'peserta_didik.nama',
             'nisn',
-            'nipd',
-            'peserta_didik.peserta_didik_id',
-            'peserta_didik.nik',
-            'peserta_didik.tanggal_lahir as tanggal_lahir',
-            'peserta_didik.tempat_lahir as tempat_lahir',
-            'ibu.nama as ibu',
-            'kontak.hp',
-            'alamat_tinggal.dusun',
-            'alamat_tinggal.rt',
-            'alamat_tinggal.rw',
-            'alamat_tinggal.desa',
-            'alamat_tinggal.kecamatan',
-            'pass_foto.path as foto_src',
-            'ref_jenis_mutasi.nama as jenis_mutasi',
-            'ref_jenis_kelamin.nama as jenis_kelamin',
-        ]);
-        $res = $this->baseData->find($id);
-        $lib = new Rombel();
-        $res['rombel_nama'] = $lib->rombel($res['peserta_didik_id']);
-        return $this->respond($res);
+            'nik',
+            'tempat_lahir',
+            'tanggal_lahir',
+            'ref_jenis_kelamin.nama as jenis_kelamin_nama'
+        ];
+        $pd = getPd($id, $select);
+        if (!$pd) return $this->fail('Peserta didik tidak ditemukan');
+        $pd['rombel'] = rombel($id);
+        $pd['nipd'] = nis($id);
+        return $this->respond($pd);
     }
 
     public function showIdentitas($id): ResponseInterface

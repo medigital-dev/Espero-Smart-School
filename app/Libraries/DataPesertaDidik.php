@@ -71,7 +71,6 @@ class DataPesertaDidik
         $this->columns = $this->request->getPost('columns');
         $this->orders = $this->request->getPost('order') ?? [];
         $this->filter = [];
-        // $this->countAll = $this->countFiltered = $this->query->countAllResults(false);
         $this->query
             ->groupStart()
             ->like('peserta_didik.nama', $this->searchValue)
@@ -155,7 +154,6 @@ class DataPesertaDidik
 
     public function withFilter()
     {
-        // $this->countAll = $this->query->countAllResults(false);
         $keyword = $this->request->getVar('key');
         $ids = $this->request->getVar('ids') ?? [''];
         $status_pd = $this->request->getVar('status_pd');

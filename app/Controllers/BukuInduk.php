@@ -15,7 +15,7 @@ class BukuInduk extends BaseController
 
     public function __construct()
     {
-        helper(['indonesia', 'files', 'string', 'referensi']);
+        helper(['indonesia', 'files', 'string', 'referensi', 'peserta_didik']);
     }
 
     public function pesertaDidik(): string
