@@ -4,9 +4,9 @@ namespace App\Libraries\baseData;
 
 use App\Models\PesertaDidikModel;
 
-class Pesertadidik
+class PesertaDidik
 {
-    public function getPd(string|bool|null $idOrStatus = null, array|string $select = '*'): array|null|false
+    public function get(string|bool|null $idOrStatus = null, array|string $select = '*'): array|null|false
     {
         $model = new PesertaDidikModel();
         $model->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
@@ -66,20 +66,20 @@ class Pesertadidik
         return $model->findAll();
     }
 
-    public function cariPd(string $keyword, array|string $select = '*'): array
+    public function search(string $keyword, array|string $select = '*'): array
     {
         $model = new PesertaDidikModel();
-        $model
-            ->select([
-                'peserta_didik.peserta_didik_id',
-                'peserta_didik.nama',
-                'nisn',
-                'nik'
-            ]);
 
         if ($select !== '*') {
             $model->select($select);
-        }
+        } else
+            $model
+                ->select([
+                    'peserta_didik.peserta_didik_id',
+                    'peserta_didik.nama',
+                    'nisn',
+                    'nik'
+                ]);
 
         $caseSql = "
         CASE 

@@ -1292,7 +1292,7 @@
                         $('#tabsProfile-nik').text(respData.nik);
                         $('#tabsProfile-ibu').text(respData.ibu);
                         $('#tabsProfile-hp').text(respData.hp);
-                        $('#tabsProfile-alamat').text(respData.dusun + ' ' + respData.rt + '/' + respData.rw + ', ' + respData.desa + ', ' + respData.kecamatan);
+                        $('#tabsProfile-alamat').text(respData.alamat);
                         if (respData.jenis_mutasi)
                             $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
                         else
@@ -1303,6 +1303,30 @@
                         } else {
                             $('#tabsProfile-foto a, .photo-profile a').attr('href', '/assets/img/users/_default.png');
                             $('#tabsProfile-foto img, .photo-profile img').attr('src', '/assets/img/users/_default.png');
+                        }
+                        if (respData.maps) {
+                            const elm = $('#tabsProfile-maps');
+                            elm.height(200).html('');
+                            const latitude = respData.maps.lintang;
+                            const longitude = respData.maps.bujur;
+
+                            if (window.map) {
+                                window.map.remove(); // hapus map sebelumnya
+                                window.map = null;
+                            }
+
+                            window.map = L.map('tabsProfile-maps').setView([latitude, longitude], 15);
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 18,
+                            }).addTo(window.map);
+
+                            L.marker([latitude, longitude]).addTo(window.map);
+                        } else {
+                            if (window.map) {
+                                window.map.remove();
+                                window.map = null;
+                            }
+                            $('#tabsProfile-maps').height('auto').html('<div class="text-muted text-center py-2 border bg-secondary">Koordinat tidak tersedia</div>');
                         }
                     }
                     offcanvasElm.find('.overlay').addClass('d-none');

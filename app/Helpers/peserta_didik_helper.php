@@ -1,6 +1,9 @@
 <?php
 
-use App\Libraries\baseData\Pesertadidik;
+use App\Libraries\baseData\Alamat;
+use App\Libraries\baseData\Kontak;
+use App\Libraries\baseData\OrangtuaWali;
+use App\Libraries\baseData\PesertaDidik;
 use App\Libraries\baseData\RegistrasiPd;
 use App\Libraries\baseData\Rombel;
 
@@ -14,14 +17,14 @@ if (!function_exists('cariPd')) {
      */
     function cariPd(string $key, string|array $select = '*'): array|null
     {
-        $libPd = new Pesertadidik();
-        return $libPd->cariPd($key, $select);
+        $libPd = new PesertaDidik();
+        return $libPd->search($key, $select);
     }
 }
 
 if (!function_exists('getPd')) {
     /**
-     * Fungsi untuk memperoleh data peserta didik
+     * Fungsi untuk menampilkan data peserta didik
      * @param string|bool|null $idOrStatus ID atau status peserta didik.
      * 
      * Default null untuk semua peserta didik. 
@@ -36,14 +39,14 @@ if (!function_exists('getPd')) {
      */
     function getPd(string|bool|null $idOrStatus = null, array|string $select = '*'): array|null|false
     {
-        $libPd = new Pesertadidik();
-        return $libPd->getPd($idOrStatus, $select);
+        $libPd = new PesertaDidik();
+        return $libPd->get($idOrStatus, $select);
     }
 }
 
 if (!function_exists('rombelPd')) {
     /**
-     * Pencarian data rombongan belajar peserta didik
+     * Fungsi menampilkan data rombongan belajar peserta didik
      * @param string $id Id unik peserta didik
      * @param boolean $aktif Status rombongan belajar peserta didik
      * @return array Data rombongan belajar peserta didik
@@ -58,7 +61,7 @@ if (!function_exists('rombelPd')) {
 
 if (!function_exists('rombel')) {
     /**
-     * Fungsi mencari nama rombongan belajar aktif
+     * Fungsi menampilkan nama rombongan belajar aktif
      * @param string $id Id Peserta Didik
      * @return string Nama rombongan belajar
      * @return null Jika tidak ditemukan
@@ -72,7 +75,7 @@ if (!function_exists('rombel')) {
 
 if (!function_exists('nis')) {
     /**
-     * Fungsi mencari Nomor Induk Siswa (NIS)
+     * Fungsi menampilkan Nomor Induk Siswa (NIS)
      * @param string $id Id Peserta Didik
      * @return string Nomor Induk Siswa (NIS)
      * @return null Jika tidak ditemukan
@@ -80,6 +83,100 @@ if (!function_exists('nis')) {
     function nis(string $id): string|null
     {
         $libRegistrasi = new RegistrasiPd();
-        return $libRegistrasi->nis($id);
+        $res = $libRegistrasi->get($id, ['nipd']);
+        return $res ? $res[0]['nipd'] : null;
+    }
+}
+
+if (!function_exists('hp')) {
+    /**
+     * Fungsi menampilkan nomor HP
+     * @param string $nik Keyword menggunakan Nomor Induk Kependudukan (NIK)
+     * @return string Nomor HP
+     * @return null Jika tidak ditemukan
+     */
+    function hp(string $nik): string|null
+    {
+        $libKontak = new Kontak();
+        $result = $libKontak->get($nik, ['hp']);
+        return $result['hp'] ?? null;
+    }
+}
+
+if (!function_exists('alamat')) {
+    /**
+     * Fungsi menampilkan alamat singkat
+     * @param string $nik Keyword menggunakan Nomor Induk Kependudukan (NIK)
+     * @return string Alamat singkat: Dusun RT RW, Desa, Kecamatan, Kabupaten, Provinsi
+     * @return null Jika tidak ditemukan
+     */
+    function alamat(string $nik): string|null
+    {
+        $libAlamat = new Alamat();
+        $result = $libAlamat->get($nik, ['dusun', 'rt', 'rw', 'desa', 'kecamatan']);
+        if ($result) {
+            $str = $result['dusun'] . ' RT ' . $result['rt'] . ' RW ' . $result['rw'] . ', ' . $result['desa'] . ', ' . $result['kecamatan'];
+            return $str;
+        } else return null;
+    }
+}
+
+if (!function_exists('maps')) {
+    /**
+     * Fungsi untuk menampilkan koordinat tempat tinggal
+     * @param string $nik Keyword menggunakan Nomor Induk Kependudukan (NIK)
+     * @return array Titik koordinat dalam bentuk array log, lat
+     * @return null Jika tidak ditemukan
+     */
+    function maps(string $nik): array|null
+    {
+        $libAlamat = new Alamat();
+        $res = $libAlamat->get($nik, ['lintang', 'bujur']);
+        return $res;
+    }
+}
+
+if (!function_exists('ortuwaliPd')) {
+    /**
+     * Fungsi menampilkan orangtua/wali peserta didik
+     * @param string|null $id Id peserta didik. Default null untuk semua data
+     * @param string|array $select Data yang akan ditampilkan. Default '*' untuk semua data
+     * @return array Data orangtua/wali peserta didik
+     * @return null Jika tidak ditemukan
+     */
+    function ortuwaliPd(string|null $id, string|array $select = '*'): array|null
+    {
+        $libOrtuwali = new OrangtuaWali();
+        return $libOrtuwali->get($id, $select);
+    }
+}
+
+if (!function_exists('ibuPd')) {
+    /**
+     * Fungsi menampilkan nama ibu peserta didik
+     * @param string $id Id peserta didik
+     * @return string Nama ibu peserta didik
+     * @return null Jika tidak ditemukan
+     */
+    function ibuPd($id): string|null
+    {
+        $libOrtuwali = new OrangtuaWali();
+        $res = $libOrtuwali->get($id, 'ibu.nama as ibu');
+        return $res['ibu'] ?? null;
+    }
+}
+
+if (!function_exists('ayahPd')) {
+    /**
+     * Fungsi menampilkan nama ibu peserta didik
+     * @param string $id Id peserta didik
+     * @return string Nama ibu peserta didik
+     * @return null Jika tidak ditemukan
+     */
+    function ayahPd($id): string|null
+    {
+        $libOrtuwali = new OrangtuaWali();
+        $res = $libOrtuwali->get($id, 'ayah.nama as ayah');
+        return $res['ayah'] ?? null;
     }
 }

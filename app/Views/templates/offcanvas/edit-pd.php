@@ -624,6 +624,10 @@
                                 <p class="text-bold mb-0 small">Alamat</p>
                                 <a class="" id="tabsProfile-alamat"></a>
                             </li>
+                            <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Maps</p>
+                                <div class="" id="tabsProfile-maps"></div>
+                            </li>
                         </ul>
                     </div>
                     <div class="tab-pane fade" id="tabs-alamat" role="tabpanel" aria-labelledby="tabs-alamat-tab">

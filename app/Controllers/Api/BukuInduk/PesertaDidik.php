@@ -52,12 +52,17 @@ class PesertaDidik extends BaseController
             'nik',
             'tempat_lahir',
             'tanggal_lahir',
-            'ref_jenis_kelamin.nama as jenis_kelamin_nama'
+            'ref_jenis_kelamin.nama as jenis_kelamin_nama',
+            'pass_foto.path as foto_src',
         ];
         $pd = getPd($id, $select);
         if (!$pd) return $this->fail('Peserta didik tidak ditemukan');
         $pd['rombel'] = rombel($id);
         $pd['nipd'] = nis($id);
+        $pd['hp'] = hp($pd['nik']);
+        $pd['alamat'] = alamat($pd['nik']);
+        $pd['maps'] = maps($pd['nik']);
+        $pd['ibu'] = ibuPd($id);
         return $this->respond($pd);
     }
 
