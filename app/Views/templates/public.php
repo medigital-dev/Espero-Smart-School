@@ -167,6 +167,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <li><a href="<?= base_url('pegawai'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-pegawai' ? 'active' : ''; ?>">Pegawai</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url('prestasi'); ?>" class="nav-link <?= $sidebar['current'] == 'prestasi' ? 'active' : '' ?>">Prestasi</a>
+                        </li>
                     </ul>
                     <div class="navbar-nav ml-auto">
                         <li class="nav-item dropdown">

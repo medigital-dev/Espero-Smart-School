@@ -366,8 +366,7 @@
 
     <!-- Global Constanta -->
     <script>
-        let selectedRows = [],
-            isLoading = false;
+        let selectedRows = [];
     </script>
 
     <!-- functions -->
@@ -776,81 +775,81 @@
     <!-- select2 custom -->
     <script>
         $(document).ready(function() {
-            $(".select2-getPd").each(function() {
-                const $select = $(this);
-                const status = $select.data('status');
-                $select.select2({
-                    placeholder: "Pilih peserta didik...",
-                    searchInputPlaceholder: "Cari Nama/NIS/NISN/Kelas...",
-                    theme: "bootstrap4",
-                    dropdownParent: $select.parents(".modal").length ?
-                        $select.parents(".modal").first() : $(document.body),
-                    ajax: {
-                        url: "/api/v0/buku-induk/peserta-didik/get/" + (status !== undefined ? status : ''),
-                        method: "GET",
-                        dataType: "json",
-                        data: function(params) {
-                            return {
-                                key: params.term,
-                                page: params.page || 1
-                            };
-                        },
-                        processResults: function(data, params) {
-                            params.page = params.page || 1;
-                            return {
-                                results: $.map(data.items, function(item) {
-                                    return {
-                                        id: item.id,
-                                        text: item.text.toUpperCase(),
-                                        kelas: item.kelas,
-                                        nisn: item.nisn,
-                                        nipd: item.nipd
-                                    };
-                                }),
-                                pagination: {
-                                    more: data.hasMore
-                                }
-                            };
-                        },
-                        cache: true,
-                        error: function(jqXHR, status, error) {
-                            return {
-                                results: [],
-                            };
-                        },
-                    },
-                    templateResult: (option) => {
-                        if (!option.id) {
-                            return option.text;
-                        }
+            // $(".select2-getPd").each(function() {
+            //     const $select = $(this);
+            //     const status = $select.data('status');
+            //     $select.select2({
+            //         placeholder: "Pilih peserta didik...",
+            //         searchInputPlaceholder: "Cari Nama/NIS/NISN/Kelas...",
+            //         theme: "bootstrap4",
+            //         dropdownParent: $select.parents(".modal").length ?
+            //             $select.parents(".modal").first() : $(document.body),
+            //         ajax: {
+            //             url: "/api/v0/buku-induk/peserta-didik/get/" + (status !== undefined ? status : ''),
+            //             method: "GET",
+            //             dataType: "json",
+            //             data: function(params) {
+            //                 return {
+            //                     key: params.term,
+            //                     page: params.page || 1
+            //                 };
+            //             },
+            //             processResults: function(data, params) {
+            //                 params.page = params.page || 1;
+            //                 return {
+            //                     results: $.map(data.items, function(item) {
+            //                         return {
+            //                             id: item.id,
+            //                             text: item.text.toUpperCase(),
+            //                             kelas: item.kelas,
+            //                             nisn: item.nisn,
+            //                             nipd: item.nipd
+            //                         };
+            //                     }),
+            //                     pagination: {
+            //                         more: data.hasMore
+            //                     }
+            //                 };
+            //             },
+            //             cache: true,
+            //             error: function(jqXHR, status, error) {
+            //                 return {
+            //                     results: [],
+            //                 };
+            //             },
+            //         },
+            //         templateResult: (option) => {
+            //             if (!option.id) {
+            //                 return option.text;
+            //             }
 
-                        var $option = $(
-                            "<div>" +
-                            "<h6 class='m-0'>" +
-                            option.text +
-                            "</h6>" +
-                            "<p class='small m-0'>Kelas: " +
-                            option.kelas +
-                            "</p>" +
-                            "<p class='small m-0'>NIS: " +
-                            option.nipd +
-                            "</p>" +
-                            "<p class='small m-0'>NISN: " +
-                            option.nisn +
-                            "</p>" +
-                            "</div>"
-                        );
-                        return $option;
-                    },
-                    templateSelection: (option) => {
-                        if (!option.id) {
-                            return option.text;
-                        }
-                        var $selection = $("<span>" + option.text + "</span>");
-                        return $selection;
-                    },
-                });
-            });
+            //             var $option = $(
+            //                 "<div>" +
+            //                 "<h6 class='m-0'>" +
+            //                 option.text +
+            //                 "</h6>" +
+            //                 "<p class='small m-0'>Kelas: " +
+            //                 option.kelas +
+            //                 "</p>" +
+            //                 "<p class='small m-0'>NIS: " +
+            //                 option.nipd +
+            //                 "</p>" +
+            //                 "<p class='small m-0'>NISN: " +
+            //                 option.nisn +
+            //                 "</p>" +
+            //                 "</div>"
+            //             );
+            //             return $option;
+            //         },
+            //         templateSelection: (option) => {
+            //             if (!option.id) {
+            //                 return option.text;
+            //             }
+            //             var $selection = $("<span>" + option.text + "</span>");
+            //             return $selection;
+            //         },
+            //     });
+            // });
 
             $(".select2-getRombel").each(function() {
                 const $select = $(this);

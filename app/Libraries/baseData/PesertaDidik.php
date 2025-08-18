@@ -6,6 +6,11 @@ use App\Models\PesertaDidikModel;
 
 class PesertaDidik
 {
+    public function __construct()
+    {
+        helper('peserta_didik');
+    }
+
     public function get(string|bool|null $idOrStatus = null, array|string $select = '*'): array|null|false
     {
         $model = new PesertaDidikModel();
@@ -69,6 +74,7 @@ class PesertaDidik
     public function search(string $keyword, array|string $select = '*'): array
     {
         $model = new PesertaDidikModel();
+        $model->join('registrasi_pd', 'registrasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left');
 
         if ($select !== '*') {
             $model->select($select);
@@ -78,15 +84,18 @@ class PesertaDidik
                     'peserta_didik.peserta_didik_id',
                     'peserta_didik.nama',
                     'nisn',
-                    'nik'
+                    'nik',
+                    'nipd'
                 ]);
 
         $caseSql = "
         CASE 
             WHEN peserta_didik.nama = '{$keyword}' THEN 1
+            WHEN nipd = '{$keyword}' THEN 1
             WHEN nisn = '{$keyword}' THEN 1
             WHEN nik = '{$keyword}' THEN 1
             WHEN peserta_didik.nama LIKE '{$keyword}%' THEN 2
+            WHEN nipd LIKE '{$keyword}%' THEN 2
             WHEN nisn LIKE '{$keyword}%' THEN 2
             WHEN nik LIKE '{$keyword}%' THEN 2
             ELSE 3
@@ -99,9 +108,37 @@ class PesertaDidik
             ->like('peserta_didik.nama', $keyword)
             ->orLike('nisn', $keyword)
             ->orLike('nik', $keyword)
+            ->orLike('nipd', $keyword)
             ->groupEnd()
             ->orderBy('relevansi', 'ASC')
             ->orderBy('peserta_didik.nama', 'ASC')
             ->findAll();
+    }
+
+    public function isActive($id): bool
+    {
+
+        return $this->cekStatus($id) ? true : false;
+    }
+
+    public function cekStatus($id): array|null
+    {
+        $model = new PesertaDidikModel();
+        $model
+            ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
+            ->where('semester.status', true)
+            ->where('peserta_didik.peserta_didik_id', $id)
+        ;
+        $pd = $model->first();
+        if (!$pd) return null;
+        $resp = [
+            'mutasi' => '',
+            'rombel' => rombelPd($id),
+            'register' => '',
+        ];
+        return $resp;
     }
 }

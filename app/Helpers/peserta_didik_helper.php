@@ -11,7 +11,7 @@ if (!function_exists('cariPd')) {
     /**
      * Pencarian peserta didik berdasarkan nama/nipd/nisn/nik
      * @param string $key Kata kunci pencarian
-     * @param string $select $output variabel
+     * @param string $select Output variabel
      * @return array Data peserta didik
      * @return null Jika data tidak ditemukan
      */
@@ -30,8 +30,6 @@ if (!function_exists('getPd')) {
      * Default null untuk semua peserta didik. 
      * 
      * true untuk aktif dan false untuk non aktif
-     * 
-     * mutasi untuk peserta didik mutasi
      * 
      * @param array|string $select Data yang ingin ditampilkan pada hasil. Default '*' untuk semua data
      * @return array Data peserta didik
@@ -52,10 +50,10 @@ if (!function_exists('rombelPd')) {
      * @return array Data rombongan belajar peserta didik
      * @return null Jika data tidak ditemukan.
      */
-    function rombelPd(string $id, bool $aktif): array|null
+    function rombelPd(string $id, bool $aktif = false): array|null
     {
         $libRombel = new Rombel();
-        return $libRombel->getDataRombelPd($id, $aktif);
+        return $libRombel->rombelPd($id, $aktif);
     }
 }
 
@@ -69,7 +67,12 @@ if (!function_exists('rombel')) {
     function rombel(string $id): string|null
     {
         $libRombel = new Rombel();
-        return $libRombel->rombel($id);
+        $res = $libRombel->rombelPd($id, true);
+        if ($res) {
+            $rombel = $libRombel->get($res, 'rombongan_belajar.nama');
+            return $rombel['nama'] ?? null;
+        }
+        return null;
     }
 }
 
@@ -83,8 +86,23 @@ if (!function_exists('nis')) {
     function nis(string $id): string|null
     {
         $libRegistrasi = new RegistrasiPd();
-        $res = $libRegistrasi->get($id, ['nipd']);
-        return $res ? $res[0]['nipd'] : null;
+        $res = $libRegistrasi->registrasiPd($id, ['nipd']);
+        return $res[0]['nipd'] ?? null;
+    }
+}
+
+if (!function_exists('registrasiPd')) {
+    /**
+     * Fungsi menampilkan registrasi peserta didik
+     * @param string $id Id peserta didik
+     * @param array|string $select Data yang ingin ditampilkan pada hasil. Default '*' untuk semua data
+     * @return array Data registrasi peserta didik
+     * @return null Jika data tidak dtemukan
+     */
+    function registrasiPd(string $id, string|array $select = '*')
+    {
+        $lib = new RegistrasiPd();
+        return $lib->registrasiPd($id, $select);
     }
 }
 

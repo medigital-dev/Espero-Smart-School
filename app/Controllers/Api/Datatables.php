@@ -18,7 +18,7 @@ class Datatables extends BaseController
 
     public function __construct()
     {
-        helper(['indonesia']);
+        helper(['indonesia', 'peserta_didik']);
         $this->getData = new DataPesertaDidik;
     }
 
@@ -57,7 +57,7 @@ class Datatables extends BaseController
             ->toDataTable();
         $rows = [];
         foreach ($result['data'] as $row) {
-            $row['rombel'] = $rombelLib->rombel($row['peserta_didik_id'], true);
+            $row['rombel'] = rombel($row['peserta_didik_id']);
             $rows[] = $row;
         }
         $result['data'] = $rows;

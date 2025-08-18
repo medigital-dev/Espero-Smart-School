@@ -43,6 +43,11 @@ class PesertaDidik extends BaseController
         $this->mPesertaDidik = new PesertaDidikModel();
     }
 
+    public function get(bool|string|null $id = null)
+    {
+        return $this->respond(cariPd($id));
+    }
+
     public function showProfil($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
@@ -991,7 +996,7 @@ class PesertaDidik extends BaseController
             ->first();
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $lib = new Rombel();
-        return $this->respond($lib->getDataRombelPd($id));
+        return $this->respond($lib->get($id));
     }
 
     public function deleteRombel($id): ResponseInterface

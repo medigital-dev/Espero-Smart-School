@@ -24,8 +24,8 @@ class Homepage extends BaseController
         $dataPdLib = new DataPesertaDidik();
         echo "<pre>";
         var_dump($dataPdLib
-            ->forPublic()
-            ->forAdmin()
+            // ->forPublic()
+            // ->for Admin()
             // ->withAlamat()
             // ->withOrtuWali()
             ->get());
@@ -39,5 +39,22 @@ class Homepage extends BaseController
             'data' => [],
         ];
         return view('public/guru', $page);
+    }
+
+    public function prestasi()
+    {
+        $page = [
+            'title' => 'EsperoSmartSchool - Prestasi',
+            'page' => 'Daftar Prestasi SMP Negeri 2 Wonosari',
+            'breadcrumb' => ['Homepage', 'Prestasi'],
+            'sidebar' => ['parent' => null, 'current' => 'prestasi',],
+            'data' => [],
+        ];
+        return view('public/prestasi', $page);
+    }
+
+    public function flyer()
+    {
+        return view('public/flyer');
     }
 }

@@ -13,6 +13,8 @@ $routes->get('/pengaturan/dapodik/koneksi', 'Dapodik::koneksi');
 $routes->group('', ['namespace' => 'App\Controllers\Public'], function ($routes) {
     $routes->get('peserta-didik', 'Homepage::pesertaDidik');
     $routes->get('guru', 'Homepage::guru');
+    $routes->get('prestasi', 'Homepage::prestasi');
+    $routes->get('flyer', 'Homepage::flyer');
 });
 
 // API
