@@ -8,74 +8,105 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- <div class="form-group row mb-2">
-                    <label for="inputForm-tanggalMutasiPd" class="col-sm-3 col-form-label">Tanggal</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <input type="text" class="form-control tanggal" id="inputForm-tanggalMutasiPd" value="<?= date('d/m/Y'); ?>" data-inputmask-alias="datetime" placeholder="Tanggal mutasi" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                            <div class="input-group-append" data-target="#inputForm-tanggalMutasiPd" data-toggle="datetimepicker">
-                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                            </div>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputForm-tanggalMutasiPd');"><i class="fas fa-eraser"></i></button>
-                            </div>
-                            <input type="hidden" name="tanggal">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="formPrestasi-namaPd">Nama Murid <small class="text-danger">*) Wajib</small></label>
+                    <select name="peserta_didik_id" id="formPrestasi-namaPd" multiple class="custom-select select2-getPd"></select>
+                    <small class="form-text text-muted">Pilih satu atau beberapa murid sekaligus.</small>
+                    <div class="invalid-feedback">Harus diisi.</div>
                 </div>
-                <div class="form-group row mb-2">
-                    <label for="selectForm-namaMutasiPd" class="col-sm-3 col-form-label">Nama</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <select class="custom-select select2-getPd" data-status="active" id="selectForm-namaMutasiPd"></select>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-namaMutasiPd');"><i class="fas fa-eraser"></i></button>
+                <form id="formPrestasi-tambahPrestasi">
+                    <div class="form-row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="formPrestasi-sebagai">Sebagai <small class="text-danger">*) Wajib</small></label>
+                                <select name="hasil_id" id="formPrestasi-hasil" class="custom-select select2-getReferensi" data-referensi="hasilPrestasi"></select>
+                                <div class="invalid-feedback">Harus diisi.</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="form-group">
+                                <label for="formPrestasi-cabang">Cabang Lomba</label>
+                                <input type="text" class="form-control" id="formPrestasi-cabang" name="cabang" data-limit-max="10">
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="selectForm-jenisMutasiPd" class="col-sm-3 col-form-label">Mutasi</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <select class="custom-select select2-getReferensi" data-tags="true" data-referensi="jenisMutasi" data-placeholder="Pilih jenis mutasi..." id="selectForm-jenisMutasiPd"></select>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#selectForm-jenisMutasiPd');"><i class="fas fa-eraser"></i></button>
+                    <div class="form-group">
+                        <label for="formPrestasi-namaKejuaraan">Nama Kejuaraan/Kegiatan <small class="text-danger">*) Wajib</small></label>
+                        <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="3" data-limit data-limit-max="20"></textarea>
+                        <div class="invalid-feedback">Harus diisi.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="formPrestasi-namaKejuaraan">Penyelenggara <small class="text-danger">*) Wajib</small></label>
+                        <textarea type="text" class="form-control" id="formPrestasi-penyelenggara" name="penyelenggara" rows="2" data-limit data-limit-max="20"></textarea>
+                        <div class="invalid-feedback">Harus diisi.</div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formPrestasi-namaPd">Tingkat Prestasi <small class="text-danger">*) Wajib</small></label>
+                                <select name="tingkat_id" id="formPrestasi-tingkat" class="custom-select select2-getReferensi" data-referensi="tingkatPrestasi"></select>
+                                <div class="invalid-feedback">Harus diisi.</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formPrestasi-namaPd">Bidang Prestasi <small class="text-danger">*) Wajib</small></label>
+                                <select name="bidang_id" id="formPrestasi-bidang" class="custom-select select2-getReferensi" data-referensi="bidangPrestasi"></select>
+                                <div class="invalid-feedback">Harus diisi.</div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="textForm-alasanMutasiPd" class="col-sm-3 col-form-label">Alasan</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <textarea class="form-control" rows="2" id="textForm-alasanMutasiPd" placeholder="Alasan mutasi"></textarea>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#textForm-alasanMutasiPd');"><i class="fas fa-eraser"></i></button>
+                    <div class="form-row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="formPrestasi-fotoJuara">Foto Kejuaraan <small class="text-danger">*) Wajib</small></label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="formPrestasi-fotoJuara" accept="image/*">
+                                    <label class="custom-file-label" for="formPrestasi-fotoJuara">Choose file</label>
+                                </div>
+                            </div>
+                            <div class="mb-3 d-none" id="fotoPreview">
+                                <div class="mb-1">
+                                    <img id="previewImage" class="img-fluid">
+                                </div>
+                                <div class="invalid-feedback">Harus diisi.</div>
+                                <small class="form-text text-muted m-0 mb-2">
+                                    Pastikan wajah berada ditengah-tengah bingkai.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label for="formPrestasi-fotoPiagam">Foto Piagam <small class="text-danger">*) Jika ada</small></label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="formPrestasi-fotoPiagam" accept="image/*">
+                                    <label class="custom-file-label" for="formPrestasi-fotoPiagam">Choose file</label>
+                                </div>
+                            </div>
+                            <div class="mb-3 d-none" id="piagamPreview">
+                                <div class="mb-1">
+                                    <a data-fancybox>
+                                        <img id="imgPiagam" class="img-fluid">
+                                    </a>
+                                </div><small class="form-text text-muted m-0 mb-2">
+                                    Klik pada foto untuk memperbesar.
+                                </small>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group row mb-2">
-                    <label for="inputForm-sekolahTujuanMutasiPd" class="col-sm-3 col-form-label">Sek. Tujuan</label>
-                    <div class="col-sm-9">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="inputForm-sekolahTujuanMutasiPd" placeholder="Sekolah tujuan">
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary" data-toggle="tooltip" data-title="Reset input" onclick="resetInput('#inputForm-sekolahTujuanMutasiPd');"><i class="fas fa-eraser"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+                </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnRun-simpanPrestasi">
-                    <i class="fas fa-save mr-1"></i>
-                    <span>
-                        Simpan
-                    </span>
-                </button>
+                <div class="">
+                    <button type="button" class="btn btn-primary" id="btnRun-simpanPrestasi">
+                        <i class="fas fa-save mr-1"></i>
+                        <span>
+                            Simpan
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary">Simpan & Buat Flyer</button>
+                </div>
             </div>
         </div>
     </div>

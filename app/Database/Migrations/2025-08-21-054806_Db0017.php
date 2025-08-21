@@ -16,10 +16,11 @@ class Db0017 extends Migration
             'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
             'id' => ['type' => 'INT', 'auto_increment' => true,],
             'flyer_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
-            'prestasi_id' => [
+            'kode' => [
                 'type' => 'VARCHAR',
                 'constraint' => '128',
                 'null' => false,
+                'unique' => true,
             ],
             'foto_id' => [
                 'type' => 'VARCHAR',
