@@ -21,6 +21,10 @@ class PrestasiModel extends Model
         'bidang_id',
         'tingkat_id',
         'nama',
-        'hasil'
+        'hasil_id',
+        'kode',
+        'cabang',
+        'foto_id',
+        'piagam_id'
     ];
 }

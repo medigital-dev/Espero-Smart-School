@@ -11,14 +11,15 @@ if (!function_exists('cariPd')) {
     /**
      * Pencarian peserta didik berdasarkan nama/nipd/nisn/nik
      * @param string $key Kata kunci pencarian
-     * @param string $select Output variabel
+     * @param int|null $limit Batas menampilkan data
+     * @param int $offset 
      * @return array Data peserta didik
      * @return null Jika data tidak ditemukan
      */
-    function cariPd(string $key, string|array $select = '*'): array|null
+    function cariPd(string $key = '', bool $isAktif = false, array $option = []): array|null
     {
         $libPd = new PesertaDidik();
-        return $libPd->search($key, $select);
+        return $libPd->search($key, $isAktif, $option);
     }
 }
 
@@ -35,7 +36,7 @@ if (!function_exists('getPd')) {
      * @return array Data peserta didik
      * @return false Jika data tidak ditemukan
      */
-    function getPd(string|bool|null $idOrStatus = null, array|string $select = '*'): array|null|false
+    function getPd(string|bool|null $idOrStatus = null, array|string $select = '*'): array|string|null|false
     {
         $libPd = new PesertaDidik();
         return $libPd->get($idOrStatus, $select);
@@ -87,7 +88,7 @@ if (!function_exists('nis')) {
     {
         $libRegistrasi = new RegistrasiPd();
         $res = $libRegistrasi->registrasiPd($id, ['nipd']);
-        return $res[0]['nipd'] ?? null;
+        return $res['nipd'] ?? null;
     }
 }
 

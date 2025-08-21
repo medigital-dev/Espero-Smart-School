@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class Db0017 extends Migration
+{
+    public function up()
+    {
+        // Flyer Prestasi
+        // Tabel: flyer_prestasi
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'flyer_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'prestasi_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => '128',
+                'null' => false,
+            ],
+            'foto_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => '128',
+                'null' => false,
+            ],
+            'nik' => [
+                'type' => 'VARCHAR',
+                'constraint' => '24',
+                'null' => false,
+            ],
+            'nama' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'content' => [
+                'type' => 'VARCHAR',
+                'constarint' => 128,
+                'null' => false,
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('flyer_prestasi', true);
+    }
+
+    public function down()
+    {
+        $this->forge->dropTable('flyer_prestasi', true);
+    }
+}

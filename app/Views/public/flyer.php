@@ -16,8 +16,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="<?= base_url('plugins/fontawesome-free/css/all.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('plugins/select2/css/select2.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('plugins/select2-bootstrap4-theme/select2-bootstrap4.css'); ?>">
-    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= base_url('plugins/cropperjs/cropper.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/toastr/toastr.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/fancyapps/fancybox.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/adminlte.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/global.css'); ?>">
 </head>
 
 <body class="hold-transition layout-top-nav">
@@ -31,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <span class="brand-text font-weight-light"><strong>Espero</strong>SmartSchool</span>
                 </a>
 
-                <button type="button" class="btn btn-sm btn-primary">Login</button>
+                <button type="button" class="btn btn-sm btn-primary">Cek Kode</button>
             </div>
         </nav>
         <!-- /.navbar -->
@@ -57,75 +60,93 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="col-md-6 mx-auto">
                             <div class="card shadow">
                                 <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="formPrestasi-namaPd">Nama Murid <small class="text-danger">*) Wajib</small></label>
+                                        <select name="peserta_didik_id" id="formPrestasi-namaPd" class="custom-select select2-getPd"></select>
+                                        <div class="invalid-feedback">Harus diisi.</div>
+                                    </div>
                                     <form id="formPrestasi-tambahPrestasi">
-                                        <div class="form-row">
-                                            <div class="col-lg-10">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-namaPd">Nama Murid</label>
-                                                    <select name="peserta_didik_id" id="formPrestasi-namaPd" class="custom-select select2-getPd"></select>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-2">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-tahun">Tahun</label>
-                                                    <input type="text" class="form-control onlyInt" id="formPrestasi-tahun" value="<?= date('Y'); ?>" name="tahun">
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-row">
                                             <div class="col-lg-4">
                                                 <div class="form-group">
-                                                    <label for="formPrestasi-juaraKe">Juara ke-</label>
-                                                    <input type="text" class="form-control onlyInt" id="formPrestasi-juaraKe" name="kode">
+                                                    <label for="formPrestasi-sebagai">Sebagai <small class="text-danger">*) Wajib</small></label>
+                                                    <select name="hasil_id" id="formPrestasi-hasil" class="custom-select select2-getReferensi" data-referensi="hasilPrestasi"></select>
+                                                    <div class="invalid-feedback">Harus diisi.</div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="form-group">
                                                     <label for="formPrestasi-cabang">Cabang Lomba</label>
-                                                    <input type="text" class="form-control onlyInt" id="formPrestasi-cabang" name="cabang">
+                                                    <input type="text" class="form-control" id="formPrestasi-cabang" name="cabang" data-limit-max="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="formPrestasi-namaKejuaraan">Nama Kejuaraan/Kegiatan <small class="text-danger">*) Wajib</small></label>
+                                            <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="3" data-limit data-limit-max="20"></textarea>
+                                            <div class="invalid-feedback">Harus diisi.</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="formPrestasi-namaKejuaraan">Penyelenggara <small class="text-danger">*) Wajib</small></label>
+                                            <textarea type="text" class="form-control" id="formPrestasi-penyelenggara" name="penyelenggara" rows="2" data-limit data-limit-max="20"></textarea>
+                                            <div class="invalid-feedback">Harus diisi.</div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="formPrestasi-namaPd">Tingkat Prestasi <small class="text-danger">*) Wajib</small></label>
+                                                    <select name="tingkat_id" id="formPrestasi-tingkat" class="custom-select select2-getReferensi" data-referensi="tingkatPrestasi"></select>
+                                                    <div class="invalid-feedback">Harus diisi.</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="formPrestasi-namaPd">Bidang Prestasi <small class="text-danger">*) Wajib</small></label>
+                                                    <select name="bidang_id" id="formPrestasi-bidang" class="custom-select select2-getReferensi" data-referensi="bidangPrestasi"></select>
+                                                    <div class="invalid-feedback">Harus diisi.</div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-namaPd">Tingkat Prestasi</label>
-                                                    <select name="peserta_didik_id" id="formPrestasi-tingkat" class="custom-select select2-getPd"></select>
+                                                <div class="mb-3">
+                                                    <label for="formPrestasi-fotoJuara">Foto Kejuaraan <small class="text-danger">*) Wajib</small></label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="formPrestasi-fotoJuara" accept="image/*">
+                                                        <label class="custom-file-label" for="formPrestasi-fotoJuara">Choose file</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 d-none" id="fotoPreview">
+                                                    <div class="mb-1">
+                                                        <img id="previewImage" class="img-fluid">
+                                                    </div>
+                                                    <div class="invalid-feedback">Harus diisi.</div>
+                                                    <small class="form-text text-muted m-0 mb-2">
+                                                        Pastikan wajah berada ditengah-tengah bingkai.
+                                                    </small>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-namaPd">Bidang Prestasi</label>
-                                                    <select name="peserta_didik_id" id="formPrestasi-bidang" class="custom-select select2-getPd"></select>
+                                                <div class="mb-3">
+                                                    <label for="formPrestasi-fotoPiagam">Foto Piagam <small class="text-danger">*) Jika ada</small></label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="formPrestasi-fotoPiagam" accept="image/*">
+                                                        <label class="custom-file-label" for="formPrestasi-fotoPiagam">Choose file</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="formPrestasi-namaKejuaraan">Nama Kejuaraan/ Event</label>
-                                            <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="3"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="formPrestasi-namaKejuaraan">Penyelenggara</label>
-                                            <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="2"></textarea>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-lg-6 mb-3">
-                                                <label for="formPrestasi-fotoJuara">Foto Kejuaraan</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="formPrestasi-fotoJuara">
-                                                    <label class="custom-file-label" for="formPrestasi-fotoJuara">Choose file</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 mb-3">
-                                                <label for="formPrestasi-fotoPiagam">Foto Piagam</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="formPrestasi-fotoPiagam">
-                                                    <label class="custom-file-label" for="formPrestasi-fotoPiagam">Choose file</label>
+                                                <div class="mb-3 d-none" id="piagamPreview">
+                                                    <div class="mb-1">
+                                                        <a data-fancybox>
+                                                            <img id="imgPiagam" class="img-fluid">
+                                                        </a>
+                                                    </div><small class="form-text text-muted m-0 mb-2">
+                                                        Klik pada foto untuk memperbesar.
+                                                    </small>
                                                 </div>
                                             </div>
                                         </div>
                                     </form>
-                                    <button type="button" class="btn btn-primary">Simpan</button>
+                                    <button type="button" class="btn btn-primary" id="btnRun-saveFlyer">Simpan</button>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +175,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </a>
                 </div>
                 <!-- Default to the left -->
-                <strong><a href="https://muhsaidlg.my.id" target="_blank">&copy; 2025</a> | Tim IT & Digitalisasi Sekolah.</strong>
+                <strong><a href="https://muhsaidlg.my.id" class="text-muted" target="_blank">&copy; 2025</a> | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
             </div>
         </footer>
     </div>
@@ -169,86 +190,169 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="<?= base_url('plugins/select2/js/select2.full.js'); ?>"></script>
     <script src="<?= base_url('plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js'); ?>"></script>
     <script src="<?= base_url('plugins/bs-custom-file-input/bs-custom-file-input.js'); ?>"></script>
+    <script src="<?= base_url('plugins/cropperjs/cropper.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/toastr/toastr.min.js'); ?>"></script>
+    <script src="<?= base_url('plugins/fancyapps/fancybox.umd.js'); ?>"></script>
     <!-- AdminLTE App -->
     <script src="<?= base_url('assets/js/adminlte.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/functions.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/variable.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/select2-ajax.js'); ?>"></script>
+    <script src="<?= base_url('assets/js/global.js'); ?>"></script>
     <!-- myScript -->
     <script>
-        $(document).ready(function() {
-            $(".select2-getPd").each(function() {
-                const $select = $(this);
-                const status = $select.data('status');
-                $select.select2({
-                    placeholder: "Pilih peserta didik...",
-                    searchInputPlaceholder: "Cari Nama/NIS/NISN/Kelas...",
-                    theme: "bootstrap4",
-                    dropdownParent: $select.parents(".modal").length ?
-                        $select.parents(".modal").first() : $(document.body),
-                    ajax: {
-                        url: "/api/v0/buku-induk/peserta-didik/get/" + (status !== undefined ? status : ''),
-                        method: "GET",
-                        dataType: "json",
-                        data: function(params) {
-                            return {
-                                key: params.term,
-                                page: params.page || 1
-                            };
-                        },
-                        processResults: function(data, params) {
-                            params.page = params.page || 1;
-                            return {
-                                results: $.map(data.items, function(item) {
-                                    return {
-                                        id: item.id,
-                                        text: item.text.toUpperCase(),
-                                        kelas: item.kelas,
-                                        nisn: item.nisn,
-                                        nipd: item.nipd
-                                    };
-                                }),
-                                pagination: {
-                                    more: data.hasMore
-                                }
-                            };
-                        },
-                        cache: true,
-                        error: function(jqXHR, status, error) {
-                            return {
-                                results: [],
-                            };
-                        },
-                    },
-                    templateResult: (option) => {
-                        if (!option.id) {
-                            return option.text;
+        (function($) {
+            $.fn.limitInput = function(options) {
+                return this.each(function() {
+                    let $input = $(this);
+
+                    // baca data-* attribute
+                    let settings = $.extend({
+                        type: $input.data("limit-type") || "all", // default "all"
+                        max: $input.data("limit-max") || null, // max karakter
+                        allow: $input.data("limit-allow") || null, // regex string
+                        deny: $input.data("limit-deny") || null, // regex string
+                        notify: $input.data("limit-notify") !== false, // default true
+                        notifyContainer: $input.data("limit-container") || null
+                    }, options);
+
+                    // convert string ke RegExp jika ada
+                    if (settings.allow) settings.allow = new RegExp(settings.allow);
+                    if (settings.deny) settings.deny = new RegExp(settings.deny);
+
+                    function showNotif(message) {
+                        if (!settings.notify) return;
+
+                        // hapus notif lama
+                        $input.next(".invalid-feedback").remove();
+
+                        // target notif
+                        let $target = settings.notifyContainer ? $(settings.notifyContainer) : $input;
+
+                        // sisipkan notif bootstrap
+                        $target.after(`<div class="invalid-feedback d-block">${message}</div>`);
+
+                        // auto hilang
+                        setTimeout(() => {
+                            $input.next(".invalid-feedback").fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        }, 2000);
+                    }
+
+                    $input.on("keypress", function(e) {
+                        let char = String.fromCharCode(e.which);
+
+                        // cek max
+                        if (settings.max !== null && $input.val().length >= settings.max) {
+                            e.preventDefault();
+                            showNotif(`Maksimal ${settings.max} karakter`);
+                            return false;
                         }
 
-                        var $option = $(
-                            "<div>" +
-                            "<h6 class='m-0'>" +
-                            option.text +
-                            "</h6>" +
-                            "<p class='small m-0'>Kelas: " +
-                            option.kelas +
-                            "</p>" +
-                            "<p class='small m-0'>NIS: " +
-                            option.nipd +
-                            "</p>" +
-                            "<p class='small m-0'>NISN: " +
-                            option.nisn +
-                            "</p>" +
-                            "</div>"
-                        );
-                        return $option;
-                    },
-                    templateSelection: (option) => {
-                        if (!option.id) {
-                            return option.text;
+                        // preset type
+                        if (settings.type === "number" && !/[0-9]/.test(char)) {
+                            e.preventDefault();
+                            showNotif("Hanya boleh angka");
+                            return false;
+                        } else if (settings.type === "letter" && !/[a-zA-Z]/.test(char)) {
+                            e.preventDefault();
+                            showNotif("Hanya boleh huruf");
+                            return false;
                         }
-                        var $selection = $("<span>" + option.text + "</span>");
-                        return $selection;
-                    },
+
+                        // allow regex
+                        if (settings.allow instanceof RegExp && !settings.allow.test(char)) {
+                            e.preventDefault();
+                            showNotif("Karakter tidak diizinkan");
+                            return false;
+                        }
+
+                        // deny regex
+                        if (settings.deny instanceof RegExp && settings.deny.test(char)) {
+                            e.preventDefault();
+                            showNotif("Karakter dilarang");
+                            return false;
+                        }
+                    });
                 });
+            };
+        })(jQuery);
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("[data-limit]").limitInput();
+
+            $('#formPrestasi-fotoPiagam').on('change', function(e) {
+                const $prevElm = $('#piagamPreview');
+                const $img = $('#imgPiagam');
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                    $prevElm.removeClass('d-none');
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $img.attr('src', e.target.result);
+                        $img.parents('a').attr('href', e.target.result);
+                    }
+                    reader.readAsDataURL(files[0]);
+                } else $prevElm.addClass('d-none');
             });
+
+            let cropper;
+            const $prevElm = $('#fotoPreview');
+            const $image = $("#previewImage");
+
+            $("#formPrestasi-fotoJuara").on("change", function(e) {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                    $prevElm.removeClass('d-none');
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $image.attr("src", e.target.result);
+
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+
+                        cropper = new Cropper($image[0], {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                        });
+                    };
+                    reader.readAsDataURL(files[0]);
+                } else $prevElm.addClass('d-none');
+            });
+
+            $('#btnRun-saveFlyer').on('click', function() {
+                const btn = $(this);
+                const validate = validationElm(['formPrestasi-namaPd', 'formPrestasi-hasil',
+                    'formPrestasi-namaKejuaraan', 'formPrestasi-penyelenggara', 'formPrestasi-tingkat',
+                    'formPrestasi-bidang', 'formPrestasi-fotoJuara',
+                ], ['', null])
+                if (!validate) return;
+                const idPd = $('#formPrestasi-namaPd').val();
+                const form = $('#formPrestasi-tambahPrestasi');
+                const piagam = $('#formPrestasi-fotoPiagam');
+                const filePiagam = piagam.prop('files');
+                cropper.getCroppedCanvas({
+                    width: 1080,
+                    height: 1080,
+                }).toBlob(async function(blob) {
+                    let formData = new FormData(form[0]);
+                    formData.append('foto', blob, 'foto.png');
+                    if (filePiagam.length > 0)
+                        formData.append('piagam', filePiagam[0]);
+
+                    const resp = await fetchData({
+                        url: '/webService/peserta-didik/prestasi/set/' + idPd,
+                        data: formData,
+                        method: 'POST',
+                        button: btn
+                    });
+                    console.log(resp);
+
+                });
+            })
         });
     </script>
 </body>

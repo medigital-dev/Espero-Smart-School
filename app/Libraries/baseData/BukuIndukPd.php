@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Libraries;
+namespace App\Libraries\baseData;
 
 use App\Models\PesertaDidikModel;
 
-class DataPesertaDidik
+class BukuIndukPd
 {
     protected $model;
     protected $query;
@@ -122,6 +122,7 @@ class DataPesertaDidik
                 'text' => $item['nama'],
                 'nipd' => $item['nipd'],
                 'nisn' => $item['nisn'],
+                'nik' => $item['nik'],
             ];
         }, $items);
 
@@ -145,6 +146,16 @@ class DataPesertaDidik
     public function active()
     {
         $this->query
+            ->select([
+                'peserta_didik.peserta_didik_id',
+                'nipd',
+                'peserta_didik.nama',
+                'nisn',
+                'nik'
+            ])
+            ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
             ->where('semester.status', true)
             ->where('mutasi_pd.id', null);
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);

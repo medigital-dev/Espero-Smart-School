@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Libraries\Referensi as LibrariesReferensi;
 use App\Models\RefAgamaModel;
 use App\Models\RefBidangPrestasiModel;
+use App\Models\RefHasilPrestasiModel;
 use App\Models\RefJenisBeasiswaModel;
 use App\Models\RefJenisKebutuhanKhususModel;
 use App\Models\RefJenisKelaminModel;
@@ -99,6 +100,10 @@ class Referensi extends BaseController
 
             case 'tingkatPrestasi':
                 $model = new RefTingkatPrestasiModel();
+                break;
+
+            case 'hasilPrestasi':
+                $model = new RefHasilPrestasiModel();
                 break;
 
             default:

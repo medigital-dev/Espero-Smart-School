@@ -30,7 +30,7 @@ class RegistrasiPd
         else $model->select($select);
 
         if (is_null($id)) return $model->findAll();
-        return $model->where('registrasi', $id)->first();
+        return $model->where('registrasi_id', $id)->first();
     }
 
     public function registrasiPd(string $id, array|string $select = '*'): array|null
