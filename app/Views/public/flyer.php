@@ -60,13 +60,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="col-md-6 mx-auto">
                             <div class="card shadow">
                                 <div class="card-body">
-                                    <input type="hidden" id="idPrestasi">
                                     <div class="form-group">
                                         <label for="formPrestasi-namaPd">Nama Murid <small class="text-danger">*) Wajib</small></label>
                                         <select name="peserta_didik_id" id="formPrestasi-namaPd" class="custom-select select2-getPd"></select>
                                         <div class="invalid-feedback">Harus diisi.</div>
                                     </div>
                                     <form id="formPrestasi-tambahPrestasi">
+                                        <input type="hidden" id="idPrestasi" name="prestasi_id">
                                         <div class="form-row">
                                             <div class="col-lg-4">
                                                 <div class="form-group">
@@ -78,18 +78,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <div class="col-lg-8">
                                                 <div class="form-group">
                                                     <label for="formPrestasi-cabang">Cabang Lomba</label>
-                                                    <input type="text" class="form-control" id="formPrestasi-cabang" name="cabang" data-limit-max="10">
+                                                    <input type="text" class="form-control" id="formPrestasi-cabang" name="cabang">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="formPrestasi-namaKejuaraan">Nama Kejuaraan/Kegiatan <small class="text-danger">*) Wajib</small></label>
-                                            <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="3" data-limit data-limit-max="20"></textarea>
+                                            <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="3"></textarea>
                                             <div class="invalid-feedback">Harus diisi.</div>
                                         </div>
                                         <div class="form-group">
                                             <label for="formPrestasi-namaKejuaraan">Penyelenggara <small class="text-danger">*) Wajib</small></label>
-                                            <textarea type="text" class="form-control" id="formPrestasi-penyelenggara" name="penyelenggara" rows="2" data-limit data-limit-max="20"></textarea>
+                                            <textarea type="text" class="form-control" id="formPrestasi-penyelenggara" name="penyelenggara" rows="2"></textarea>
                                             <div class="invalid-feedback">Harus diisi.</div>
                                         </div>
                                         <div class="form-row">
@@ -299,10 +299,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
 
             let cropper;
-            const $prevElm = $('#fotoPreview');
-            const $image = $("#previewImage");
 
             $("#formPrestasi-fotoJuara").on("change", function(e) {
+                const $prevElm = $('#fotoPreview');
+                const $image = $("#previewImage");
                 const files = e.target.files;
                 if (files && files.length > 0) {
                     $prevElm.removeClass('d-none');
@@ -323,36 +323,68 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 } else $prevElm.addClass('d-none');
             });
 
-            $('#btnRun-saveFlyer').on('click', function() {
+            $('#btnRun-saveFlyer').on('click', async function() {
                 const btn = $(this);
+                const idPrestasi = $('#idPrestasi');
+
                 const validate = validationElm(['formPrestasi-namaPd', 'formPrestasi-hasil',
                     'formPrestasi-namaKejuaraan', 'formPrestasi-penyelenggara', 'formPrestasi-tingkat',
-                    'formPrestasi-bidang', 'formPrestasi-fotoJuara',
+                    'formPrestasi-bidang',
                 ], ['', null])
                 if (!validate) return;
-                const idPd = $('#formPrestasi-namaPd').val();
+                const id = $('#formPrestasi-namaPd').val();
                 const form = $('#formPrestasi-tambahPrestasi');
+                let formData = new FormData(form[0]);
                 const piagam = $('#formPrestasi-fotoPiagam');
-                const filePiagam = piagam.prop('files');
+                const files = piagam.prop('files');
+                if (files.length > 0)
+                    formData.append('piagam', files[0]);
+
+                const respData = await fetchData({
+                    url: '/api/v0/buku-induk/peserta-didik/prestasi/' + id,
+                    data: formData,
+                    method: 'POST',
+                    button: btn
+                });
+                if (respData) {
+                    idPrestasi.val(respData.id);
+                    const dataPrestasi = await fetchData('/api/v0/buku-induk/peserta-didik/prestasi/' + id);
+                    for (const value of dataPrestasi) {
+                        if (value.id == respData.id) {
+                            const pd = await fetchData('/api/v0/buku-induk/peserta-didik/profil/' + id);
+                            $('#formPrestasi-kode').val(value.kode);
+                            $('#formPrestasi-content').val(value.hasil_str + ' ' + value.nama);
+                            $('#formPrestasi-namaFlyer').val(pd.nama + ' - ' + pd.rombel);
+                            $('#modalAddFlyer').modal('show');
+                        }
+                    }
+                } else idPrestasi.val('');
+            });
+
+            $('#btnRun-generateFlyer').on('click', async function() {
+                const btn = $(this);
+                if (!validationElm(['formPrestasi-namaFlyer', 'formPrestasi-kode', 'formPrestasi-content', 'formPrestasi-fotoJuara'], ['', null])) return;
+                const id = $('#formPrestasi-namaPd').val();
+                const foto = $('#formPrestasi-fotoJuara');
+                const form = $('#formPrestasi-tambahFlyer');
+                $('#btnRun-downloadFlyer').prop('disabled', false);
                 cropper.getCroppedCanvas({
                     width: 1080,
                     height: 1080,
                 }).toBlob(async function(blob) {
                     let formData = new FormData(form[0]);
                     formData.append('foto', blob, 'foto.png');
-                    if (filePiagam.length > 0)
-                        formData.append('piagam', filePiagam[0]);
-
                     const resp = await fetchData({
-                        url: '/webService/peserta-didik/prestasi/set/' + idPd,
+                        url: '/webService/peserta-didik/prestasi/set/' + id,
                         data: formData,
                         method: 'POST',
                         button: btn
                     });
-                    console.log(resp);
-
+                    if (resp) {
+                        $('#previewFlyer').html('<img src=' + resp + ' class="img-fluid">');
+                    }
                 });
-            })
+            });
         });
     </script>
 </body>

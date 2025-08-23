@@ -52,7 +52,7 @@ class PesertaDidik extends BaseController
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
         $select = [
-            'peserta_didik.nama',
+            'peserta_didik.nama as nama',
             'nisn',
             'nik',
             'tempat_lahir',
@@ -655,14 +655,18 @@ class PesertaDidik extends BaseController
                 'prestasi_id as id',
                 'tahun',
                 'nik',
+                'prestasi.kode',
+                'cabang',
                 'penyelenggara',
                 'prestasi.nama',
-                'hasil',
+                'ref_hasil_prestasi.id as hasil_id',
+                'ref_hasil_prestasi.nama as hasil_str',
                 'ref_bidang_prestasi.id as bidang_id',
                 'ref_bidang_prestasi.nama as bidang_str',
                 'ref_tingkat_prestasi.id as tingkat_id',
                 'ref_tingkat_prestasi.nama as tingkat_str',
             ])
+            ->join('ref_hasil_prestasi', 'ref_hasil_prestasi.ref_id = prestasi.hasil_id', 'left')
             ->join('ref_bidang_prestasi', 'ref_bidang_prestasi.ref_id = prestasi.bidang_id', 'left')
             ->join('ref_tingkat_prestasi', 'ref_tingkat_prestasi.ref_id = prestasi.tingkat_id', 'left')
             ->where('nik', $cPd['nik'])
@@ -673,14 +677,23 @@ class PesertaDidik extends BaseController
     public function savePrestasi($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $cPd = $this->mPesertaDidik->select('peserta_didik.nik')
-            ->where('peserta_didik.peserta_didik_id', $id)
-            ->first();
-        if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
+        $nik = getPd($id, 'nik');
+        if (!$nik) return $this->fail('Peserta didik tidak ditemukan.');
         $mPrestasi = new PrestasiModel();
         $set = $this->request->getPost();
-        $set['nik'] = $cPd['nik'];
-        $set['prestasi_id'] = idUnik($mPrestasi, 'prestasi_id');
+        $piagam = $this->request->getFile('piagam');
+        $set['nik'] = $nik;
+        if (!isset($set['prestasi_id']) || $set['prestasi_id'] == '') {
+            $set['prestasi_id'] = idUnik($mPrestasi, 'prestasi_id');
+            $set['kode'] = idUnik($mPrestasi, 'kode', 'alnum', 8);
+        } else {
+            $res = $mPrestasi->where('prestasi_id', $set['prestasi_id'])->first();
+            $set['id'] = $res['id'] ?? null;
+        }
+        if ($piagam)
+            $set['piagam_id'] = upload($piagam, ['jpg', 'jpeg', 'png'], 'prestasi/piagam');
+        if (!isset($set['tahun'])) $set['tahun'] = date('Y');
+
         if (!$mPrestasi->save($set)) return $this->fail('Data prestasi gagal disimpan.');
         return $this->respond(['message' => 'Data prestasi berhasil disimpan.', 'id' => $set['prestasi_id']]);
     }

@@ -3,8 +3,11 @@
 namespace App\Controllers\Api\Public;
 
 use App\Controllers\BaseController;
+use App\Models\FlyerPrestasiModel;
 use App\Models\PrestasiModel;
 use CodeIgniter\API\ResponseTrait;
+use Milon\Barcode\DNS1D;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class PesertaDidik extends BaseController
 {
@@ -46,29 +49,25 @@ class PesertaDidik extends BaseController
         ]);
     }
 
-    public function setPrestasi($id)
+    public function setFlyer($id)
     {
-        $model = new PrestasiModel();
+        $model = new FlyerPrestasiModel();
         $nik = getPd($id, 'nik');
         if (!$nik) return $this->fail('Peserta didik tidak ditemukan.');
         $set = $this->request->getPost();
-        $set['tahun'] = date('Y');
-        $set['nik'] = $nik;
-        $set['prestasi_id'] = idUnik($model, 'prestasi_id');
-        $set['kode'] = date('ymd') . idUnik($model, 'kode', 'alnum', 4);
-
         $fotoJuara = $this->request->getFile('foto');
-        $fotoPiagam = $this->request->getFile('piagam');
+        $set['nik'] = $nik;
         if ($fotoJuara)
-            $set['foto_id'] = upload($fotoJuara, ['jpg', 'jpeg', 'png'], 'peserta-didik/juara');
-        if ($fotoPiagam)
-            $set['piagam_id'] = upload($fotoPiagam, ['jpg', 'png', 'jpeg'], 'peserta-didik/piagam');
-
+            $set['foto_id'] = upload($fotoJuara, ['jpg', 'jpeg', 'png'], 'flyer/prestasi');
+        if (!$cek = $model->where('kode', $set['kode'])->first())
+            $set['flyer_id'] = idUnik($model, 'flyer_id');
+        else
+            $set['id'] = $cek['id'];
         if (!$model->save($set)) return $this->fail('Prestasi peserta didik gagal disimpan.');
-        return $this->respond($this->generatFlyer($id, $set['foto_id']));
+        return $this->respond($this->generatFlyer($set));
     }
 
-    function cleanPng(string $filePath): string
+    private function cleanPng(string $filePath): string
     {
         $img = imagecreatefrompng($filePath);
 
@@ -92,20 +91,38 @@ class PesertaDidik extends BaseController
         return $filePath;
     }
 
-    public function generatFlyer($idPd, $idFile)
+    private function setBarcode($text)
     {
+        $d = new BarcodeGeneratorPNG();
+        $barcodeData = $d->getBarcode($text['kode'], $d::TYPE_CODE_128);
+        // Tentukan path simpan
+        $path = WRITEPATH . 'barcode/';
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        // Simpan ke file
+        file_put_contents($path . 'barcode.png', $barcodeData);
+        return $path . '/barcode.png';
+    }
+
+    public function generatFlyer($data)
+    {
+        echo $this->setBarcode($data['kode']);
+        die;
         $settings = [
-            'path' => getFile($idFile, 'path'),
+            'path' => getFile($data['foto_id'], 'path'),
             'fotoX' => 300,
-            'fotoY' => 236,
+            'fotoY' => 183,
             'fotoW' => 480,
             'fotoH' => 480,
-            'textX' => 150,
-            'textY' => 600,
-            'fontSize' => 28,
+            'textX' => 190,   // kotak text mulai X
+            'textY' => 620,   // kotak text mulai Y (atas)
+            'textW' => 700,   // lebar kotak
+            'textH' => 110,   // tinggi kotak
+            'fontSize' => 40,
         ];
-        $pd = getPd($idPd, 'peserta_didik.nama');
-        $kelas = rombel($idPd);
+
         error_reporting(E_ALL & ~E_WARNING);
         $template = imagecreatefrompng(TEMPLATES_PATH . 'flyer.png');
         error_reporting(E_ALL);
@@ -131,9 +148,32 @@ class PesertaDidik extends BaseController
         );
         imagecopy($resize, $template, 0, 0, 0, 0, $width, $height);
 
+        // warna teks
+        $yellow = imagecolorallocate($resize, 255, 240, 0);
+        $black  = imagecolorallocate($resize, 0, 0, 0);
+
+        $fontSize = $settings['fontSize'];
+        $font = FCPATH . 'assets/fonts/Roboto_Condensed-ExtraBold.ttf';
+        $font2 = FCPATH . 'assets/fonts/OpenSans_SemiCondensed-Bold.ttf';
+
+        // gambar teks ke dalam kotak
+        $this->drawWrappedText(
+            $resize,
+            $data['nama'],
+            $font,
+            $fontSize,
+            $settings['textX'],
+            $settings['textY'],
+            $settings['textW'],
+            $settings['textH'],
+            $yellow,
+            $black
+        );
+
+        $this->drawWrappedText($resize, $data['content'], $font2, 28, 110, 773, 860, 160, $yellow, true);
 
         // simpan ke server
-        $outputDir = EXPORTS_PATH . 'flyers' . DIRECTORY_SEPARATOR;
+        $outputDir = EXPORTS_PATH . 'flyers' . DIRECTORY_SEPARATOR . 'prestasi' . DIRECTORY_SEPARATOR;
         if (!is_dir($outputDir)) {
             mkdir($outputDir, 0777, true);
         }
@@ -143,10 +183,61 @@ class PesertaDidik extends BaseController
 
         imagepng($resize, $outputPath);
 
-        // bersihkan
         imagedestroy($template);
         imagedestroy($fotoImg);
         imagedestroy($resize);
-        return $outputDir;
+
+        return $outputPath;
+    }
+
+    public function drawWrappedText($image, $text, $font, $fontSize, $x, $y, $boxWidth, $boxHeight, $color, $outlineColor = null)
+    {
+        // bungkus teks ke dalam beberapa baris
+        $words = explode(' ', $text);
+        $lines = [];
+        $currentLine = '';
+
+        foreach ($words as $word) {
+            $testLine = ($currentLine === '') ? $word : $currentLine . ' ' . $word;
+            $box = imagettfbbox($fontSize, 0, $font, $testLine);
+            $lineWidth = $box[2] - $box[0];
+
+            if ($lineWidth > $boxWidth && $currentLine !== '') {
+                $lines[] = $currentLine;
+                $currentLine = $word;
+            } else {
+                $currentLine = $testLine;
+            }
+        }
+        if ($currentLine !== '') {
+            $lines[] = $currentLine;
+        }
+
+        // hitung tinggi total teks
+        $lineHeight = $fontSize + 10;
+        $textHeight = count($lines) * $lineHeight;
+
+        // mulai Y agar teks rata tengah secara vertikal dalam kotak
+        $yStart = $y + ($boxHeight - $textHeight) / 2 + $fontSize;
+
+        foreach ($lines as $line) {
+            $bbox = imagettfbbox($fontSize, 0, $font, $line);
+            $textWidth = $bbox[2] - $bbox[0];
+            $xText = $x + ($boxWidth - $textWidth) / 2;
+
+            // outline hitam (opsional)
+            if ($outlineColor) {
+                for ($c1 = -1; $c1 <= 1; $c1++) {
+                    for ($c2 = -1; $c2 <= 1; $c2++) {
+                        imagettftext($image, $fontSize, 0, $xText + $c1, $yStart + $c2, $outlineColor, $font, $line);
+                    }
+                }
+            }
+
+            // isi warna utama
+            imagettftext($image, $fontSize, 0, $xText, $yStart, $color, $font, $line);
+
+            $yStart += $lineHeight;
+        }
     }
 }

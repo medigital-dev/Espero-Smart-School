@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PrestasiModel extends Model
+class FlyerPrestasiModel extends Model
 {
-    protected $table      = 'prestasi';
+    protected $table      = 'flyer_prestasi';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
@@ -14,16 +14,11 @@ class PrestasiModel extends Model
 
     protected $allowedFields = [
         'deleted_at',
-        'prestasi_id',
-        'tahun',
-        'penyelenggara',
-        'nik',
-        'bidang_id',
-        'tingkat_id',
-        'nama',
-        'hasil_id',
+        'flyer_id',
         'kode',
-        'cabang',
-        'piagam_id'
+        'foto_id',
+        'nik',
+        'nama',
+        'content',
     ];
 }

@@ -81,21 +81,48 @@ class PesertaDidik
                         return $result[$select] ?? null;
                     }
                 }
-            } elseif (is_array($select)) {
-                // kalau array → hanya ambil field itu saja
+            } elseif (is_array($select) || is_string($select)) {
                 if (is_array($result)) {
+                    $normalized = $this->normalizeSelect($select);
                     if (array_is_list($result)) {
                         // banyak row
-                        return array_map(fn($row) => array_intersect_key($row, array_flip($select)), $result);
+                        return array_map(fn($row) => array_intersect_key($row, array_flip($normalized)), $result);
                     } else {
                         // single row
-                        return array_intersect_key($result, array_flip($select));
+                        return array_intersect_key($result, array_flip($normalized));
                     }
                 }
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Normalisasi select agar hanya menghasilkan key sesuai hasil query
+     * Bisa input string "a, b as c" atau array ['a', 'b as c']
+     */
+    private function normalizeSelect(array|string $select): array
+    {
+        if (is_string($select)) {
+            // pecah string jadi array
+            $select = array_map('trim', explode(',', $select));
+        }
+
+        $normalized = [];
+        foreach ($select as $s) {
+            // cek apakah ada alias
+            if (stripos($s, ' as ') !== false) {
+                [, $alias] = preg_split('/\s+as\s+/i', $s);
+                $normalized[] = trim($alias);
+            } else {
+                // kalau tanpa alias → ambil nama kolom terakhir
+                $parts = explode('.', $s);
+                $normalized[] = trim(end($parts));
+            }
+        }
+
+        return $normalized;
     }
 
     public function search(string $keyword = '', bool|null $isAktif = null, array $option = []): array

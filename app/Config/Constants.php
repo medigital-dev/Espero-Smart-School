@@ -96,6 +96,6 @@ define('EVENT_PRIORITY_HIGH', 10);
 /**
  * Custom Constanta
  */
-defined('UPLOADS_PATH')      || define('UPLOAD_PATH', WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR);
+defined('UPLOADS_PATH')       || define('UPLOAD_PATH', WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR);
 defined('EXPORTS_PATH')       || define('EXPORTS_PATH', WRITEPATH . 'exports' . DIRECTORY_SEPARATOR);
 defined('TEMPLATES_PATH')     || define('TEMPLATES_PATH', WRITEPATH . 'templates' . DIRECTORY_SEPARATOR);
