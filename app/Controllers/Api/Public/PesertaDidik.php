@@ -91,25 +91,70 @@ class PesertaDidik extends BaseController
         return $filePath;
     }
 
-    private function setBarcode($text)
+    private function attachBarcodeToFlyer(string $flyerPath, string $barcodeText)
     {
-        $d = new BarcodeGeneratorPNG();
-        $barcodeData = $d->getBarcode($text['kode'], $d::TYPE_CODE_128);
-        // Tentukan path simpan
-        $path = WRITEPATH . 'barcode/';
-        if (!is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
+        $d = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        $barcodeData = $d->getBarcode($barcodeText, $d::TYPE_CODE_128, 2, 20);
+        $barcodeImg  = imagecreatefromstring($barcodeData);
 
-        // Simpan ke file
-        file_put_contents($path . 'barcode.png', $barcodeData);
-        return $path . '/barcode.png';
+        // Tambahkan teks
+        $fontSize   = 3;
+        $textHeight = imagefontheight($fontSize) + 5;
+        $barcodeW   = imagesx($barcodeImg);
+        $barcodeH   = imagesy($barcodeImg);
+
+        $withText = imagecreatetruecolor($barcodeW, $barcodeH + $textHeight);
+        $white = imagecolorallocate($withText, 255, 255, 255);
+        $black = imagecolorallocate($withText, 0, 0, 0);
+        imagefill($withText, 0, 0, $white);
+        imagecopy($withText, $barcodeImg, 0, 0, 0, 0, $barcodeW, $barcodeH);
+
+        $textWidth = imagefontwidth($fontSize) * strlen($barcodeText);
+        $x = ($barcodeW - $textWidth) / 2;
+        $y = $barcodeH + 2;
+        imagestring($withText, $fontSize, $x, $y, $barcodeText, $black);
+
+        // ==== Tambahkan padding di sekitar barcode ====
+        $paddingInside = 6; // padding internal (px)
+        $finalW = $barcodeW + ($paddingInside * 2);
+        $finalH = $barcodeH + $textHeight + ($paddingInside * 2);
+
+        $barcodeFinal = imagecreatetruecolor($finalW, $finalH);
+        imagefill($barcodeFinal, 0, 0, $white);
+        imagecopy($barcodeFinal, $withText, $paddingInside, $paddingInside, 0, 0, $barcodeW, $barcodeH + $textHeight);
+
+        // === Load flyer ===
+        $flyer = imagecreatefrompng($flyerPath);
+        $flyerW = imagesx($flyer);
+        $flyerH = imagesy($flyer);
+
+        // Posisi kanan bawah dengan jarak dari tepi flyer
+        $paddingOutside = 10;
+        $dstX = $flyerW - $finalW - $paddingOutside;
+        $dstY = $flyerH - $finalH - $paddingOutside;
+
+        // Tempelkan
+        imagecopy($flyer, $barcodeFinal, $dstX, $dstY, 0, 0, $finalW, $finalH);
+
+        // Simpan hasil
+        $output = WRITEPATH . 'flyers/flyer_with_barcode.png';
+        if (!is_dir(dirname($output))) {
+            mkdir(dirname($output), 0777, true);
+        }
+        imagepng($flyer, $output);
+
+        // Bersihkan memory
+        imagedestroy($flyer);
+        imagedestroy($barcodeImg);
+        imagedestroy($withText);
+        imagedestroy($barcodeFinal);
+
+        return $output;
     }
 
     public function generatFlyer($data)
     {
-        echo $this->setBarcode($data['kode']);
-        die;
+
         $settings = [
             'path' => getFile($data['foto_id'], 'path'),
             'fotoX' => 300,
@@ -187,7 +232,9 @@ class PesertaDidik extends BaseController
         imagedestroy($fotoImg);
         imagedestroy($resize);
 
-        return $outputPath;
+        // return $outputPath;
+
+        return $this->attachBarcodeToFlyer($outputPath, $data['kode']);
     }
 
     public function drawWrappedText($image, $text, $font, $fontSize, $x, $y, $boxWidth, $boxHeight, $color, $outlineColor = null)

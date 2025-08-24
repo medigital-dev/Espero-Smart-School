@@ -20,7 +20,6 @@ class BukuInduk extends BaseController
 
     public function pesertaDidik(): string
     {
-        echo FCPATH, die;
         $page = [
             'title' => 'EsperoSmartSchool - Buku Induk',
             'page' => 'Buku Induk Peserta Didik',
