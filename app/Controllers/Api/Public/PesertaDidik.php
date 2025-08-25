@@ -3,11 +3,9 @@
 namespace App\Controllers\Api\Public;
 
 use App\Controllers\BaseController;
+use App\Libraries\ImageEditor;
 use App\Models\FlyerPrestasiModel;
-use App\Models\PrestasiModel;
 use CodeIgniter\API\ResponseTrait;
-use Milon\Barcode\DNS1D;
-use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class PesertaDidik extends BaseController
 {
@@ -64,32 +62,32 @@ class PesertaDidik extends BaseController
         else
             $set['id'] = $cek['id'];
         if (!$model->save($set)) return $this->fail('Prestasi peserta didik gagal disimpan.');
-        return $this->respond($this->generatFlyer($set));
+        return $this->respond($this->generateFlyer($set));
     }
 
-    private function cleanPng(string $filePath): string
-    {
-        $img = imagecreatefrompng($filePath);
+    // private function cleanPng(string $filePath): string
+    // {
+    //     $img = imagecreatefrompng($filePath);
 
-        // buat ulang
-        $width  = imagesx($img);
-        $height = imagesy($img);
-        $clean  = imagecreatetruecolor($width, $height);
+    //     // buat ulang
+    //     $width  = imagesx($img);
+    //     $height = imagesy($img);
+    //     $clean  = imagecreatetruecolor($width, $height);
 
-        // transparansi biar tetap ada
-        imagealphablending($clean, false);
-        imagesavealpha($clean, true);
+    //     // transparansi biar tetap ada
+    //     imagealphablending($clean, false);
+    //     imagesavealpha($clean, true);
 
-        imagecopy($clean, $img, 0, 0, 0, 0, $width, $height);
+    //     imagecopy($clean, $img, 0, 0, 0, 0, $width, $height);
 
-        // overwrite file tanpa profil warna
-        imagepng($clean, $filePath);
+    //     // overwrite file tanpa profil warna
+    //     imagepng($clean, $filePath);
 
-        imagedestroy($img);
-        imagedestroy($clean);
+    //     imagedestroy($img);
+    //     imagedestroy($clean);
 
-        return $filePath;
-    }
+    //     return $filePath;
+    // }
 
     private function attachBarcodeToFlyer(string $flyerPath, string $barcodeText)
     {
@@ -152,8 +150,9 @@ class PesertaDidik extends BaseController
         return $output;
     }
 
-    public function generatFlyer($data)
+    public function generateFlyer($data)
     {
+        $imgEditor = new ImageEditor();
 
         $settings = [
             'path' => getFile($data['foto_id'], 'path'),
@@ -172,12 +171,12 @@ class PesertaDidik extends BaseController
         $template = imagecreatefrompng(TEMPLATES_PATH . 'flyer.png');
         error_reporting(E_ALL);
 
-        $width = imagesx($template);
-        $height = imagesy($template);
+        $width =
+            $height = 1080;
         $fotoImg = imagecreatefromstring(file_get_contents($settings['path']));
         $resize = imagecreatetruecolor($width, $height);
-        $white = imagecolorallocate($resize, 35, 122, 165);
-        imagefill($resize, 0, 0, $white);
+        $bgColor = imagecolorallocate($resize, 35, 122, 165);
+        imagefill($resize, 0, 0, $bgColor);
 
         imagecopyresampled(
             $resize,
@@ -193,29 +192,24 @@ class PesertaDidik extends BaseController
         );
         imagecopy($resize, $template, 0, 0, 0, 0, $width, $height);
 
-        // warna teks
-        $yellow = imagecolorallocate($resize, 255, 240, 0);
-        $black  = imagecolorallocate($resize, 0, 0, 0);
-
-        $fontSize = $settings['fontSize'];
-        $font = FCPATH . 'assets/fonts/Roboto_Condensed-ExtraBold.ttf';
-        $font2 = FCPATH . 'assets/fonts/OpenSans_SemiCondensed-Bold.ttf';
-
-        // gambar teks ke dalam kotak
-        $this->drawWrappedText(
+        $imgEditor->addTitleText(
             $resize,
             $data['nama'],
-            $font,
-            $fontSize,
             $settings['textX'],
             $settings['textY'],
             $settings['textW'],
             $settings['textH'],
-            $yellow,
-            $black
         );
 
-        $this->drawWrappedText($resize, $data['content'], $font2, 28, 110, 773, 860, 160, $yellow, true);
+        $imgEditor->addBodyText(
+            $resize,
+            $data['content'],
+            110,
+            773,
+            860,
+            160,
+            [255, 240, 0]
+        );
 
         // simpan ke server
         $outputDir = EXPORTS_PATH . 'flyers' . DIRECTORY_SEPARATOR . 'prestasi' . DIRECTORY_SEPARATOR;
@@ -235,56 +229,5 @@ class PesertaDidik extends BaseController
         // return $outputPath;
 
         return $this->attachBarcodeToFlyer($outputPath, $data['kode']);
-    }
-
-    public function drawWrappedText($image, $text, $font, $fontSize, $x, $y, $boxWidth, $boxHeight, $color, $outlineColor = null)
-    {
-        // bungkus teks ke dalam beberapa baris
-        $words = explode(' ', $text);
-        $lines = [];
-        $currentLine = '';
-
-        foreach ($words as $word) {
-            $testLine = ($currentLine === '') ? $word : $currentLine . ' ' . $word;
-            $box = imagettfbbox($fontSize, 0, $font, $testLine);
-            $lineWidth = $box[2] - $box[0];
-
-            if ($lineWidth > $boxWidth && $currentLine !== '') {
-                $lines[] = $currentLine;
-                $currentLine = $word;
-            } else {
-                $currentLine = $testLine;
-            }
-        }
-        if ($currentLine !== '') {
-            $lines[] = $currentLine;
-        }
-
-        // hitung tinggi total teks
-        $lineHeight = $fontSize + 10;
-        $textHeight = count($lines) * $lineHeight;
-
-        // mulai Y agar teks rata tengah secara vertikal dalam kotak
-        $yStart = $y + ($boxHeight - $textHeight) / 2 + $fontSize;
-
-        foreach ($lines as $line) {
-            $bbox = imagettfbbox($fontSize, 0, $font, $line);
-            $textWidth = $bbox[2] - $bbox[0];
-            $xText = $x + ($boxWidth - $textWidth) / 2;
-
-            // outline hitam (opsional)
-            if ($outlineColor) {
-                for ($c1 = -1; $c1 <= 1; $c1++) {
-                    for ($c2 = -1; $c2 <= 1; $c2++) {
-                        imagettftext($image, $fontSize, 0, $xText + $c1, $yStart + $c2, $outlineColor, $font, $line);
-                    }
-                }
-            }
-
-            // isi warna utama
-            imagettftext($image, $fontSize, 0, $xText, $yStart, $color, $font, $line);
-
-            $yStart += $lineHeight;
-        }
     }
 }

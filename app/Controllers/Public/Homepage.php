@@ -55,9 +55,9 @@ class Homepage extends BaseController
 
     public function flyer()
     {
-        helper('code');
-        qrcode('http://smp2wonosari.sch.id', 'Scan Me!', 'assets/img/brands/meDigital-dev.png');
-        die;
+        // helper('code');
+        // qrcode('http://smp2wonosari.sch.id', 'Scan Me!', 'assets/img/brands/meDigital-dev.png');
+        // die;
         return view('public/flyer');
     }
 }
