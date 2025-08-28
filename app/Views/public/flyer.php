@@ -57,94 +57,79 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="content">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6 mx-auto">
-                            <div class="card shadow">
+                        <div class="col-lg-6 mx-auto">
+                            <div class="card card-primary shadow">
+                                <div class="card-header">
+                                    <h3 class="card-title">Form Flyer</h3>
+                                </div>
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="formPrestasi-namaPd">Nama Murid <small class="text-danger">*) Wajib</small></label>
-                                        <select name="peserta_didik_id" id="formPrestasi-namaPd" class="custom-select select2-getPd"></select>
-                                        <div class="invalid-feedback">Harus diisi.</div>
+                                    <h6 class="text-bold m-0">Flyer Prestasi</h6>
+                                    <hr class="my-2">
+                                    <div class="form-group row">
+                                        <label for="formPrestasi-untuk" class="col-sm-3 col-form-label">Untuk</label>
+                                        <div class="col-sm-9">
+                                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                                                <label class="btn btn-outline-primary">
+                                                    <input type="radio" name="atas_nama" value="pd"> Murid
+                                                </label>
+                                                <label class="btn btn-outline-primary disabled">
+                                                    <input type="radio" name="atas_nama" value="gtk"> Guru/TU
+                                                </label>
+                                                <label class="btn btn-outline-primary">
+                                                    <input type="radio" name="atas_nama" value="custom"> Custom
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <form id="formPrestasi-tambahPrestasi">
-                                        <input type="hidden" id="idPrestasi" name="prestasi_id">
-                                        <div class="form-row">
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-sebagai">Sebagai <small class="text-danger">*) Wajib</small></label>
-                                                    <select name="hasil_id" id="formPrestasi-hasil" class="custom-select select2-getReferensi" data-referensi="hasilPrestasi"></select>
-                                                    <div class="invalid-feedback">Harus diisi.</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-cabang">Cabang Lomba</label>
-                                                    <input type="text" class="form-control" id="formPrestasi-cabang" name="cabang">
-                                                </div>
+                                    <div class="form-group row">
+                                        <label for="formPrestasi-atasNama" class="col-sm-3 col-form-label">Nama</label>
+                                        <div class="col-sm-9" id="formPrestasi-nama">
+                                            <input type="text" class="form-control" disabled>
+                                        </div>
+                                    </div>
+                                    <form id="formPrestasi-tambahFlyer">
+                                        <div class="form-group row">
+                                            <label for="formPrestasi-content" class="col-sm-3 col-form-label">Uraian</label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" id="formPrestasi-content" name="content" rows="3"></textarea>
+                                                <div class="invalid-feedback">Harus di input!</div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="formPrestasi-namaKejuaraan">Nama Kejuaraan/Kegiatan <small class="text-danger">*) Wajib</small></label>
-                                            <textarea type="text" class="form-control" id="formPrestasi-namaKejuaraan" name="nama" rows="3"></textarea>
-                                            <div class="invalid-feedback">Harus diisi.</div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="formPrestasi-namaKejuaraan">Penyelenggara <small class="text-danger">*) Wajib</small></label>
-                                            <textarea type="text" class="form-control" id="formPrestasi-penyelenggara" name="penyelenggara" rows="2"></textarea>
-                                            <div class="invalid-feedback">Harus diisi.</div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-namaPd">Tingkat Prestasi <small class="text-danger">*) Wajib</small></label>
-                                                    <select name="tingkat_id" id="formPrestasi-tingkat" class="custom-select select2-getReferensi" data-referensi="tingkatPrestasi"></select>
-                                                    <div class="invalid-feedback">Harus diisi.</div>
+                                        <div class="form-group row mb-0">
+                                            <label for="formPrestasi-fotoJuara" class="col-sm-3 col-form-label">Foto</label>
+                                            <div class="col-sm-9">
+                                                <div class="mb-2">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="formPrestasi-fotoJuara" accept="image/*">
+                                                        <label class="custom-file-label" for="formPrestasi-fotoJuara">Choose file</label>
+                                                        <div class="invalid-feedback">File foto harus di pilih!</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="formPrestasi-namaPd">Bidang Prestasi <small class="text-danger">*) Wajib</small></label>
-                                                    <select name="bidang_id" id="formPrestasi-bidang" class="custom-select select2-getReferensi" data-referensi="bidangPrestasi"></select>
-                                                    <div class="invalid-feedback">Harus diisi.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="mb-3">
-                                                <label for="formPrestasi-fotoPiagam">Foto Piagam <small class="text-danger">*) Jika ada</small></label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="formPrestasi-fotoPiagam" accept="image/*">
-                                                    <label class="custom-file-label" for="formPrestasi-fotoPiagam">Choose file</label>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3 d-none" id="piagamPreview">
-                                                <div class="mb-1">
-                                                    <a data-fancybox>
-                                                        <img id="imgPiagam" class="img-fluid">
-                                                    </a>
-                                                </div><small class="form-text text-muted m-0 mb-2">
-                                                    Klik pada foto untuk memperbesar.
-                                                </small>
                                             </div>
                                         </div>
                                     </form>
-                                    <div class="d-flex justify-content-end">
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-primary float-right" id="btnRun-saveFlyer">
-                                                <i class="fas fa-save"></i>
-                                                <span>
-                                                    Simpan & Buat Flyer
-                                                </span>
-                                            </button>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false">
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
-                                                    <a class="dropdown-item" href="#">Simpan & Buat Baru</a>
-                                                    <a class="dropdown-item" href="#">Simpan & Salin Form</a>
-                                                    <a class="dropdown-item" href="#">Hanya Simpan/Update</a>
+                                    <div class="form-group row">
+                                        <label for="previewFlyer" class="col-sm-3 col-form-label">Preview</label>
+                                        <div class="col-sm-9">
+                                            <div class="row row-cols-1 row-cols-sm-2">
+                                                <div class="col mb-2" id="fotoPreview">
+                                                    <div class="mb-1">
+                                                        <img id="previewImage" class="img-fluid">
+                                                    </div>
+                                                    <div class="invalid-feedback">Harus diisi.</div>
+                                                    <small class="form-text text-muted text-center m-0 mb-2">
+                                                        Pastikan wajah berada ditengah-tengah bingkai.
+                                                    </small>
+                                                </div>
+                                                <div class="col mb-2" id="previewFlyer">
+                                                    <p class="text-center small">Klik tombol generate terlebih dahulu.</p>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="float-right">
+                                        <button type="button" class="btn btn-outline-primary" id="btnRun-generateFlyer"><i class="fas fa-save mr-1"></i>Generate</button>
                                     </div>
                                 </div>
                             </div>
@@ -201,105 +186,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="<?= base_url('assets/js/global.js'); ?>"></script>
     <!-- myScript -->
     <script>
-        (function($) {
-            $.fn.limitInput = function(options) {
-                return this.each(function() {
-                    let $input = $(this);
-
-                    // baca data-* attribute
-                    let settings = $.extend({
-                        type: $input.data("limit-type") || "all", // default "all"
-                        max: $input.data("limit-max") || null, // max karakter
-                        allow: $input.data("limit-allow") || null, // regex string
-                        deny: $input.data("limit-deny") || null, // regex string
-                        notify: $input.data("limit-notify") !== false, // default true
-                        notifyContainer: $input.data("limit-container") || null
-                    }, options);
-
-                    // convert string ke RegExp jika ada
-                    if (settings.allow) settings.allow = new RegExp(settings.allow);
-                    if (settings.deny) settings.deny = new RegExp(settings.deny);
-
-                    function showNotif(message) {
-                        if (!settings.notify) return;
-
-                        // hapus notif lama
-                        $input.next(".invalid-feedback").remove();
-
-                        // target notif
-                        let $target = settings.notifyContainer ? $(settings.notifyContainer) : $input;
-
-                        // sisipkan notif bootstrap
-                        $target.after(`<div class="invalid-feedback d-block">${message}</div>`);
-
-                        // auto hilang
-                        setTimeout(() => {
-                            $input.next(".invalid-feedback").fadeOut(300, function() {
-                                $(this).remove();
-                            });
-                        }, 2000);
-                    }
-
-                    $input.on("keypress", function(e) {
-                        let char = String.fromCharCode(e.which);
-
-                        // cek max
-                        if (settings.max !== null && $input.val().length >= settings.max) {
-                            e.preventDefault();
-                            showNotif(`Maksimal ${settings.max} karakter`);
-                            return false;
-                        }
-
-                        // preset type
-                        if (settings.type === "number" && !/[0-9]/.test(char)) {
-                            e.preventDefault();
-                            showNotif("Hanya boleh angka");
-                            return false;
-                        } else if (settings.type === "letter" && !/[a-zA-Z]/.test(char)) {
-                            e.preventDefault();
-                            showNotif("Hanya boleh huruf");
-                            return false;
-                        }
-
-                        // allow regex
-                        if (settings.allow instanceof RegExp && !settings.allow.test(char)) {
-                            e.preventDefault();
-                            showNotif("Karakter tidak diizinkan");
-                            return false;
-                        }
-
-                        // deny regex
-                        if (settings.deny instanceof RegExp && settings.deny.test(char)) {
-                            e.preventDefault();
-                            showNotif("Karakter dilarang");
-                            return false;
-                        }
-                    });
-                });
-            };
-        })(jQuery);
-    </script>
-    <script>
         $(document).ready(function() {
-            $("[data-limit]").limitInput();
+            $('input[name="atas_nama"]').on('change', function() {
+                const anElm = $('#formPrestasi-nama');
+                const tagName = anElm.prop('tagName').toLowerCase();
 
-            $('#formPrestasi-fotoPiagam').on('change', function(e) {
-                const $prevElm = $('#piagamPreview');
-                const $img = $('#imgPiagam');
-                const files = e.target.files;
-                if (files && files.length > 0) {
-                    $prevElm.removeClass('d-none');
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        $img.attr('src', e.target.result);
-                        $img.parents('a').attr('href', e.target.result);
-                    }
-                    reader.readAsDataURL(files[0]);
-                } else $prevElm.addClass('d-none');
+                if ($(this).val() == 'pd') {
+                    anElm
+                        .html(`<select class="custom-select select2-getPd" name="atas_nama" id="formPrestasi-atasNama"></select><div class="invalid-feedback">Harus di input!</div>`);
+                    runSelect2GetPd();
+                } else if ($(this).val() == 'custom') {
+                    anElm.html('<input type="text" name="atas_nama" id="formPrestasi-atasNama" class="form-control"><div class="invalid-feedback">Harus di input!</div>')
+                }
             });
 
             let cropper;
-
             $("#formPrestasi-fotoJuara").on("change", function(e) {
                 const $prevElm = $('#fotoPreview');
                 const $image = $("#previewImage");
@@ -309,11 +210,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         $image.attr("src", e.target.result);
-
-                        if (cropper) {
+                        if (cropper)
                             cropper.destroy();
-                        }
-
                         cropper = new Cropper($image[0], {
                             aspectRatio: 1,
                             viewMode: 1,
@@ -323,65 +221,47 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 } else $prevElm.addClass('d-none');
             });
 
-            $('#btnRun-saveFlyer').on('click', async function() {
-                const btn = $(this);
-                const idPrestasi = $('#idPrestasi');
-
-                const validate = validationElm(['formPrestasi-namaPd', 'formPrestasi-hasil',
-                    'formPrestasi-namaKejuaraan', 'formPrestasi-penyelenggara', 'formPrestasi-tingkat',
-                    'formPrestasi-bidang',
-                ], ['', null])
-                if (!validate) return;
-                const id = $('#formPrestasi-namaPd').val();
-                const form = $('#formPrestasi-tambahPrestasi');
-                let formData = new FormData(form[0]);
-                const piagam = $('#formPrestasi-fotoPiagam');
-                const files = piagam.prop('files');
-                if (files.length > 0)
-                    formData.append('piagam', files[0]);
-
-                const respData = await fetchData({
-                    url: '/api/v0/buku-induk/peserta-didik/prestasi/' + id,
-                    data: formData,
-                    method: 'POST',
-                    button: btn
-                });
-                if (respData) {
-                    idPrestasi.val(respData.id);
-                    const dataPrestasi = await fetchData('/api/v0/buku-induk/peserta-didik/prestasi/' + id);
-                    for (const value of dataPrestasi) {
-                        if (value.id == respData.id) {
-                            const pd = await fetchData('/api/v0/buku-induk/peserta-didik/profil/' + id);
-                            $('#formPrestasi-kode').val(value.kode);
-                            $('#formPrestasi-content').val(value.hasil_str + ' ' + value.nama);
-                            $('#formPrestasi-namaFlyer').val(pd.nama + ' - ' + pd.rombel);
-                            $('#modalAddFlyer').modal('show');
-                        }
-                    }
-                } else idPrestasi.val('');
-            });
-
             $('#btnRun-generateFlyer').on('click', async function() {
                 const btn = $(this);
-                if (!validationElm(['formPrestasi-namaFlyer', 'formPrestasi-kode', 'formPrestasi-content', 'formPrestasi-fotoJuara'], ['', null])) return;
-                const id = $('#formPrestasi-namaPd').val();
-                const foto = $('#formPrestasi-fotoJuara');
-                const form = $('#formPrestasi-tambahFlyer');
-                $('#btnRun-downloadFlyer').prop('disabled', false);
+                if (!validationElm(['formPrestasi-atasNama', 'formPrestasi-content', 'formPrestasi-fotoJuara'], ['', null])) return;
+                const untuk = $('input[name="atas_nama"]:checked').val();
+                const id = $('#formPrestasi-atasNama').val();
+                const isi = $('#formPrestasi-content').val();
+                let nama = '';
+                if (untuk == 'pd') {
+                    const pd = await fetchData({
+                        url: '/api/v0/buku-induk/peserta-didik/profil/' + id,
+                        button: btn
+                    })
+                    if (pd)
+                        nama = pd.nama + " - " + pd.rombel;
+                } else if (untuk == 'custom')
+                    nama = $('#formPrestasi-atasNama').val();
                 cropper.getCroppedCanvas({
-                    width: 1080,
-                    height: 1080,
+                    width: 720,
+                    height: 720,
                 }).toBlob(async function(blob) {
-                    let formData = new FormData(form[0]);
+                    let formData = new FormData();
                     formData.append('foto', blob, 'foto.png');
+                    formData.append('nama', nama);
+                    formData.append('isi', isi)
                     const resp = await fetchData({
-                        url: '/webService/peserta-didik/prestasi/set/' + id,
+                        url: '/webService/flyer/generate',
                         data: formData,
                         method: 'POST',
                         button: btn
                     });
                     if (resp) {
-                        $('#previewFlyer').html('<img src=' + resp + ' class="img-fluid">');
+                        $('#previewFlyer').html(`
+                            <div class="mb-1">
+                                <a href="${resp}" data-fancybox>
+                                    <img src="${resp}" class="img-fluid">
+                                </a>
+                            </div>
+                            <small class="form-text text-muted m-0 mb-2">
+                                Klik pada foto untuk memperbesar. <a href="${resp}" target="_blank" download>Unduh Flyer disini</a>
+                            </small>
+                        `);
                     }
                 });
             });

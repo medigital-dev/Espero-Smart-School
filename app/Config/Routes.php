@@ -133,5 +133,9 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
 $routes->group('/webService', ['namespace' => 'App\Controllers\Api\Public'], function ($routes) {
     // $routes->post('getPd', 'Datatables::publicPd');
     $routes->get('peserta-didik/get/select2', 'PesertaDidik::getPd_select2');
-    $routes->post('peserta-didik/prestasi/set/(:segment)', 'PesertaDidik::setFlyer/$1');
+    // $routes->post('peserta-didik/prestasi/set/(:segment)', 'PesertaDidik::setFlyer/$1');
+    $routes->post('flyer/generate', 'Flyer::generate');
 });
+
+// Files Source
+$routes->get('/files/(:segment)/(:any)', 'Url::file_src/$1/$2');

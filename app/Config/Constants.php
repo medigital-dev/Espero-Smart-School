@@ -99,4 +99,5 @@ define('EVENT_PRIORITY_HIGH', 10);
 defined('UPLOADS_PATH')       || define('UPLOAD_PATH', WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR);
 defined('EXPORTS_PATH')       || define('EXPORTS_PATH', WRITEPATH . 'exports' . DIRECTORY_SEPARATOR);
 defined('TEMPLATES_PATH')     || define('TEMPLATES_PATH', WRITEPATH . 'templates' . DIRECTORY_SEPARATOR);
+defined('TEMPORARY_PATH')     || define('TEMPORARY_PATH', WRITEPATH . 'temporary' . DIRECTORY_SEPARATOR);
 defined('CACHES_PATH')        || define('CACHES_PATH', WRITEPATH . 'caches' . DIRECTORY_SEPARATOR);
