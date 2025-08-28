@@ -24,7 +24,7 @@ class Files
             return ['status' => false, 'message' => 'Upload Error.', 'error' => 'Format file tidak sesuai. [' . implode(', ', $allowedExtension) . ']', 'data' => []];
         }
 
-        $folder = UPLOAD_PATH . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $toFolder);
+        $folder = WRITEPATH . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $toFolder);
         if (!is_dir($folder)) {
             if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
                 return ['status' => false, 'message' => 'Upload Error', 'error' => 'Gagal membuat folder penyimpanan.', 'data' => []];

@@ -34,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <span class="brand-text font-weight-light"><strong>Espero</strong>SmartSchool</span>
                 </a>
 
-                <button type="button" class="btn btn-sm btn-primary">Cek Kode</button>
+                <!-- <button type="button" class="btn btn-sm btn-primary">Cek Kode</button> -->
             </div>
         </nav>
         <!-- /.navbar -->
@@ -65,37 +65,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <div class="card-body">
                                     <h6 class="text-bold m-0">Flyer Prestasi</h6>
                                     <hr class="my-2">
-                                    <div class="form-group row">
-                                        <label for="formPrestasi-untuk" class="col-sm-3 col-form-label">Untuk</label>
-                                        <div class="col-sm-9">
-                                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-                                                <label class="btn btn-outline-primary">
-                                                    <input type="radio" name="atas_nama" value="pd"> Murid
-                                                </label>
-                                                <label class="btn btn-outline-primary disabled">
-                                                    <input type="radio" name="atas_nama" value="gtk"> Guru/TU
-                                                </label>
-                                                <label class="btn btn-outline-primary">
-                                                    <input type="radio" name="atas_nama" value="custom"> Custom
-                                                </label>
+                                    <form id="formPrestasi-tambahFlyer">
+                                        <div class="form-group row">
+                                            <label for="formPrestasi-atasNama" class="col-sm-3 col-form-label">Nama</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="formPrestasi-atasNama" class="form-control" name="nama">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="formPrestasi-atasNama" class="col-sm-3 col-form-label">Nama</label>
-                                        <div class="col-sm-9" id="formPrestasi-nama">
-                                            <input type="text" class="form-control" disabled>
-                                        </div>
-                                    </div>
-                                    <form id="formPrestasi-tambahFlyer">
                                         <div class="form-group row">
                                             <label for="formPrestasi-content" class="col-sm-3 col-form-label">Uraian</label>
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" id="formPrestasi-content" name="content" rows="3"></textarea>
+                                                <textarea class="form-control" id="formPrestasi-content" name="isi" rows="3"></textarea>
                                                 <div class="invalid-feedback">Harus di input!</div>
                                             </div>
                                         </div>
-                                        <div class="form-group row mb-0">
+                                        <div class="form-group row mb-1">
                                             <label for="formPrestasi-fotoJuara" class="col-sm-3 col-form-label">Foto</label>
                                             <div class="col-sm-9">
                                                 <div class="mb-2">
@@ -105,26 +89,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                         <div class="invalid-feedback">File foto harus di pilih!</div>
                                                     </div>
                                                 </div>
+                                                <div class="mb-2">
+                                                    <div class="mb-1 d-none w-100" id="fotoPreview" style="max-height: 360px;">
+                                                        <img id="previewImage" class="img-fluid">
+                                                        <small class="form-text text-muted text-center m-0 mb-2">
+                                                            Pastikan wajah berada ditengah-tengah bingkai.
+                                                        </small>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
-                                    <div class="form-group row">
+                                    <div class="form-group row mb-0">
                                         <label for="previewFlyer" class="col-sm-3 col-form-label">Preview</label>
-                                        <div class="col-sm-9">
-                                            <div class="row row-cols-1 row-cols-sm-2">
-                                                <div class="col mb-2" id="fotoPreview">
-                                                    <div class="mb-1">
-                                                        <img id="previewImage" class="img-fluid">
-                                                    </div>
-                                                    <div class="invalid-feedback">Harus diisi.</div>
-                                                    <small class="form-text text-muted text-center m-0 mb-2">
-                                                        Pastikan wajah berada ditengah-tengah bingkai.
-                                                    </small>
-                                                </div>
-                                                <div class="col mb-2" id="previewFlyer">
-                                                    <p class="text-center small">Klik tombol generate terlebih dahulu.</p>
-                                                </div>
-                                            </div>
+                                        <div class="col-sm-9" id="previewFlyer">
+                                            <p class="text-center pt-2 m-0 small">Klik tombol generate terlebih dahulu.</p>
                                         </div>
                                     </div>
                                     <hr class="my-2">
@@ -187,19 +166,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- myScript -->
     <script>
         $(document).ready(function() {
-            $('input[name="atas_nama"]').on('change', function() {
-                const anElm = $('#formPrestasi-nama');
-                const tagName = anElm.prop('tagName').toLowerCase();
-
-                if ($(this).val() == 'pd') {
-                    anElm
-                        .html(`<select class="custom-select select2-getPd" name="atas_nama" id="formPrestasi-atasNama"></select><div class="invalid-feedback">Harus di input!</div>`);
-                    runSelect2GetPd();
-                } else if ($(this).val() == 'custom') {
-                    anElm.html('<input type="text" name="atas_nama" id="formPrestasi-atasNama" class="form-control"><div class="invalid-feedback">Harus di input!</div>')
-                }
-            });
-
             let cropper;
             $("#formPrestasi-fotoJuara").on("change", function(e) {
                 const $prevElm = $('#fotoPreview');
@@ -224,27 +190,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $('#btnRun-generateFlyer').on('click', async function() {
                 const btn = $(this);
                 if (!validationElm(['formPrestasi-atasNama', 'formPrestasi-content', 'formPrestasi-fotoJuara'], ['', null])) return;
-                const untuk = $('input[name="atas_nama"]:checked').val();
-                const id = $('#formPrestasi-atasNama').val();
-                const isi = $('#formPrestasi-content').val();
-                let nama = '';
-                if (untuk == 'pd') {
-                    const pd = await fetchData({
-                        url: '/api/v0/buku-induk/peserta-didik/profil/' + id,
-                        button: btn
-                    })
-                    if (pd)
-                        nama = pd.nama + " - " + pd.rombel;
-                } else if (untuk == 'custom')
-                    nama = $('#formPrestasi-atasNama').val();
+                const form = $('#formPrestasi-tambahFlyer');
                 cropper.getCroppedCanvas({
                     width: 720,
                     height: 720,
                 }).toBlob(async function(blob) {
-                    let formData = new FormData();
+                    let formData = new FormData(form[0]);
                     formData.append('foto', blob, 'foto.png');
-                    formData.append('nama', nama);
-                    formData.append('isi', isi)
                     const resp = await fetchData({
                         url: '/webService/flyer/generate',
                         data: formData,
@@ -258,9 +210,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <img src="${resp}" class="img-fluid">
                                 </a>
                             </div>
-                            <small class="form-text text-muted m-0 mb-2">
-                                Klik pada foto untuk memperbesar. <a href="${resp}" target="_blank" download>Unduh Flyer disini</a>
-                            </small>
+                            <p class="form-text text-muted small m-0 mb-1">
+                                Klik pada foto untuk memperbesar.
+                            </p>
+                            <a class="btn btn-sm btn-success" href="${resp}" download><i class="fas fa-download fa-fw"></i>Unduh Flyer</a>
                         `);
                     }
                 });

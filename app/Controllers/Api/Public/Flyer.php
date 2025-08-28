@@ -87,12 +87,8 @@ class Flyer extends BaseController
             [0, 0, 0]
         );
 
-        $barcode = barcode(date('y') . random_string('alnum', 4));
-        $imgEditor->mergeImage($outputImg, $imgEditor->toGDImage($barcode), 'right', 'bottom');
-
-        // simpan ke server
-        cleanFiles(EXPORTS_PATH);
-        $outputDir = EXPORTS_PATH;
+        cleanFiles(TEMPORARY_PATH);
+        $outputDir = TEMPORARY_PATH;
         if (!is_dir($outputDir)) {
             mkdir($outputDir, 0777, true);
         }
@@ -105,6 +101,6 @@ class Flyer extends BaseController
         imagedestroy($fotoImg);
         imagedestroy($outputImg);
 
-        return $this->respond(public_src('export', $filename));
+        return $this->respond(public_src('temp', $filename));
     }
 }

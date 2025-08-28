@@ -60,8 +60,8 @@ if (!function_exists('tempUpload')) {
      */
     function tempUpload(UploadedFile $file): string|null
     {
-        cleanFiles(UPLOAD_PATH . 'temp');
-        return (new Files())->upload($file, [], 'temp')['data']['path'] ?? null;
+        cleanFiles(TEMPORARY_PATH);
+        return (new Files())->upload($file, [], 'temporary')['data']['path'] ?? null;
     }
 }
 
