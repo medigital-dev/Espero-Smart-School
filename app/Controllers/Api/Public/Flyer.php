@@ -11,9 +11,46 @@ class Flyer extends BaseController
 {
     use ResponseTrait;
 
-    public function generate(): ResponseInterface
+    protected $imgEditor;
+
+    public function __construct()
     {
         helper(['files', 'code', 'text']);
+        $this->imgEditor = new ImageEditor();
+    }
+
+    public function prestasi()
+    {
+        $nama = $this->request->getPost('nama');
+        $isi = $this->request->getPost('isi');
+        $foto = $this->request->getFile('foto');
+
+        $gdCanvas = $this->imgEditor->createCanvas();
+        $gdTemplate = $this->imgEditor->toGDImage(TEMPLATES_PATH . 'flyer-prestasi.png');
+        $gdFoto = $this->imgEditor->toGDImage(tempUpload($foto));
+        $gdFotoSm = $this->imgEditor->resize($gdFoto, 480, 480);
+        $this->imgEditor->mergeImage($gdCanvas, $gdFotoSm, 'center', 183);
+        $this->imgEditor->mergeImage($gdCanvas, $gdTemplate, 'center', 'middle');
+        $this->imgEditor->addText($gdCanvas, 'h1', $nama, ['center', 620], [700, 110], ['color' => [255, 255, 255]]);
+        $this->imgEditor->addText($gdCanvas, 'body', $isi, ['center', 780], [720, 200], ['align' => 'center', 'valign' => 'top', 'color' => [255, 240, 0]]);
+        $barcode = barcode(random_string('alnum', 4), true, [255, 255, 255], true);
+        $gbBarcode = $this->imgEditor->toGDImage(TEMPORARY_PATH . $barcode);
+        $this->imgEditor->mergeImage($gdCanvas, $gbBarcode, 'right', 'bottom');
+
+        // output
+        $dir = TEMPORARY_PATH;
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $filename = uniqid('pres_') . '.png';
+        $path = $dir . $filename;
+        $this->imgEditor->saveImage($gdCanvas, $path);
+        $this->imgEditor->destroy();
+        return $this->respond(public_src('temp', $filename));
+    }
+
+    public function generate(): ResponseInterface
+    {
         $imgEditor = new ImageEditor();
         $config = [
             'template' => TEMPLATES_PATH . 'flyer.png',
@@ -65,7 +102,7 @@ class Flyer extends BaseController
             $config['foto']['width'],
             $config['foto']['height'],
             imagesx($fotoImg),
-            imagesy($fotoImg),
+            imagesy($fotoImg)
         );
         imagecopy($outputImg, $template, 0, 0, 0, 0, $config['output']['width'], $config['output']['height']);
         $imgEditor->addTitleText(
@@ -74,7 +111,7 @@ class Flyer extends BaseController
             $config['nama']['fromX'],
             $config['nama']['fromY'],
             $config['nama']['width'],
-            $config['nama']['height'],
+            $config['nama']['height']
         );
         $imgEditor->addBodyText(
             $outputImg,

@@ -13,7 +13,7 @@ if (!function_exists('barcode')) {
      * Helper untuk generate barcode
      * @param string $text Text yang akan diubah menjadi barcode
      * @param bool $withText Tulisan dibawah barcode (Default: true)
-     * @return string Path File (png)
+     * @return string Filename .png on dir TEMPORARY_PATH
      */
     function barcode(string $text, bool $withText = true, array $barColor = [0, 0, 0], bool|array $bgColor = false, int $height = 30)
     {
@@ -33,7 +33,7 @@ if (!function_exists('barcode')) {
 
         file_put_contents($filepath, $barcode);
 
-        return $filepath;
+        return $filename;
     }
 }
 
@@ -42,7 +42,7 @@ if (!function_exists('qrcode')) {
      * Helper untuk generate QRCode
      * @param string $text Text yang akan diubah menjadi QRCode
      * @param bool $withText Tulisan dibawah QRCode (Default: true)
-     * @return string Path File (png)
+     * @return string Filename .png on dir TEMPORARY_PATH
      */
     function qrcode(string $text, string|null $label = null, string|null $logoSrc = null): string
     {
@@ -80,7 +80,7 @@ if (!function_exists('qrcode')) {
 
         $result = $writer->write($qr, $logo, $label);
         $result->saveToFile($filepath);
-        return $filepath;
+        return $filename;
     }
 }
 

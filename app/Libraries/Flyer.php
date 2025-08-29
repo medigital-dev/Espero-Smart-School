@@ -6,6 +6,12 @@ use GdImage;
 
 class Flyer
 {
+    protected GdImage $srcImage;
+    protected GdImage $dstImage;
+    protected GdImage $templateImage;
+
+    public function setTemplate(string $path) {}
+
     /**
      * Tambahkan teks ke dalam gambar dengan pembungkus kata otomatis
      *

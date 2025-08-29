@@ -6,7 +6,53 @@ use GdImage;
 
 class ImageEditor
 {
-    protected $gdImage;
+    /** @var GDImage[] */
+    protected $gdImages = [];
+
+    /**
+     * Auto destroy GDImage
+     * Default: true
+     */
+    protected bool $autoDestroy = true;
+
+    /**
+     * Set apakah autoDestroy aktif atau tidak
+     */
+    public function setAutoDestroy(bool $status): self
+    {
+        $this->autoDestroy = $status;
+        return $this;
+    }
+
+    /**
+     * Auto cleanup ketika objek hancur
+     */
+    public function __destruct()
+    {
+        if ($this->autoDestroy) {
+            $this->destroy(); // otomatis destroy semua
+        }
+    }
+
+    /**
+     * Simpan GDImage ke file
+     *
+     * @param GDImage $gd
+     * @param string  $filePath  Lokasi file output
+     * @param string  $format    png|jpeg|jpg|gif|webp (default: png)
+     * @param int     $quality   Untuk jpeg/webp (0-100), untuk png (0-9)
+     */
+    public function saveImage(GDImage $gd, string $filePath, string $format = 'png', int $quality = 90): bool
+    {
+        $format = strtolower($format);
+        return match ($format) {
+            'jpg', 'jpeg' => imagejpeg($gd, $filePath, max(0, min(100, $quality))),
+            'png'         => imagepng($gd, $filePath, max(0, min(9, (int)($quality / 10)))),
+            'gif'         => imagegif($gd, $filePath),
+            'webp'        => function_exists('imagewebp') ? imagewebp($gd, $filePath, max(0, min(100, $quality))) : false,
+            default       => false,
+        };
+    }
 
     /**
      * Tambahkan teks ke dalam gambar dengan pembungkus kata otomatis
@@ -331,23 +377,301 @@ class ImageEditor
         return $baseImage;
     }
 
+    /**
+     * Convert file gambar menjadi GDImage.
+     */
     public function toGDImage(string $file): GDImage|false
     {
         if (! is_file($file)) {
             return false;
         }
 
-        $info = getimagesize($file);
+        $info = @getimagesize($file);
         if (! $info) {
             return false;
         }
 
         $mime = $info['mime'];
-        return match ($mime) {
-            'image/jpeg' => imagecreatefromjpeg($file),
-            'image/png'  => imagecreatefrompng($file),
-            'image/gif'  => imagecreatefromgif($file),
-            default      => false, // bisa ditambah format lain kalau perlu
+        $gd = match ($mime) {
+            'image/jpeg' => @imagecreatefromjpeg($file),
+            'image/png'  => @imagecreatefrompng($file),
+            'image/gif'  => @imagecreatefromgif($file),
+            'image/webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($file) : false,
+            'image/bmp'  => function_exists('imagecreatefrombmp') ? @imagecreatefrombmp($file) : false,
+            default      => false,
         };
+
+        if ($gd instanceof \GdImage) {
+            $this->gdImages[] = $gd;
+        }
+
+        return $gd;
+    }
+
+    /**
+     * Membuat canvas kosong dengan ukuran dan warna tertentu
+     *
+     * @param int|array         $size    lebar dan tinggi canvas
+     * @param array|string|null $color   warna: 
+     *                                   - array [R,G,B]
+     *                                   - array [R,G,B,A] (A = alpha 0-127)
+     *                                   - "transparent"
+     *                                   - default putih
+     * @return GDImage|false
+     */
+    public function createCanvas(int|array $size = 1080, array|string|null $color = [255, 255, 255]): GDImage|false
+    { // jika input int -> persegi
+        if (is_int($size)) {
+            $width = $height = $size;
+        } elseif (is_array($size) && count($size) === 2) {
+            [$width, $height] = $size;
+        } else {
+            return false; // format salah
+        }
+
+        $gd = imagecreatetruecolor($width, $height);
+        if (! $gd) {
+            return false;
+        }
+
+        // Aktifkan alpha
+        imagealphablending($gd, false);
+        imagesavealpha($gd, true);
+
+        if ($color === 'transparent') {
+            // full transparent
+            $bg = imagecolorallocatealpha($gd, 0, 0, 0, 127);
+        } elseif (is_array($color)) {
+            $r = $color[0] ?? 255;
+            $g = $color[1] ?? 255;
+            $b = $color[2] ?? 255;
+            $a = $color[3] ?? 0; // default solid
+            $bg = imagecolorallocatealpha($gd, $r, $g, $b, $a);
+        } else {
+            // default putih
+            $bg = imagecolorallocate($gd, 255, 255, 255);
+        }
+
+        // Isi background
+        imagefill($gd, 0, 0, $bg);
+
+        // Simpan ke list
+        $this->gdImages[] = $gd;
+
+        return $gd;
+    }
+
+
+    /**
+     * Destroy GDImage
+     * - tanpa parameter → semua
+     * - dengan GDImage  → hanya itu
+     * - dengan index    → hanya di posisi tertentu
+     */
+    public function destroy(GdImage|int|null $target = null): void
+    {
+        if ($target === null) {
+            // destroy semua
+            foreach ($this->gdImages as $i => $img) {
+                if ($img instanceof \GdImage) {
+                    imagedestroy($img);
+                }
+            }
+            $this->gdImages = [];
+            return;
+        }
+
+        if ($target instanceof \GdImage) {
+            // destroy satu GDImage
+            foreach ($this->gdImages as $i => $img) {
+                if ($img === $target) {
+                    imagedestroy($img);
+                    unset($this->gdImages[$i]);
+                    break;
+                }
+            }
+        } elseif (is_int($target) && isset($this->gdImages[$target])) {
+            // destroy berdasarkan index
+            $img = $this->gdImages[$target];
+            if ($img instanceof \GdImage) {
+                imagedestroy($img);
+            }
+            unset($this->gdImages[$target]);
+        }
+
+        // rapikan index array
+        $this->gdImages = array_values($this->gdImages);
+    }
+
+    protected array $textStyles = [
+        'h1' => [
+            'font' => 'Roboto_Condensed-ExtraBold.ttf',
+            'fontSize' => 40,
+            'lineSpacing' => 6,
+            'align' => 'center',
+            'color' => [0, 0, 0],
+            'padding' => 0,
+        ],
+        'h2' => [
+            'font' => 'Roboto_Condensed-ExtraBold.ttf',
+            'fontSize' => 36,
+            'lineSpacing' => 6,
+            'align' => 'center',
+            'color' => [0, 0, 0],
+            'padding' => 0,
+        ],
+        'body' => [
+            'font' => 'OpenSans_SemiCondensed-Bold.ttf',
+            'fontSize' => 32,
+            'lineSpacing' => 16,
+            'align' => 'left',
+            'color' => [0, 0, 0],
+            'padding' => 0,
+        ],
+    ];
+
+    public function addText(
+        GdImage $image,
+        string $style,
+        string $text,
+        int|array|string $pos,       // [x, y] atau string (left/center/right, top/middle/bottom)
+        int|array|string $box = 'auto', // [w, h] atau 'auto'
+        array $overrides = []
+    ): void {
+        if (!isset($this->textStyles[$style])) {
+            throw new \InvalidArgumentException("Style {$style} tidak terdaftar");
+        }
+
+        $opt = array_merge([
+            'padding' => 0,
+            'valign'  => 'middle', // default vertical alignment
+        ], $this->textStyles[$style], $overrides);
+
+        $fontFile = FCPATH . 'assets/fonts/' . $opt['font'];
+        $imageWidth  = imagesx($image);
+        $imageHeight = imagesy($image);
+
+        // === Normalisasi posisi ===
+        if (is_int($pos)) {
+            $pos = [$pos, $pos];
+        } elseif (!is_array($pos)) {
+            throw new \InvalidArgumentException("Posisi harus int atau [x,y]");
+        }
+        [$fromX, $fromY] = $pos;
+
+        // === Normalisasi ukuran box ===
+        if ($box === 'auto') {
+            $boxWidth = 'auto';
+            $boxHeight = 'auto';
+        } elseif (is_int($box)) {
+            $boxWidth = $boxHeight = $box;
+        } elseif (is_array($box)) {
+            [$boxWidth, $boxHeight] = $box;
+        } else {
+            throw new \InvalidArgumentException("Box harus int, [w,h], atau 'auto'");
+        }
+
+        // === Box width auto ===
+        if ($boxWidth === 'auto') {
+            $words = explode(' ', $text);
+            $maxWidth = 0;
+            foreach ($words as $w) {
+                $wBox = imagettfbbox($opt['fontSize'], 0, $fontFile, $w);
+                $wWidth = abs($wBox[2] - $wBox[0]);
+                $maxWidth = max($maxWidth, $wWidth);
+            }
+            $boxWidth = $maxWidth + ($opt['padding'] * 2);
+        }
+
+        // === Word wrap untuk estimasi tinggi ===
+        $lines = [];
+        $currentLine = '';
+        foreach (explode(' ', $text) as $word) {
+            $testLine = $currentLine === '' ? $word : $currentLine . ' ' . $word;
+            $testBox = imagettfbbox($opt['fontSize'], 0, $fontFile, $testLine);
+            $testWidth = abs($testBox[2] - $testBox[0]);
+
+            if ($testWidth > ($boxWidth - ($opt['padding'] * 2)) && $currentLine !== '') {
+                $lines[] = $currentLine;
+                $currentLine = $word;
+            } else {
+                $currentLine = $testLine;
+            }
+        }
+        if ($currentLine !== '') {
+            $lines[] = $currentLine;
+        }
+
+        // === Box height auto ===
+        if ($boxHeight === 'auto') {
+            $boxHeight = count($lines) * ($opt['fontSize'] + $opt['lineSpacing']);
+            $boxHeight += ($opt['padding'] * 2);
+        }
+
+        // === Horizontal pos (string center, left, right) ===
+        if (is_string($fromX)) {
+            if ($fromX === 'left') {
+                $fromX = 0;
+            } elseif ($fromX === 'center') {
+                $fromX = (int)(($imageWidth - $boxWidth) / 2);
+            } elseif ($fromX === 'right') {
+                $fromX = $imageWidth - $boxWidth;
+            } else {
+                throw new \InvalidArgumentException("Posisi X tidak valid: {$fromX}");
+            }
+        }
+
+        // === Vertical pos (string top, middle, bottom) ===
+        if (is_string($fromY)) {
+            if ($fromY === 'top') {
+                $fromY = 0;
+            } elseif ($fromY === 'middle') {
+                $fromY = (int)(($imageHeight - $boxHeight) / 2);
+            } elseif ($fromY === 'bottom') {
+                $fromY = $imageHeight - $boxHeight;
+            } else {
+                throw new \InvalidArgumentException("Posisi Y tidak valid: {$fromY}");
+            }
+        }
+
+        // Mulai menulis dari dalam box (padding + align)
+        $xStart = $fromX + $opt['padding'];
+
+        // === Vertical alignment ===
+        $textTotalHeight = count($lines) * ($opt['fontSize'] + $opt['lineSpacing']);
+        if ($opt['valign'] === 'top') {
+            $y = $fromY + $opt['padding'] + $opt['fontSize'];
+        } elseif ($opt['valign'] === 'bottom') {
+            $y = $fromY + $boxHeight - $textTotalHeight + $opt['fontSize'];
+        } else { // middle
+            $y = $fromY + (int)(($boxHeight - $textTotalHeight) / 2) + $opt['fontSize'];
+        }
+
+        foreach ($lines as $line) {
+            $lineBox = imagettfbbox($opt['fontSize'], 0, $fontFile, $line);
+            $lineWidth = abs($lineBox[2] - $lineBox[0]);
+
+            $lineX = $xStart;
+            if ($opt['align'] === 'center') {
+                $lineX = $fromX + (int)(($boxWidth - $lineWidth) / 2);
+            } elseif ($opt['align'] === 'right') {
+                $lineX = $fromX + $boxWidth - $lineWidth - $opt['padding'];
+            }
+
+            imagettftext(
+                $image,
+                $opt['fontSize'],
+                0,
+                $lineX,
+                $y,
+                is_array($opt['color'])
+                    ? imagecolorallocate($image, $opt['color'][0], $opt['color'][1], $opt['color'][2])
+                    : $opt['color'],
+                $fontFile,
+                $line
+            );
+
+            $y += $opt['fontSize'] + $opt['lineSpacing'];
+        }
     }
 }
