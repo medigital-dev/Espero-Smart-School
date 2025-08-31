@@ -63,69 +63,92 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <h3 class="card-title">Form Flyer</h3>
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="text-bold m-0">Flyer Prestasi</h6>
-                                    <hr class="my-2">
-                                    <form id="formPrestasi-tambahFlyer">
-                                        <input type="hidden" name="kode" id="kodeFlyer">
-                                        <div class="form-group row">
-                                            <label for="formPrestasi-untuk" class="col-sm-3 col-form-label">Untuk</label>
-                                            <div class="col-sm-9">
-                                                <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-                                                    <label class="btn btn-outline-primary">
-                                                        <input type="radio" name="target" value="pd"> Murid
-                                                    </label>
-                                                    <label class="btn btn-outline-primary disabled">
-                                                        <input type="radio" name="target" value="gtk"> Guru/TU
-                                                    </label>
-                                                    <label class="btn btn-outline-primary">
-                                                        <input type="radio" name="target" value="custom"> Custom
-                                                    </label>
-                                                </div>
-                                            </div>
+                                    <div class="d-flex flex-column flex-sm-row align-items-start w-100">
+
+                                        <div class="nav flex-row flex-sm-column nav-tabs h-100 mr-4 mb-3 mb-sm-0 border-bottom flex-nowrap" id="tabs-tab" role="tablist" aria-orientation="vertical" style="min-width: 120px;">
+                                            <a class="nav-link active" id="tabs-prestasi-tab" data-toggle="pill" href="#tabs-prestasi" role="tab" aria-controls="tabs-prestasi" aria-selected="true">Prestasi</a>
+                                            <a class="nav-link" id="tabs-profile-tab" data-toggle="pill" href="#tabs-profile" role="tab" aria-controls="tabs-profile" aria-selected="false">Duka Cita</a>
+                                            <a class="nav-link" id="tabs-messages-tab" data-toggle="pill" href="#tabs-messages" role="tab" aria-controls="tabs-messages" aria-selected="false">Informasi</a>
+                                            <a class="nav-link" id="tabs-settings-tab" data-toggle="pill" href="#tabs-settings" role="tab" aria-controls="tabs-settings" aria-selected="false">Settings</a>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="formPrestasi-atasNama" class="col-sm-3 col-form-label">Nama</label>
-                                            <div class="col-sm-9" id="formPrestasi-nama">
-                                                <input type="text" class="form-control" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="formPrestasi-content" class="col-sm-3 col-form-label">Uraian</label>
-                                            <div class="col-sm-9">
-                                                <textarea class="form-control" id="formPrestasi-content" name="isi" rows="3"></textarea>
-                                                <div class="invalid-feedback">Harus di input!</div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row mb-1">
-                                            <label for="formPrestasi-fotoJuara" class="col-sm-3 col-form-label">Foto</label>
-                                            <div class="col-sm-9">
-                                                <div class="mb-2">
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="formPrestasi-fotoJuara" accept="image/*">
-                                                        <label class="custom-file-label" for="formPrestasi-fotoJuara">Choose file</label>
-                                                        <div class="invalid-feedback">File foto harus di pilih!</div>
+
+                                        <div class="tab-content w-100 mb-3 mb-sm-0" id="tabs-tabContent">
+                                            <div class="tab-pane active show fade" id="tabs-prestasi" role="tabpanel" aria-labelledby="tabs-prestasi-tab">
+                                                <h6 class="text-bold m-0">Flyer Prestasi</h6>
+                                                <hr class="my-2">
+                                                <form id="formFlyer-prestasi">
+                                                    <input type="hidden" name="kode" id="formFlyer-prestasi_kode">
+                                                    <div class="form-group row">
+                                                        <label for="formFlyer-prestasi_untuk" class="col-sm-3 col-form-label">Untuk</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                                                                <label class="btn btn-outline-primary">
+                                                                    <input type="radio" name="target" value="pd"> Murid
+                                                                </label>
+                                                                <label class="btn btn-outline-primary disabled">
+                                                                    <input type="radio" name="target" value="gtk"> Guru/TU
+                                                                </label>
+                                                                <label class="btn btn-outline-primary">
+                                                                    <input type="radio" name="target" value="custom"> Custom
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="formFlyer-prestasi_atasNama" class="col-sm-3 col-form-label">Nama</label>
+                                                        <div class="col-sm-9" id="formFlyer-prestasi_nama">
+                                                            <input type="text" class="form-control" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="formFlyer-prestasi_content" class="col-sm-3 col-form-label">Uraian</label>
+                                                        <div class="col-sm-9">
+                                                            <textarea class="form-control" id="formFlyer-prestasi_content" name="isi" rows="3"></textarea>
+                                                            <div class="invalid-feedback">Harus di input!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row mb-1">
+                                                        <label for="formFlyer-prestasi_foto" class="col-sm-3 col-form-label">Foto</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="mb-2">
+                                                                <div class="custom-file">
+                                                                    <input type="file" class="custom-file-input" id="formFlyer-prestasi_foto" accept="image/*">
+                                                                    <label class="custom-file-label" for="formFlyer-prestasi_foto">Choose file</label>
+                                                                    <div class="invalid-feedback">File foto harus di pilih!</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <div class="mb-1 d-none w-100" id="formFlyer-prestasi_fotoPreview" style="max-height: 360px;">
+                                                                    <img id="previewImage" class="img-fluid">
+                                                                    <small class="form-text text-muted text-center m-0 mb-2">
+                                                                        Pastikan wajah berada ditengah-tengah bingkai.
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <div class="form-group row mb-0">
+                                                    <label for="formFlyer-prestasi_preview" class="col-sm-3 col-form-label">Preview</label>
+                                                    <div class="col-sm-9" id="formFlyer-prestasi_preview">
+                                                        <p class="text-center pt-2 m-0 small">Klik tombol generate terlebih dahulu.</p>
                                                     </div>
                                                 </div>
-                                                <div class="mb-2">
-                                                    <div class="mb-1 d-none w-100" id="fotoPreview" style="max-height: 360px;">
-                                                        <img id="previewImage" class="img-fluid">
-                                                        <small class="form-text text-muted text-center m-0 mb-2">
-                                                            Pastikan wajah berada ditengah-tengah bingkai.
-                                                        </small>
-                                                    </div>
+                                                <hr class="my-2">
+                                                <div class="float-right">
+                                                    <button type="button" class="btn btn-outline-primary" id="btnRun-generateFlyer"><i class="fas fa-save mr-1"></i>Generate</button>
                                                 </div>
                                             </div>
+                                            <div class="tab-pane fade" id="tabs-profile" role="tabpanel" aria-labelledby="tabs-profile-tab">
+                                                Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                                            </div>
+                                            <div class="tab-pane fade" id="tabs-messages" role="tabpanel" aria-labelledby="tabs-messages-tab">
+                                                Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+                                            </div>
+                                            <div class="tab-pane fade" id="tabs-settings" role="tabpanel" aria-labelledby="tabs-settings-tab">
+                                                Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
+                                            </div>
                                         </div>
-                                    </form>
-                                    <div class="form-group row mb-0">
-                                        <label for="previewFlyer" class="col-sm-3 col-form-label">Preview</label>
-                                        <div class="col-sm-9" id="previewFlyer">
-                                            <p class="text-center pt-2 m-0 small">Klik tombol generate terlebih dahulu.</p>
-                                        </div>
-                                    </div>
-                                    <hr class="my-2">
-                                    <div class="float-right">
-                                        <button type="button" class="btn btn-outline-primary" id="btnRun-generateFlyer"><i class="fas fa-save mr-1"></i>Generate</button>
                                     </div>
                                 </div>
                             </div>
@@ -184,19 +207,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
         $(document).ready(function() {
             $('input[name="target"]').on('change', function() {
-                const anElm = $('#formPrestasi-nama');
+                const anElm = $('#formFlyer-prestasi_nama');
 
                 if ($(this).val() == 'pd') {
-                    anElm.html(`<select class="custom-select select2-getPd" name="idTarget" id="formPrestasi-atasNama"></select><div class="invalid-feedback">Harus di input!</div>`);
+                    anElm.html(`<select class="custom-select select2-getPd" name="idTarget" id="formFlyer-prestasi_atasNama"></select><div class="invalid-feedback">Harus di input!</div>`);
                     runSelect2GetPd();
                 } else if ($(this).val() == 'custom') {
-                    anElm.html('<input type="text" name="idTarget" id="formPrestasi-atasNama" class="form-control"><div class="invalid-feedback">Harus di input!</div>')
+                    anElm.html('<input type="text" name="idTarget" id="formFlyer-prestasi_atasNama" class="form-control"><div class="invalid-feedback">Harus di input!</div>')
                 }
             });
 
             let cropper;
-            $("#formPrestasi-fotoJuara").on("change", function(e) {
-                const $prevElm = $('#fotoPreview');
+            $("#formFlyer-prestasi_foto").on("change", function(e) {
+                const $prevElm = $('#formFlyer-prestasi_fotoPreview');
                 const $image = $("#previewImage");
                 const files = e.target.files;
                 if (files && files.length > 0) {
@@ -217,8 +240,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             $('#btnRun-generateFlyer').on('click', async function() {
                 const btn = $(this);
-                if (!validationElm(['formPrestasi-atasNama', 'formPrestasi-content', 'formPrestasi-fotoJuara'], ['', null])) return;
-                const form = $('#formPrestasi-tambahFlyer');
+                if (!validationElm(['formFlyer-prestasi_atasNama', 'formFlyer-prestasi_content', 'formFlyer-prestasi_foto'], ['', null])) return;
+                const form = $('#formFlyer-prestasi');
                 cropper.getCroppedCanvas({
                     width: 720,
                     height: 720,
@@ -234,8 +257,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     console.log(resp);
 
                     if (resp) {
-                        $('#kodeFlyer').val(resp.kode);
-                        $('#previewFlyer').html(`
+                        $('#formFlyer-prestasi_kode').val(resp.kode);
+                        $('#formFlyer-prestasi_preview').html(`
                             <div class="mb-1">
                                 <a href="${resp.src}" data-fancybox>
                                     <img src="${resp.src}" class="img-fluid">
