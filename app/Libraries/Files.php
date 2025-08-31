@@ -11,10 +11,10 @@ class Files
      * Library unggah berkas
      * @param UploadedFile $file Berkas yang diupload
      * @param array $allowedExtension ekstensi yang diizinkan untuk diupload (default [] => semua diperbolehkan)
-     * @param string $toFolder Lokasi penyimpanan, default di "assets/files/uploads/", isi string untuk membuat folder baru di "assets/files/uploads/"
+     * @param string $toFolder Lokasi penyimpanan, default di UPLOAD_PATH
      * @return array status dan pesan
      */
-    public function upload(UploadedFile $file, array $allowedExtension = [], string $toFolder = ''): array
+    public function upload(UploadedFile $file, string $toFolder = '', array $allowedExtension = []): array
     {
         if (!$file->isValid()) {
             return ['status' => false, 'message' => 'Upload Error.', 'error' => $file->getError(), 'data' => []];
@@ -24,7 +24,7 @@ class Files
             return ['status' => false, 'message' => 'Upload Error.', 'error' => 'Format file tidak sesuai. [' . implode(', ', $allowedExtension) . ']', 'data' => []];
         }
 
-        $folder = WRITEPATH . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $toFolder);
+        $folder = WRITEPATH . $toFolder;
         if (!is_dir($folder)) {
             if (!mkdir($folder, 0777, true) && !is_dir($folder)) {
                 return ['status' => false, 'message' => 'Upload Error', 'error' => 'Gagal membuat folder penyimpanan.', 'data' => []];
@@ -35,7 +35,8 @@ class Files
         $set = [
             'clientname' => $file->getClientName(),
             'filename' => $newName,
-            'path' => $folder . DIRECTORY_SEPARATOR . $newName,
+            'path' => $toFolder,
+            'fullpath' => $toFolder . DIRECTORY_SEPARATOR . $newName,
             'type' => $file->getMimeType(),
             'extension' => $file->getExtension(),
             'size' => $file->getSize(),
@@ -48,9 +49,12 @@ class Files
         return ['status' => true, 'message' => 'Upload Berhasil.', 'error' => null, 'data' => $set];
     }
 
-    public function saveUpload(UploadedFile $file, array|string $allowedExtension = '*', string $toFolder = '/'): string|null
+    public function saveUpload(UploadedFile $file, string $toFolder = '', array|string $allowedExtension = '*', array|string $return = 'file_id'): array|string|null
     {
-        $data = $this->upload($file, $allowedExtension, $toFolder);
+        if ($allowedExtension == '*')
+            $allowedExtension = [];
+
+        $data = $this->upload($file, $toFolder, $allowedExtension);
         if (!$data['status']) return null;
 
         helper('string');
@@ -58,7 +62,16 @@ class Files
         $set = $data['data'];
         $set['file_id'] = idUnik($model, 'file_id');
         if (!$model->save($set)) return null;
-        return $set['file_id'];
+        if (is_string($return))
+            return $set[$return];
+        else if (is_array($return)) {
+            $send = [];
+            foreach ($return as $key) {
+                $send[$key] = $set[$key];
+            }
+            return $send;
+        }
+        return true;
     }
 
     public function get(string|null $id = null, array|string $select = '*'): array|string|null

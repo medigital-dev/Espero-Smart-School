@@ -35,14 +35,14 @@ if (!function_exists('upload')) {
      * Helper untuk mengunggah berkas
      * @param UploadedFile $file Berkas yang akan diupload
      * @param string|array $allowedExtension Extensi yang diperbolehkan. Default '*' semua file
-     * @param string $toFolder Target penyimpanan berkas yang diupload.
+     * @param string $toFolder Target penyimpanan berkas yang diupload. Default: uploads
      * @return string ID file
      * @return null Jika gagal upload.
      */
-    function upload(UploadedFile $file, string|array $allowedExtension = '*', string $toFolder = '/'): string|null
+    function upload(UploadedFile $file, string $toFolder = '', string|array $allowedExtension = '*', string|array $return = 'file_id'): array|string|null
     {
         $lib = new Files();
-        return $lib->saveUpload($file, $allowedExtension, $toFolder);
+        return $lib->saveUpload($file, 'uploads/' . $toFolder, $allowedExtension, $return);
     }
 }
 
@@ -61,7 +61,8 @@ if (!function_exists('tempUpload')) {
     function tempUpload(UploadedFile $file): string|null
     {
         cleanFiles(TEMPORARY_PATH);
-        return (new Files())->upload($file, [], 'temporary')['data']['path'] ?? null;
+        $result = (new Files())->upload($file, 'temporary');
+        return $result['status'] ? $result['data']['filename'] : null;
     }
 }
 
@@ -121,5 +122,25 @@ if (!function_exists('public_src')) {
     function public_src($type, $filename)
     {
         return base_url('files/' . $type . '/' . $filename);
+    }
+}
+
+if (!function_exists('tempSrc')) {
+    /**
+     * Helper membuat path source dari TEMPORARY_PATH
+     */
+    function tempSrc($filename): string
+    {
+        return base_url('files/temp/' . $filename);
+    }
+}
+
+if (!function_exists('uploadSrc')) {
+    /**
+     * Helper membuat path source dari UPLOADS_PATH
+     */
+    function uploadSrc($filename): string
+    {
+        return base_url('files/upload/' . $filename);
     }
 }

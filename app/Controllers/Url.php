@@ -39,8 +39,7 @@ class Url extends BaseController
         $path = $type . $filename;
 
         if (!is_file($path)) {
-            echo $path;
-            // throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("File tidak ditemukan");
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("File tidak ditemukan");
         }
 
         // kembalikan file sebagai download

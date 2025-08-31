@@ -66,10 +66,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <h6 class="text-bold m-0">Flyer Prestasi</h6>
                                     <hr class="my-2">
                                     <form id="formPrestasi-tambahFlyer">
+                                        <input type="hidden" name="kode" id="kodeFlyer">
+                                        <div class="form-group row">
+                                            <label for="formPrestasi-untuk" class="col-sm-3 col-form-label">Untuk</label>
+                                            <div class="col-sm-9">
+                                                <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                                                    <label class="btn btn-outline-primary">
+                                                        <input type="radio" name="target" value="pd"> Murid
+                                                    </label>
+                                                    <label class="btn btn-outline-primary disabled">
+                                                        <input type="radio" name="target" value="gtk"> Guru/TU
+                                                    </label>
+                                                    <label class="btn btn-outline-primary">
+                                                        <input type="radio" name="target" value="custom"> Custom
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <label for="formPrestasi-atasNama" class="col-sm-3 col-form-label">Nama</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="formPrestasi-atasNama" class="form-control" name="nama">
+                                            <div class="col-sm-9" id="formPrestasi-nama">
+                                                <input type="text" class="form-control" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -166,6 +183,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- myScript -->
     <script>
         $(document).ready(function() {
+            $('input[name="target"]').on('change', function() {
+                const anElm = $('#formPrestasi-nama');
+
+                if ($(this).val() == 'pd') {
+                    anElm.html(`<select class="custom-select select2-getPd" name="idTarget" id="formPrestasi-atasNama"></select><div class="invalid-feedback">Harus di input!</div>`);
+                    runSelect2GetPd();
+                } else if ($(this).val() == 'custom') {
+                    anElm.html('<input type="text" name="idTarget" id="formPrestasi-atasNama" class="form-control"><div class="invalid-feedback">Harus di input!</div>')
+                }
+            });
+
             let cropper;
             $("#formPrestasi-fotoJuara").on("change", function(e) {
                 const $prevElm = $('#fotoPreview');
@@ -203,17 +231,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         method: 'POST',
                         button: btn
                     });
+                    console.log(resp);
+
                     if (resp) {
+                        $('#kodeFlyer').val(resp.kode);
                         $('#previewFlyer').html(`
                             <div class="mb-1">
-                                <a href="${resp}" data-fancybox>
-                                    <img src="${resp}" class="img-fluid">
+                                <a href="${resp.src}" data-fancybox>
+                                    <img src="${resp.src}" class="img-fluid">
                                 </a>
                             </div>
                             <p class="form-text text-muted small m-0 mb-1">
                                 Klik pada foto untuk memperbesar.
                             </p>
-                            <a class="btn btn-sm btn-success" href="${resp}" download><i class="fas fa-download fa-fw"></i>Unduh Flyer</a>
+                            <a class="btn btn-sm btn-success" href="${resp.src}" download><i class="fas fa-download fa-fw"></i>Unduh Flyer</a>
                         `);
                     }
                 });

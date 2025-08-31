@@ -43,7 +43,7 @@
         <img src="/assets/img/brands/logo2.png" alt="Logo Espero Smart School" height="40">
         <img src="/assets/img/brands/logo-ess2.png" alt="Logo Espero Smart School" height="40">
         <h1>Under Construction</h1>
-        <p>We are currently working on something amazing!</p>
+        <p>Proyek Digitalisasi Sekolah <br>sedang dalam proses pengembangan!</p>
         <small style="color:dodgerblue; font-weight:bold;">&copy; 2025 | Tim IT dan Digitalisasi Sekolah</small>
     </div>
 </body>
