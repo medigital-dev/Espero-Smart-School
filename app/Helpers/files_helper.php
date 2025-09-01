@@ -34,9 +34,9 @@ if (!function_exists('upload')) {
     /**
      * Helper untuk mengunggah berkas
      * @param UploadedFile $file Berkas yang akan diupload
-     * @param string|array $allowedExtension Extensi yang diperbolehkan. Default '*' semua file
      * @param string $toFolder Target penyimpanan berkas yang diupload. Default: uploads
-     * @return string ID file
+     * @param string|array $allowedExtension Extensi yang diperbolehkan. Default '*' semua file
+     * @return string $return
      * @return null Jika gagal upload.
      */
     function upload(UploadedFile $file, string $toFolder = '', string|array $allowedExtension = '*', string|array $return = 'file_id'): array|string|null

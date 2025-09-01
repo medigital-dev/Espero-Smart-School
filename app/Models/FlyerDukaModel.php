@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class FilesModel extends Model
+class FlyerDukaModel extends Model
 {
-    protected $table      = 'files';
+    protected $table      = 'flyer_duka';
     protected $primaryKey = 'id';
 
     protected $useTimestamps = true;
@@ -14,13 +14,10 @@ class FilesModel extends Model
 
     protected $allowedFields = [
         'deleted_at',
-        'file_id',
-        'clientname',
-        'filename',
-        'extension',
-        'path',
-        'size',
-        'type',
-        'fullpath',
+        'flyer_id',
+        'kode',
+        'foto_id',
+        'nama',
+        'keterangan',
     ];
 }

@@ -134,7 +134,9 @@ $routes->group('/webService', ['namespace' => 'App\Controllers\Api\Public'], fun
     // $routes->post('getPd', 'Datatables::publicPd');
     $routes->get('peserta-didik/get/select2', 'PesertaDidik::getPd_select2');
     // $routes->post('peserta-didik/prestasi/set/(:segment)', 'PesertaDidik::setFlyer/$1');
-    $routes->post('flyer/generate', 'Flyer::prestasi');
+    $routes->post('flyer/prestasi/generate', 'Flyer::prestasi');
+    $routes->post('flyer/duka/generate', 'Flyer::duka');
+    $routes->post('flyer/info/generate', 'Flyer::info');
 });
 
 // Files Source
