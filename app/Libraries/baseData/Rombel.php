@@ -11,7 +11,6 @@ class Rombel
         $model = new RombonganBelajarModel();
         $model
             ->join('guru_pegawai', 'guru_pegawai.guru_pegawai_id = rombongan_belajar.ptk_id', 'left')
-            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
             ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
             ->orderBy('tingkat_pendidikan', 'ASC')
             ->orderBy('rombongan_belajar.nama', 'ASC');
@@ -23,9 +22,6 @@ class Rombel
                 'tingkat_pendidikan as tingkat',
                 'guru_pegawai.nama as gtk_nama',
                 'guru_pegawai.guru_pegawai_id as gtk_id',
-                'semester.kode as semester_kode',
-                'semester.semester_id as semester_id',
-                'semester.status',
                 'ref_kurikulum.nama as kurikulum_nama',
                 'ref_kurikulum.kode as kurikulum_kode',
                 'ref_kurikulum.id as kurikulum_id',
@@ -36,7 +32,7 @@ class Rombel
         if (is_null($id))
             return $model->findAll();
         if (is_bool($id))
-            return $model->where('semester.status', $id)->findAll();
+            return $model->where('rombongan_belajar.status', $id)->findAll();
 
         return $model->where('rombel_id', $id)->first();
     }
@@ -45,15 +41,45 @@ class Rombel
     {
         $model = new RombonganBelajarModel();
         $model->select('rombongan_belajar.rombel_id')
-            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
             ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.rombel_id = rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
             ->where('peserta_didik_id', $id)
         ;
         if ($aktif) {
-            $res = $model->where('semester.status', true)->first();
+            $res = $model
+                ->where('semester.status', true)
+                ->first();
             return $res ? $res['rombel_id'] : null;
         }
         return $model
             ->findAll();
+    }
+
+    public function save(array $set = [], string|array|null $keyname = null): string|null
+    {
+        $model = new RombonganBelajarModel();
+        $ifExist = false;
+        if (is_string($keyname)) {
+            $ifExist = $model->where($keyname, $set[$keyname])->first();
+            if ($ifExist) {
+                $set['id'] = $ifExist['id'];
+                $set['rombel_id'] = $ifExist['rombel_id'];
+            }
+        } else if (is_array($keyname) && count($keyname) > 0) {
+            $model->groupStart();
+            foreach ($keyname as $key) {
+                $model->where($key, $set[$key]);
+            }
+            $model->groupEnd();
+            $ifExist = $model->first();
+            if ($ifExist) {
+                $set['id'] = $ifExist['id'];
+                $set['rombel_id'] = $ifExist['rombel_id'];
+            }
+        }
+        if (!isset($set['rombel_id'])) $set['rombel_id'] = idUnik($model, 'rombel_id');
+        if (!$model->save($set)) return false;
+
+        return $set['rombel_id'];
     }
 }

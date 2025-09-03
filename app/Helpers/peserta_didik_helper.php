@@ -69,8 +69,9 @@ if (!function_exists('rombel')) {
     {
         $libRombel = new Rombel();
         $res = $libRombel->rombelPd($id, true);
-        if ($res) {
-            $rombel = $libRombel->get($res, 'rombongan_belajar.nama');
+        if (!is_null($res)) {
+            $rombel = $libRombel
+                ->get($res, 'rombongan_belajar.nama');
             return $rombel['nama'] ?? null;
         }
         return null;

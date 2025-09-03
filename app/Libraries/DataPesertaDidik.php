@@ -192,7 +192,7 @@ class DataPesertaDidik
                 $this->query
                     ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
                     ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-                    ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
+                    ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
                     ->where('semester.status', true)
                     ->where('mutasi_pd.id');
             } else if ($status_pd == 'mutasi') {
@@ -212,7 +212,7 @@ class DataPesertaDidik
             $this->query
                 ->join('anggota_rombongan_belajar', 'peserta_didik.peserta_didik_id = anggota_rombongan_belajar.peserta_didik_id', 'left')
                 ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-                ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
+                ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
                 ->where('tingkat_pendidikan', $tingkat)
                 ->where('status', true);
         }

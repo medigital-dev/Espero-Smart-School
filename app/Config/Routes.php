@@ -55,6 +55,7 @@ $routes->group('/api/v0', ['namespace' => 'App\Controllers\Api'], function ($rou
     // $routes->get('buku-induk/peserta-didik/show/(:segment)', 'PesertaDidik::show/$1');
     // $routes->post('buku-induk/peserta-didik/identitas/save/(:segment)', 'PesertaDidik::saveIdentitas/$1');
 
+    $routes->resource('semester');
     $routes->resource('kelulusan');
     $routes->resource('mutasiPd');
     $routes->resource('referensi');
@@ -133,6 +134,7 @@ $routes->group('/api/v0/buku-induk/peserta-didik', ['namespace' => 'App\Controll
 $routes->group('/webService', ['namespace' => 'App\Controllers\Api\Public'], function ($routes) {
     // $routes->post('getPd', 'Datatables::publicPd');
     $routes->get('peserta-didik/get/select2', 'PesertaDidik::getPd_select2');
+    $routes->get('semester/get/select2', 'Webservice::select2_getSemester');
     // $routes->post('peserta-didik/prestasi/set/(:segment)', 'PesertaDidik::setFlyer/$1');
     $routes->post('flyer/prestasi/generate', 'Flyer::prestasi');
     $routes->post('flyer/duka/generate', 'Flyer::duka');

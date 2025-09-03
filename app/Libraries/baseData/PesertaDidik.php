@@ -141,7 +141,7 @@ class PesertaDidik
             ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->groupBy(['peserta_didik.peserta_didik_id', 'rombongan_belajar.nama'])
             ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
-            ->join('semester', 'semester.kode = rombongan_belajar.semester_kode', 'left')
+            ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
         ;
 
         if (is_bool($isAktif)) {

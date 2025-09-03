@@ -17,8 +17,8 @@ class RombonganBelajarModel extends Model
         'rombel_id',
         'nama',
         'tingkat_pendidikan',
-        'semester_kode',
         'ptk_id',
         'kurikulum_id',
+        'status',
     ];
 }

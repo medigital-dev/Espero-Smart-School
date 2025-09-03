@@ -312,6 +312,7 @@
     <script src="<?= base_url('plugins/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
     <script src="<?= base_url('plugins/moment/moment-with-locales.js'); ?>"></script>
     <script src="<?= base_url('plugins/bootstrap4-offcanvas/offcanvas-bs4.js'); ?>"></script>
+    <script src="<?= base_url('plugins/bootstrap-switch/js/bootstrap-switch.min.js'); ?>"></script>
     <script src="<?= base_url('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
     <script src="<?= base_url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js'); ?>"></script>
     <script src="<?= base_url('plugins/datatables-responsive/js/dataTables.responsive.min.js'); ?>"></script>
@@ -1261,6 +1262,36 @@
                 $('#' + targetElm).find('option[value="' + idOpt + '"]').remove()
                 $('#' + targetElm).val(null).trigger('change');
                 $('#modalReferensi').modal('hide');
+            });
+
+            $('#btnCancel-simpanSemester').on('click', function() {
+                const target = $('#idTarget-semester').val();
+                const elm = $('option[value="' + target + '"]');
+                const select = elm.parents('select');
+                elm.remove();
+                select.val(null).trigger('change');
+                $('#modalTambahSemester').modal('hide');
+            });
+
+            $('#btnRun-simpanSemester').on('click', async function() {
+                const btn = $(this);
+                const formElm = $('#formSemester-add');
+                const resp = await fetchData({
+                    url: '/api/v0/semester',
+                    data: formElm.serializeArray(),
+                    method: 'POST',
+                    button: btn,
+                });
+                if (!resp) return;
+                formElm.trigger('reset').find('select,textarea').val(null).trigger('change');
+                $('#refPreview').html('');
+                $('#modalTambahSemester').modal('hide');
+                const newOpt = new Option(resp.nama, resp.ref_id, false, true);
+                $('#formImport-pd_semester').append(newOpt);
+            });
+
+            $('input[data-bootstrap-switch]').on('switchChange.bootstrapSwitch', function(event, state) {
+                $(this).parents('.form-group').find('input:hidden').val(state ? 1 : 0);
             });
 
             $('#btnRun-saveBeasiswa').on('click', async function() {

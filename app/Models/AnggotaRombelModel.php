@@ -18,5 +18,6 @@ class AnggotaRombelModel extends Model
         'peserta_didik_id',
         'rombel_id',
         'jenis_registrasi_rombel',
+        'semester_kode',
     ];
 }

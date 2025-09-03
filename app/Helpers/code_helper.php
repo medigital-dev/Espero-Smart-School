@@ -13,7 +13,13 @@ if (!function_exists('barcode')) {
      * Helper untuk generate barcode
      * @param string $text Text yang akan diubah menjadi barcode
      * @param bool $withText Tulisan dibawah barcode (Default: true)
-     * @return string Filename .png on dir TEMPORARY_PATH
+     * @param array $barColor Warna bar [r, g, b]
+     * @param bool|array $bgColor Warna latar belakang
+     *                  - false tidak ada warna latar belakang (transparan)
+     *                  - true Warna putih
+     *                  - array [r,g,b] warna dalam RGB
+     * @param int $height Tinggi bar dalam px. (Default 30)
+     * @return string fullpath lokasi file barcode
      */
     function barcode(string $text, bool $withText = true, array $barColor = [0, 0, 0], bool|array $bgColor = false, int $height = 30)
     {
@@ -33,7 +39,7 @@ if (!function_exists('barcode')) {
 
         file_put_contents($filepath, $barcode);
 
-        return $filename;
+        return TEMPORARY_PATH . $filename;
     }
 }
 
@@ -131,7 +137,7 @@ function add_text_to_barcode(
     $newImg = imagecreatetruecolor($newWidth, $newHeight);
 
     // Atur background
-    if ($background === true) {
+    if ($background === false) {
         // transparan
         imagesavealpha($newImg, true);
         $transparent = imagecolorallocatealpha($newImg, 0, 0, 0, 127);

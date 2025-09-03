@@ -36,7 +36,7 @@ class Files
             'clientname' => $file->getClientName(),
             'filename' => $newName,
             'path' => $toFolder,
-            'fullpath' => $toFolder . DIRECTORY_SEPARATOR . $newName,
+            'fullpath' => $folder . DIRECTORY_SEPARATOR . $newName,
             'type' => $file->getMimeType(),
             'extension' => $file->getExtension(),
             'size' => $file->getSize(),

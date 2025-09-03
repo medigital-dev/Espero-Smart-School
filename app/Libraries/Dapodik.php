@@ -11,7 +11,7 @@ class Dapodik
 {
     public function __construct()
     {
-        helper(['string', 'indonesia', 'referensi', 'file']);
+        helper(['string', 'indonesia', 'referensi', 'file', 'semester', 'rombel']);
     }
 
     public function config(): array|null
@@ -156,7 +156,6 @@ class Dapodik
 
                     if (isset($row['rombongan_belajar_id'])) $temp['rombel'] = [
                         'rombel_id' => $row["rombongan_belajar_id"],
-                        'semester_kode' => $row['semester_id'],
                         'tingkat_pendidikan' => $row["tingkat_pendidikan_id"],
                         'nama' => $row["nama_rombel"],
                         'kurikulum_id' => saveKurikulum($row["kurikulum_id_str"],)
@@ -166,7 +165,7 @@ class Dapodik
                         'anggota_id' => $row["anggota_rombel_id"],
                         'peserta_didik_id' => $row["peserta_didik_id"],
                         'rombel_id' => $row["rombongan_belajar_id"],
-                        // 'jenis_registrasi_rombel' => saveJenisRegistrasi($row['jenis_pendaftaran_id_str']),
+                        'semester_kode' => semester(true, 'semester_kode')
                     ];
                     $response[] = $temp;
                 }
@@ -359,6 +358,14 @@ class Dapodik
                             'rekening' => null,
                             'layak_pip' => null,
                             'kesejahteraan' => [],
+                            'rombel' => [
+                                'rombel_id' => saveRombel(['nama' => $row[42]], 'nama'),
+                                'nama' => $row[42],
+                            ],
+                            'anggotaRombel' => [
+                                'rombel_id' => saveRombel(['nama' => $row[42]], 'nama'),
+                                'semester_kode' => semester(true, 'kode'),
+                            ]
                         ];
 
                         if ($row[44]) $temp['kelulusan'] = [

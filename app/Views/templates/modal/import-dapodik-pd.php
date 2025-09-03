@@ -10,13 +10,19 @@
             <div class="modal-body">
                 <div id="importStatus"></div>
                 <div class="form-group row">
-                    <label for="" class="col-sm-3 col-form-label">Pilih File</label>
+                    <label for="inputFile" class="col-sm-3 col-form-label">Pilih File</label>
                     <div class="col-sm-9">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="inputFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                             <label class="custom-file-label" for="inputFile">Pilih file</label>
                         </div>
                         <small id="fileHelp" class="form-text text-muted">Pilih file excel hasil unduh daftar peserta didik di Aplikasi Dapodik</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="formImport-pd_semester" class="col-sm-3 col-form-label">Semester</label>
+                    <div class="col-sm-9">
+                        <select name="semester_kode" id="formImport-pd_semester" data-tags="true" class="custom-select select2-getSemester"></select>
                     </div>
                 </div>
                 <div class="form-group row mb-2">
@@ -154,6 +160,22 @@
                                         <input type="checkbox" id="formImport-checkKelulusan" name="kelulusan">
                                         <label for="formImport-checkKelulusan">
                                             Kelulusan
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formImport-checkRombel" name="rombel">
+                                        <label for="formImport-checkRombel">
+                                            Rombel
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col mb-2">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="checkbox" id="formImport-checkAnggotaRombel" name="anggotaRombel">
+                                        <label for="formImport-checkAnggotaRombel">
+                                            Anggota Rombel
                                         </label>
                                     </div>
                                 </div>

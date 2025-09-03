@@ -40,7 +40,7 @@ class Flyer extends BaseController
         $editor->addText($gdCanvas, 'body', $set['konten'], ['center', 320], [900, 'auto'], ['color' => [255, 240, 0], 'fontSize' => 32, 'lineSpacing' => 24, 'align' => 'center']);
         // Barcode
         $barcode = barcode($set['kode'], true, [255, 255, 255], true);
-        $gdBarcode = $editor->toGDImage(TEMPORARY_PATH . $barcode);
+        $gdBarcode = $editor->toGDImage($barcode);
         $editor->mergeImage($gdCanvas, $gdBarcode, 'right', 'bottom');
         // output
         $dir = TEMPORARY_PATH;
@@ -85,7 +85,7 @@ class Flyer extends BaseController
         $editor->addText($gdCanvas, 'body', $set['keterangan'], ['center', 800], [720, 'auto'], ['color' => [255, 240, 0], 'fontSize' => 16, 'align' => 'center']);
         // Barcode
         $barcode = barcode($set['kode'], true, [255, 255, 255], true);
-        $gdBarcode = $editor->toGDImage(TEMPORARY_PATH . $barcode);
+        $gdBarcode = $editor->toGDImage($barcode);
         $editor->mergeImage($gdCanvas, $gdBarcode, 'right', 'bottom');
         // output
         $dir = TEMPORARY_PATH;
@@ -149,7 +149,7 @@ class Flyer extends BaseController
         $editor->addText($gdCanvas, 'h1', $nama, ['center', 620], [700, 110], ['color' => [255, 255, 255]]);
         $editor->addText($gdCanvas, 'body', $isi, ['center', 780], [720, 200], ['align' => 'center', 'valign' => 'top', 'color' => [255, 240, 0]]);
         $barcode = barcode($set['kode'], true, [255, 255, 255], true);
-        $gbBarcode = $editor->toGDImage(TEMPORARY_PATH . $barcode);
+        $gbBarcode = $editor->toGDImage($barcode);
         $editor->mergeImage($gdCanvas, $gbBarcode, 'right', 'bottom');
 
         // output

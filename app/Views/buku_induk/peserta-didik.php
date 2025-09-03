@@ -124,7 +124,7 @@
         </div>
     </div>
 </div>
-<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi', 'sync-pd']); ?>
+<?= modal(['mutasi-pd', 'import-dapodik-pd', 'kelulusan-pd', 'batal-mutasi-pd', 'referensi', 'sync-pd', 'addSemester']); ?>
 <?= offcanvas(['filter-pd', 'edit-pd']); ?>
 
 <?= $this->endSection(); ?>

@@ -94,6 +94,7 @@ function runSelect2() {
   runSelect2Global();
   runSelect2GetPd();
   runSelect2GetReferensi();
+  runSelect2GetSemester();
 }
 
 function runSelect2Global() {
@@ -128,6 +129,7 @@ function initJs() {
   runBsCustomFileInput();
   runFancyBox();
   runSelectedCount();
+  runBsSwitch();
 }
 
 function resetInput(elmInput, elmDatatables = false) {
@@ -588,5 +590,112 @@ function runSelect2GetReferensi() {
           modalDialog.find("#typeReferensi").val($select.data("referensi"));
         }
       });
+  });
+}
+
+function runSelect2GetSemester() {
+  $(".select2-getSemester").each(function () {
+    const $select = $(this);
+    const $modal = $("#modalTambahSemester");
+    $select
+      .select2({
+        placeholder: $select.data("placeholder") || "Pilih semester...",
+        searchInputPlaceholder:
+          $select.data("tags") == true ? "Cari/Tambah baru..." : "Cari...",
+        theme: "bootstrap4",
+        dropdownParent: $select.parents(".modal").length
+          ? $select.parents(".modal").first()
+          : $(document.body),
+        ajax: {
+          url: "/webService/semester/get/select2",
+          method: "GET",
+          dataType: "json",
+          data: function (params) {
+            return {
+              key: params.term,
+              page: params.page || 1,
+            };
+          },
+          processResults: function (data, params) {
+            params.page = params.page || 1;
+            return {
+              results: $.map(data.items, function (item) {
+                return item;
+              }),
+              pagination: {
+                more: data.hasMore,
+              },
+            };
+          },
+          cache: true,
+          error: function (jqXHR, status, error) {
+            return {
+              results: [],
+            };
+          },
+        },
+        templateResult: (option) => {
+          if (!option.id) {
+            return option.text;
+          }
+          if (option.newTag)
+            return $(
+              `<div class="d-flex justify-content-between align-items-center"><span>${option.text}</span><span class="badge bg-danger" data-toggle="tooltip" title="Tambah Baru">New</span></div>`
+            );
+
+          var $option = $(`
+          <h6 class="m-0 text-bold">${option.text}</h6>
+          <div class="small">
+          <div class="row">
+          <div class="col-2">
+          Kode
+          </div>
+          <div class="col-10">
+          : ${option.kode}
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-2">
+          Status
+          </div>
+          <div class="col-10">
+          : ${option.status == 1 ? "Aktif" : "Non Aktif"}
+          </div>
+          </div>
+          </div>
+          `);
+          return $option;
+        },
+        templateSelection: (option) => {
+          return option.text;
+        },
+        escapeMarkup: (markup) => markup,
+        createTag: function (params) {
+          var term = $.trim(params.term);
+          if (term === "") return null;
+          return {
+            id: new Date().getTime(),
+            text: term,
+            newTag: true,
+          };
+        },
+      })
+      .on("select2:select", function (e) {
+        let data = e.params.data;
+        if (data.newTag) {
+          $modal
+            .find('textarea[name="nama"],input[name="kode"]')
+            .val(data.text)
+            .trigger("change");
+          $modal.find("#idTarget-semester").val(data.id);
+          $modal.modal("show");
+        }
+      });
+  });
+}
+
+function runBsSwitch() {
+  $("input[data-bootstrap-switch]").each(function () {
+    $(this).bootstrapSwitch("state", $(this).prop("checked"));
   });
 }

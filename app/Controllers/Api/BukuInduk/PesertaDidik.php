@@ -691,7 +691,7 @@ class PesertaDidik extends BaseController
             $set['id'] = $res['id'] ?? null;
         }
         if ($piagam)
-            $set['piagam_id'] = upload($piagam, ['jpg', 'jpeg', 'png'], 'prestasi/piagam');
+            $set['piagam_id'] = upload($piagam, 'prestasi/piagam', ['jpg', 'jpeg', 'png']);
         if (!isset($set['tahun'])) $set['tahun'] = date('Y');
 
         if (!$mPrestasi->save($set)) return $this->fail('Data prestasi gagal disimpan.');
@@ -927,7 +927,9 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
         if (!isset($set['anggota_id']))
             $set['anggota_id'] = idUnik($mAnggotaRombel, 'anggota_id');
-        $cAnggota = $mAnggotaRombel->where('anggota_id', $set['anggota_id'])
+        $cAnggota = $mAnggotaRombel
+            ->where('peserta_didik_id', $id)
+            ->where('rombel_id', $set['rombel_id'])
             ->first();
         if ($cAnggota)
             $set['id'] = $cAnggota['id'];
@@ -948,7 +950,7 @@ class PesertaDidik extends BaseController
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
         $mRombel = new RombonganBelajarModel();
         $set = $this->request->getPost();
-        $cRombel = $mRombel->where('rombel_id', $set['rombel_id'])
+        $cRombel = $mRombel->where('nama', $set['nama'])
             ->first();
         if ($cRombel)
             $set['id'] = $cRombel['id'];

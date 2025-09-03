@@ -31,7 +31,8 @@ class Db0014 extends Migration
             ]
         ]);
         $this->forge->dropColumn('rombongan_belajar', 'semester_id');
-        $db->insertBatch($rows);
+        if (!empty($rows))
+            $db->insertBatch($rows);
     }
 
     public function down()
@@ -56,6 +57,7 @@ class Db0014 extends Migration
             ]
         ]);
         $this->forge->dropColumn('rombongan_belajar', 'semester_kode');
-        $db->insertBatch($rows);
+        if (!empty($rows))
+            $db->insertBatch($rows);
     }
 }

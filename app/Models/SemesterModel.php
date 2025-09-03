@@ -17,5 +17,6 @@ class SemesterModel extends Model
         'semester_id',
         'kode',
         'status',
+        'nama',
     ];
 }

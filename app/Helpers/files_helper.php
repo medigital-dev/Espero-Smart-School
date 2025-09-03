@@ -1,25 +1,21 @@
 <?php
 
 use App\Libraries\Files;
+use App\Libraries\Import;
 use CodeIgniter\HTTP\Files\UploadedFile;
 
 if (!function_exists('importExcel')) {
-    function importExcel(UploadedFile $file)
+    /**
+     * Membaca file excel dan mengubah ke dalam array
+     * @param UploadedFile $file File Excel
+     * @return Array Data file excel
+     * @return false Jika gagal
+     */
+    function importExcel(UploadedFile $file): array|false
     {
-        $upload = service('files')->upload($file, ['xlsx']);
-
-        if (!$upload['status']) {
-            return [
-                'status' => false,
-                'http_code' => 400,
-                'status_code' => 'upload_error',
-                'message' => $upload['message'],
-                'error' => $upload['error'],
-                'data' => [],
-            ];
-        }
-
-        return service('import')->excel($upload['data']['path']);
+        $upload = tempUpload($file);
+        if (!$upload) return false;
+        return (new Import())->excel($upload);
     }
 }
 
@@ -47,22 +43,30 @@ if (!function_exists('upload')) {
 }
 
 if (!function_exists('getFile')) {
-    function getFile(string|null $id, array|string $select = '*')
+    /**
+     * Helper untuk mengambil data file pada database
+     * @param string|null $id Id file. Default null untuk semua file yang tersimpan
+     * @return array|string $select Return variable data yang diinginkan
+     */
+    function getFile(string|null $id = null, array|string $select = '*')
     {
-        $lib = new Files();
-        return $lib->get($id, $select);
+        return (new Files())->get($id, $select);
     }
 }
 
 if (!function_exists('tempUpload')) {
     /**
-     * Helper untuk upload file sementara 
+     * Helper untuk upload file sementara
+     * File akan disimpan pada folder temporary
+     * @param UploadedFile $file File upload
+     * @return string Fullpath lokasi file
+     * @return null Jika gagal upload
      */
     function tempUpload(UploadedFile $file): string|null
     {
         cleanFiles(TEMPORARY_PATH);
         $result = (new Files())->upload($file, 'temporary');
-        return $result['status'] ? $result['data']['filename'] : null;
+        return $result['data']['fullpath'] ?? null;
     }
 }
 
