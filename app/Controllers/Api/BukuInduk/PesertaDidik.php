@@ -3,7 +3,6 @@
 namespace App\Controllers\Api\BukuInduk;
 
 use App\Controllers\BaseController;
-use App\Libraries\baseData\Pesertadidik as BaseDataPesertadidik;
 use App\Libraries\baseData\Rombel;
 use App\Libraries\DataPesertaDidik;
 use App\Models\AlamatModel;
@@ -43,11 +42,6 @@ class PesertaDidik extends BaseController
         $this->mPesertaDidik = new PesertaDidikModel();
     }
 
-    public function get(bool|string|null $id = null)
-    {
-        return $this->respond(cariPd($id));
-    }
-
     public function showProfil($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
@@ -65,16 +59,17 @@ class PesertaDidik extends BaseController
         $pd['rombel'] = rombel($id);
         $pd['nipd'] = nis($id);
         $pd['hp'] = hp($pd['nik']);
-        $pd['alamat'] = alamat($pd['nik']);
+        $pd['alamat'] = tempatTinggal($pd['nik']);
         $pd['maps'] = maps($pd['nik']);
         $pd['ibu'] = ibuPd($id);
+        $pd['ayah'] = ayahPd($id);
         return $this->respond($pd);
     }
 
     public function showIdentitas($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $this->baseData->select([
+        $select = [
             'peserta_didik.peserta_didik_id',
             'peserta_didik.anak_ke',
             'peserta_didik.nama',
@@ -89,14 +84,17 @@ class PesertaDidik extends BaseController
             'ref_agama.nama as agama_str',
             'ref_jenis_kelamin.ref_id as jenis_kelamin_id',
             'ref_jenis_kelamin.nama as jenis_kelamin_str',
-        ]);
-        return $this->respond($this->baseData->find($id));
+        ];
+
+        return $this->respond(getPd($id, $select));
     }
 
     public function showAlamat($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-        $this->baseData->select([
+        $nik = getPd($id, 'nik');
+        if (!$nik) return $this->fail('Peserta didik tidak ditemukan.');
+        $select = [
             'alamat_jalan',
             'rt',
             'rw',
@@ -114,8 +112,8 @@ class PesertaDidik extends BaseController
             'ref_alat_transportasi.nama as transportasi_str',
             'ref_jenis_tinggal.ref_id as tinggal_id',
             'ref_jenis_tinggal.nama as tinggal_str',
-        ]);
-        return $this->respond($this->baseData->find($id));
+        ];
+        return $this->respond(alamat($nik, $select));
     }
 
     public function saveIdentitas($id): ResponseInterface
@@ -139,16 +137,18 @@ class PesertaDidik extends BaseController
             }
         }
 
-        $cPd = $this->mPesertaDidik
-            ->where('nisn', $set['nisn'])->orWhere('nik', $set['nik'])->first();
+        $model = new PesertaDidikModel();
+        $cPd = $model
+            ->where('nisn', $set['nisn'])
+            ->orWhere('nik', $set['nik'])
+            ->first();
         if ($cPd)
             $set['id'] = $cPd['id'];
-        else {
-            if (!isset($set['peserta_didik_id']))
-                $set['peserta_didik_id'] = $id;
-        }
 
-        if (!$this->mPesertaDidik->save($set)) return $this->fail('Data peserta didik gagal disimpan.');
+        if (!isset($set['peserta_didik_id']))
+            $set['peserta_didik_id'] = $id;
+
+        if (!$model->save($set)) return $this->fail('Data peserta didik gagal disimpan.');
 
         return $this->respond(['status' => true, 'message' => 'Data peserta didik berhasil disimpan.']);
     }
@@ -357,7 +357,11 @@ class PesertaDidik extends BaseController
     {
         $set = $this->request->getPost();
         $mRegistrasi = new RegistrasiPesertaDidikModel();
-        $cRegistrasi = $mRegistrasi->where('nipd', $set['nipd'])->first();
+        $cRegistrasi = $mRegistrasi
+            ->where('nipd', $set['nipd'])
+            ->orWhere('peserta_didik_id', $id)
+            ->first();
+
         if (!$cRegistrasi) {
             $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
             if (!isset($set['peserta_didik_id']))
@@ -708,103 +712,6 @@ class PesertaDidik extends BaseController
         return $this->respond(['message' => 'Riwayat prestasi berhasil dihapus permanen.']);
     }
 
-    // public function savePd($id): ResponseInterface
-    // {
-    //     $set = $this->request->getPost();
-    //     if (!$id) return $this->fail('ID Peserta didik diperlukan.');
-
-    //     $mAnggotaRombel = new AnggotaRombelModel();
-    //     $cekAnggotaRombel = $mAnggotaRombel->where('anggota_id', $set['anggota_rombel']['anggota_id'])->first();
-    //     if ($cekAnggotaRombel) $set['anggota_rombel']['id'] = $cekAnggotaRombel['id'];
-    //     $mAnggotaRombel->save($set['anggota_rombel']);
-
-    //     $mKontak = new KontakModel();
-    //     $cKontak = $mKontak->where('nik', $set['nik'])->first();
-    //     if ($cKontak) $set['kontak']['id'] = $cKontak['id'];
-    //     else $set['kontak']['kontak_id'] = idUnik($mKontak, 'kontak_id');
-    //     $mKontak->save($set['kontak']);
-
-    //     $mOrtuWali = new OrangtuaWaliModel();
-    //     $idAyah = $idIbu = $idWali = null;
-    //     if ($set['orangtua_wali']['ayah']['nama'] !== '') {
-    //         $cAyah = $mOrtuWali->where('nama', $set['orangtua_wali']['ayah']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ayah']['pekerjaan_id'])->first();
-    //         if (!$cAyah) $set['orangtua_wali']['ayah']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-    //         else {
-    //             $set['orangtua_wali']['ayah']['orangtua_id'] = $cAyah['orangtua_id'];
-    //             $set['orangtua_wali']['ayah']['id'] = $cAyah['id'];
-    //         }
-    //         $mOrtuWali->save($set['orangtua_wali']['ayah']);
-    //         $idAyah = $set['orangtua_wali']['ayah']['orangtua_id'];
-    //     }
-
-    //     $cibu = $mOrtuWali->where('nama', $set['orangtua_wali']['ibu']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['ibu']['pekerjaan_id'])->first();
-    //     if (!$cibu) $set['orangtua_wali']['ibu']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-    //     else {
-    //         $set['orangtua_wali']['ibu']['orangtua_id'] = $cibu['orangtua_id'];
-    //         $set['orangtua_wali']['ibu']['id'] = $cibu['id'];
-    //     }
-    //     $mOrtuWali->save($set['orangtua_wali']['ibu']);
-    //     $idIbu = $set['orangtua_wali']['ibu']['orangtua_id'];
-
-    //     if ($set['orangtua_wali']['wali']['nama'] !== '') {
-    //         $cwali = $mOrtuWali->where('nama', $set['orangtua_wali']['wali']['nama'])->orWhere('pekerjaan_id', $set['orangtua_wali']['wali']['pekerjaan_id'])->first();
-    //         if (!$cwali) $set['orangtua_wali']['wali']['orangtua_id'] = idUnik($mOrtuWali, 'orangtua_id');
-    //         else {
-    //             $set['orangtua_wali']['wali']['orangtua_id'] = $cwali['orangtua_id'];
-    //             $set['orangtua_wali']['wali']['id'] = $cwali['id'];
-    //         }
-    //         $mOrtuWali->save($set['orangtua_wali']['wali']);
-    //         $idAyah = $set['orangtua_wali']['wali']['orangtua_id'];
-    //     }
-
-    //     $mOrtuPd = new OrtuWaliPdModel();
-    //     $setOrtuPd = [
-    //         'peserta_didik_id' => $set['peserta_didik_id'],
-    //         'ayah_id' => $idAyah,
-    //         'ibu_id' => $idIbu,
-    //         'wali_id' => $idWali,
-    //         'anak_ke' => $set['orangtua_wali']['anak_ke'],
-    //     ];
-    //     $cOrtuPd = $mOrtuPd->where('peserta_didik_id', $set['peserta_didik_id'])->first();
-    //     if ($cOrtuPd) $setOrtuPd['id'] = $cOrtuPd['id'];
-    //     else $setOrtuPd['ortupd_id'] = idUnik($mOrtuPd, 'ortupd_id');
-    //     $mOrtuPd->save($setOrtuPd);
-
-    //     $mPeriodik = new PeriodikModel();
-    //     $cPeriodik = $mPeriodik->where('nik', $set['nik'])
-    //         ->where('tinggi_badan', $set['periodik']['tinggi_badan'])
-    //         ->where('berat_badan', $set['periodik']['berat_badan'])
-    //         ->first();
-    //     if (!$cPeriodik) $set['periodik']['periodik_id'] = idUnik($mPeriodik, 'periodik_id');
-    //     else $set['periodik']['id'] = $cPeriodik['id'];
-    //     $mPeriodik->save($set['periodik']);
-
-    //     $mPesertaDidik = new PesertaDidikModel();
-    //     $cPd = $mPesertaDidik->where('peserta_didik_id', $set['peserta_didik_id'])
-    //         ->orWhere('nik', $set['nik'])
-    //         ->orWhere('nisn', $set['nisn'])
-    //         ->orWhere('nama', $set['nama'])
-    //         ->first();
-    //     if ($cPd) $set['peserta_didik']['id'] = $cPd['id'];
-    //     $mPesertaDidik->save($set['peserta_didik']);
-
-    //     $mRegistrasi = new RegistrasiPesertaDidikModel();
-    //     $cRegistrasi = $mRegistrasi->where('peserta_didik_id', $set['peserta_didik_id'])
-    //         ->orWhere('nipd', $set['nipd'])
-    //         ->first();
-    //     if ($cRegistrasi) $set['registrasi']['id'] = $cRegistrasi['id'];
-    //     else $set['registrasi_id'] = idUnik($mRegistrasi, 'registrasi_id');
-    //     $mRegistrasi->save($set['registrasi']);
-
-    //     $mRombel = new RombonganBelajarModel();
-    //     $cRombel = $mRombel->where('rombel_id', $set['rombongan_belajar']['rombel_id'])
-    //         ->first();
-    //     if ($cRombel) $set['rombongan_belajar']['id'] = $cRombel['id'];
-    //     $mRombel->save($set['rombongan_belajar']);
-
-    //     return $this->respond(true);
-    // }
-
     public function deleteOrtuWaliPd($id): ResponseInterface
     {
         if (!$id) return $this->fail('ID prestasi diperlukan.');
@@ -900,8 +807,10 @@ class PesertaDidik extends BaseController
         $set = $this->request->getPost();
         if (!isset($set['nik']))
             $set['nik'] = $cPd['nik'];
-        $set['kebutuhan_khusus_id'] = idUnik($mDifabel, 'kebutuhan_khusus_id');
-        if ($mDifabel->where('nik', $cPd['nik'])->where('ref_id', $set['ref_id'])->first()) return $this->fail('Data kebutuhan khusus sudah ada.');
+        $cek = $mDifabel->where('nik', $cPd['nik'])->where('ref_id', $set['ref_id'])->first();
+        if ($cek) $set['id'] = $cek['id'];
+        if (!isset($set['kebutuhan_khusus_id']))
+            $set['kebutuhan_khusus_id'] = idUnik($mDifabel, 'kebutuhan_khusus_id');
         if (!$mDifabel->save($set)) return $this->fail('Data kebutuhan khusus gagal disimpan.');
         return $this->respond(['message' => 'Data kebutuhan khusus berhasil disimpan.', 'id' => $set['kebutuhan_khusus_id']]);
     }
@@ -933,10 +842,10 @@ class PesertaDidik extends BaseController
             ->first();
         if ($cAnggota)
             $set['id'] = $cAnggota['id'];
-        else {
-            if (!isset($set['peserta_didik_id']))
-                $set['peserta_didik_id'] = $id;
-        }
+
+        if (!isset($set['peserta_didik_id']))
+            $set['peserta_didik_id'] = $id;
+
         if (!$mAnggotaRombel->save($set)) return $this->fail('Data anggota rombongan belajar gagal disimpan.');
         return $this->respond(['message' => 'Data anggota rombongan belajar berhasil disimpan.']);
     }

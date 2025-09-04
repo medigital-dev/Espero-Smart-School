@@ -301,9 +301,11 @@
 
         <footer class="main-footer">
             <div class="float-right d-none d-sm-block">
-                <a href="https://adminlte.io">AdminLTE.io</a>
+                <a href="https://github.com/medigital-dev/Espero-Smart-School" target="_blank">
+                    ESS_v1.0-pre_alpha
+                </a>
             </div>
-            <strong>&copy; 2024 | <a href="//muhsaidlg.my.id" class="text-decoration-none text-muted" target="_blank"> meDigital-dev</a>
+            <strong><a href="https://muhsaidlg.my.id" class="text-muted" target="_blank">&copy; 2025</a> | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
         </footer>
 
         <aside class="control-sidebar control-sidebar-dark"></aside>
@@ -561,6 +563,7 @@
                         $('#tabsProfile-nipd').text(respData.nipd);
                         $('#tabsProfile-nik').text(respData.nik);
                         $('#tabsProfile-ibu').text(respData.ibu);
+                        $('#tabsProfile-ayah').text(respData.ayah);
                         $('#tabsProfile-hp').text(respData.hp);
                         $('#tabsProfile-alamat').text(respData.alamat);
                         if (respData.jenis_mutasi)

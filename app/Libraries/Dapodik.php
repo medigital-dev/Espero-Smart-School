@@ -361,6 +361,7 @@ class Dapodik
                             'rombel' => [
                                 'rombel_id' => saveRombel(['nama' => $row[42]], 'nama'),
                                 'nama' => $row[42],
+                                'status' => true,
                             ],
                             'anggotaRombel' => [
                                 'rombel_id' => saveRombel(['nama' => $row[42]], 'nama'),

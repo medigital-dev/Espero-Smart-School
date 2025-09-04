@@ -264,7 +264,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- To the right -->
                 <div class="float-right d-none d-sm-inline">
                     <a href="https://github.com/medigital-dev/Espero-Smart-School" target="_blank">
-                        ess_v1.0-pre_alpha
+                        ESS_v1.0-pre_alpha
                     </a>
                 </div>
                 <!-- Default to the left -->

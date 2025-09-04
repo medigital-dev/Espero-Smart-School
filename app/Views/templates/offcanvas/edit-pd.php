@@ -613,6 +613,10 @@
                                 <a class="" id="tabsProfile-nik"></a>
                             </li>
                             <li class="list-group-item py-2">
+                                <p class="text-bold mb-0 small">Nama Ayah</p>
+                                <a class="" id="tabsProfile-ayah"></a>
+                            </li>
+                            <li class="list-group-item py-2">
                                 <p class="text-bold mb-0 small">Nama Ibu Kandung</p>
                                 <a class="" id="tabsProfile-ibu"></a>
                             </li>

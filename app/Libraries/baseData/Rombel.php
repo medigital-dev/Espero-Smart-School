@@ -55,7 +55,7 @@ class Rombel
             ->findAll();
     }
 
-    public function save(array $set = [], string|array|null $keyname = null): string|null
+    public function save(array $set = [], string|array|null $keyname = null): string|false
     {
         $model = new RombonganBelajarModel();
         $ifExist = false;

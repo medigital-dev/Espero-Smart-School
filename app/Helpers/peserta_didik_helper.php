@@ -33,7 +33,7 @@ if (!function_exists('getPd')) {
      * true untuk aktif dan false untuk non aktif
      * 
      * @param array|string $select Data yang ingin ditampilkan pada hasil. Default '*' untuk semua data
-     * @return array Data peserta didik
+     * @return array|string Data peserta didik
      * @return false Jika data tidak ditemukan
      */
     function getPd(string|bool|null $idOrStatus = null, array|string $select = '*'): array|string|null|false
@@ -123,14 +123,14 @@ if (!function_exists('hp')) {
     }
 }
 
-if (!function_exists('alamat')) {
+if (!function_exists('tempatTinggal')) {
     /**
-     * Fungsi menampilkan alamat singkat
+     * Fungsi menampilkan Tempat Tinggal singkat
      * @param string $nik Keyword menggunakan Nomor Induk Kependudukan (NIK)
      * @return string Alamat singkat: Dusun RT RW, Desa, Kecamatan, Kabupaten, Provinsi
      * @return null Jika tidak ditemukan
      */
-    function alamat(string $nik): string|null
+    function tempatTinggal(string $nik): string|null
     {
         $libAlamat = new Alamat();
         $result = $libAlamat->get($nik, ['dusun', 'rt', 'rw', 'desa', 'kecamatan']);
@@ -138,6 +138,13 @@ if (!function_exists('alamat')) {
             $str = $result['dusun'] . ' RT ' . $result['rt'] . ' RW ' . $result['rw'] . ', ' . $result['desa'] . ', ' . $result['kecamatan'];
             return $str;
         } else return null;
+    }
+}
+
+if (!function_exists('alamat')) {
+    function alamat(string $nik, array|string $select)
+    {
+        return (new Alamat())->get($nik, $select);
     }
 }
 

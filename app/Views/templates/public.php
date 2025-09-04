@@ -236,11 +236,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- To the right -->
                 <div class="float-right d-none d-sm-inline">
                     <a href="https://github.com/medigital-dev/Espero-Smart-School" target="_blank">
-                        ESS_v1.0.0-beta1
+                        ESS_v1.0-pre_alpha
                     </a>
                 </div>
                 <!-- Default to the left -->
-                <strong>&copy; 2025 | <a href="https://muhsaidlg.my.id" target="_blank">meDigital-dev</a>.</strong>
+                <strong><a href="https://muhsaidlg.my.id" class="text-muted" target="_blank">&copy; 2025</a> | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
             </div>
         </footer>
     </div>
