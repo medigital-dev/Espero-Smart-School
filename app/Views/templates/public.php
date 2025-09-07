@@ -233,14 +233,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Main Footer -->
         <footer class="main-footer">
             <div class="container">
-                <!-- To the right -->
                 <div class="float-right d-none d-sm-inline">
-                    <a href="https://github.com/medigital-dev/Espero-Smart-School" target="_blank">
+                    <a href="https://muhsaidlg.my.id" data-toggle="tooltip" title="Dibuat dan dikembangkan oleh muhsaidlg.my.id" target="_blank">
                         ESS_v1.0-pre_alpha
                     </a>
                 </div>
-                <!-- Default to the left -->
-                <strong><a href="https://muhsaidlg.my.id" class="text-muted" target="_blank">&copy; 2025</a> | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
+                &copy; 2025 | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
             </div>
         </footer>
     </div>

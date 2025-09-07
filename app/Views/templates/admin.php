@@ -300,12 +300,12 @@
         </div>
 
         <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <a href="https://github.com/medigital-dev/Espero-Smart-School" target="_blank">
+            <div class="float-right d-none d-sm-inline">
+                <a href="https://muhsaidlg.my.id" data-toggle="tooltip" title="Dibuat dan dikembangkan oleh muhsaidlg.my.id" target="_blank">
                     ESS_v1.0-pre_alpha
                 </a>
             </div>
-            <strong><a href="https://muhsaidlg.my.id" class="text-muted" target="_blank">&copy; 2025</a> | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
+            &copy; 2025 | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
         </footer>
 
         <aside class="control-sidebar control-sidebar-dark"></aside>
@@ -2474,6 +2474,8 @@
                 const btn = $(this);
                 const formElm = $('#formImport-pd');
                 const dataType = formElm.serializeArray();
+                console.log(dataType);
+                return;
                 const pd = $('input[name="radioFormImport-statusPd"]:checked').val();
                 const alertElm = $('#importStatus');
                 const inputElm = $('#inputFile');

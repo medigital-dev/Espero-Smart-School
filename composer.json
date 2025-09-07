@@ -15,6 +15,7 @@
     "ext-mbstring": "*",
     "endroid/qr-code": "^6.0",
     "laminas/laminas-escaper": "^2.13",
+    "myth/auth": "^1.2",
     "phpoffice/phpspreadsheet": "^4.2",
     "picqer/php-barcode-generator": "^2.4",
     "psr/log": "^3.0"

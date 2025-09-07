@@ -3,7 +3,6 @@
 namespace App\Controllers\Api\Public\v1;
 
 use App\Controllers\BaseController;
-use App\Libraries\DataPesertaDidik;
 use App\Models\PesertaDidikModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -12,16 +11,12 @@ class PesertaDidik extends BaseController
 {
     use ResponseTrait;
 
-    public function __construct()
-    {
-        helper(['indonesia']);
-    }
-
     private function model()
     {
         $model = new PesertaDidikModel();
         $model
             ->select([
+                'peserta_didik.peserta_didik_id',
                 'rombongan_belajar.nama as kelas',
                 'peserta_didik.nama',
                 'nipd',
@@ -80,36 +75,39 @@ class PesertaDidik extends BaseController
 
     public function select2()
     {
-        // $keyword = $this->request->getGet('key') ?? '';
-        // $start = (int) $this->request->getGet('page') ?: 1;
-        // $limit = 10;
-        // $offset = ($start - 1) * $limit;
-        // $items = cariPd($keyword, true, ['limit' => $limit + 1, 'offset' => $offset]);
-
-        // $hasMore = count($items) > $limit;
-        // if ($hasMore) {
-        //     array_pop($items);
-        // }
-
-        // $results = array_map(function ($item) {
-        //     $pd = getPd($item['peserta_didik_id']);
-        //     return [
-        //         'id' => $item['peserta_didik_id'],
-        //         'text' => $pd['nama'],
-        //         'nipd' => nis($item['peserta_didik_id']),
-        //         'nisn' => $pd['nisn'],
-        //         'kelas' => rombel($item['peserta_didik_id']),
-        //         'nik' => $pd['nik'],
-        //     ];
-        // }, $items);
-
-        // return $this->respond([
-        //     'items' => $results,
-        //     'hasMore' => $hasMore,
-        // ]);
-        $raw = (new DataPesertaDidik())->active()->toSelect2();
-        foreach ($data as $row) {
+        $model = $this->model();
+        $keyword = $this->request->getGet('key') ?? '';
+        $start = (int) $this->request->getGet('page') ?: 1;
+        $limit = 10;
+        $offset = ($start - 1) * $limit;
+        if (!empty($keyword)) {
+            $model
+                ->groupStart()
+                ->like('peserta_didik.nama', $keyword)
+                ->orLike('nipd', $keyword)
+                ->orLike('nisn', $keyword)
+                ->orLike('rombongan_belajar.nama', $keyword)
+                ->groupEnd();
         }
-        return $this->respond();
+        $items = $model->findAll($limit + 1, $offset);
+        $hasMore = count($items) > $limit;
+        if ($hasMore) {
+            array_pop($items);
+        }
+
+        $results = array_map(function ($item) {
+            return [
+                'id' => $item['peserta_didik_id'],
+                'text' => $item['nama'],
+                'nipd' => $item['nipd'],
+                'nisn' => $item['nisn'],
+                'kelas' => $item['kelas'],
+            ];
+        }, $items);
+
+        return $this->respond([
+            'items' => $results,
+            'hasMore' => $hasMore,
+        ]);
     }
 }

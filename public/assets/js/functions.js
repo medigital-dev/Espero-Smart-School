@@ -487,14 +487,6 @@ function runSelect2GetPd() {
                       : ${option.nisn}
                   </div>
               </div>
-              <div class="row">
-                  <div class="col-2">
-                      NIK
-                  </div>
-                  <div class="col-10">
-                      : ${option.nik}
-                  </div>
-              </div>
           </div>
           `);
         return $option;

@@ -76,7 +76,7 @@ class DataPesertaDidik
             ->like('peserta_didik.nama', $this->searchValue)
             ->orLike('nipd', $this->searchValue)
             ->orLike('nisn', $this->searchValue)
-            ->orLike('rombongan_belajar.nama', $this->searchValue)
+            // ->orLike('rombongan_belajar.nama', $this->searchValue)
             ->groupEnd();
         $this->countFiltered = $this->query->countAllResults(false);
 
