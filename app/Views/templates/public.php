@@ -286,44 +286,57 @@ scratch. This page gets rid of all links and provides the needed markup only.
             order: [],
             ajax: {
                 method: "POST",
-                url: "/api/getPd",
+                url: "/webService/v1/peserta-didik/datatable",
             },
             language: {
                 url: "/plugins/datatables/id.json",
             },
             columns: [{
-                    data: 'no',
+                    data: null,
                     className: 'text-lg-center',
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
                 }, {
                     data: "kelas",
+                    name: 'rombongan_belajar.nama',
                     className: 'text-lg-center',
                     render: (data) => {
                         return `<span class="badge bg-success">${data}</span>`;
                     }
                 }, {
                     data: "nama",
+                    name: 'peserta_didik.nama',
                 },
                 {
                     data: "nipd",
+                    name: 'nipd',
                     className: "text-lg-center",
                 },
                 {
                     data: "nisn",
+                    name: 'nisn',
                     orderable: false,
                     className: "text-lg-center",
                 },
                 {
                     data: "jenis_kelamin",
+                    name: 'ref_jenis_kelamin.nama',
                     orderable: false,
                     className: 'text-lg-center'
                 },
                 {
                     orderable: false,
+                    name: 'tempat_lahir',
                     data: "tempat_lahir",
                 },
                 {
                     data: "tanggal_lahir",
-                    className: 'text-lg-center'
+                    name: 'tanggal_lahir',
+                    className: 'text-lg-center',
+                    render: (data) => {
+                        return tanggal(data, 'dd mmmm Y')
+                    }
                 },
             ],
         })
@@ -372,7 +385,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $('#btnPreviousDt-publicPesertaDidik').on('click', () => dtPublicPd.page('previous').draw('page'));
             $('#btnNextDt-publicPesertaDidik').on('click', () => dtPublicPd.page('next').draw('page'));
             $('#pageLenghtDt-publicPesertaDidik').on('change', e => dtPublicPd.page.len(e.target.value).draw('page'));
-            $('#searchDt-publicPesertaDidik').on('input', e => dtPublicPd.search(e.target.value).draw('page'));
+            $('#searchDt-publicPesertaDidik').on('input', e => dtPublicPd.search(e.target.value).draw());
             $('#btnReloadDt-publicPesertaDidik').on('click', function() {
                 const btn = $(this);
                 btn.prop('disabled', true).children("i").addClass("fa-spin");

@@ -428,7 +428,7 @@ function runSelect2GetPd() {
         ? $select.parents(".modal").first()
         : $(document.body),
       ajax: {
-        url: "/webService/peserta-didik/get/select2",
+        url: "/webService/v1/peserta-didik/select2",
         method: "GET",
         dataType: "json",
         data: function (params) {

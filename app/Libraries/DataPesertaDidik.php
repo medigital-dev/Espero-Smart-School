@@ -28,6 +28,7 @@ class DataPesertaDidik
         $this->query = $this->model;
         $this->joinTable();
         $this->countAll = $this->query->countAllResults(false);
+        helper('peserta_didik');
     }
 
     private function joinTable()
@@ -75,6 +76,7 @@ class DataPesertaDidik
             ->like('peserta_didik.nama', $this->searchValue)
             ->orLike('nipd', $this->searchValue)
             ->orLike('nisn', $this->searchValue)
+            ->orLike('rombongan_belajar.nama', $this->searchValue)
             ->groupEnd();
         $this->countFiltered = $this->query->countAllResults(false);
 
@@ -98,17 +100,23 @@ class DataPesertaDidik
             'recordsTotal' => $this->countAll,
             'recordsFiltered' => $this->countFiltered,
             'data' => $this->query->findAll($this->length, $this->start),
-            '_post' => $this->request->getVar()
         ];
     }
 
     public function toSelect2(): array
     {
+        $keyword = $this->request->getGet('key') ?? '';
         $this->length = 10;
         $this->start = (int) $this->request->getGet('page') ?: 1;
         $offset = ($this->start - 1) * $this->length;
         if (empty($this->query->select()))
             $this->query->select(['peserta_didik.peserta_didik_id', 'peserta_didik.nama', 'nisn', 'nipd']);
+        $this->query->groupStart()
+            ->like('peserta_didik.nama', $keyword)
+            ->orLike('nisn', $keyword)
+            ->orLike('nipd', $keyword)
+            ->orLike('rombongan_belajar.nama', $keyword)
+            ->groupEnd();
         $items = $this->query->findAll($this->length + 1, $offset);
 
         $hasMore = count($items) > $this->length;
@@ -117,11 +125,13 @@ class DataPesertaDidik
         }
 
         $results = array_map(function ($item) {
+            // return $item;
             return [
                 'id' => $item['peserta_didik_id'],
                 'text' => $item['nama'],
                 'nipd' => $item['nipd'],
                 'nisn' => $item['nisn'],
+                'kelas' => rombel($item['peserta_didik_id']),
             ];
         }, $items);
 
@@ -145,6 +155,9 @@ class DataPesertaDidik
     public function active()
     {
         $this->query
+            ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
+            ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
+            ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
             ->where('semester.status', true)
             ->where('mutasi_pd.id', null);
         $this->countAll = $this->countFiltered = $this->query->countAllResults(false);

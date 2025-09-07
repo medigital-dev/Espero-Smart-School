@@ -24,8 +24,6 @@ class Datatables extends BaseController
 
     public function bukuIndukPd()
     {
-        $rombelLib = new Rombel;
-
         $result = $this->getData
             ->select([
                 'peserta_didik.peserta_didik_id',
