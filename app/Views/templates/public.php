@@ -189,7 +189,23 @@
                     }
                 },
             ],
-        })
+        });
+
+        const dtPublicGuru = $('#dtPublic-publicGuru').DataTable({
+            dom: 't',
+            pageLength: 5,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            order: [],
+            language: {
+                url: "/plugins/datatables/id.json",
+            },
+            ajax: {
+                method: "POST",
+                url: "/webService/v1/guru/datatable",
+            },
+        });
     </script>
     <!-- End Constanta DataTables -->
 

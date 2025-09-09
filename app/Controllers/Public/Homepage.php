@@ -19,20 +19,8 @@ class Homepage extends BaseController
 
     public function guru(): string
     {
-        $dataPdLib = new DataPesertaDidik();
-        echo "<pre>";
-        var_dump($dataPdLib
-            // ->forPublic()
-            // ->for Admin()
-            // ->withAlamat()
-            // ->withOrtuWali()
-            ->get());
-        echo "</pre>";
-        die;
         $page = [
             'title' => 'EsperoSmartSchool - Daftar Guru',
-            'page' => 'Daftar Guru',
-            'breadcrumb' => ['Homepage', 'Guru'],
             'sidebar' => ['parent' => 'database', 'current' => 'data-guru'],
             'data' => [],
         ];
