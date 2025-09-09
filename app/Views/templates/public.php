@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 
 <head>
@@ -10,131 +6,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $title; ?></title>
 
-    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="/plugins/select2/css/select2.css">
     <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.css">
-    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
-    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css">
+    <link rel="stylesheet" href="<?= base_url('plugins/cropperjs/cropper.min.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('plugins/fancyapps/fancybox.css'); ?>">
+    <!-- <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.css">
+    <link rel="stylesheet" href="/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.css"> -->
     <link rel="stylesheet" href="/plugins/toastr/toastr.min.css">
     <link rel="stylesheet" href="/assets/css/adminlte.min.css">
-    <link rel="stylesheet" href="/assets/css/global.css">
+    <!-- <link rel="stylesheet" href="/assets/css/global.css"> -->
     <!-- MyCss -->
     <style>
-        .form-label-group {
-            position: relative;
-            margin-bottom: 1rem;
-        }
 
-        .form-label-group input,
-        .form-label-group label {
-            height: 3.125rem;
-            padding: .75rem;
-        }
-
-        .form-label-group label {
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: block;
-            width: 100%;
-            margin-bottom: 0;
-            /* Override default `<label>` margin */
-            line-height: 1.5;
-            color: #495057;
-            pointer-events: none;
-            cursor: text;
-            /* Match the input under the label */
-            border: 1px solid transparent;
-            border-radius: .25rem;
-            transition: all .1s ease-in-out;
-        }
-
-        .form-label-group input::-webkit-input-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input::-moz-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input:-ms-input-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input::-ms-input-placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input::placeholder {
-            color: transparent;
-        }
-
-        .form-label-group input:not(:-moz-placeholder-shown) {
-            padding-top: 1.25rem;
-            padding-bottom: .25rem;
-        }
-
-        .form-label-group input:not(:-ms-input-placeholder) {
-            padding-top: 1.25rem;
-            padding-bottom: .25rem;
-        }
-
-        .form-label-group input:not(:placeholder-shown) {
-            padding-top: 1.25rem;
-            padding-bottom: .25rem;
-        }
-
-        .form-label-group input:not(:-moz-placeholder-shown)~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .form-label-group input:not(:-ms-input-placeholder)~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .form-label-group input:not(:placeholder-shown)~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        .form-label-group input:-webkit-autofill~label {
-            padding-top: .25rem;
-            padding-bottom: .25rem;
-            font-size: 12px;
-            color: #777;
-        }
-
-        /* Fallback for Edge
--------------------------------------------------- */
-        @supports (-ms-ime-align: auto) {
-            .form-label-group {
-                display: -ms-flexbox;
-                display: flex;
-                -ms-flex-direction: column-reverse;
-                flex-direction: column-reverse;
-            }
-
-            .form-label-group label {
-                position: static;
-            }
-
-            .form-label-group input::-ms-input-placeholder {
-                color: #777;
-            }
-        }
     </style>
 </head>
 
@@ -144,7 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand-md navbar-light navbar-white sticky-top">
             <div class="container">
-                <a href="../../index3.html" class="navbar-brand">
+                <a href="<?= base_url(); ?>" class="navbar-brand">
                     <img src="<?= base_url('assets/img/brands/logo2.png'); ?>" alt="ESS Logo" class="brand-image">
                     <span class="brand-text font-weight-light"><strong>Espero</strong>SmartSchool</span>
                 </a>
@@ -154,115 +41,77 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
 
                 <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-                    <!-- Left navbar links -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a href="<?= base_url(); ?>" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= $sidebar['parent'] == 'database' ? 'active' : ''; ?>">Database</a>
-                            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu shadow">
-                                <li><a href="<?= base_url('peserta-didik'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-pd' ? 'active' : ''; ?>">Peserta Didik </a></li>
+                            <a id="dropdown-data" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= $sidebar['parent'] == 'database' ? 'active' : ''; ?>">Data</a>
+                            <ul aria-labelledby="dropdown-data" class="dropdown-menu shadow">
+                                <li><a href="<?= base_url('peserta-didik'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-pd' ? 'active' : ''; ?>">Murid </a></li>
                                 <li><a href="<?= base_url('guru'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-guru' ? 'active' : ''; ?>">Guru</a></li>
                                 <li><a href="<?= base_url('pegawai'); ?>" class="dropdown-item <?= $sidebar['current'] == 'data-pegawai' ? 'active' : ''; ?>">Pegawai</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url('prestasi'); ?>" class="nav-link <?= $sidebar['current'] == 'prestasi' ? 'active' : '' ?>">Prestasi</a>
+                        <li class="nav-item dropdown">
+                            <a id="dropdown-layanan" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle <?= $sidebar['parent'] == 'layanan' ? 'active' : ''; ?>">Layanan</a>
+                            <ul aria-labelledby="dropdown-layanan" class="dropdown-menu shadow">
+                                <li><a href="<?= base_url('flyer'); ?>" class="dropdown-item <?= $sidebar['current'] == 'flyer' ? 'active' : ''; ?>">Buat Flyer </a></li>
+                            </ul>
                         </li>
                     </ul>
-                    <div class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-toggle="dropdown" data-autoclose="false">Login</a>
-                            <div class="dropdown-menu" style="min-width: 250px;">
-                                <div class="px-3 py-2">
-                                    <div class="form-label-group">
-                                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-                                        <label for="inputEmail">Email address</label>
-                                    </div>
-                                    <div class="form-label-group">
-                                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-                                        <label for="inputEmail">Email address</label>
-                                    </div>
-                                    <button type="button" class="btn btn-sm btn-primary">Login</button>
-                                </div>
-                            </div>
-                        </li>
-                    </div>
+                    <a href="#" class="btn btn-sm btn-primary ml-auto">Login</a>
                 </div>
             </div>
         </nav>
-        <!-- /.navbar -->
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0"><?= $page; ?></h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="<?= base_url(); ?>">Homepage</a></li>
-                                <li class="breadcrumb-item"><a href="<?= base_url('peserta-didik'); ?>">Peserta Didik</a></li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
+        <div class="content-wrapper pt-3">
             <div class="content">
                 <div class="container">
                     <?= $this->renderSection('content'); ?>
-                </div><!-- /.container-fluid -->
+                </div>
             </div>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
 
-        <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
         </aside>
-        <!-- /.control-sidebar -->
 
-        <!-- Main Footer -->
         <footer class="main-footer">
             <div class="container">
-                <div class="float-right d-none d-sm-inline">
+                <div class="float-right">
                     <a href="https://muhsaidlg.my.id" data-toggle="tooltip" title="Dibuat dan dikembangkan oleh muhsaidlg.my.id" target="_blank">
-                        ESS_v1.0-pre_alpha
+                        <img src="<?= base_url('assets/img/brands/meDigital-dev.png'); ?>" alt="Logo" height="20">
                     </a>
+                    <div class="d-none d-sm-inline">
+                        <a href="https://github.com/medigital-dev/Espero-Smart-School" target="_blank">
+                            ESS_v1.0-pre_alpha
+                        </a>
+                    </div>
                 </div>
                 &copy; 2025 | <span class="text-primary">Tim IT & Digitalisasi Sekolah.</span></strong>
             </div>
         </footer>
     </div>
-    <!-- ./wrapper -->
 
-    <!-- REQUIRED SCRIPTS -->
-
-    <!-- jQuery -->
     <script src="/plugins/jquery/jquery.min.js"></script>
     <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/plugins/moment/moment-with-locales.js"></script>
+    <!-- <script src="/plugins/moment/moment-with-locales.js"></script> -->
     <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="/plugins/select2/js/select2.full.js"></script>
     <script src="/plugins/select2-searchInputPlaceholder/select2-searchInputPlaceholder.js"></script>
-    <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
-    <script src="/plugins/inputmask/jquery.inputmask.js"></script>
+    <script src="<?= base_url('plugins/fancyapps/fancybox.umd.js'); ?>"></script>
+    <!-- <script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.js"></script>
+    <script src="/plugins/inputmask/jquery.inputmask.js"></script>-->
+    <script src="<?= base_url('plugins/bs-custom-file-input/bs-custom-file-input.js'); ?>"></script>
+    <script src="<?= base_url('plugins/cropperjs/cropper.min.js'); ?>"></script>
     <script src="/plugins/toastr/toastr.min.js"></script>
-    <script src="/plugins/fetchData/fetchData.js"></script>
+    <!-- <script src="/plugins/fetchData/fetchData.js"></script>  -->
     <script src="/assets/js/adminlte.min.js"></script>
     <script src="/assets/js/functions.js"></script>
-    <script src="/assets/js/global.js"></script>
+    <!-- <script src="/assets/js/global.js"></script> -->
     <!-- function script -->
     <script>
 
@@ -270,7 +119,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- end function script -->
     <!-- Global Script -->
     <script>
-
+        $(document).ready(function() {
+            runBsCustomFileInput();
+            runFancyBox();
+        });
     </script>
     <!-- End Global Script -->
     <!-- Constanta DataTables -->
@@ -361,7 +213,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                 let text = startPage + ' - ' + endPage + ' dari ' + filter + ' entri';
                 if (total !== filter) {
-                    text += ' (disaring dari ' + total + ' entri keseluruhan';
+                    text += ' (disaring dari ' + total + ' entri keseluruhan)';
                 }
                 pageInfoElm.text(text);
 
@@ -397,6 +249,153 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 console.log($(this).val());
                 dtPublicPd.column(7).search($(this).val()).draw('page');
             });
+
+            // === FLYER ===
+            $('#formFlyer-prestasi input[name="target"]').on('change', function() {
+                const anElm = $('#formFlyer-prestasi_nama');
+
+                if ($(this).val() == 'pd') {
+                    anElm.html(`<select class="custom-select select2-getPd" name="idTarget" id="formFlyer-prestasi_atasNama"></select><div class="invalid-feedback">Harus di input!</div>`);
+                    runSelect2GetPd();
+                } else if ($(this).val() == 'custom') {
+                    anElm.html('<input type="text" name="idTarget" id="formFlyer-prestasi_atasNama" class="form-control"><div class="invalid-feedback">Harus di input!</div>')
+                }
+            });
+
+            let cropper;
+            $("#formFlyer-prestasi_foto").on("change", function(e) {
+                const $prevElm = $('#formFlyer-prestasi_fotoPreview');
+                const $image = $("#formFlyer-prestasi_previewImage");
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                    $prevElm.removeClass('d-none');
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $image.attr("src", e.target.result);
+                        if (cropper)
+                            cropper.destroy();
+                        cropper = new Cropper($image[0], {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                        });
+                    };
+                    reader.readAsDataURL(files[0]);
+                } else $prevElm.addClass('d-none');
+            });
+
+            $("#formFlyer-duka_foto").on("change", function(e) {
+                const $prevElm = $('#formFlyer-duka_fotoPreview');
+                const $image = $("#formFlyer-duka_previewImage");
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                    $prevElm.removeClass('d-none');
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $image.attr("src", e.target.result);
+                        if (cropper)
+                            cropper.destroy();
+                        cropper = new Cropper($image[0], {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                        });
+                    };
+                    reader.readAsDataURL(files[0]);
+                } else $prevElm.addClass('d-none');
+            });
+
+            $('#btnGenerate-prestasi').on('click', async function() {
+                const btn = $(this);
+                if (!validationElm(['formFlyer-prestasi_atasNama', 'formFlyer-prestasi_content', 'formFlyer-prestasi_foto'], ['', null])) return;
+                const form = $('#formFlyer-prestasi');
+                cropper.getCroppedCanvas({
+                    width: 720,
+                    height: 720,
+                }).toBlob(async function(blob) {
+                    let formData = new FormData(form[0]);
+                    formData.append('foto', blob, 'foto.png');
+                    const resp = await fetchData({
+                        url: '/webService/v1/flyer/prestasi/generate',
+                        data: formData,
+                        method: 'POST',
+                        button: btn
+                    });
+                    if (resp) {
+                        $('#formFlyer-prestasi_kode').val(resp.kode);
+                        $('#formFlyer-prestasi_preview').html(`
+                            <div class="mb-1">
+                                <a href="${resp.src}" data-fancybox>
+                                    <img src="${resp.src}" class="img-fluid">
+                                </a>
+                            </div>
+                            <p class="form-text text-muted small m-0 mb-1">
+                                Klik pada foto untuk memperbesar.
+                            </p>
+                            <a class="btn btn-sm btn-success" href="${resp.src}" download><i class="fas fa-download fa-fw mr-1"></i>Unduh Flyer</a>
+                        `);
+                    }
+                });
+            });
+
+            $('#btnGenerate-duka').on('click', async function() {
+                const btn = $(this);
+                if (!validationElm(['formFlyer-duka_atasNama', 'formFlyer-duka_content', 'formFlyer-duka_foto'], ['', null])) return;
+                const form = $('#formFlyer-duka');
+                cropper.getCroppedCanvas({
+                    width: 720,
+                    height: 720,
+                }).toBlob(async function(blob) {
+                    let formData = new FormData(form[0]);
+                    formData.append('foto', blob, 'foto.png');
+                    const resp = await fetchData({
+                        url: '/webService/v1/flyer/duka/generate',
+                        data: formData,
+                        method: 'POST',
+                        button: btn
+                    });
+                    if (resp) {
+                        $('#formFlyer-duka_kode').val(resp.kode);
+                        $('#formFlyer-duka_preview').html(`
+                            <div class="mb-1">
+                                <a href="${resp.src}" data-fancybox>
+                                    <img src="${resp.src}" class="img-fluid">
+                                </a>
+                            </div>
+                            <p class="form-text text-muted small m-0 mb-1">
+                                Klik pada foto untuk memperbesar.
+                            </p>
+                            <a class="btn btn-sm btn-success" href="${resp.src}" download><i class="fas fa-download fa-fw mr-1"></i>Unduh Flyer</a>
+                        `);
+                    }
+                });
+            });
+
+            $('#btnGenerate-info').on('click', async function() {
+                const btn = $(this);
+                if (!validationElm(['formFlyer-info_atasNama', 'formFlyer-info_content', 'formFlyer-info_foto'], ['', null])) return;
+                const form = $('#formFlyer-info');
+                let formData = new FormData(form[0]);
+                const resp = await fetchData({
+                    url: '/webService/v1/flyer/info/generate',
+                    data: formData,
+                    method: 'POST',
+                    button: btn
+                });
+                if (resp) {
+                    $('#formFlyer-info_kode').val(resp.kode);
+                    $('#formFlyer-info_preview').html(`
+                        <div class="mb-1">
+                            <a href="${resp.src}" data-fancybox>
+                                <img src="${resp.src}" class="img-fluid">
+                            </a>
+                        </div>
+                        <p class="form-text text-muted small m-0 mb-1">
+                            Klik pada foto untuk memperbesar.
+                        </p>
+                        <a class="btn btn-sm btn-success" href="${resp.src}" download><i class="fas fa-download fa-fw mr-1"></i>Unduh Flyer</a>
+                    `);
+                }
+            });
+            // === END FLYER ===
         });
     </script>
     <!-- End Main Script -->

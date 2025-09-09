@@ -28,9 +28,11 @@ class PesertaDidik extends BaseController
             ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('rombongan_belajar', 'rombongan_belajar.rombel_id = anggota_rombongan_belajar.rombel_id', 'left')
             ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
+            ->join('mutasi_pd', 'mutasi_pd.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('registrasi_peserta_didik', 'registrasi_peserta_didik.peserta_didik_id = peserta_didik.peserta_didik_id', 'left')
             ->join('ref_jenis_kelamin', 'ref_jenis_kelamin.ref_id = peserta_didik.jenis_kelamin', 'left')
-            ->where('semester.status', true)
+            ->orderBy('peserta_didik.nama', 'ASC')
+            ->where('semester.status', true)->where('mutasi_pd.id', null)
         ;
 
         return $model;
@@ -56,13 +58,11 @@ class PesertaDidik extends BaseController
             ->groupEnd();
         $countFiltered = $model->countAllResults(false);
 
-        if (!empty($orders))
-            foreach ($orders as $order) {
-                $field = $columns[$order['column']]['name'];
-                $dir = $order['dir'];
-                $model->orderBy($field, $dir);
-            }
-        else $model->orderBy('peserta_didik.nama', 'ASC');
+        foreach ($orders as $order) {
+            $field = $columns[$order['column']]['name'];
+            $dir = $order['dir'];
+            $model->orderBy($field, $dir);
+        }
 
         return $this->respond([
             'draw' => $draw,

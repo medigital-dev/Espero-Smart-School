@@ -569,7 +569,7 @@
                         if (respData.jenis_mutasi)
                             $('#tabsProfile-status').text(respData.jenis_mutasi).attr('title', respData.jenis_mutasi).removeClass('bg-success').addClass('bg-secondary');
                         else
-                            $('#tabsProfile-status').text(respData.rombel_nama).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
+                            $('#tabsProfile-status').text(respData.rombel).attr('title', 'Aktif').addClass('bg-success').removeClass('bg-secondary');
                         if (respData.foto_src) {
                             $('#tabsProfile-foto a, .photo-profile a').attr('href', '/' + respData.foto_src);
                             $('#tabsProfile-foto img, .photo-profile img').attr('src', '/' + respData.foto_src);
@@ -2345,18 +2345,18 @@
                     respData.forEach(v => {
                         const itemElm = `<div class="list-group-item">
                                             <div class="d-flex w-100 justify-content-between">
-                                                <h6 class="mb-1 text-bold" data-toggle="collapse" data-target="#coll-${v.id}" aria-expanded="false" aria-controls="coll-${v.id}">${v.semester_kode} - ${v.rombel_nama}</h6>
+                                                <h6 class="mb-1 text-bold" data-toggle="collapse" data-target="#coll-${v.anggota_id}" aria-expanded="false" aria-controls="coll-${v.anggota_id}">${v.semester_kode} - ${v.rombel_nama}</h6>
                                                 <div>
-                                                    <button type="button" data-id="${v.id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusRombel" aria-label="Close">
+                                                    <button type="button" data-id="${v.anggota_id}" data-toggle="tooltip" data-title="Hapus" class="close btnRow-hapusRombel" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div class="collapse mt-1" id="coll-${v.id}">
+                                            <div class="collapse mt-1" id="coll-${v.anggota_id}">
                                                 <ul class="list-group list-group-unbordered">
                                                     <li class="list-group-item py-2">
                                                         <p class="text-bold mb-0 small">Tahun Ajaran</p>
-                                                        <a class="">${v.ta_nama}</a>
+                                                        <a class="">${v.semester_nama}</a>
                                                     </li>
                                                     <li class="list-group-item py-2">
                                                         <p class="text-bold mb-0 small">Semester</p>
@@ -2474,9 +2474,8 @@
                 const btn = $(this);
                 const formElm = $('#formImport-pd');
                 const dataType = formElm.serializeArray();
-                console.log(dataType);
-                return;
                 const pd = $('input[name="radioFormImport-statusPd"]:checked').val();
+                const semester = $('#formImport-pd_semester').val();
                 const alertElm = $('#importStatus');
                 const inputElm = $('#inputFile');
                 const file = inputElm.prop('files')[0];
@@ -2485,10 +2484,10 @@
                     set = [],
                     data = new FormData();
 
-                if (dataType.length == 0 || !pd) {
+                if (!validationElm2(['input[name="radioFormImport-statusPd"]', '#formImport-pd_semester', '#inputFile'])) {
                     alertElm.html('').html(`
                         <div class="alert alert-danger alert-dismissible fade show mb-2" role="alert">
-                            Error: Peserta Didik/Jenis data belum dipilih.
+                            Error: Peserta Didik/Jenis data/Semester belum dipilih.
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -2499,6 +2498,7 @@
 
                 data.append('fileUpload', file);
                 data.append('dataId', selectedRows);
+                data.append('idSemester', semester);
 
                 alertElm.html('').html(`
                         <div class="alert alert-primary alert-dismissible fade show mb-2" role="alert">

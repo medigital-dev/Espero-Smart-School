@@ -16,7 +16,7 @@ class Dapodik extends BaseController
 
     public function __construct()
     {
-        helper(['string', 'indonesia', 'dapodik', 'files', 'referensi']);
+        helper(['string', 'indonesia', 'dapodik', 'files', 'referensi', 'semester']);
     }
 
     public function koneksi(): string
@@ -279,7 +279,7 @@ class Dapodik extends BaseController
         $mPd = new PesertaDidikModel();
         $file = $this->request->getFile('fileUpload');
         $dataId = explode(',', $this->request->getPost('dataId'));
-
+        $idSemester = $this->request->getPost('idSemester');
         if (!$file) return $this->fail('File untuk di import tidak ditemukan.');
         $result = importDapodik($file, 'pesertaDidik');
         if (!$result['success']) return $this->fail($result['message']);
@@ -296,6 +296,7 @@ class Dapodik extends BaseController
             if ($type === 'database' && !$id) continue;
 
             $row['peserta_didik_id'] = $id ?: idUnik($mPd, 'peserta_didik_id');
+            $row['anggotaRombel']['semester_kode'] = semester($idSemester, 'kode');
             $response[] = $row;
         }
         return $this->respond($response);

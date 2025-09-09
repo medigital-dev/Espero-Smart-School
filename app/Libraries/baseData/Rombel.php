@@ -37,22 +37,43 @@ class Rombel
         return $model->where('rombel_id', $id)->first();
     }
 
+    /**
+     * @return array|string id Rombongan Belajar
+     * @return null id not found
+     */
     public function rombelPd(string $id, bool $aktif = false): array|string|null
     {
         $model = new RombonganBelajarModel();
-        $model->select('rombongan_belajar.rombel_id')
+        $model->select([
+            'rombongan_belajar.rombel_id',
+            'anggota_id',
+            'semester_kode',
+            'semester.nama as semester_nama',
+            'rombongan_belajar.nama as rombel_nama',
+            'ref_jenis_registrasi.nama as registrasi_nama',
+            'tingkat_pendidikan as tingkat',
+            'guru_pegawai.nama as gtk_nama',
+            'guru_pegawai.guru_pegawai_id as gtk_id',
+            'ref_kurikulum.nama as kurikulum_nama',
+            'ref_kurikulum.kode as kurikulum_kode',
+            'ref_kurikulum.id as kurikulum_id',
+        ])
             ->join('anggota_rombongan_belajar', 'anggota_rombongan_belajar.rombel_id = rombongan_belajar.rombel_id', 'left')
+            ->join('guru_pegawai', 'guru_pegawai.guru_pegawai_id = rombongan_belajar.ptk_id', 'left')
+            ->join('ref_kurikulum', 'ref_kurikulum.ref_id = rombongan_belajar.kurikulum_id', 'left')
             ->join('semester', 'semester.kode = anggota_rombongan_belajar.semester_kode', 'left')
+            ->join('ref_jenis_registrasi', 'ref_jenis_registrasi.ref_id = anggota_rombongan_belajar.jenis_registrasi_rombel', 'left')
             ->where('peserta_didik_id', $id)
         ;
         if ($aktif) {
             $res = $model
                 ->where('semester.status', true)
                 ->first();
-            return $res ? $res['rombel_id'] : null;
+            return $res;
         }
-        return $model
+        $rows = $model
             ->findAll();
+        return $rows;
     }
 
     public function save(array $set = [], string|array|null $keyname = null): string|false

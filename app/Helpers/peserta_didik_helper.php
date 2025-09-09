@@ -58,6 +58,20 @@ if (!function_exists('rombelPd')) {
     }
 }
 
+if (!function_exists('getRombel')) {
+    /**
+     * Fungsi menampilkan data rombongan belajar
+     * @param string|bool|null $idOrStatus id_rombel|true|false|null
+     * @param array|string $field Data yang ingin ditampilkan
+     * @return array Data rombongan belajar
+     * @return null jika tidak ditemukan
+     */
+    function getRombel(string|bool|null $idOrStatus = null, array|string $field = '*'): array|null
+    {
+        return (new Rombel())->get($idOrStatus, $field);
+    }
+}
+
 if (!function_exists('rombel')) {
     /**
      * Fungsi menampilkan nama rombongan belajar aktif
@@ -69,12 +83,7 @@ if (!function_exists('rombel')) {
     {
         $libRombel = new Rombel();
         $res = $libRombel->rombelPd($id, true);
-        if (!is_null($res)) {
-            $rombel = $libRombel
-                ->get($res, 'rombongan_belajar.nama');
-            return $rombel['nama'] ?? null;
-        }
-        return null;
+        return $res['rombel_nama'] ?? null;
     }
 }
 

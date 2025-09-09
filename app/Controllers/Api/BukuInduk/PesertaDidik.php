@@ -919,13 +919,12 @@ class PesertaDidik extends BaseController
             ->where('peserta_didik.peserta_didik_id', $id)
             ->first();
         if (!$cPd) return $this->fail('Peserta didik tidak ditemukan.');
-        $lib = new Rombel();
-        return $this->respond($lib->get($id));
+        return $this->respond(rombelPd($id));
     }
 
     public function deleteRombel($id): ResponseInterface
     {
-        if (!$id) return $this->fail('ID Rombingan Belajar diperlukan.');
+        if (!$id) return $this->fail('ID Rombongan Belajar diperlukan.');
         $mAnggotaRombel = new AnggotaRombelModel();
         $cAnggota = $mAnggotaRombel->where('anggota_id', $id)->first();
         if (!$cAnggota) return $this->fail('Data anggota rombel tidak ditemukan.');

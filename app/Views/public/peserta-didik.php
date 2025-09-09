@@ -2,7 +2,10 @@
 <?= $this->section('content'); ?>
 <div class="row">
     <div class="col" id="tabelColumn">
-        <div class="card">
+        <div class="card card-primary shadow">
+            <div class="card-header">
+                <h3 class="card-title">Data Murid Aktif</h3>
+            </div>
             <div class="card-body">
                 <div class="btn-toolbar mb-2">
                     <div class="input-group input-group-sm my-1 mr-1">

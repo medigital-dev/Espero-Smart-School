@@ -590,11 +590,18 @@
                             </a>
                         </div>
                         <h3 class="profile-username text-center" id="tabsProfile-nama"></h3>
-                        <div class="text-center w-100 d-flex justify-content-center mb-3">
-                            <span data-toggle="tooltip" data-title="Status" class="badge bg-success mx-1" id="tabsProfile-status"></span>
-                            <span data-toggle="tooltip" data-title="NIS" class="badge bg-primary mx-1" id="tabsProfile-nipd"></span>
-                            <span data-toggle="tooltip" data-title="NISN" class="badge bg-danger mx-1" id="tabsProfile-nisn"></span>
-                        </div>
+                        <table class="table table-sm table-borderless text-center">
+                            <tr class="small">
+                                <th>Status</th>
+                                <th>NIS</th>
+                                <th>NISN</th>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-title="Status" class="badge bg-success mx-1" id="tabsProfile-status"></span></td>
+                                <td><span data-toggle="tooltip" data-title="NIS" class="badge bg-primary mx-1" id="tabsProfile-nipd"></span></td>
+                                <td><span data-toggle="tooltip" data-title="NISN" class="badge bg-danger mx-1" id="tabsProfile-nisn"></span></td>
+                            </tr>
+                        </table>
                         <ul class="list-group list-group-unbordered">
                             <li class="list-group-item py-2">
                                 <p class="text-bold mb-0 small">Jenis Kelamin</p>

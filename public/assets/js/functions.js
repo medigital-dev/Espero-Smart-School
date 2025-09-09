@@ -52,6 +52,34 @@ function validationElm(
   return true;
 }
 
+/**
+ * Fungsi validasi elemen
+ * @param {Array} idElm Selector id atau class atau yang lain
+ * @param {Array} invalidValue Invalid jika value = (default "" atau null)
+ * @param {string} errorMessage Pesan error
+ * @returns true or false
+ */
+function validationElm2(
+  idElm = [],
+  invalidValue = ["", null],
+  errorMessage = "Input tidak valid."
+) {
+  let check = [];
+  idElm.forEach(function (item) {
+    let elm = $(item);
+    if (invalidValue.includes(elm.val())) {
+      check.push(elm.val());
+      elm.addClass("is-invalid");
+    } else elm.removeClass("is-invalid");
+  });
+  if (check.length !== 0) {
+    toast(errorMessage, "error");
+    return false;
+  }
+  $(".is-invalid").removeClass("is-invalid");
+  return true;
+}
+
 function runTooltip() {
   $('[data-toggle="tooltip"], .btn-tooltip').tooltip({
     html: true,
@@ -599,7 +627,7 @@ function runSelect2GetSemester() {
           ? $select.parents(".modal").first()
           : $(document.body),
         ajax: {
-          url: "/webService/semester/get/select2",
+          url: "/webService/v1/semester/select2",
           method: "GET",
           dataType: "json",
           data: function (params) {

@@ -11,8 +11,6 @@ class Homepage extends BaseController
     {
         $page = [
             'title' => 'EsperoSmartSchool - Daftar Peserta Didik',
-            'page' => 'Daftar Peserta Didik',
-            'breadcrumb' => ['Homepage', 'Peserta Didik'],
             'sidebar' => ['parent' => 'database', 'current' => 'data-pd',],
             'data' => [],
         ];
@@ -45,8 +43,6 @@ class Homepage extends BaseController
     {
         $page = [
             'title' => 'EsperoSmartSchool - Prestasi',
-            'page' => 'Daftar Prestasi SMP Negeri 2 Wonosari',
-            'breadcrumb' => ['Homepage', 'Prestasi'],
             'sidebar' => ['parent' => null, 'current' => 'prestasi',],
             'data' => [],
         ];
@@ -55,9 +51,11 @@ class Homepage extends BaseController
 
     public function flyer()
     {
-        // helper('code');
-        // qrcode('http://smp2wonosari.sch.id', 'Scan Me!', 'assets/img/brands/meDigital-dev.png');
-        // die;
-        return view('public/flyer');
+        $page = [
+            'title' => 'EsperoSmartSchool - Flyer',
+            'sidebar' => ['parent' => 'layanan', 'current' => 'flyer',],
+            'data' => [],
+        ];
+        return view('public/flyer', $page);
     }
 }

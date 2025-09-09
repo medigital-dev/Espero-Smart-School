@@ -365,7 +365,6 @@ class Dapodik
                             ],
                             'anggotaRombel' => [
                                 'rombel_id' => saveRombel(['nama' => $row[42]], 'nama'),
-                                'semester_kode' => semester(true, 'kode'),
                             ]
                         ];
 
