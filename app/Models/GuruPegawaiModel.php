@@ -19,11 +19,8 @@ class GuruPegawaiModel extends Model
         'jenis_kelamin',
         'tempat_lahir',
         'tanggal_lahir',
-        'nip',
         'nik',
         'agama_id',
-        'golongan_darah',
-        'kewarganegaraan',
-        'nama_ibu_kandung',
+        'ibu_kandung',
     ];
 }
