@@ -20,7 +20,79 @@ class Db0020 extends Migration
                 'constraint' => 128,
                 'null' => false,
             ],
+            'nuptk' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'null' => true,
+                'default' => null,
+            ],
+            'nip' => [
+                'type' => 'VARCHAR',
+                'constraint' => 16,
+                'null' => true,
+                'default' => null,
+            ],
+            'status_pegawai_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'jenis_gtk_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'sk_pengangkatan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'tmt_pengangkatan' => [
+                'type' => 'DATE',
+            ],
+            'tanggal_pengangkatan' => [
+                'type' => 'DATE',
+            ],
+            'lembaga_pengangkatan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            ''
         ]);
+
+        // Tabel: riwayat_pendidikan
+        $this->forge->addField([
+            'created_at' => ['type' => 'DATETIME',],
+            'updated_at' => ['type' => 'DATETIME',],
+            'deleted_at' => ['type' => 'DATETIME', 'null' => true,],
+            'id' => ['type' => 'INT', 'auto_increment' => true,],
+            'riwayat_id' => ['type' => 'VARCHAR', 'constraint' => 128, 'unique' => true,],
+            'pendidikan_id' => [
+                'type' => 'VARCHAR',
+                'constraint' => 128,
+                'null' => false,
+            ],
+            'tanggal_lulus' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
+            'gelar_depan' => [
+                'type' => 'VARCHAR',
+                'constraint' => 8,
+                'null' => true,
+                'default' => null,
+            ],
+            'gelar_belakang' => [
+                'type' => 'VARCHAR',
+                'constraint' => 8,
+                'null' => true,
+                'default' => null,
+            ]
+        ]);
+        $this->forge->addKey('id', 'true');
+        $this->forge->createTable('riwayat_pendidikan', true);
     }
 
     public function down()
@@ -45,5 +117,6 @@ class Db0020 extends Migration
                 'constraint' => 128,
             ],
         ]);
+        $this->forge->dropTable('riwayat_pendidikan', true);
     }
 }
